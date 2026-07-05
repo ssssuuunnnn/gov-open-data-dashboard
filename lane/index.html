@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>巷弄長照站儀表板</title>
+<link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <h1>巷弄長照站儀表板</h1>
+    <div class="meta"><a href="../index.html" style="color:#fff">← 回首頁</a></div>
+  </div>
+  <div class="header-inner">
+    <nav>
+      提供機關：彰化縣政府社會處　|　更新頻率：每1年　|　
+      <a href="https://email.chcg.gov.tw/df/pufnpn5i5741iy9efkn2rrz5ga6uhb" target="_blank" rel="noopener">原始資料下載</a>
+    </nav>
+    <div class="meta" id="meta-updated"></div>
+  </div>
+</header>
+<main>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="num" id="stat-total">-</div><div class="label">篩選後站數</div></div>
+    <div class="stat-card"><div class="num" id="stat-districts">-</div><div class="label">涵蓋鄉鎮市區數</div></div>
+    <div class="stat-card"><div class="num" id="stat-top">-</div><div class="label">站數最多鄉鎮</div></div>
+  </div>
+
+  <div class="card">
+    <div class="filters">
+      <div class="field">
+        <label>鄉鎮市區</label>
+        <select id="f-district"><option value="">全部</option></select>
+      </div>
+      <div class="field" style="flex:1;">
+        <label>關鍵字（單位 / 地址）</label>
+        <input type="text" id="f-keyword" placeholder="例如：社區發展協會、衛生所…" />
+      </div>
+      <button class="ghost" id="f-reset">重設篩選</button>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="chart-box" style="height:460px;"><h3>各鄉鎮市區站數</h3><canvas id="chart-district"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="chart-box" style="height:220px;"><h3>單位型態關鍵字分布（前10）</h3><canvas id="chart-unit"></canvas></div>
+      <p style="font-size:.8rem;color:#64748b;">依「單位」名稱關鍵字（如社區發展協會、衛生所、教會、護理之家等）概略分類統計。</p>
+    </div>
+  </div>
+
+  <h2 class="section-title">資料明細</h2>
+  <div class="card">
+    <div id="table-container"></div>
+  </div>
+</main>
+<footer class="site-footer">
+  資料來源：<a href="https://email.chcg.gov.tw/df/pufnpn5i5741iy9efkn2rrz5ga6uhb" target="_blank" rel="noopener">彰化縣政府社會處 巷弄長照站</a>（原始資料 CSV）。
+  依「政府資料開放授權條款-第1版」釋出。鄉鎮市區由本站依原始地址欄位解析產生，僅供參考，實際請以原始資料為準。
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="../assets/table.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

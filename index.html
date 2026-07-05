@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>長照據點開放資料儀表板</title>
+<link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <h1>長照據點開放資料儀表板</h1>
+    <div class="meta">政府開放資料 · 互動式視覺化</div>
+  </div>
+</header>
+<main>
+  <p>本網站整理衛生福利部與彰化縣政府社會處公開之長期照顧相關資料集，提供地圖、統計圖表與可篩選查詢的資料表，方便使用者快速瀏覽與比較各地長照資源分布。</p>
+  <div class="home-grid">
+    <a class="home-card" href="abc/index.html">
+      <span class="tag">全國 · 含地圖座標</span>
+      <h2>長照ABC據點地圖儀表板</h2>
+      <div class="desc">衛生福利部提供，涵蓋全國 A（旗艦店）、B（複合型服務中心）、C（巷弄長照站）三級長照據點，包含地址、經緯度、特約服務項目、開放床數與現有住民等資訊。</div>
+      <div class="footline" id="abc-count">資料筆數載入中…</div>
+    </a>
+    <a class="home-card" href="lane/index.html">
+      <span class="tag">彰化縣</span>
+      <h2>巷弄長照站儀表板</h2>
+      <div class="desc">彰化縣政府社會處提供，列出各鄉鎮市區之巷弄長照站（C級據點）名稱與地址，可依鄉鎮篩選並瀏覽站所分布統計。</div>
+      <div class="footline" id="lane-count">資料筆數載入中…</div>
+    </a>
+  </div>
+</main>
+<footer class="site-footer">
+  資料來源：<a href="https://ltcpap.mohw.gov.tw/publish/abc.csv" target="_blank" rel="noopener">衛生福利部 長照ABC據點</a> ·
+  <a href="https://email.chcg.gov.tw/df/pufnpn5i5741iy9efkn2rrz5ga6uhb" target="_blank" rel="noopener">彰化縣政府社會處 巷弄長照站</a><br />
+  依「政府資料開放授權條款-第1版」釋出，本站僅作資料視覺化整理，實際內容以原始資料集為準。
+</footer>
+<script>
+fetch("data/meta.json").then(r => r.json()).then(meta => {
+  document.getElementById("abc-count").textContent = `共 ${meta.abc.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  document.getElementById("lane-count").textContent = `共 ${meta.lane.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+}).catch(() => {});
+</script>
+</body>
+</html>

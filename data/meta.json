@@ -1,0 +1,13 @@
+{
+  "generatedAt": "2026-07-05T08:55:10.497791+00:00",
+  "abc": {
+    "count": 31488,
+    "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
+    "title": "長照ABC據點"
+  },
+  "lane": {
+    "count": 250,
+    "source": "https://email.chcg.gov.tw/df/pufnpn5i5741iy9efkn2rrz5ga6uhb",
+    "title": "巷弄長照站"
+  }
+}

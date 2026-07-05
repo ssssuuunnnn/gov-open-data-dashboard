@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>長照ABC據點地圖儀表板</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+<link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <h1>長照ABC據點地圖儀表板</h1>
+    <div class="meta"><a href="../index.html" style="color:#fff">← 回首頁</a></div>
+  </div>
+  <div class="header-inner">
+    <nav>
+      提供機關：衛生福利部　|　更新頻率：每1月　|　
+      <a href="https://ltcpap.mohw.gov.tw/publish/abc.csv" target="_blank" rel="noopener">原始資料下載</a>
+    </nav>
+    <div class="meta" id="meta-updated"></div>
+  </div>
+</header>
+<main>
+  <div class="stat-grid" id="stat-grid">
+    <div class="stat-card"><div class="num" id="stat-total">-</div><div class="label">篩選後據點數</div></div>
+    <div class="stat-card a"><div class="num" id="stat-a">-</div><div class="label">A級 旗艦店</div></div>
+    <div class="stat-card b"><div class="num" id="stat-b">-</div><div class="label">B級 複合型中心</div></div>
+    <div class="stat-card c"><div class="num" id="stat-c">-</div><div class="label">C級 巷弄長照站</div></div>
+    <div class="stat-card"><div class="num" id="stat-beds">-</div><div class="label">開放床數合計</div></div>
+    <div class="stat-card"><div class="num" id="stat-residents">-</div><div class="label">現有住民合計</div></div>
+  </div>
+
+  <div class="card">
+    <div class="filters">
+      <div class="field">
+        <label>縣市</label>
+        <select id="f-county"><option value="">全部</option></select>
+      </div>
+      <div class="field">
+        <label>鄉鎮市區</label>
+        <select id="f-district"><option value="">全部</option></select>
+      </div>
+      <div class="field">
+        <label>類別</label>
+        <div class="checkbox-group" id="f-category">
+          <label><input type="checkbox" value="A" checked /> <span class="badge a">A</span></label>
+          <label><input type="checkbox" value="B" checked /> <span class="badge b">B</span></label>
+          <label><input type="checkbox" value="C" checked /> <span class="badge c">C</span></label>
+        </div>
+      </div>
+      <div class="field" style="flex:1;">
+        <label>關鍵字（機構名稱 / 地址 / 服務項目）</label>
+        <input type="text" id="f-keyword" placeholder="例如：日間照顧、喘息服務、機構名稱…" />
+      </div>
+      <button class="ghost" id="f-reset">重設篩選</button>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div id="map"></div>
+    </div>
+    <div class="card">
+      <div class="chart-box"><h3>各縣市據點數（前10）</h3><canvas id="chart-county"></canvas></div>
+      <div class="chart-box"><h3>類別比例</h3><canvas id="chart-category"></canvas></div>
+    </div>
+  </div>
+
+  <h2 class="section-title">資料明細</h2>
+  <div class="card">
+    <div id="table-container"></div>
+  </div>
+</main>
+<footer class="site-footer">
+  資料來源：<a href="https://ltcpap.mohw.gov.tw/publish/abc.csv" target="_blank" rel="noopener">衛生福利部 長照ABC據點</a>（原始資料 CSV）。
+  依「政府資料開放授權條款-第1版」釋出。地址對應之縣市／鄉鎮市區由本站依原始地址欄位解析產生，僅供參考，實際請以原始資料為準。
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="../assets/table.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
