@@ -3,11 +3,63 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>長照ABC據點地圖儀表板</title>
+<title>長照ABC據點地圖儀表板｜全台A/B/C級長照資源查詢</title>
+<meta name="description" content="衛生福利部長照ABC據點開放資料視覺化，全台約3.1萬筆A級旗艦店、B級複合型服務中心、C級巷弄長照站資料，提供地圖、縣市鄉鎮篩選、特約服務項目搜尋與統計圖表。" />
+<meta name="keywords" content="長照ABC據點,長照2.0,A級長照旗艦店,B級複合型服務中心,C級巷弄長照站,長照地圖,長照資源查詢,衛生福利部開放資料" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://www.sunkuo.cc/gov-open-data-dashboard/abc/index.html" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="長照據點開放資料儀表板" />
+<meta property="og:locale" content="zh_TW" />
+<meta property="og:title" content="長照ABC據點地圖儀表板" />
+<meta property="og:description" content="全台約3.1萬筆長照ABC據點資料，提供地圖、篩選與統計圖表。" />
+<meta property="og:url" content="https://www.sunkuo.cc/gov-open-data-dashboard/abc/index.html" />
+<meta property="og:image" content="https://www.sunkuo.cc/gov-open-data-dashboard/assets/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="長照ABC據點地圖儀表板" />
+<meta name="twitter:description" content="全台約3.1萬筆長照ABC據點資料，提供地圖、篩選與統計圖表。" />
+<meta name="twitter:image" content="https://www.sunkuo.cc/gov-open-data-dashboard/assets/og-image.png" />
+
+<link rel="icon" type="image/png" href="../assets/favicon.png" />
+<link rel="preconnect" href="https://unpkg.com" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
 <link rel="stylesheet" href="../assets/style.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "長照ABC據點",
+  "description": "長照2.0 A、B、C據點(含GIS座標XY)，涵蓋全國約3.1萬筆長照服務據點資訊。",
+  "url": "https://www.sunkuo.cc/gov-open-data-dashboard/abc/index.html",
+  "license": "https://data.gov.tw/license",
+  "isAccessibleForFree": true,
+  "inLanguage": "zh-Hant-TW",
+  "keywords": ["長照", "長照2.0", "長照ABC據點", "老年安養"],
+  "spatialCoverage": {
+    "@type": "Place",
+    "name": "台灣"
+  },
+  "creator": {
+    "@type": "Organization",
+    "name": "衛生福利部",
+    "url": "https://www.mohw.gov.tw/"
+  },
+  "distribution": {
+    "@type": "DataDownload",
+    "encodingFormat": "CSV",
+    "contentUrl": "https://ltcpap.mohw.gov.tw/publish/abc.csv"
+  }
+}
+</script>
 </head>
 <body>
 <header class="site-header">
@@ -23,6 +75,11 @@
     <div class="meta" id="meta-updated"></div>
   </div>
 </header>
+<noscript>
+  <p style="max-width:1280px;margin:16px auto;padding:0 24px;color:#b91c1c;">
+    本頁需要啟用 JavaScript 才能載入地圖、資料與圖表，請於瀏覽器設定中開啟 JavaScript 後重新整理頁面。
+  </p>
+</noscript>
 <main>
   <div class="stat-grid" id="stat-grid">
     <div class="stat-card"><div class="num" id="stat-total">-</div><div class="label">篩選後據點數</div></div>

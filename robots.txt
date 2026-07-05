@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.sunkuo.cc/gov-open-data-dashboard/sitemap.xml

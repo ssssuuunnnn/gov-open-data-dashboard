@@ -94,6 +94,23 @@ script，透過 `<script src="...">` 標籤引入，不使用 ES module import/e
 5. 更新 `README.md` 的資料集表格與目錄結構說明。
 6. 執行 `python3 scripts/build_data.py` 產生資料，並用 `python3 -m http.server` 本機預覽驗證後再部署。
 
+## SEO 慣例（新增頁面時務必比照辦理）
+
+每個頁面的 `<head>` 都包含一組固定的 SEO 標籤，新增資料集頁面時請完整複製並依內容調整：
+
+- 獨立且描述性的 `<title>` 與 `<meta name="description">`／`keywords`
+- `<link rel="canonical">` 指向 `https://www.sunkuo.cc/gov-open-data-dashboard/<path>`
+- Open Graph（`og:type/site_name/locale/title/description/url/image`）與 Twitter Card 標籤，
+  共用分享圖為 `assets/og-image.png`（1200x630，由 Pillow 產生，來源腳本未保留於 repo，如需重製可用
+  ImageDraw 畫漸層背景 + 置中文字）
+- `schema.org` JSON-LD：首頁用 `WebSite`（`hasPart` 列出各 Dataset），各資料集頁面用 `Dataset`
+  （含 `creator` 提供機關、`distribution.contentUrl` 原始 CSV 網址、`license`、`spatialCoverage`）
+- `<link rel="icon">` 指向 `assets/favicon.png`
+- 外部 CDN 資源請加 `<link rel="preconnect">`
+- `<body>` 開頭的 `<header>` 之後放 `<noscript>` 提示文字（本站內容需 JS 動態載入）
+- 新增/搬移頁面路徑時，記得同步更新根目錄 `robots.txt`、`sitemap.xml`，以及所有頁面中互相引用的
+  canonical / og:url / JSON-LD url 欄位
+
 ## 部署
 
 - GitHub Pages 由 repo 設定直接以根目錄 `/` 部署 `main` 分支，沒有 CI/CD workflow、沒有 Actions build
