@@ -3,18 +3,18 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>長照據點開放資料儀表板｜長照ABC據點・巷弄長照站互動地圖與統計</title>
+<title>政府開放資料儀表板｜長照ABC據點・巷弄長照站互動地圖與統計</title>
 <meta name="description" content="整理衛生福利部「長照ABC據點」與彰化縣政府社會處「巷弄長照站」政府開放資料，提供互動地圖、統計圖表與可篩選查詢資料表，快速瀏覽全台與彰化縣長照資源分布。" />
 <meta name="keywords" content="長照,長照2.0,長照ABC據點,巷弄長照站,政府開放資料,open data,長照地圖,長照資源查詢" />
 <meta name="robots" content="index, follow" />
-<meta name="author" content="長照據點開放資料儀表板" />
+<meta name="author" content="政府開放資料儀表板" />
 <link rel="canonical" href="https://www.sunkuo.cc/gov-open-data-dashboard/" />
 
 <!-- Open Graph -->
 <meta property="og:type" content="website" />
-<meta property="og:site_name" content="長照據點開放資料儀表板" />
+<meta property="og:site_name" content="政府開放資料儀表板" />
 <meta property="og:locale" content="zh_TW" />
-<meta property="og:title" content="長照據點開放資料儀表板" />
+<meta property="og:title" content="政府開放資料儀表板" />
 <meta property="og:description" content="整理長照ABC據點與巷弄長照站政府開放資料，提供互動地圖、統計圖表與可篩選查詢資料表。" />
 <meta property="og:url" content="https://www.sunkuo.cc/gov-open-data-dashboard/" />
 <meta property="og:image" content="https://www.sunkuo.cc/gov-open-data-dashboard/assets/og-image.png" />
@@ -23,7 +23,7 @@
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="長照據點開放資料儀表板" />
+<meta name="twitter:title" content="政府開放資料儀表板" />
 <meta name="twitter:description" content="整理長照ABC據點與巷弄長照站政府開放資料，提供互動地圖、統計圖表與可篩選查詢資料表。" />
 <meta name="twitter:image" content="https://www.sunkuo.cc/gov-open-data-dashboard/assets/og-image.png" />
 
@@ -33,7 +33,7 @@
 {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  "name": "長照據點開放資料儀表板",
+  "name": "政府開放資料儀表板",
   "url": "https://www.sunkuo.cc/gov-open-data-dashboard/",
   "description": "整理衛生福利部「長照ABC據點」與彰化縣政府社會處「巷弄長照站」政府開放資料，提供互動地圖、統計圖表與可篩選查詢資料表。",
   "inLanguage": "zh-Hant-TW",
@@ -47,6 +47,11 @@
       "@type": "Dataset",
       "name": "巷弄長照站",
       "url": "https://www.sunkuo.cc/gov-open-data-dashboard/lane/index.html"
+    },
+    {
+      "@type": "Dataset",
+      "name": "桃園市老人福利機構一覽表",
+      "url": "https://www.sunkuo.cc/gov-open-data-dashboard/tyc-elder/index.html"
     }
   ]
 }
@@ -55,7 +60,7 @@
 <body>
 <header class="site-header">
   <div class="header-inner">
-    <h1>長照據點開放資料儀表板</h1>
+    <h1>政府開放資料儀表板</h1>
     <div class="meta">政府開放資料 · 互動式視覺化</div>
   </div>
 </header>
@@ -65,7 +70,7 @@
   </p>
 </noscript>
 <main>
-  <p>本網站整理衛生福利部「長照ABC據點」與彰化縣政府社會處「巷弄長照站」公開之長期照顧相關資料集，提供地圖、統計圖表與可篩選查詢的資料表，方便使用者快速瀏覽與比較各地長照資源分布。</p>
+  <p>本網站整理衛生福利部「長照ABC據點」、彰化縣政府社會處「巷弄長照站」與桃園市政府社會局「桃園市老人福利機構一覽表」公開之長期照顧相關資料集，提供地圖、統計圖表與可篩選查詢的資料表，方便使用者快速瀏覽與比較各地長照資源分布。</p>
   <div class="home-grid">
     <a class="home-card" href="abc/index.html">
       <span class="tag">全國 · 含地圖座標</span>
@@ -79,17 +84,25 @@
       <div class="desc">彰化縣政府社會處提供，列出各鄉鎮市區之巷弄長照站（C級據點）名稱與地址，可依鄉鎮篩選並瀏覽站所分布統計。</div>
       <div class="footline" id="lane-count">資料筆數載入中…</div>
     </a>
+    <a class="home-card" href="tyc-elder/index.html">
+      <span class="tag">桃園市</span>
+      <h2>桃園市老人福利機構一覽表</h2>
+      <div class="desc">桃園市政府社會局提供，列出私立老人福利機構（養護、長照、安養）名稱、地址、負責人、床數與最近1次評鑑成績，可依鄉鎮市區、收容對象、評鑑成績篩選並瀏覽統計圖表。</div>
+      <div class="footline" id="tyc-elder-count">資料筆數載入中…</div>
+    </a>
   </div>
 </main>
 <footer class="site-footer">
   資料來源：<a href="https://ltcpap.mohw.gov.tw/publish/abc.csv" target="_blank" rel="noopener">衛生福利部 長照ABC據點</a> ·
-  <a href="https://email.chcg.gov.tw/df/pufnpn5i5741iy9efkn2rrz5ga6uhb" target="_blank" rel="noopener">彰化縣政府社會處 巷弄長照站</a><br />
+  <a href="https://email.chcg.gov.tw/df/pufnpn5i5741iy9efkn2rrz5ga6uhb" target="_blank" rel="noopener">彰化縣政府社會處 巷弄長照站</a> ·
+  <a href="https://opendata.tycg.gov.tw/api/dataset/536bb44b-b9f1-4336-ad26-34b9e25b3a68/resource/3d7e3b4c-8bc5-47c4-85a9-eec70415b189/download" target="_blank" rel="noopener">桃園市政府社會局 桃園市老人福利機構一覽表</a><br />
   依「政府資料開放授權條款-第1版」釋出，本站僅作資料視覺化整理，實際內容以原始資料集為準。
 </footer>
 <script>
 fetch("data/meta.json").then(r => r.json()).then(meta => {
   document.getElementById("abc-count").textContent = `共 ${meta.abc.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   document.getElementById("lane-count").textContent = `共 ${meta.lane.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  document.getElementById("tyc-elder-count").textContent = `共 ${meta.tycElder.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
 }).catch(() => {});
 </script>
 </body>

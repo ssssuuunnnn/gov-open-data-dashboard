@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-05T08:55:10.497791+00:00",
+  "generatedAt": "2026-07-10T13:55:16.906728+00:00",
   "abc": {
-    "count": 31488,
+    "count": 31719,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
     "title": "長照ABC據點"
   },
@@ -9,5 +9,10 @@
     "count": 250,
     "source": "https://email.chcg.gov.tw/df/pufnpn5i5741iy9efkn2rrz5ga6uhb",
     "title": "巷弄長照站"
+  },
+  "tycElder": {
+    "count": 67,
+    "source": "https://opendata.tycg.gov.tw/api/dataset/536bb44b-b9f1-4336-ad26-34b9e25b3a68/resource/3d7e3b4c-8bc5-47c4-85a9-eec70415b189/download",
+    "title": "桃園市老人福利機構一覽表"
   }
 }

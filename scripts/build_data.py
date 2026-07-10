@@ -1,16 +1,20 @@
 #!/usr/bin/env python3
 """
-下載並轉換兩個政府開放資料集為前端可用的 JSON。
+下載並轉換政府開放資料集為前端可用的 JSON。
 
 資料來源：
 1. 長照ABC據點  https://ltcpap.mohw.gov.tw/publish/abc.csv
 2. 巷弄長照站    https://email.chcg.gov.tw/df/pufnpn5i5741iy9efkn2rrz5ga6uhb
+3. 桃園市老人福利機構一覽表  https://opendata.tycg.gov.tw/api/dataset/536bb44b-b9f1-4336-ad26-34b9e25b3a68/resource/3d7e3b4c-8bc5-47c4-85a9-eec70415b189/download
+   （來源網址的 CORS 標頭僅允許 opendata.tycg.gov.tw 網域，前端無法直接 fetch，
+   需由本腳本於伺服器端下載）
 
 用法：
     python3 scripts/build_data.py
 輸出：
     data/abc.json
     data/lane.json
+    data/tyc-elder.json
     data/meta.json  (資料更新時間等資訊)
 """
 import csv
@@ -23,6 +27,7 @@ from datetime import datetime, timezone
 
 ABC_URL = "https://ltcpap.mohw.gov.tw/publish/abc.csv"
 LANE_URL = "https://email.chcg.gov.tw/df/pufnpn5i5741iy9efkn2rrz5ga6uhb"
+TYC_ELDER_URL = "https://opendata.tycg.gov.tw/api/dataset/536bb44b-b9f1-4336-ad26-34b9e25b3a68/resource/3d7e3b4c-8bc5-47c4-85a9-eec70415b189/download"
 
 # O_ABC 類別中文說明
 CATEGORY_LABELS = {
@@ -124,6 +129,42 @@ def build_lane():
     return {"fields": fields, "rows": records}
 
 
+TYC_DISTRICTS = [
+    "桃園區", "中壢區", "平鎮區", "八德區", "楊梅區", "蘆竹區",
+    "龜山區", "大溪區", "復興區", "大園區", "觀音區", "新屋區", "龍潭區",
+]
+
+
+def build_tyc_elder():
+    """桃園市老人福利機構一覽表（桃園市政府開放資料平台，CORS 僅允許該平台網域，改由本腳本下載）。"""
+    print("下載 桃園市老人福利機構一覽表 ...", file=sys.stderr)
+    text = fetch(TYC_ELDER_URL)
+    reader = csv.DictReader(io.StringIO(text))
+    rows_in = list(reader)
+    records = []
+    for row in rows_in:
+        addr = (row.get("地址", "") or "").strip()
+        # 地址開頭即為鄉鎮市區（無縣市字首），且共用的 ADDR_RE 對「平鎮區」等
+        # 名稱中途含「鎮」字的行政區會誤判，故改用桃園市固定 13 區清單比對。
+        district = next((d for d in TYC_DISTRICTS if addr.startswith(d)), "")
+        occupants = [s for s in re.split(r"\s+", (row.get("收容對象", "") or "").strip()) if s]
+        records.append([
+            row.get("編號", "").strip(),          # 0 id
+            row.get("機構名稱", "").strip(),      # 1 name
+            row.get("負責人", "").strip(),        # 2 director
+            district,                               # 3 district
+            addr,                                   # 4 address
+            row.get("電話", "").strip(),          # 5 phone
+            ";".join(occupants),                    # 6 occupants (';' joined)
+            _to_int(row.get("立案床數")),          # 7 beds
+            row.get("最近1次評鑑成績", "").strip(), # 8 rating
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "name", "director", "district", "address", "phone",
+              "occupants", "beds", "rating"]
+    return {"fields": fields, "rows": records}
+
+
 def _to_int(v):
     try:
         return int(float(v))
@@ -134,16 +175,24 @@ def _to_int(v):
 def main():
     abc = build_abc()
     lane = build_lane()
+    tyc_elder = build_tyc_elder()
 
     with open("data/abc.json", "w", encoding="utf-8") as f:
         json.dump(abc, f, ensure_ascii=False, separators=(",", ":"))
     with open("data/lane.json", "w", encoding="utf-8") as f:
         json.dump(lane, f, ensure_ascii=False, separators=(",", ":"))
+    with open("data/tyc-elder.json", "w", encoding="utf-8") as f:
+        json.dump(tyc_elder, f, ensure_ascii=False, separators=(",", ":"))
 
     meta = {
         "generatedAt": datetime.now(timezone.utc).isoformat(),
         "abc": {"count": len(abc["rows"]), "source": ABC_URL, "title": "長照ABC據點"},
         "lane": {"count": len(lane["rows"]), "source": LANE_URL, "title": "巷弄長照站"},
+        "tycElder": {
+            "count": len(tyc_elder["rows"]),
+            "source": TYC_ELDER_URL,
+            "title": "桃園市老人福利機構一覽表",
+        },
     }
     with open("data/meta.json", "w", encoding="utf-8") as f:
         json.dump(meta, f, ensure_ascii=False, indent=2)
