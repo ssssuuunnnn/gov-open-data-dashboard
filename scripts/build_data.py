@@ -15,6 +15,7 @@
     data/abc.json
     data/lane.json
     data/tyc-elder.json
+    data/tyc-elder.js   (window.TYC_ELDER_DATA，供前端以 <script> 直接載入，避免 fetch 時序問題)
     data/meta.json  (資料更新時間等資訊)
 """
 import csv
@@ -183,6 +184,12 @@ def main():
         json.dump(lane, f, ensure_ascii=False, separators=(",", ":"))
     with open("data/tyc-elder.json", "w", encoding="utf-8") as f:
         json.dump(tyc_elder, f, ensure_ascii=False, separators=(",", ":"))
+    # 額外輸出內嵌式 JS 版本（window.TYC_ELDER_DATA），前端以 <script> 標籤直接載入，
+    # 不透過 fetch()，避免任何網路請求/快取/部署時序問題導致資料顯示空白。
+    with open("data/tyc-elder.js", "w", encoding="utf-8") as f:
+        f.write("window.TYC_ELDER_DATA = ")
+        json.dump(tyc_elder, f, ensure_ascii=False, separators=(",", ":"))
+        f.write(";\n")
 
     meta = {
         "generatedAt": datetime.now(timezone.utc).isoformat(),

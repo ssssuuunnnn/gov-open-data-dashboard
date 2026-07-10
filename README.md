@@ -32,6 +32,8 @@ assets/table.js       共用分頁表格元件
 data/abc.json         長照ABC據點資料（由 scripts/build_data.py 產生）
 data/lane.json        巷弄長照站資料（由 scripts/build_data.py 產生）
 data/tyc-elder.json   桃園市老人福利機構一覽表資料（由 scripts/build_data.py 產生）
+data/tyc-elder.js     同上資料的內嵌 JS 版本（window.TYC_ELDER_DATA），供 tyc-elder 頁面以
+                       <script> 標籤直接載入，不透過 fetch()，避免任何網路/快取時序問題
 data/meta.json        資料筆數與更新時間
 scripts/build_data.py 資料下載與轉換腳本
 ```

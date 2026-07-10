@@ -183,28 +183,37 @@
     };
   }
 
-  Promise.all([
-    fetch("../data/tyc-elder.json").then((r) => r.json()),
-    fetch("../data/meta.json").then((r) => r.json()),
-  ])
-    .then(([data, meta]) => {
-      state.fields = data.fields;
-      state.all = data.rows.map(rowToObj);
+  function init() {
+    const data = window.TYC_ELDER_DATA;
+    if (!data) {
+      document.getElementById("table-container").innerHTML = `<div class="loading">資料載入失敗：找不到內嵌資料 data/tyc-elder.js</div>`;
+      return;
+    }
+    state.fields = data.fields;
+    state.all = data.rows.map(rowToObj);
 
-      const districts = Array.from(new Set(state.all.map((r) => r.district))).filter(Boolean).sort((a, b) => a.localeCompare(b, "zh-Hant"));
-      populateSelect(els.district, districts);
+    const districts = Array.from(new Set(state.all.map((r) => r.district))).filter(Boolean).sort((a, b) => a.localeCompare(b, "zh-Hant"));
+    populateSelect(els.district, districts);
 
-      const occupants = Array.from(new Set(state.all.flatMap((r) => r.occupants))).filter(Boolean).sort((a, b) => a.localeCompare(b, "zh-Hant"));
-      populateSelect(els.occupant, occupants);
+    const occupants = Array.from(new Set(state.all.flatMap((r) => r.occupants))).filter(Boolean).sort((a, b) => a.localeCompare(b, "zh-Hant"));
+    populateSelect(els.occupant, occupants);
 
-      const ratings = Array.from(new Set(state.all.map((r) => r.rating))).filter(Boolean).sort((a, b) => a.localeCompare(b, "zh-Hant"));
-      populateSelect(els.rating, ratings);
+    const ratings = Array.from(new Set(state.all.map((r) => r.rating))).filter(Boolean).sort((a, b) => a.localeCompare(b, "zh-Hant"));
+    populateSelect(els.rating, ratings);
 
-      els.metaUpdated.textContent = `資料筆數：${meta.tycElder.count.toLocaleString()}　資料整理時間：${new Date(meta.generatedAt).toLocaleString("zh-Hant-TW")}`;
+    els.metaUpdated.textContent = `資料筆數：${data.rows.length.toLocaleString()}`;
+    applyFilters();
 
-      applyFilters();
-    })
-    .catch((err) => {
-      document.getElementById("table-container").innerHTML = `<div class="loading">資料載入失敗：${err}</div>`;
-    });
+    // meta.json 僅用於補上資料整理時間，非核心資料，失敗也不影響上方篩選/圖表/表格運作。
+    fetch("../data/meta.json")
+      .then((r) => r.json())
+      .then((meta) => {
+        if (meta.tycElder) {
+          els.metaUpdated.textContent = `資料筆數：${meta.tycElder.count.toLocaleString()}　資料整理時間：${new Date(meta.generatedAt).toLocaleString("zh-Hant-TW")}`;
+        }
+      })
+      .catch(() => {});
+  }
+
+  init();
 })();
