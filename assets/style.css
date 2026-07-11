@@ -72,6 +72,7 @@ main {
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   padding: 16px 18px;
+  margin-bottom: 16px;
 }
 
 .stat-grid {
@@ -169,9 +170,17 @@ button.ghost {
 
 #map { height: 480px; border-radius: var(--radius); }
 
-.chart-box { height: 220px; margin-bottom: 18px; }
+.chart-box {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 220px;
+  margin-bottom: 18px;
+}
 .chart-box:last-child { margin-bottom: 0; }
-.chart-box h3 { margin: 0 0 8px; font-size: .9rem; color: var(--color-muted); }
+.chart-box h3 { margin: 0 0 8px; font-size: .9rem; color: var(--color-muted); flex: 0 0 auto; }
+.chart-box .chart-canvas-wrap { position: relative; flex: 1 1 auto; min-height: 0; }
+.chart-box canvas { max-width: 100%; max-height: 100%; }
 
 table.data-table {
   width: 100%;
@@ -205,6 +214,7 @@ table.data-table tbody tr:hover { background: #f1f7f5; }
 .badge.a { background: var(--cat-a); }
 .badge.b { background: var(--cat-b); }
 .badge.c { background: var(--cat-c); }
+.badge.cap { background: var(--color-primary); margin: 1px 2px 1px 0; }
 
 .pagination {
   display: flex;

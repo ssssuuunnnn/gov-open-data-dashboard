@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>臺北市長照專業服務特約單位｜居家長照專業服務查詢儀表板</title>
+<meta name="description" content="臺北市政府衛生局長照專業服務特約單位資料視覺化，收錄約75家機構名稱、服務區域、地址、聯絡方式，並可依服務區域與8項專業服務能力（復能照護、營養照護、進食與吞嚥照護等）篩選查詢，附統計圖表。" />
+<meta name="keywords" content="臺北市長照,長照專業服務,居家護理所,長照特約單位,復能照護,營養照護,進食吞嚥照護,長照2.0,政府開放資料" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://www.sunkuo.cc/gov-open-data-dashboard/specialty/index.html" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="政府開放資料儀表板" />
+<meta property="og:locale" content="zh_TW" />
+<meta property="og:title" content="臺北市長照專業服務特約單位" />
+<meta property="og:description" content="臺北市約75家長照專業服務特約單位資料，提供服務區域、專業服務能力篩選與統計圖表。" />
+<meta property="og:url" content="https://www.sunkuo.cc/gov-open-data-dashboard/specialty/index.html" />
+<meta property="og:image" content="https://www.sunkuo.cc/gov-open-data-dashboard/assets/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="臺北市長照專業服務特約單位" />
+<meta name="twitter:description" content="臺北市約75家長照專業服務特約單位資料，提供服務區域、專業服務能力篩選與統計圖表。" />
+<meta name="twitter:image" content="https://www.sunkuo.cc/gov-open-data-dashboard/assets/og-image.png" />
+
+<link rel="icon" type="image/png" href="../assets/favicon.png" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+<link rel="stylesheet" href="../assets/style.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "臺北市長照專業服務特約單位",
+  "description": "臺北市政府衛生局長照服務特約專區公告之長照專業服務特約單位清單，含機構名稱、服務區域、地址、聯絡方式，以及是否提供8項專業服務能力（復能照護、個別化服務計畫擬定與執行、營養照護、進食與吞嚥照護、困擾行為照護、臥床或長期活動受限照護、居家環境安全或無障礙空間規劃、居家護理指導與諮詢）。",
+  "url": "https://www.sunkuo.cc/gov-open-data-dashboard/specialty/index.html",
+  "license": "https://data.gov.tw/license",
+  "isAccessibleForFree": true,
+  "inLanguage": "zh-Hant-TW",
+  "keywords": ["長照專業服務", "居家護理所", "臺北市", "復能照護", "營養照護", "長照特約單位"],
+  "spatialCoverage": {
+    "@type": "Place",
+    "name": "臺北市"
+  },
+  "creator": {
+    "@type": "Organization",
+    "name": "臺北市政府衛生局",
+    "url": "https://health.gov.taipei/"
+  },
+  "distribution": {
+    "@type": "DataDownload",
+    "encodingFormat": "PDF",
+    "contentUrl": "https://health.gov.taipei/News_Content.aspx?n=F0D7A5A451D2493C&sms=549F98C9E5942A2B&s=9138F86B8A3CBF69"
+  }
+}
+</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <h1>臺北市長照專業服務特約單位</h1>
+    <div class="meta"><a href="../index.html" style="color:#fff">← 回首頁</a></div>
+  </div>
+  <div class="header-inner">
+    <nav>
+      提供機關：臺北市政府衛生局　|　更新頻率：不定期（依衛生局公告更新）　|　
+      <a href="https://health.gov.taipei/News_Content.aspx?n=F0D7A5A451D2493C&sms=549F98C9E5942A2B&s=9138F86B8A3CBF69" target="_blank" rel="noopener">原始公告與PDF下載</a>
+    </nav>
+    <div class="meta" id="meta-updated"></div>
+  </div>
+</header>
+<noscript>
+  <p style="max-width:1280px;margin:16px auto;padding:0 24px;color:#b91c1c;">
+    本頁需要啟用 JavaScript 才能載入資料與圖表，請於瀏覽器設定中開啟 JavaScript 後重新整理頁面。
+  </p>
+</noscript>
+<main>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="num" id="stat-total">-</div><div class="label">篩選後機構數</div></div>
+    <div class="stat-card"><div class="num" id="stat-districts">-</div><div class="label">涵蓋行政區數</div></div>
+    <div class="stat-card"><div class="num" id="stat-avgcap">-</div><div class="label">平均每家提供服務項數</div></div>
+    <div class="stat-card"><div class="num" id="stat-top">-</div><div class="label">最普及的專業服務</div></div>
+  </div>
+
+  <div class="card">
+    <div class="filters">
+      <div class="field">
+        <label>服務區域（行政區）</label>
+        <select id="f-district"><option value="">全部</option></select>
+      </div>
+      <div class="field" style="flex:1;">
+        <label>關鍵字（機構名稱 / 地址 / 聯絡窗口）</label>
+        <input type="text" id="f-keyword" placeholder="例如：居家護理所、職能治療、路名…" />
+      </div>
+      <button class="ghost" id="f-reset">重設篩選</button>
+    </div>
+    <div class="field">
+      <label>專業服務能力（勾選後僅顯示同時提供所有已勾選項目之機構）</label>
+      <div class="checkbox-group" id="f-capability" style="flex-wrap:wrap;"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0;">專業服務能力代號說明</h3>
+    <ul id="capability-legend" style="margin:0;padding-left:1.2em;font-size:.88rem;line-height:1.8;columns:2;"></ul>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="chart-box" style="height:280px;"><h3>各專業服務能力提供機構數</h3><div class="chart-canvas-wrap"><canvas id="chart-capability"></canvas></div></div>
+    </div>
+    <div class="card">
+      <div class="chart-box" style="height:340px;"><h3>各行政區可服務機構數</h3><div class="chart-canvas-wrap"><canvas id="chart-district"></canvas></div></div>
+      <p style="font-size:.8rem;color:#64748b;">服務區域標示「全區」之機構會計入全部12個行政區。</p>
+    </div>
+  </div>
+
+  <h2 class="section-title">資料明細</h2>
+  <div class="card">
+    <div id="table-container"></div>
+  </div>
+</main>
+<footer class="site-footer">
+  資料來源：<a href="https://health.gov.taipei/News_Content.aspx?n=F0D7A5A451D2493C&sms=549F98C9E5942A2B&s=9138F86B8A3CBF69" target="_blank" rel="noopener">臺北市政府衛生局 長照服務特約專區－長照專業服務特約單位</a>（公告 PDF 附件，非開放資料 CSV/API）。
+  本站僅作資料視覺化整理，實際內容以原始公告 PDF 為準；PDF 更新後需由本站維護者手動下載重新整理，非即時同步。
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="../assets/table.js"></script>
+<script src="../data/specialty.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

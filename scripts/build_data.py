@@ -8,6 +8,10 @@
 3. 桃園市老人福利機構一覽表  https://opendata.tycg.gov.tw/api/dataset/536bb44b-b9f1-4336-ad26-34b9e25b3a68/resource/3d7e3b4c-8bc5-47c4-85a9-eec70415b189/download
    （來源網址的 CORS 標頭僅允許 opendata.tycg.gov.tw 網域，前端無法直接 fetch，
    需由本腳本於伺服器端下載）
+4. 臺北市長照專業服務特約單位  https://health.gov.taipei/News_Content.aspx?n=F0D7A5A451D2493C&sms=549F98C9E5942A2B&s=9138F86B8A3CBF69
+   （此資料集**非開放資料 CSV/API**，臺北市政府衛生局僅以公告頁面附加 PDF 附件釋出，因此無法在
+   本腳本自動下載，須將衛生局公告的最新 PDF 手動存成 data/source/tp-ltc-specialty-*.pdf 後才能
+   重新解析。詳見 build_specialty() 與 README「更新資料」章節）
 
 用法：
     python3 scripts/build_data.py
@@ -16,9 +20,16 @@
     data/lane.json
     data/tyc-elder.json
     data/tyc-elder.js   (window.TYC_ELDER_DATA，供前端以 <script> 直接載入，避免 fetch 時序問題)
+    data/specialty.json
+    data/specialty.js   (window.SPECIALTY_DATA，同上，供前端以 <script> 直接載入)
     data/meta.json  (資料更新時間等資訊)
+
+額外相依套件：
+    僅 build_specialty() 需要 pdfplumber（`python3 -m pip install pdfplumber`）解析 PDF 表格，
+    其餘資料集仍只用標準庫 urllib/csv 下載/解析 CSV。
 """
 import csv
+import glob
 import io
 import json
 import re
@@ -29,6 +40,30 @@ from datetime import datetime, timezone
 ABC_URL = "https://ltcpap.mohw.gov.tw/publish/abc.csv"
 LANE_URL = "https://email.chcg.gov.tw/df/pufnpn5i5741iy9efkn2rrz5ga6uhb"
 TYC_ELDER_URL = "https://opendata.tycg.gov.tw/api/dataset/536bb44b-b9f1-4336-ad26-34b9e25b3a68/resource/3d7e3b4c-8bc5-47c4-85a9-eec70415b189/download"
+SPECIALTY_SOURCE_PAGE = "https://health.gov.taipei/News_Content.aspx?n=F0D7A5A451D2493C&sms=549F98C9E5942A2B&s=9138F86B8A3CBF69"
+SPECIALTY_PDF_GLOB = "data/source/tp-ltc-specialty-*.pdf"
+
+# 服務碼中文全名（8 項專業服務能力，PDF 表頭欄位）
+CAPABILITY_LABELS = {
+    "ca07": "CA07 復能照護",
+    "ca08": "CA08 個別化服務計畫（ISP）擬定與執行",
+    "cb01": "CB01 營養照護",
+    "cb02": "CB02 進食與吞嚥照護",
+    "cb03": "CB03 困擾行為照護",
+    "cb04": "CB04 臥床或長期活動受限照護",
+    "cc01": "CC01 居家環境安全或無障礙空間規劃",
+    "cd02": "CD02 居家護理指導與諮詢",
+}
+
+# PDF 內文字因來源字型 cmap 對應問題，部分常見漢字被替換成外觀相同的
+# Unicode CJK 部首（Kangxi Radicals / CJK Radicals Supplement）符號，需還原為正常漢字才能顯示。
+SPECIALTY_RADICAL_MAP = {
+    0x2EA0: "民", 0x2EC4: "西", 0x2F00: "一", 0x2F06: "二", 0x2F08: "人",
+    0x2F1D: "口", 0x2F1F: "土", 0x2F20: "士", 0x2F24: "大", 0x2F29: "小",
+    0x2F2D: "山", 0x2F3C: "心", 0x2F42: "文", 0x2F47: "日", 0x2F4C: "止",
+    0x2F63: "生", 0x2F6F: "石", 0x2F72: "禾", 0x2F8F: "行", 0x2F94: "言",
+    0x2FA6: "金", 0x2FBA: "馬",
+}
 
 # O_ABC 類別中文說明
 CATEGORY_LABELS = {
@@ -166,6 +201,73 @@ def build_tyc_elder():
     return {"fields": fields, "rows": records}
 
 
+def _specialty_norm(s):
+    """去除 PDF 儲存格內因欄寬過窄產生的換行，並還原被誤用的 CJK 部首符號為正常漢字。"""
+    if not s:
+        return ""
+    chars = [SPECIALTY_RADICAL_MAP.get(ord(ch), ch) for ch in s]
+    return "".join(chars).replace("\n", "").strip()
+
+
+def _specialty_phone(s):
+    """合併電話欄位跨行內容：緊接在數字/連字號後的『轉』分機直接接續，
+    否則視為另一組聯絡電話，以『 / 』分隔。"""
+    if not s:
+        return ""
+    segs = [seg for seg in s.split("\n") if seg]
+    if not segs:
+        return ""
+    merged = [segs[0]]
+    for seg in segs[1:]:
+        prev = merged[-1]
+        if seg.startswith("轉") or seg.startswith("#") or prev.endswith("-") or prev.endswith("轉"):
+            merged[-1] = prev + seg
+        else:
+            merged.append(seg)
+    return _specialty_norm(" / ".join(merged))
+
+
+def build_specialty():
+    """臺北市長照專業服務特約單位（臺北市政府衛生局公告 PDF 附件，非開放資料 API，
+    需將最新 PDF 存於 data/source/tp-ltc-specialty-*.pdf 後才能解析，詳見 README）。"""
+    matches = sorted(glob.glob(SPECIALTY_PDF_GLOB))
+    if not matches:
+        print(f"  找不到來源 PDF（{SPECIALTY_PDF_GLOB}），略過此資料集", file=sys.stderr)
+        return None
+    pdf_path = matches[-1]
+    print(f"解析 臺北市長照專業服務特約單位 PDF：{pdf_path} ...", file=sys.stderr)
+    import pdfplumber  # 延遲載入：僅此資料集需要，避免其他資料集重跑時強制安裝
+
+    records = []
+    cap_keys = list(CAPABILITY_LABELS.keys())
+    with pdfplumber.open(pdf_path) as pdf:
+        for page in pdf.pages:
+            tables = page.extract_tables()
+            if not tables:
+                continue
+            for row in tables[0]:
+                # 每個機構固定佔用最後 16 個欄位（序號 + 6 項基本資料 + 8 項服務能力 + 1 個尾端空欄），
+                # 前面欄數會因跨頁合併儲存格數量不同而變動，故一律用負索引定位。
+                if len(row) < 16:
+                    continue
+                raw_id = (row[-16] or "").replace("\n", "").strip()
+                if not raw_id.isdigit():
+                    continue
+                caps = [1 if (row[i] or "").strip() == "V" else 0 for i in range(-9, -1)]
+                records.append([
+                    int(raw_id),                       # 0 id
+                    _specialty_norm(row[-15]),          # 1 name
+                    _specialty_norm(row[-14]),          # 2 district
+                    _specialty_norm(row[-13]),          # 3 zipcode
+                    _specialty_norm(row[-12]),          # 4 address
+                    _specialty_phone(row[-11]),         # 5 phone
+                    _specialty_norm(row[-10]),          # 6 contact
+                ] + caps)
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "name", "district", "zipcode", "address", "phone", "contact"] + cap_keys
+    return {"fields": fields, "capabilityLabels": CAPABILITY_LABELS, "rows": records}
+
+
 def _to_int(v):
     try:
         return int(float(v))
@@ -177,6 +279,7 @@ def main():
     abc = build_abc()
     lane = build_lane()
     tyc_elder = build_tyc_elder()
+    specialty = build_specialty()
 
     with open("data/abc.json", "w", encoding="utf-8") as f:
         json.dump(abc, f, ensure_ascii=False, separators=(",", ":"))
@@ -201,6 +304,21 @@ def main():
             "title": "桃園市老人福利機構一覽表",
         },
     }
+
+    if specialty is not None:
+        with open("data/specialty.json", "w", encoding="utf-8") as f:
+            json.dump(specialty, f, ensure_ascii=False, separators=(",", ":"))
+        # 同 tyc-elder，另外輸出內嵌式 JS 版本（window.SPECIALTY_DATA），供前端以 <script> 直接載入。
+        with open("data/specialty.js", "w", encoding="utf-8") as f:
+            f.write("window.SPECIALTY_DATA = ")
+            json.dump(specialty, f, ensure_ascii=False, separators=(",", ":"))
+            f.write(";\n")
+        meta["specialty"] = {
+            "count": len(specialty["rows"]),
+            "source": SPECIALTY_SOURCE_PAGE,
+            "title": "臺北市長照專業服務特約單位",
+        }
+
     with open("data/meta.json", "w", encoding="utf-8") as f:
         json.dump(meta, f, ensure_ascii=False, indent=2)
 

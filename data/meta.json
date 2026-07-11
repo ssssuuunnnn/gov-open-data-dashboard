@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-10T14:06:51.492913+00:00",
+  "generatedAt": "2026-07-11T05:44:19.518957+00:00",
   "abc": {
-    "count": 31719,
+    "count": 31729,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
     "title": "長照ABC據點"
   },
@@ -14,5 +14,10 @@
     "count": 67,
     "source": "https://opendata.tycg.gov.tw/api/dataset/536bb44b-b9f1-4336-ad26-34b9e25b3a68/resource/3d7e3b4c-8bc5-47c4-85a9-eec70415b189/download",
     "title": "桃園市老人福利機構一覽表"
+  },
+  "specialty": {
+    "count": 75,
+    "source": "https://health.gov.taipei/News_Content.aspx?n=F0D7A5A451D2493C&sms=549F98C9E5942A2B&s=9138F86B8A3CBF69",
+    "title": "臺北市長照專業服務特約單位"
   }
 }
