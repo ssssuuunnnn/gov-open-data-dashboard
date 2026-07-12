@@ -284,3 +284,49 @@ footer.site-footer {
 }
 .home-card .desc { font-size: .88rem; color: var(--color-muted); }
 .home-card .footline { font-size: .78rem; color: var(--color-muted); margin-top: auto; }
+
+.changelog-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-left: 3px solid var(--color-border);
+}
+.changelog-item {
+  position: relative;
+  padding: 2px 0 22px 22px;
+}
+.changelog-item::before {
+  content: "";
+  position: absolute;
+  left: -7px;
+  top: 6px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  border: 2px solid var(--color-card);
+}
+.changelog-item .changelog-date {
+  font-size: .78rem;
+  color: var(--color-muted);
+  font-weight: 600;
+}
+.changelog-item h3 {
+  margin: 4px 0 4px;
+  font-size: 1.02rem;
+  color: var(--color-primary-dark);
+}
+.changelog-item p {
+  margin: 0;
+  font-size: .92rem;
+  color: var(--color-text);
+}
+.changelog-item .changelog-tag {
+  display: inline-block;
+  font-size: .72rem;
+  color: #fff;
+  background: var(--color-accent);
+  padding: 1px 8px;
+  border-radius: 999px;
+  margin-right: 6px;
+}

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-11T05:44:19.518957+00:00",
+  "generatedAt": "2026-07-12T00:00:30.191349+00:00",
   "abc": {
     "count": 31729,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -14,6 +14,11 @@
     "count": 67,
     "source": "https://opendata.tycg.gov.tw/api/dataset/536bb44b-b9f1-4336-ad26-34b9e25b3a68/resource/3d7e3b4c-8bc5-47c4-85a9-eec70415b189/download",
     "title": "桃園市老人福利機構一覽表"
+  },
+  "kcgHomecare": {
+    "count": 115,
+    "source": "https://data.kcg.gov.tw/File/DirectDownload/59ac925f-10dd-42f7-a540-ab6c4218b93d",
+    "title": "銀髮族服務-居家長照機構"
   },
   "specialty": {
     "count": 75,

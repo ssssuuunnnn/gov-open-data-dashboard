@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>政府開放資料儀表板｜長照ABC據點・巷弄長照站互動地圖與統計</title>
+<title>政府開放資料-老年安養,長照資料｜長照ABC據點・巷弄長照站互動地圖與統計</title>
 <meta name="description" content="整理衛生福利部「長照ABC據點」、彰化縣政府社會處「巷弄長照站」、桃園市政府社會局「桃園市老人福利機構一覽表」與臺北市政府衛生局「長照專業服務特約單位」政府開放資料，提供互動地圖、統計圖表與可篩選查詢資料表，快速瀏覽各地長照資源分布。" />
 <meta name="keywords" content="長照,長照2.0,長照ABC據點,巷弄長照站,政府開放資料,open data,長照地圖,長照資源查詢" />
 <meta name="robots" content="index, follow" />
@@ -38,7 +38,7 @@
   "description": "整理衛生福利部「長照ABC據點」與彰化縣政府社會處「巷弄長照站」政府開放資料，提供互動地圖、統計圖表與可篩選查詢資料表。",
   "inLanguage": "zh-Hant-TW",
   "datePublished": "2026-07-05",
-  "dateModified": "2026-07-11",
+  "dateModified": "2026-07-12",
   "hasPart": [
     {
       "@type": "Dataset",
@@ -86,6 +86,17 @@
         "name": "臺北市政府衛生局",
         "url": "https://health.gov.taipei/"
       }
+    },
+    {
+      "@type": "Dataset",
+      "name": "銀髮族服務-居家長照機構",
+      "description": "高雄市政府社會局銀髮族服務-居家長照機構清冊，含GIS經緯度座標，涵蓋高雄市約115筆居家式服務類長期照顧服務機構的名稱、地址、電話、服務項目與服務時段等資訊。",
+      "url": "https://www.sunkuo.cc/gov-open-data-dashboard/kcg-homecare/index.html",
+      "license": "http://data.gov.tw/license",
+      "creator": {
+        "@type": "Organization",
+        "name": "高雄市政府社會局"
+      }
     }
   ]
 }
@@ -94,8 +105,8 @@
 <body>
 <header class="site-header">
   <div class="header-inner">
-    <h1>政府開放資料儀表板</h1>
-    <div class="meta">政府開放資料 · 互動式視覺化</div>
+    <h1>政府開放資料-老年安養,長照資料</h1>
+    <div class="meta">政府開放資料 · 互動式視覺化　|　<a href="changelog/index.html" style="color:#fff">更新紀錄</a></div>
   </div>
 </header>
 <noscript>
@@ -104,17 +115,17 @@
   </p>
 </noscript>
 <main>
-  <p>本網站整理衛生福利部「長照ABC據點」、彰化縣政府社會處「巷弄長照站」、桃園市政府社會局「桃園市老人福利機構一覽表」與臺北市政府衛生局「長照專業服務特約單位」公開之長期照顧相關資料集，提供地圖、統計圖表與可篩選查詢的資料表，方便使用者快速瀏覽與比較各地長照資源分布。</p>
+  <p>本網站整理衛生福利部「長照ABC據點」、彰化縣政府社會處「巷弄長照站」、桃園市政府社會局「桃園市老人福利機構一覽表」、臺北市政府衛生局「長照專業服務特約單位」與高雄市政府社會局「銀髮族服務-居家長照機構」公開之長期照顧相關資料集，提供地圖、統計圖表與可篩選查詢的資料表，方便使用者快速瀏覽與比較各地長照資源分布。</p>
   <div class="home-grid">
     <a class="home-card" href="abc/index.html">
       <span class="tag">全國 · 含地圖座標</span>
-      <h2>長照ABC據點地圖儀表板</h2>
+      <h2>全國長照ABC據點地圖儀表板</h2>
       <div class="desc">衛生福利部提供，涵蓋全國 A（旗艦店）、B（複合型服務中心）、C（巷弄長照站）三級長照據點，包含地址、經緯度、特約服務項目、開放床數與現有住民等資訊。</div>
       <div class="footline" id="abc-count">資料筆數載入中…</div>
     </a>
     <a class="home-card" href="lane/index.html">
       <span class="tag">彰化縣</span>
-      <h2>巷弄長照站儀表板</h2>
+      <h2>彰化縣巷弄長照站儀表板</h2>
       <div class="desc">彰化縣政府社會處提供，列出各鄉鎮市區之巷弄長照站（C級據點）名稱與地址，可依鄉鎮篩選並瀏覽站所分布統計。</div>
       <div class="footline" id="lane-count">資料筆數載入中…</div>
     </a>
@@ -126,9 +137,15 @@
     </a>
     <a class="home-card" href="specialty/index.html">
       <span class="tag">臺北市</span>
-      <h2>長照專業服務特約單位</h2>
+      <h2>臺北市長照專業服務特約單位</h2>
       <div class="desc">臺北市政府衛生局提供，列出長照專業服務特約單位（居家護理所、物理／職能治療所等）名稱、服務區域、地址與聯絡方式，並標示是否提供復能照護、營養照護、進食與吞嚥照護等8項專業服務能力，可依服務區域與服務能力篩選並瀏覽統計圖表。</div>
       <div class="footline" id="specialty-count">資料筆數載入中…</div>
+    </a>
+    <a class="home-card" href="kcg-homecare/index.html">
+      <span class="tag">高雄市 · 含地圖座標</span>
+      <h2>高雄市銀髮族服務-居家長照機構</h2>
+      <div class="desc">高雄市政府社會局提供，列出居家式服務類長期照顧服務機構名稱、地址、經緯度、電話、服務項目與服務時段，可依行政區、服務時段篩選並於地圖上瀏覽分布。</div>
+      <div class="footline" id="kcg-homecare-count">資料筆數載入中…</div>
     </a>
   </div>
 </main>
@@ -136,9 +153,10 @@
   資料來源：<a href="https://ltcpap.mohw.gov.tw/publish/abc.csv" target="_blank" rel="noopener">衛生福利部 長照ABC據點</a> ·
   <a href="https://email.chcg.gov.tw/df/pufnpn5i5741iy9efkn2rrz5ga6uhb" target="_blank" rel="noopener">彰化縣政府社會處 巷弄長照站</a> ·
   <a href="https://opendata.tycg.gov.tw/api/dataset/536bb44b-b9f1-4336-ad26-34b9e25b3a68/resource/3d7e3b4c-8bc5-47c4-85a9-eec70415b189/download" target="_blank" rel="noopener">桃園市政府社會局 桃園市老人福利機構一覽表</a> ·
-  <a href="https://health.gov.taipei/News_Content.aspx?n=F0D7A5A451D2493C&sms=549F98C9E5942A2B&s=9138F86B8A3CBF69" target="_blank" rel="noopener">臺北市政府衛生局 長照專業服務特約單位</a><br />
+  <a href="https://health.gov.taipei/News_Content.aspx?n=F0D7A5A451D2493C&sms=549F98C9E5942A2B&s=9138F86B8A3CBF69" target="_blank" rel="noopener">臺北市政府衛生局 長照專業服務特約單位</a> ·
+  <a href="https://data.kcg.gov.tw/File/DirectDownload/59ac925f-10dd-42f7-a540-ab6c4218b93d" target="_blank" rel="noopener">高雄市政府社會局 銀髮族服務-居家長照機構</a><br />
   依「政府資料開放授權條款-第1版」釋出，本站僅作資料視覺化整理，實際內容以原始資料集為準。<br />
-  本頁面最後更新時間：2026年7月11日
+  <a href="changelog/index.html">網站更新紀錄</a>　|　本頁面最後更新時間：2026年7月12日
 </footer>
 <script>
 fetch("data/meta.json").then(r => r.json()).then(meta => {
@@ -147,6 +165,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   document.getElementById("tyc-elder-count").textContent = `共 ${meta.tycElder.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   if (meta.specialty) {
     document.getElementById("specialty-count").textContent = `共 ${meta.specialty.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.kcgHomecare) {
+    document.getElementById("kcg-homecare-count").textContent = `共 ${meta.kcgHomecare.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
 }).catch(() => {});
 </script>

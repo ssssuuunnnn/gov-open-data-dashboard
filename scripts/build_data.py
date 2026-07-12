@@ -12,6 +12,8 @@
    （此資料集**非開放資料 CSV/API**，臺北市政府衛生局僅以公告頁面附加 PDF 附件釋出，因此無法在
    本腳本自動下載，須將衛生局公告的最新 PDF 手動存成 data/source/tp-ltc-specialty-*.pdf 後才能
    重新解析。詳見 build_specialty() 與 README「更新資料」章節）
+5. 銀髮族服務-居家長照機構（高雄市）  https://data.kcg.gov.tw/File/DirectDownload/59ac925f-10dd-42f7-a540-ab6c4218b93d
+   （來源網址無 CORS 標頭，前端無法直接 fetch，改由本腳本於伺服器端下載）
 
 用法：
     python3 scripts/build_data.py
@@ -22,6 +24,8 @@
     data/tyc-elder.js   (window.TYC_ELDER_DATA，供前端以 <script> 直接載入，避免 fetch 時序問題)
     data/specialty.json
     data/specialty.js   (window.SPECIALTY_DATA，同上，供前端以 <script> 直接載入)
+    data/kcg-homecare.json
+    data/kcg-homecare.js  (window.KCG_HOMECARE_DATA，同上，供前端以 <script> 直接載入)
     data/meta.json  (資料更新時間等資訊)
 
 額外相依套件：
@@ -42,6 +46,7 @@ LANE_URL = "https://email.chcg.gov.tw/df/pufnpn5i5741iy9efkn2rrz5ga6uhb"
 TYC_ELDER_URL = "https://opendata.tycg.gov.tw/api/dataset/536bb44b-b9f1-4336-ad26-34b9e25b3a68/resource/3d7e3b4c-8bc5-47c4-85a9-eec70415b189/download"
 SPECIALTY_SOURCE_PAGE = "https://health.gov.taipei/News_Content.aspx?n=F0D7A5A451D2493C&sms=549F98C9E5942A2B&s=9138F86B8A3CBF69"
 SPECIALTY_PDF_GLOB = "data/source/tp-ltc-specialty-*.pdf"
+KCG_HOMECARE_URL = "https://data.kcg.gov.tw/File/DirectDownload/59ac925f-10dd-42f7-a540-ab6c4218b93d"
 
 # 服務碼中文全名（8 項專業服務能力，PDF 表頭欄位）
 CAPABILITY_LABELS = {
@@ -73,6 +78,9 @@ CATEGORY_LABELS = {
 }
 
 ADDR_RE = re.compile(r"^(..[市縣])(.*?[市區鄉鎮])")
+# 加上「後面不可緊接市/區/鄉/鎮」的否定預查，避免「前鎮區」被非貪婪比對誤判成「前鎮」
+# （原 ADDR_RE 在鄉鎮市區名稱中途含有這些字時會提前停止，例如「前鎮區」「平鎮區」）。
+ADDR_RE_STRICT = re.compile(r"^(..[市縣])(.*?[市區鄉鎮])(?![市區鄉鎮])")
 
 
 def fetch(url: str) -> str:
@@ -82,8 +90,8 @@ def fetch(url: str) -> str:
     return raw.decode("utf-8-sig", errors="replace")
 
 
-def parse_county_district(address: str, fallback_county: str = "") -> tuple[str, str]:
-    m = ADDR_RE.match(address or "")
+def parse_county_district(address: str, fallback_county: str = "", strict: bool = False) -> tuple[str, str]:
+    m = (ADDR_RE_STRICT if strict else ADDR_RE).match(address or "")
     if m:
         return m.group(1), m.group(2)
     # fallback: try to locate fallback_county text anywhere in the address
@@ -201,6 +209,44 @@ def build_tyc_elder():
     return {"fields": fields, "rows": records}
 
 
+def build_kcg_homecare():
+    """銀髮族服務-居家長照機構（高雄市政府社會局，來源網址無 CORS 標頭，改由本腳本下載）。
+
+    來源 CSV 欄位為 id、lat、lng、informaddress、hlink、informtel、servItem、servTime、
+    dataOrg、doOrg、text；經檢查 hlink／doOrg 全數為空字串，不具資訊價值故不收錄。
+    """
+    print("下載 銀髮族服務-居家長照機構 ...", file=sys.stderr)
+    text = fetch(KCG_HOMECARE_URL)
+    reader = csv.DictReader(io.StringIO(text))
+    records = []
+    for row in reader:
+        addr = (row.get("informaddress", "") or "").strip()
+        _county, district = parse_county_district(addr, strict=True)
+        # 電話欄位偶有跨行的多組號碼/分機備註，統一以 " / " 合併成單行
+        phone_lines = [p.strip() for p in (row.get("informtel", "") or "").splitlines() if p.strip()]
+        phone = " / ".join(phone_lines)
+        try:
+            lng = float(row.get("lng") or 0)
+            lat = float(row.get("lat") or 0)
+        except ValueError:
+            lng, lat = 0.0, 0.0
+        records.append([
+            row.get("id", "").strip(),            # 0 id
+            row.get("text", "").strip(),           # 1 name
+            district,                                # 2 district
+            addr,                                    # 3 address
+            phone,                                   # 4 phone
+            row.get("servItem", "").strip(),       # 5 servItem
+            row.get("servTime", "").strip(),       # 6 servTime
+            round(lng, 6),                           # 7 lng
+            round(lat, 6),                           # 8 lat
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "name", "district", "address", "phone",
+              "servItem", "servTime", "lng", "lat"]
+    return {"fields": fields, "rows": records}
+
+
 def _specialty_norm(s):
     """去除 PDF 儲存格內因欄寬過窄產生的換行，並還原被誤用的 CJK 部首符號為正常漢字。"""
     if not s:
@@ -280,6 +326,7 @@ def main():
     lane = build_lane()
     tyc_elder = build_tyc_elder()
     specialty = build_specialty()
+    kcg_homecare = build_kcg_homecare()
 
     with open("data/abc.json", "w", encoding="utf-8") as f:
         json.dump(abc, f, ensure_ascii=False, separators=(",", ":"))
@@ -293,6 +340,13 @@ def main():
         f.write("window.TYC_ELDER_DATA = ")
         json.dump(tyc_elder, f, ensure_ascii=False, separators=(",", ":"))
         f.write(";\n")
+    with open("data/kcg-homecare.json", "w", encoding="utf-8") as f:
+        json.dump(kcg_homecare, f, ensure_ascii=False, separators=(",", ":"))
+    # 同 tyc-elder，來源網址無 CORS 標頭，改用內嵌式 JS 版本（window.KCG_HOMECARE_DATA）。
+    with open("data/kcg-homecare.js", "w", encoding="utf-8") as f:
+        f.write("window.KCG_HOMECARE_DATA = ")
+        json.dump(kcg_homecare, f, ensure_ascii=False, separators=(",", ":"))
+        f.write(";\n")
 
     meta = {
         "generatedAt": datetime.now(timezone.utc).isoformat(),
@@ -302,6 +356,11 @@ def main():
             "count": len(tyc_elder["rows"]),
             "source": TYC_ELDER_URL,
             "title": "桃園市老人福利機構一覽表",
+        },
+        "kcgHomecare": {
+            "count": len(kcg_homecare["rows"]),
+            "source": KCG_HOMECARE_URL,
+            "title": "銀髮族服務-居家長照機構",
         },
     }
 

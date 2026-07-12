@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>高雄市銀髮族服務-居家長照機構地圖儀表板｜居家長照機構查詢</title>
+<meta name="description" content="高雄市政府社會局銀髮族服務-居家長照機構開放資料視覺化，約115筆居家式服務類長期照顧機構資料，提供地圖、行政區篩選、機構名稱與電話關鍵字搜尋與統計圖表。" />
+<meta name="keywords" content="居家長照機構,銀髮族服務,居家式服務類長期照顧,高雄市長照,長照地圖,長照資源查詢,高雄市政府社會局開放資料" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://www.sunkuo.cc/gov-open-data-dashboard/kcg-homecare/index.html" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="政府開放資料儀表板" />
+<meta property="og:locale" content="zh_TW" />
+<meta property="og:title" content="高雄市銀髮族服務-居家長照機構地圖儀表板" />
+<meta property="og:description" content="高雄市約115筆居家長照機構資料，提供地圖、篩選與統計圖表。" />
+<meta property="og:url" content="https://www.sunkuo.cc/gov-open-data-dashboard/kcg-homecare/index.html" />
+<meta property="og:image" content="https://www.sunkuo.cc/gov-open-data-dashboard/assets/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="高雄市銀髮族服務-居家長照機構地圖儀表板" />
+<meta name="twitter:description" content="高雄市約115筆居家長照機構資料，提供地圖、篩選與統計圖表。" />
+<meta name="twitter:image" content="https://www.sunkuo.cc/gov-open-data-dashboard/assets/og-image.png" />
+
+<link rel="icon" type="image/png" href="../assets/favicon.png" />
+<link rel="preconnect" href="https://unpkg.com" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+<link rel="stylesheet" href="../assets/style.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "銀髮族服務-居家長照機構",
+  "description": "高雄市政府社會局銀髮族服務-居家長照機構清冊，含GIS經緯度座標，涵蓋高雄市約115筆居家式服務類長期照顧服務機構的名稱、地址、電話、服務項目與服務時段等資訊。",
+  "url": "https://www.sunkuo.cc/gov-open-data-dashboard/kcg-homecare/index.html",
+  "license": "http://data.gov.tw/license",
+  "isAccessibleForFree": true,
+  "inLanguage": "zh-Hant-TW",
+  "keywords": ["長照", "居家長照機構", "銀髮族服務", "老年安養"],
+  "spatialCoverage": {
+    "@type": "Place",
+    "name": "高雄市"
+  },
+  "creator": {
+    "@type": "Organization",
+    "name": "高雄市政府社會局"
+  },
+  "distribution": {
+    "@type": "DataDownload",
+    "encodingFormat": "CSV",
+    "contentUrl": "https://data.kcg.gov.tw/File/DirectDownload/59ac925f-10dd-42f7-a540-ab6c4218b93d"
+  }
+}
+</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <h1>高雄市銀髮族服務-居家長照機構地圖儀表板</h1>
+    <div class="meta"><a href="../index.html" style="color:#fff">← 回首頁</a></div>
+  </div>
+  <div class="header-inner">
+    <nav>
+      提供機關：高雄市政府社會局　|　更新頻率：不定期更新　|　
+      <a href="https://data.kcg.gov.tw/File/DirectDownload/59ac925f-10dd-42f7-a540-ab6c4218b93d" target="_blank" rel="noopener">原始資料下載</a>
+    </nav>
+    <div class="meta" id="meta-updated"></div>
+  </div>
+</header>
+<noscript>
+  <p style="max-width:1280px;margin:16px auto;padding:0 24px;color:#b91c1c;">
+    本頁需要啟用 JavaScript 才能載入地圖、資料與圖表，請於瀏覽器設定中開啟 JavaScript 後重新整理頁面。
+  </p>
+</noscript>
+<main>
+  <div class="stat-grid" id="stat-grid">
+    <div class="stat-card"><div class="num" id="stat-total">-</div><div class="label">篩選後機構數</div></div>
+    <div class="stat-card"><div class="num" id="stat-districts">-</div><div class="label">涵蓋行政區數</div></div>
+    <div class="stat-card"><div class="num" id="stat-top">-</div><div class="label">機構最多行政區</div></div>
+    <div class="stat-card"><div class="num" id="stat-fixed-hours">-</div><div class="label">上午9點至下午5點服務</div></div>
+  </div>
+
+  <div class="card">
+    <div class="filters">
+      <div class="field">
+        <label>行政區</label>
+        <select id="f-district"><option value="">全部</option></select>
+      </div>
+      <div class="field">
+        <label>服務時段</label>
+        <select id="f-servtime"><option value="">全部</option></select>
+      </div>
+      <div class="field" style="flex:1;">
+        <label>關鍵字（機構名稱 / 電話 / 地址）</label>
+        <input type="text" id="f-keyword" placeholder="例如：機構名稱、電話號碼…" />
+      </div>
+      <button class="ghost" id="f-reset">重設篩選</button>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div id="map"></div>
+    </div>
+    <div class="card">
+      <div class="chart-box"><h3>各行政區機構數</h3><div class="chart-canvas-wrap"><canvas id="chart-district"></canvas></div></div>
+      <div class="chart-box"><h3>服務時段分布</h3><div class="chart-canvas-wrap"><canvas id="chart-servtime"></canvas></div></div>
+    </div>
+  </div>
+
+  <h2 class="section-title">資料明細</h2>
+  <div class="card">
+    <div id="table-container"></div>
+  </div>
+</main>
+<footer class="site-footer">
+  資料來源：<a href="https://data.kcg.gov.tw/File/DirectDownload/59ac925f-10dd-42f7-a540-ab6c4218b93d" target="_blank" rel="noopener">高雄市政府社會局 銀髮族服務-居家長照機構</a>（原始資料 CSV）。
+  依「政府資料開放授權條款-第1版」釋出。地址對應之行政區由本站依原始地址欄位解析產生，僅供參考，實際請以原始資料為準。
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="../assets/table.js"></script>
+<script src="../data/kcg-homecare.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
