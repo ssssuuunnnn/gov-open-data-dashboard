@@ -1,6 +1,6 @@
 # 政府開放資料儀表板
 
-以政府開放資料建置的靜態網站，整理五個長照/老人福利相關資料集為互動式儀表板，可直接部署於 GitHub Pages。
+以政府開放資料建置的靜態網站，整理六個長照/老人福利相關資料集為互動式儀表板，可直接部署於 GitHub Pages。
 
 ## 資料集
 
@@ -11,6 +11,7 @@
 | `tyc-elder/` | 桃園市老人福利機構一覽表 | 桃園市政府社會局 | 桃園市私立老人福利機構（養護/長照/安養）清單，提供鄉鎮市區／收容對象／評鑑成績／關鍵字篩選與統計圖表 |
 | `specialty/` | 臺北市長照專業服務特約單位 | 臺北市政府衛生局 | 臺北市居家護理所、物理／職能治療所等長照專業服務特約單位清單，標示是否提供8項專業服務能力（復能照護、營養照護、進食與吞嚥照護等），提供服務區域／服務能力／關鍵字篩選與統計圖表。**資料來源僅為公告頁面的 PDF 附件、非開放資料 CSV/API**，需人工下載更新，詳見下方「更新資料」說明 |
 | `kcg-homecare/` | 銀髮族服務-居家長照機構 | 高雄市政府社會局 | 高雄市居家式服務類長期照顧服務機構清單，含經緯度座標，於地圖上呈現，並提供行政區／服務時段／關鍵字篩選與統計圖表 |
+| `hsc-ltc/` | 新竹縣長照機構名冊 | 新竹縣政府社會處 | 新竹縣居家服務、日間照顧、小規模多機能、家庭托顧、團體家屋等長照機構清單，提供鄉鎮市區／服務類型／關鍵字篩選與統計圖表 |
 
 原始資料下載網址：
 - https://ltcpap.mohw.gov.tw/publish/abc.csv
@@ -18,13 +19,14 @@
 - https://opendata.tycg.gov.tw/api/dataset/536bb44b-b9f1-4336-ad26-34b9e25b3a68/resource/3d7e3b4c-8bc5-47c4-85a9-eec70415b189/download
 - https://health.gov.taipei/News_Content.aspx?n=F0D7A5A451D2493C&sms=549F98C9E5942A2B&s=9138F86B8A3CBF69　（公告頁面，PDF 需手動下載，見下方說明）
 - https://data.kcg.gov.tw/File/DirectDownload/59ac925f-10dd-42f7-a540-ab6c4218b93d
+- https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/283/b14a70a1-784c-4586-babf-ade99a7e8277.json
 
 授權方式：政府資料開放授權條款-第1版
 
 ## 網站架構
 
 ```
-index.html          首頁，連結至五個儀表板與更新紀錄頁
+index.html          首頁，連結至六個儀表板與更新紀錄頁
 changelog/index.html 網站更新紀錄頁（純靜態文字，供 SEO 與使用者查看網站更新歷程）
 abc/index.html       長照ABC據點地圖儀表板（Leaflet 地圖 + Chart.js 圖表 + 篩選表格）
 abc/app.js
@@ -36,6 +38,8 @@ specialty/index.html 臺北市長照專業服務特約單位儀表板（Chart.js
 specialty/app.js
 kcg-homecare/index.html 銀髮族服務-居家長照機構地圖儀表板（Leaflet 地圖 + Chart.js 圖表 + 篩選表格）
 kcg-homecare/app.js
+hsc-ltc/index.html   新竹縣長照機構名冊儀表板（Chart.js 圖表 + 篩選表格，無地圖）
+hsc-ltc/app.js
 assets/style.css     共用樣式
 assets/table.js       共用分頁表格元件
 data/abc.json         長照ABC據點資料（由 scripts/build_data.py 產生）
@@ -48,6 +52,9 @@ data/specialty.js     同上資料的內嵌 JS 版本（window.SPECIALTY_DATA）
                        <script> 標籤直接載入
 data/kcg-homecare.json 銀髮族服務-居家長照機構資料（由 scripts/build_data.py 產生）
 data/kcg-homecare.js   同上資料的內嵌 JS 版本（window.KCG_HOMECARE_DATA），供 kcg-homecare 頁面以
+                       <script> 標籤直接載入，因來源網址無 CORS 標頭，不透過 fetch()
+data/hsc-ltc.json     新竹縣長照機構名冊資料（由 scripts/build_data.py 產生）
+data/hsc-ltc.js       同上資料的內嵌 JS 版本（window.HSC_LTC_DATA），供 hsc-ltc 頁面以
                        <script> 標籤直接載入，因來源網址無 CORS 標頭，不透過 fetch()
 data/source/          長照專業服務特約單位來源 PDF（人工下載存放於此，供 build_data.py 解析）
 data/meta.json        資料筆數與更新時間
@@ -66,10 +73,10 @@ scripts/build_data.py 資料下載與轉換腳本
 python3 scripts/build_data.py
 ```
 
-會重新下載四份 CSV（長照ABC據點、巷弄長照站、桃園市老人福利機構一覽表、銀髮族服務-居家長照機構）並覆寫
-對應 `data/*.json`；同時嘗試解析 `data/source/tp-ltc-specialty-*.pdf`（若存在）產生
-`data/specialty.json`／`data/specialty.js`。建議依資料集「更新頻率」（每1月 / 每1年 / 不定期）定期執行
-後再部署。
+會重新下載五份 CSV/JSON（長照ABC據點、巷弄長照站、桃園市老人福利機構一覽表、銀髮族服務-居家長照機構、
+新竹縣長照機構名冊）並覆寫對應 `data/*.json`；同時嘗試解析 `data/source/tp-ltc-specialty-*.pdf`（若存在）
+產生 `data/specialty.json`／`data/specialty.js`。建議依資料集「更新頻率」（每1月 / 每1年 / 不定期）定期
+執行後再部署。
 
 執行前請先安裝 PDF 解析用的額外相依套件（僅 `specialty` 資料集需要，其他資料集僅用標準庫）：
 
@@ -125,4 +132,7 @@ python3 -m http.server 8000
   或多個行政區組合，前端篩選與統計圖表會將「全區」展開計入全部12個行政區。
 - 「銀髮族服務-居家長照機構」資料約115筆，來源網址無 CORS 標頭，改以內嵌式 JS（`window.KCG_HOMECARE_DATA`）
   載入；因筆數遠低於 abc 資料集，地圖不做抽樣上限處理，僅沿用 MarkerCluster 群聚顯示。
+- 「新竹縣長照機構名冊」資料約55筆，無經緯度座標，來源網址無 CORS 標頭，改以內嵌式 JS
+  （`window.HSC_LTC_DATA`）載入；原始資料地址欄位有「新鋪鎮」typo（新竹縣無此行政區），已於
+  `build_data.py` 自動修正為「新埔鎮」再解析鄉鎮市區。
 

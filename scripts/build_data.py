@@ -14,6 +14,9 @@
    重新解析。詳見 build_specialty() 與 README「更新資料」章節）
 5. 銀髮族服務-居家長照機構（高雄市）  https://data.kcg.gov.tw/File/DirectDownload/59ac925f-10dd-42f7-a540-ab6c4218b93d
    （來源網址無 CORS 標頭，前端無法直接 fetch，改由本腳本於伺服器端下載）
+6. 新竹縣長照機構名冊  https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/283/b14a70a1-784c-4586-babf-ade99a7e8277.json
+   （來源網址無 CORS 標頭，前端無法直接 fetch，改由本腳本於伺服器端下載；原始地址欄位有「新鋪鎮」
+   應為「新埔鎮」的錯字，本腳本會自動修正後再解析鄉鎮市區）
 
 用法：
     python3 scripts/build_data.py
@@ -26,6 +29,8 @@
     data/specialty.js   (window.SPECIALTY_DATA，同上，供前端以 <script> 直接載入)
     data/kcg-homecare.json
     data/kcg-homecare.js  (window.KCG_HOMECARE_DATA，同上，供前端以 <script> 直接載入)
+    data/hsc-ltc.json
+    data/hsc-ltc.js       (window.HSC_LTC_DATA，同上，供前端以 <script> 直接載入)
     data/meta.json  (資料更新時間等資訊)
 
 額外相依套件：
@@ -47,6 +52,7 @@ TYC_ELDER_URL = "https://opendata.tycg.gov.tw/api/dataset/536bb44b-b9f1-4336-ad2
 SPECIALTY_SOURCE_PAGE = "https://health.gov.taipei/News_Content.aspx?n=F0D7A5A451D2493C&sms=549F98C9E5942A2B&s=9138F86B8A3CBF69"
 SPECIALTY_PDF_GLOB = "data/source/tp-ltc-specialty-*.pdf"
 KCG_HOMECARE_URL = "https://data.kcg.gov.tw/File/DirectDownload/59ac925f-10dd-42f7-a540-ab6c4218b93d"
+HSC_LTC_URL = "https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/283/b14a70a1-784c-4586-babf-ade99a7e8277.json"
 
 # 服務碼中文全名（8 項專業服務能力，PDF 表頭欄位）
 CAPABILITY_LABELS = {
@@ -247,6 +253,37 @@ def build_kcg_homecare():
     return {"fields": fields, "rows": records}
 
 
+def build_hsc_ltc():
+    """新竹縣長照機構名冊（新竹縣政府社會處，來源網址無 CORS 標頭，改由本腳本下載）。
+
+    來源為 JSON 陣列，欄位為編號、服務類型、機構名稱、郵遞區號、地址、電話、分機；
+    原始地址欄位有「新鋪鎮」應為「新埔鎮」的錯字（新竹縣僅有「新埔鎮」），此處先修正後再解析鄉鎮市區。
+    """
+    print("下載 新竹縣長照機構名冊 ...", file=sys.stderr)
+    text = fetch(HSC_LTC_URL)
+    rows_in = json.loads(text)
+    records = []
+    for row in rows_in:
+        addr = (row.get("地址", "") or "").strip().replace("新鋪鎮", "新埔鎮")
+        _county, district = parse_county_district(addr)
+        phone = (row.get("電話", "") or "").strip()
+        ext = (row.get("分機", "") or "").strip()
+        if ext:
+            phone = f"{phone} 轉 {ext}"
+        records.append([
+            row.get("編號", "").strip(),           # 0 id
+            row.get("服務類型", "").strip(),       # 1 servType
+            row.get("機構名稱", "").strip(),       # 2 name
+            row.get("郵遞區號", "").strip(),       # 3 zipcode
+            district,                                 # 4 district
+            addr,                                     # 5 address
+            phone,                                    # 6 phone
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "servType", "name", "zipcode", "district", "address", "phone"]
+    return {"fields": fields, "rows": records}
+
+
 def _specialty_norm(s):
     """去除 PDF 儲存格內因欄寬過窄產生的換行，並還原被誤用的 CJK 部首符號為正常漢字。"""
     if not s:
@@ -327,6 +364,7 @@ def main():
     tyc_elder = build_tyc_elder()
     specialty = build_specialty()
     kcg_homecare = build_kcg_homecare()
+    hsc_ltc = build_hsc_ltc()
 
     with open("data/abc.json", "w", encoding="utf-8") as f:
         json.dump(abc, f, ensure_ascii=False, separators=(",", ":"))
@@ -347,6 +385,13 @@ def main():
         f.write("window.KCG_HOMECARE_DATA = ")
         json.dump(kcg_homecare, f, ensure_ascii=False, separators=(",", ":"))
         f.write(";\n")
+    with open("data/hsc-ltc.json", "w", encoding="utf-8") as f:
+        json.dump(hsc_ltc, f, ensure_ascii=False, separators=(",", ":"))
+    # 同 tyc-elder，來源網址無 CORS 標頭，改用內嵌式 JS 版本（window.HSC_LTC_DATA）。
+    with open("data/hsc-ltc.js", "w", encoding="utf-8") as f:
+        f.write("window.HSC_LTC_DATA = ")
+        json.dump(hsc_ltc, f, ensure_ascii=False, separators=(",", ":"))
+        f.write(";\n")
 
     meta = {
         "generatedAt": datetime.now(timezone.utc).isoformat(),
@@ -361,6 +406,11 @@ def main():
             "count": len(kcg_homecare["rows"]),
             "source": KCG_HOMECARE_URL,
             "title": "銀髮族服務-居家長照機構",
+        },
+        "hscLtc": {
+            "count": len(hsc_ltc["rows"]),
+            "source": HSC_LTC_URL,
+            "title": "新竹縣長照機構名冊",
         },
     }
 

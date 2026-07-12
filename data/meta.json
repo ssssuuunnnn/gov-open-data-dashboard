@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-12T00:00:30.191349+00:00",
+  "generatedAt": "2026-07-12T00:43:12.239679+00:00",
   "abc": {
     "count": 31729,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -19,6 +19,11 @@
     "count": 115,
     "source": "https://data.kcg.gov.tw/File/DirectDownload/59ac925f-10dd-42f7-a540-ab6c4218b93d",
     "title": "銀髮族服務-居家長照機構"
+  },
+  "hscLtc": {
+    "count": 55,
+    "source": "https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/283/b14a70a1-784c-4586-babf-ade99a7e8277.json",
+    "title": "新竹縣長照機構名冊"
   },
   "specialty": {
     "count": 75,
