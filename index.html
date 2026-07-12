@@ -108,6 +108,17 @@
         "@type": "Organization",
         "name": "新竹縣政府社會處"
       }
+    },
+    {
+      "@type": "Dataset",
+      "name": "宜蘭縣立案老人長期照顧及安養機構名冊",
+      "description": "宜蘭縣政府公告之立案老人長期照顧及安養機構名冊，收錄約39筆機構的編號、機構名稱、負責人、電話、傳真、地址等資訊，機構類型（養護型/長期照護型等）由機構名稱解析而來。",
+      "url": "https://www.sunkuo.cc/gov-open-data-dashboard/yl-ltc/index.html",
+      "license": "http://data.gov.tw/license",
+      "creator": {
+        "@type": "Organization",
+        "name": "宜蘭縣政府"
+      }
     }
   ]
 }
@@ -126,7 +137,7 @@
   </p>
 </noscript>
 <main>
-  <p>本網站整理衛生福利部「長照ABC據點」、彰化縣政府社會處「巷弄長照站」、桃園市政府社會局「桃園市老人福利機構一覽表」、臺北市政府衛生局「長照專業服務特約單位」、高雄市政府社會局「銀髮族服務-居家長照機構」與新竹縣政府社會處「新竹縣長照機構名冊」公開之長期照顧相關資料集，提供地圖、統計圖表與可篩選查詢的資料表，方便使用者快速瀏覽與比較各地長照資源分布。</p>
+  <p>本網站整理衛生福利部「長照ABC據點」、彰化縣政府社會處「巷弄長照站」、桃園市政府社會局「桃園市老人福利機構一覽表」、臺北市政府衛生局「長照專業服務特約單位」、高雄市政府社會局「銀髮族服務-居家長照機構」、新竹縣政府社會處「新竹縣長照機構名冊」與宜蘭縣政府「立案老人長期照顧及安養機構名冊」公開之長期照顧相關資料集，提供地圖、統計圖表與可篩選查詢的資料表，方便使用者快速瀏覽與比較各地長照資源分布。</p>
   <div class="home-grid">
     <a class="home-card" href="abc/index.html">
       <span class="tag">全國 · 含地圖座標</span>
@@ -164,6 +175,12 @@
       <div class="desc">新竹縣政府社會處提供，列出居家服務、日間照顧、小規模多機能、家庭托顧、團體家屋等長照機構名稱、地址與電話，可依鄉鎮市區、服務類型篩選並瀏覽統計圖表。</div>
       <div class="footline" id="hsc-ltc-count">資料筆數載入中…</div>
     </a>
+    <a class="home-card" href="yl-ltc/index.html">
+      <span class="tag">宜蘭縣</span>
+      <h2>宜蘭縣立案老人長期照顧及安養機構名冊</h2>
+      <div class="desc">宜蘭縣政府提供，列出養護型、長期照護型等立案老人長期照顧及安養機構名稱、負責人、地址與電話，可依鄉鎮市區、機構類型篩選並瀏覽統計圖表。</div>
+      <div class="footline" id="yl-ltc-count">資料筆數載入中…</div>
+    </a>
   </div>
 </main>
 <footer class="site-footer">
@@ -172,7 +189,8 @@
   <a href="https://opendata.tycg.gov.tw/api/dataset/536bb44b-b9f1-4336-ad26-34b9e25b3a68/resource/3d7e3b4c-8bc5-47c4-85a9-eec70415b189/download" target="_blank" rel="noopener">桃園市政府社會局 桃園市老人福利機構一覽表</a> ·
   <a href="https://health.gov.taipei/News_Content.aspx?n=F0D7A5A451D2493C&sms=549F98C9E5942A2B&s=9138F86B8A3CBF69" target="_blank" rel="noopener">臺北市政府衛生局 長照專業服務特約單位</a> ·
   <a href="https://data.kcg.gov.tw/File/DirectDownload/59ac925f-10dd-42f7-a540-ab6c4218b93d" target="_blank" rel="noopener">高雄市政府社會局 銀髮族服務-居家長照機構</a> ·
-  <a href="https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/283/b14a70a1-784c-4586-babf-ade99a7e8277.json" target="_blank" rel="noopener">新竹縣政府社會處 新竹縣長照機構名冊</a><br />
+  <a href="https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/283/b14a70a1-784c-4586-babf-ade99a7e8277.json" target="_blank" rel="noopener">新竹縣政府社會處 新竹縣長照機構名冊</a> ·
+  <a href="https://opendataap2.e-land.gov.tw/./resource/files/2019-12-03/a91e966d8b5b07d1e9bb8c3a767e9d1f.json" target="_blank" rel="noopener">宜蘭縣政府 立案老人長期照顧及安養機構名冊</a><br />
   依「政府資料開放授權條款-第1版」釋出，本站僅作資料視覺化整理，實際內容以原始資料集為準。<br />
   <a href="changelog/index.html">網站更新紀錄</a>　|　本頁面最後更新時間：2026年7月13日
 </footer>
@@ -189,6 +207,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.hscLtc) {
     document.getElementById("hsc-ltc-count").textContent = `共 ${meta.hscLtc.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.ylLtc) {
+    document.getElementById("yl-ltc-count").textContent = `共 ${meta.ylLtc.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
 }).catch(() => {});
 </script>

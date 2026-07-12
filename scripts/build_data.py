@@ -17,6 +17,10 @@
 6. 新竹縣長照機構名冊  https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/283/b14a70a1-784c-4586-babf-ade99a7e8277.json
    （來源網址無 CORS 標頭，前端無法直接 fetch，改由本腳本於伺服器端下載；原始地址欄位有「新鋪鎮」
    應為「新埔鎮」的錯字，本腳本會自動修正後再解析鄉鎮市區）
+7. 宜蘭縣立案老人長期照顧及安養機構名冊  https://opendataap2.e-land.gov.tw/./resource/files/2019-12-03/a91e966d8b5b07d1e9bb8c3a767e9d1f.json
+   （來源網址無 CORS 標頭，前端無法直接 fetch，改由本腳本於伺服器端下載；部分地址欄位缺少「宜蘭縣」
+   前綴，本腳本會嘗試依已知鄉鎮市區名稱補上前綴後再解析；機構類型由機構名稱後綴「(養護型)」等括號
+   文字解析而來，無標示者歸類為「未標示」）
 
 用法：
     python3 scripts/build_data.py
@@ -31,6 +35,8 @@
     data/kcg-homecare.js  (window.KCG_HOMECARE_DATA，同上，供前端以 <script> 直接載入)
     data/hsc-ltc.json
     data/hsc-ltc.js       (window.HSC_LTC_DATA，同上，供前端以 <script> 直接載入)
+    data/yl-ltc.json
+    data/yl-ltc.js        (window.YL_LTC_DATA，同上，供前端以 <script> 直接載入)
     data/meta.json  (資料更新時間等資訊)
 
 額外相依套件：
@@ -53,6 +59,14 @@ SPECIALTY_SOURCE_PAGE = "https://health.gov.taipei/News_Content.aspx?n=F0D7A5A45
 SPECIALTY_PDF_GLOB = "data/source/tp-ltc-specialty-*.pdf"
 KCG_HOMECARE_URL = "https://data.kcg.gov.tw/File/DirectDownload/59ac925f-10dd-42f7-a540-ab6c4218b93d"
 HSC_LTC_URL = "https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/283/b14a70a1-784c-4586-babf-ade99a7e8277.json"
+YL_LTC_URL = "https://opendataap2.e-land.gov.tw/./resource/files/2019-12-03/a91e966d8b5b07d1e9bb8c3a767e9d1f.json"
+
+# 宜蘭縣行政區清單，用於補上原始地址欄位缺漏的「宜蘭縣」前綴（部分機構地址僅寫鄉鎮市區名，
+# 未包含縣名，例如「羅東鎮站前南路11號」）。
+YL_DISTRICTS = [
+    "宜蘭市", "羅東鎮", "蘇澳鎮", "頭城鎮", "礁溪鄉", "壯圍鄉", "員山鄉",
+    "五結鄉", "冬山鄉", "三星鄉", "大同鄉", "南澳鄉",
+]
 
 # 服務碼中文全名（8 項專業服務能力，PDF 表頭欄位）
 CAPABILITY_LABELS = {
@@ -284,6 +298,44 @@ def build_hsc_ltc():
     return {"fields": fields, "rows": records}
 
 
+def build_yl_ltc():
+    """宜蘭縣立案老人長期照顧及安養機構名冊（宜蘭縣政府，來源網址無 CORS 標頭，改由本腳本下載）。
+
+    來源為 JSON 陣列，欄位為編號、機構名稱、負責人、電話、傳真、地址。
+    部分地址欄位缺少「宜蘭縣」前綴，先嘗試依已知鄉鎮市區名稱補上前綴後再解析。
+    機構類型由機構名稱結尾括號內文字解析（如「(養護型)」），無標示者歸類為「未標示」。
+    """
+    print("下載 宜蘭縣立案老人長期照顧及安養機構名冊 ...", file=sys.stderr)
+    text = fetch(YL_LTC_URL)
+    rows_in = json.loads(text)
+    type_re = re.compile(r"[（(]([^）)]+)[）)]\s*$")
+    records = []
+    for row in rows_in:
+        addr = (row.get("地址", "") or "").strip()
+        if not addr.startswith("宜蘭"):
+            for d in YL_DISTRICTS:
+                if addr.startswith(d):
+                    addr = "宜蘭縣" + addr
+                    break
+        _county, district = parse_county_district(addr, fallback_county="宜蘭縣")
+        name = row.get("機構名稱", "").strip()
+        m = type_re.search(name)
+        inst_type = m.group(1).strip() if m else "未標示"
+        records.append([
+            row.get("編號", "").strip(),   # 0 id
+            name,                              # 1 name
+            inst_type,                         # 2 type
+            row.get("負責人", "").strip(),  # 3 owner
+            district,                          # 4 district
+            addr,                              # 5 address
+            row.get("電話", "").strip(),    # 6 phone
+            row.get("傳真", "").strip(),    # 7 fax
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "name", "type", "owner", "district", "address", "phone", "fax"]
+    return {"fields": fields, "rows": records}
+
+
 def _specialty_norm(s):
     """去除 PDF 儲存格內因欄寬過窄產生的換行，並還原被誤用的 CJK 部首符號為正常漢字。"""
     if not s:
@@ -365,6 +417,7 @@ def main():
     specialty = build_specialty()
     kcg_homecare = build_kcg_homecare()
     hsc_ltc = build_hsc_ltc()
+    yl_ltc = build_yl_ltc()
 
     with open("data/abc.json", "w", encoding="utf-8") as f:
         json.dump(abc, f, ensure_ascii=False, separators=(",", ":"))
@@ -392,6 +445,13 @@ def main():
         f.write("window.HSC_LTC_DATA = ")
         json.dump(hsc_ltc, f, ensure_ascii=False, separators=(",", ":"))
         f.write(";\n")
+    with open("data/yl-ltc.json", "w", encoding="utf-8") as f:
+        json.dump(yl_ltc, f, ensure_ascii=False, separators=(",", ":"))
+    # 同 tyc-elder，來源網址無 CORS 標頭，改用內嵌式 JS 版本（window.YL_LTC_DATA）。
+    with open("data/yl-ltc.js", "w", encoding="utf-8") as f:
+        f.write("window.YL_LTC_DATA = ")
+        json.dump(yl_ltc, f, ensure_ascii=False, separators=(",", ":"))
+        f.write(";\n")
 
     meta = {
         "generatedAt": datetime.now(timezone.utc).isoformat(),
@@ -411,6 +471,11 @@ def main():
             "count": len(hsc_ltc["rows"]),
             "source": HSC_LTC_URL,
             "title": "新竹縣長照機構名冊",
+        },
+        "ylLtc": {
+            "count": len(yl_ltc["rows"]),
+            "source": YL_LTC_URL,
+            "title": "宜蘭縣立案老人長期照顧及安養機構名冊",
         },
     }
 

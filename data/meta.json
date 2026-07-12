@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-12T00:43:12.239679+00:00",
+  "generatedAt": "2026-07-12T01:12:20.859727+00:00",
   "abc": {
     "count": 31729,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -24,6 +24,11 @@
     "count": 55,
     "source": "https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/283/b14a70a1-784c-4586-babf-ade99a7e8277.json",
     "title": "新竹縣長照機構名冊"
+  },
+  "ylLtc": {
+    "count": 39,
+    "source": "https://opendataap2.e-land.gov.tw/./resource/files/2019-12-03/a91e966d8b5b07d1e9bb8c3a767e9d1f.json",
+    "title": "宜蘭縣立案老人長期照顧及安養機構名冊"
   },
   "specialty": {
     "count": 75,
