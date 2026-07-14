@@ -34,5 +34,10 @@
     "count": 75,
     "source": "https://health.gov.taipei/News_Content.aspx?n=F0D7A5A451D2493C&sms=549F98C9E5942A2B&s=9138F86B8A3CBF69",
     "title": "臺北市長照專業服務特約單位"
+  },
+  "hccgElder": {
+    "count": 8,
+    "source": "https://odws.hccg.gov.tw/001/Upload/25/opendataback/9059/33/b253c75b-9e30-42d5-81bd-eb1f37e74af2.json",
+    "title": "新竹市老人福利機構一覽表"
   }
 }

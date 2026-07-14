@@ -21,6 +21,11 @@
    （來源網址無 CORS 標頭，前端無法直接 fetch，改由本腳本於伺服器端下載；部分地址欄位缺少「宜蘭縣」
    前綴，本腳本會嘗試依已知鄉鎮市區名稱補上前綴後再解析；機構類型由機構名稱後綴「(養護型)」等括號
    文字解析而來，無標示者歸類為「未標示」）
+8. 新竹市老人福利機構一覽表（DCAT dataset https://data.gov.tw/dataset/8572）
+   https://odws.hccg.gov.tw/001/Upload/25/opendataback/9059/33/b253c75b-9e30-42d5-81bd-eb1f37e74af2.json
+   （來源網址無 CORS 標頭，前端無法直接 fetch，改由本腳本於伺服器端下載；地址已含完整「新竹市OO區」
+   字首可直接解析行政區，且原始資料已內建經緯度不需地理編碼；「編號」欄位有跳號、「立案日期」欄位
+   格式不一致，屬原始資料狀態）
 
 用法：
     python3 scripts/build_data.py
@@ -37,6 +42,8 @@
     data/hsc-ltc.js       (window.HSC_LTC_DATA，同上，供前端以 <script> 直接載入)
     data/yl-ltc.json
     data/yl-ltc.js        (window.YL_LTC_DATA，同上，供前端以 <script> 直接載入)
+    data/hccg-elder.json
+    data/hccg-elder.js    (window.HCCG_ELDER_DATA，同上，供前端以 <script> 直接載入)
     data/meta.json  (資料更新時間等資訊)
 
 額外相依套件：
@@ -60,6 +67,7 @@ SPECIALTY_PDF_GLOB = "data/source/tp-ltc-specialty-*.pdf"
 KCG_HOMECARE_URL = "https://data.kcg.gov.tw/File/DirectDownload/59ac925f-10dd-42f7-a540-ab6c4218b93d"
 HSC_LTC_URL = "https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/283/b14a70a1-784c-4586-babf-ade99a7e8277.json"
 YL_LTC_URL = "https://opendataap2.e-land.gov.tw/./resource/files/2019-12-03/a91e966d8b5b07d1e9bb8c3a767e9d1f.json"
+HCCG_ELDER_URL = "https://odws.hccg.gov.tw/001/Upload/25/opendataback/9059/33/b253c75b-9e30-42d5-81bd-eb1f37e74af2.json"
 
 # 宜蘭縣行政區清單，用於補上原始地址欄位缺漏的「宜蘭縣」前綴（部分機構地址僅寫鄉鎮市區名，
 # 未包含縣名，例如「羅東鎮站前南路11號」）。
@@ -336,6 +344,51 @@ def build_yl_ltc():
     return {"fields": fields, "rows": records}
 
 
+def build_hccg_elder():
+    """新竹市老人福利機構一覽表（新竹市政府社會處，DCAT dataset id 67739）。
+
+    來源：https://data.gov.tw/dataset/8572 提供 xlsx/csv/xml/json 四種同內容格式，
+    本腳本選用 json（downloadURL 見 HCCG_ELDER_URL），內容為物件陣列，中文欄位鍵值。
+    原始欄位：編號、屬性、機構名稱、負責人、郵遞區號、地址、經度、緯度、電話、收容對象、
+    核定收容人數、立案日期。地址已含完整「新竹市OO區」字首，可直接用 parse_county_district()
+    解析行政區；經緯度已內建於資料，不需另行地理編碼。
+    已知資料品質問題：「編號」欄位有跳號（例如缺 7 號），為原始資料狀態非解析錯誤；
+    「立案日期」欄位格式不一致（部分為民國年 yy.mm.dd，部分夾雜「設立/變更負責人」等敘述文字），
+    前端僅原文顯示，不做日期排序/運算。
+    """
+    print("下載 新竹市老人福利機構一覽表 ...", file=sys.stderr)
+    text = fetch(HCCG_ELDER_URL)
+    rows_in = json.loads(text)
+    records = []
+    for row in rows_in:
+        addr = (row.get("地址", "") or "").strip()
+        _county, district = parse_county_district(addr, fallback_county="新竹市")
+        try:
+            lng = float(row.get("經度") or 0)
+            lat = float(row.get("緯度") or 0)
+        except ValueError:
+            lng, lat = 0.0, 0.0
+        records.append([
+            row.get("編號", "").strip(),           # 0 id
+            row.get("屬性", "").strip(),           # 1 attr
+            row.get("機構名稱", "").strip(),       # 2 name
+            row.get("負責人", "").strip(),         # 3 owner
+            row.get("郵遞區號", "").strip(),       # 4 zipcode
+            district,                                 # 5 district
+            addr,                                     # 6 address
+            round(lng, 6),                             # 7 lng
+            round(lat, 6),                             # 8 lat
+            row.get("電話", "").strip(),           # 9 phone
+            row.get("收容對象", "").strip(),       # 10 target
+            _to_int(row.get("核定收容人數")),      # 11 capacity
+            row.get("立案日期", "").strip(),       # 12 approvedDate
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "attr", "name", "owner", "zipcode", "district", "address",
+              "lng", "lat", "phone", "target", "capacity", "approvedDate"]
+    return {"fields": fields, "rows": records}
+
+
 def _specialty_norm(s):
     """去除 PDF 儲存格內因欄寬過窄產生的換行，並還原被誤用的 CJK 部首符號為正常漢字。"""
     if not s:
@@ -418,6 +471,7 @@ def main():
     kcg_homecare = build_kcg_homecare()
     hsc_ltc = build_hsc_ltc()
     yl_ltc = build_yl_ltc()
+    hccg_elder = build_hccg_elder()
 
     with open("data/abc.json", "w", encoding="utf-8") as f:
         json.dump(abc, f, ensure_ascii=False, separators=(",", ":"))
@@ -452,6 +506,13 @@ def main():
         f.write("window.YL_LTC_DATA = ")
         json.dump(yl_ltc, f, ensure_ascii=False, separators=(",", ":"))
         f.write(";\n")
+    with open("data/hccg-elder.json", "w", encoding="utf-8") as f:
+        json.dump(hccg_elder, f, ensure_ascii=False, separators=(",", ":"))
+    # 同 tyc-elder，來源網址無 CORS 標頭，改用內嵌式 JS 版本（window.HCCG_ELDER_DATA）。
+    with open("data/hccg-elder.js", "w", encoding="utf-8") as f:
+        f.write("window.HCCG_ELDER_DATA = ")
+        json.dump(hccg_elder, f, ensure_ascii=False, separators=(",", ":"))
+        f.write(";\n")
 
     meta = {
         "generatedAt": datetime.now(timezone.utc).isoformat(),
@@ -476,6 +537,11 @@ def main():
             "count": len(yl_ltc["rows"]),
             "source": YL_LTC_URL,
             "title": "宜蘭縣立案老人長期照顧及安養機構名冊",
+        },
+        "hccgElder": {
+            "count": len(hccg_elder["rows"]),
+            "source": HCCG_ELDER_URL,
+            "title": "新竹市老人福利機構一覽表",
         },
     }
 
