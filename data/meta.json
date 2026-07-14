@@ -39,5 +39,10 @@
     "count": 8,
     "source": "https://odws.hccg.gov.tw/001/Upload/25/opendataback/9059/33/b253c75b-9e30-42d5-81bd-eb1f37e74af2.json",
     "title": "新竹市老人福利機構一覽表"
+  },
+  "tnHomecareNursing": {
+    "count": 36,
+    "source": "https://data.tainan.gov.tw/File/ResourceCsvDownload/4de27549-893c-4e8e-8644-538a35076607",
+    "title": "臺南市居家護理機構"
   }
 }

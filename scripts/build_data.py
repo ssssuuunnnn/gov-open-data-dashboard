@@ -26,6 +26,12 @@
    （來源網址無 CORS 標頭，前端無法直接 fetch，改由本腳本於伺服器端下載；地址已含完整「新竹市OO區」
    字首可直接解析行政區，且原始資料已內建經緯度不需地理編碼；「編號」欄位有跳號、「立案日期」欄位
    格式不一致，屬原始資料狀態）
+9. 臺南市居家護理機構（DCAT dataset https://data.gov.tw/dataset/7626）
+   https://data.tainan.gov.tw/File/ResourceCsvDownload/4de27549-893c-4e8e-8644-538a35076607
+   （此 DCAT 罕見列出104~114年度共9個版本 distribution，欄位隨年度不同，本腳本選用114年度：
+   機構名稱/機構代碼/行政區/地址/負責人/電話/分機，無經緯度座標但地址已含完整「臺南市OO區」字首可
+   直接解析行政區；原始「行政區」欄位為數字代碼未提供對照表，本腳本改用地址解析取代；來源網址無
+   CORS 標頭，改由本腳本於伺服器端下載，詳見 build_tn_homecare_nursing() 選用理由說明）
 
 用法：
     python3 scripts/build_data.py
@@ -44,6 +50,8 @@
     data/yl-ltc.js        (window.YL_LTC_DATA，同上，供前端以 <script> 直接載入)
     data/hccg-elder.json
     data/hccg-elder.js    (window.HCCG_ELDER_DATA，同上，供前端以 <script> 直接載入)
+    data/tn-homecare-nursing.json
+    data/tn-homecare-nursing.js  (window.TN_HOMECARE_NURSING_DATA，同上，供前端以 <script> 直接載入)
     data/meta.json  (資料更新時間等資訊)
 
 額外相依套件：
@@ -68,6 +76,7 @@ KCG_HOMECARE_URL = "https://data.kcg.gov.tw/File/DirectDownload/59ac925f-10dd-42
 HSC_LTC_URL = "https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/283/b14a70a1-784c-4586-babf-ade99a7e8277.json"
 YL_LTC_URL = "https://opendataap2.e-land.gov.tw/./resource/files/2019-12-03/a91e966d8b5b07d1e9bb8c3a767e9d1f.json"
 HCCG_ELDER_URL = "https://odws.hccg.gov.tw/001/Upload/25/opendataback/9059/33/b253c75b-9e30-42d5-81bd-eb1f37e74af2.json"
+TN_HOMECARE_NURSING_URL = "https://data.tainan.gov.tw/File/ResourceCsvDownload/4de27549-893c-4e8e-8644-538a35076607"
 
 # 宜蘭縣行政區清單，用於補上原始地址欄位缺漏的「宜蘭縣」前綴（部分機構地址僅寫鄉鎮市區名，
 # 未包含縣名，例如「羅東鎮站前南路11號」）。
@@ -389,6 +398,48 @@ def build_hccg_elder():
     return {"fields": fields, "rows": records}
 
 
+def build_tn_homecare_nursing():
+    """臺南市居家護理機構（臺南市政府衛生局，DCAT dataset https://data.gov.tw/dataset/7626）。
+
+    此 DCAT 罕見列出歷年 9 個版本的 distribution（104~114年度），欄位隨年度不同：
+      104~106年度：機構名稱/機構代碼/地址/負責人/電話/經度/緯度（有座標但機構數少，缺官田/學甲/
+        歸仁等多個行政區機構，資料已過時）
+      107~109年度：機構名稱/機構代碼/地址/負責人/電話（無行政區、無座標）
+      110年度：改用縣市代碼/行政區域代碼/村里/街路門牌等結構化欄位（格式與其他年度不相容）
+      113~114年度：機構名稱/機構代碼/行政區/地址/負責人/電話/分機（無座標，資料最新最完整）
+    本腳本選用 **114年度** CSV 下載網址（TN_HOMECARE_NURSING_URL），理由：資料最新且涵蓋臺南市
+    全部行政區機構（36筆），雖無經緯度座標但地址已含完整「臺南市OO區」字首可直接解析行政區，
+    不需要地理編碼；114年度原始「行政區」欄位為數字代碼（如 67000320），未提供對照表，因此不採用
+    該欄位，改用 parse_county_district() 從地址欄位解析。
+    「電話」與「分機」兩欄位常互斥出現（例如電話留空、分機欄位填入手機號碼），本腳本合併為單一
+    聯絡電話欄位：若電話與分機皆有值則以「電話 轉 分機」呈現，否則兩者取其一。
+    """
+    print("下載 臺南市居家護理機構 ...", file=sys.stderr)
+    text = fetch(TN_HOMECARE_NURSING_URL)
+    reader = csv.DictReader(io.StringIO(text))
+    records = []
+    for row in reader:
+        addr = (row.get("地址", "") or "").strip()
+        _county, district = parse_county_district(addr, fallback_county="臺南市")
+        phone = (row.get("電話", "") or "").strip()
+        ext = (row.get("分機", "") or "").strip()
+        if phone and ext:
+            phone = f"{phone} 轉 {ext}"
+        elif not phone and ext:
+            phone = ext
+        records.append([
+            row.get("機構代碼", "").strip(),   # 0 code
+            row.get("機構名稱", "").strip(),   # 1 name
+            district,                             # 2 district
+            addr,                                 # 3 address
+            row.get("負責人", "").strip(),     # 4 owner
+            phone,                                 # 5 phone
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["code", "name", "district", "address", "owner", "phone"]
+    return {"fields": fields, "rows": records}
+
+
 def _specialty_norm(s):
     """去除 PDF 儲存格內因欄寬過窄產生的換行，並還原被誤用的 CJK 部首符號為正常漢字。"""
     if not s:
@@ -472,6 +523,7 @@ def main():
     hsc_ltc = build_hsc_ltc()
     yl_ltc = build_yl_ltc()
     hccg_elder = build_hccg_elder()
+    tn_homecare_nursing = build_tn_homecare_nursing()
 
     with open("data/abc.json", "w", encoding="utf-8") as f:
         json.dump(abc, f, ensure_ascii=False, separators=(",", ":"))
@@ -513,6 +565,13 @@ def main():
         f.write("window.HCCG_ELDER_DATA = ")
         json.dump(hccg_elder, f, ensure_ascii=False, separators=(",", ":"))
         f.write(";\n")
+    with open("data/tn-homecare-nursing.json", "w", encoding="utf-8") as f:
+        json.dump(tn_homecare_nursing, f, ensure_ascii=False, separators=(",", ":"))
+    # 同 tyc-elder，來源網址無 CORS 標頭，改用內嵌式 JS 版本（window.TN_HOMECARE_NURSING_DATA）。
+    with open("data/tn-homecare-nursing.js", "w", encoding="utf-8") as f:
+        f.write("window.TN_HOMECARE_NURSING_DATA = ")
+        json.dump(tn_homecare_nursing, f, ensure_ascii=False, separators=(",", ":"))
+        f.write(";\n")
 
     meta = {
         "generatedAt": datetime.now(timezone.utc).isoformat(),
@@ -542,6 +601,11 @@ def main():
             "count": len(hccg_elder["rows"]),
             "source": HCCG_ELDER_URL,
             "title": "新竹市老人福利機構一覽表",
+        },
+        "tnHomecareNursing": {
+            "count": len(tn_homecare_nursing["rows"]),
+            "source": TN_HOMECARE_NURSING_URL,
+            "title": "臺南市居家護理機構",
         },
     }
 
