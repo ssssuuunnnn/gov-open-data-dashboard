@@ -138,67 +138,89 @@
 </noscript>
 <main>
   <p>因為台灣社會已經邁向高齡社會，對於長照的需求只會更高，因為作者身邊也曾遇到類似的需求，所以希望這個頁面的資訊可以幫助到大家，若資訊有落後可寄email至<a href="mailto:sun889999@gmail.com">sun889999@gmail.com</a>。</p>
-  <div class="home-grid">
-    <a class="home-card" href="abc/index.html">
+  <div class="card">
+    <div class="filters">
+      <div class="field" style="flex:1;">
+        <label>依縣市篩選（可多選，未選則顯示全部）</label>
+        <div class="checkbox-group" id="county-filter" style="flex-wrap:wrap;">
+          <label><input type="checkbox" value="彰化縣" /> 彰化縣</label>
+          <label><input type="checkbox" value="桃園市" /> 桃園市</label>
+          <label><input type="checkbox" value="臺北市" /> 臺北市</label>
+          <label><input type="checkbox" value="高雄市" /> 高雄市</label>
+          <label><input type="checkbox" value="新竹縣" /> 新竹縣</label>
+          <label><input type="checkbox" value="宜蘭縣" /> 宜蘭縣</label>
+          <label><input type="checkbox" value="新竹市" /> 新竹市</label>
+          <label><input type="checkbox" value="臺南市" /> 臺南市</label>
+          <label><input type="checkbox" value="臺中市" /> 臺中市</label>
+        </div>
+      </div>
+      <button class="ghost" id="county-reset">重設篩選</button>
+    </div>
+  </div>
+  <div class="home-grid" id="home-grid">
+    <a class="home-card" href="abc/index.html" data-county="all">
       <span class="tag">全國 · 含地圖座標</span>
       <h2>全國長照ABC據點地圖儀表板</h2>
       <div class="desc">衛生福利部提供，涵蓋全國 A（旗艦店）、B（複合型服務中心）、C（巷弄長照站）三級長照據點，包含地址、經緯度、特約服務項目、開放床數與現有住民等資訊。</div>
       <div class="footline" id="abc-count">資料筆數載入中…</div>
     </a>
-    <a class="home-card" href="lane/index.html">
+    <a class="home-card" href="lane/index.html" data-county="彰化縣">
       <span class="tag">彰化縣</span>
       <h2>彰化縣巷弄長照站儀表板</h2>
       <div class="desc">彰化縣政府社會處提供，列出各鄉鎮市區之巷弄長照站（C級據點）名稱與地址，可依鄉鎮篩選並瀏覽站所分布統計。</div>
       <div class="footline" id="lane-count">資料筆數載入中…</div>
     </a>
-    <a class="home-card" href="tyc-elder/index.html">
+    <a class="home-card" href="tyc-elder/index.html" data-county="桃園市">
       <span class="tag">桃園市</span>
       <h2>桃園市老人福利機構一覽表</h2>
       <div class="desc">桃園市政府社會局提供，列出私立老人福利機構（養護、長照、安養）名稱、地址、負責人、床數與最近1次評鑑成績，可依鄉鎮市區、收容對象、評鑑成績篩選並瀏覽統計圖表。</div>
       <div class="footline" id="tyc-elder-count">資料筆數載入中…</div>
     </a>
-    <a class="home-card" href="specialty/index.html">
+    <a class="home-card" href="specialty/index.html" data-county="臺北市">
       <span class="tag">臺北市</span>
       <h2>臺北市長照專業服務特約單位</h2>
       <div class="desc">臺北市政府衛生局提供，列出長照專業服務特約單位（居家護理所、物理／職能治療所等）名稱、服務區域、地址與聯絡方式，並標示是否提供復能照護、營養照護、進食與吞嚥照護等8項專業服務能力，可依服務區域與服務能力篩選並瀏覽統計圖表。</div>
       <div class="footline" id="specialty-count">資料筆數載入中…</div>
     </a>
-    <a class="home-card" href="kcg-homecare/index.html">
+    <a class="home-card" href="kcg-homecare/index.html" data-county="高雄市">
       <span class="tag">高雄市 · 含地圖座標</span>
       <h2>高雄市銀髮族服務-居家長照機構</h2>
       <div class="desc">高雄市政府社會局提供，列出居家式服務類長期照顧服務機構名稱、地址、經緯度、電話、服務項目與服務時段，可依行政區、服務時段篩選並於地圖上瀏覽分布。</div>
       <div class="footline" id="kcg-homecare-count">資料筆數載入中…</div>
     </a>
-    <a class="home-card" href="hsc-ltc/index.html">
+    <a class="home-card" href="hsc-ltc/index.html" data-county="新竹縣">
       <span class="tag">新竹縣</span>
       <h2>新竹縣長照機構名冊</h2>
       <div class="desc">新竹縣政府社會處提供，列出居家服務、日間照顧、小規模多機能、家庭托顧、團體家屋等長照機構名稱、地址與電話，可依鄉鎮市區、服務類型篩選並瀏覽統計圖表。</div>
       <div class="footline" id="hsc-ltc-count">資料筆數載入中…</div>
     </a>
-    <a class="home-card" href="yl-ltc/index.html">
+    <a class="home-card" href="yl-ltc/index.html" data-county="宜蘭縣">
       <span class="tag">宜蘭縣</span>
       <h2>宜蘭縣立案老人長期照顧及安養機構名冊</h2>
       <div class="desc">宜蘭縣政府提供，列出養護型、長期照護型等立案老人長期照顧及安養機構名稱、負責人、地址與電話，可依鄉鎮市區、機構類型篩選並瀏覽統計圖表。</div>
       <div class="footline" id="yl-ltc-count">資料筆數載入中…</div>
     </a>
-    <a class="home-card" href="hccg-elder/index.html">
+    <a class="home-card" href="hccg-elder/index.html" data-county="新竹市">
       <span class="tag">新竹市 · 含地圖座標</span>
       <h2>新竹市老人福利機構一覽表</h2>
       <div class="desc">新竹市政府社會處提供，列出立案老人福利機構名稱、負責人、地址、經緯度、電話、收容對象與核定收容人數，可依行政區、收容對象篩選並於地圖上瀏覽分布。</div>
       <div class="footline" id="hccg-elder-count">資料筆數載入中…</div>
     </a>
-    <a class="home-card" href="tn-homecare-nursing/index.html">
+    <a class="home-card" href="tn-homecare-nursing/index.html" data-county="臺南市">
       <span class="tag">臺南市</span>
       <h2>臺南市居家護理機構</h2>
       <div class="desc">臺南市政府衛生局提供，列出各行政區居家護理所機構名稱、機構代碼、地址、負責人與聯絡電話，可依行政區、關鍵字篩選並瀏覽統計圖表。</div>
       <div class="footline" id="tn-homecare-nursing-count">資料筆數載入中…</div>
     </a>
-    <a class="home-card" href="tc-nursing/index.html">
+    <a class="home-card" href="tc-nursing/index.html" data-county="臺中市">
       <span class="tag">臺中市</span>
       <h2>臺中市一般護理之家清冊</h2>
       <div class="desc">臺中市政府衛生局提供，列出各行政區護理之家機構名稱、一般床／呼吸器依賴床許可與開放床數、開業日期、評鑑與督考結果、負責人與聯絡電話，可依行政區、關鍵字篩選並瀏覽統計圖表。</div>
       <div class="footline" id="tc-nursing-count">資料筆數載入中…</div>
     </a>
+    <p class="no-match" id="county-no-match" style="display:none; grid-column: 1 / -1; text-align:center; color: var(--color-muted); padding: 24px 0;">
+      沒有符合所選縣市的資料集，請調整篩選條件。
+    </p>
   </div>
 </main>
 <footer class="site-footer">
@@ -243,6 +265,34 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
     document.getElementById("tc-nursing-count").textContent = `共 ${meta.tcNursing.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
 }).catch(() => {});
+
+// 首頁縣市多選篩選：勾選一個或多個縣市時，只顯示對應縣市的資料集卡片；
+// 全國性資料集（data-county="all"，如長照ABC據點）因涵蓋所有縣市，篩選時一律顯示；
+// 未勾選任何縣市時顯示全部卡片。
+(function () {
+  const checkboxes = Array.from(document.querySelectorAll("#county-filter input[type=checkbox]"));
+  const cards = Array.from(document.querySelectorAll("#home-grid .home-card"));
+  const noMatch = document.getElementById("county-no-match");
+  const resetBtn = document.getElementById("county-reset");
+
+  function applyCountyFilter() {
+    const selected = checkboxes.filter((cb) => cb.checked).map((cb) => cb.value);
+    let visibleCount = 0;
+    cards.forEach((card) => {
+      const county = card.dataset.county;
+      const visible = selected.length === 0 || county === "all" || selected.includes(county);
+      card.style.display = visible ? "" : "none";
+      if (visible) visibleCount++;
+    });
+    noMatch.style.display = visibleCount === 0 ? "" : "none";
+  }
+
+  checkboxes.forEach((cb) => cb.addEventListener("change", applyCountyFilter));
+  resetBtn.addEventListener("click", () => {
+    checkboxes.forEach((cb) => (cb.checked = false));
+    applyCountyFilter();
+  });
+})();
 </script>
 </body>
 </html>
