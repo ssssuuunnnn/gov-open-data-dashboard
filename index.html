@@ -193,10 +193,16 @@
       <div class="desc">臺南市政府衛生局提供，列出各行政區居家護理所機構名稱、機構代碼、地址、負責人與聯絡電話，可依行政區、關鍵字篩選並瀏覽統計圖表。</div>
       <div class="footline" id="tn-homecare-nursing-count">資料筆數載入中…</div>
     </a>
+    <a class="home-card" href="tc-nursing/index.html">
+      <span class="tag">臺中市</span>
+      <h2>臺中市一般護理之家清冊</h2>
+      <div class="desc">臺中市政府衛生局提供，列出各行政區護理之家機構名稱、一般床／呼吸器依賴床許可與開放床數、開業日期、評鑑與督考結果、負責人與聯絡電話，可依行政區、關鍵字篩選並瀏覽統計圖表。</div>
+      <div class="footline" id="tc-nursing-count">資料筆數載入中…</div>
+    </a>
   </div>
 </main>
 <footer class="site-footer">
-  本網站整理衛生福利部「長照ABC據點」、彰化縣政府社會處「巷弄長照站」、桃園市政府社會局「桃園市老人福利機構一覽表」、臺北市政府衛生局「長照專業服務特約單位」、高雄市政府社會局「銀髮族服務-居家長照機構」、新竹縣政府社會處「新竹縣長照機構名冊」、宜蘭縣政府「立案老人長期照顧及安養機構名冊」、新竹市政府社會處「新竹市老人福利機構一覽表」與臺南市政府衛生局「臺南市居家護理機構」公開之長期照顧相關資料集，提供地圖、統計圖表與可篩選查詢的資料表，方便使用者快速瀏覽與比較各地長照資源分布。<br />
+  本網站整理衛生福利部「長照ABC據點」、彰化縣政府社會處「巷弄長照站」、桃園市政府社會局「桃園市老人福利機構一覽表」、臺北市政府衛生局「長照專業服務特約單位」、高雄市政府社會局「銀髮族服務-居家長照機構」、新竹縣政府社會處「新竹縣長照機構名冊」、宜蘭縣政府「立案老人長期照顧及安養機構名冊」、新竹市政府社會處「新竹市老人福利機構一覽表」、臺南市政府衛生局「臺南市居家護理機構」與臺中市政府衛生局「臺中市一般護理之家清冊」公開之長期照顧相關資料集，提供地圖、統計圖表與可篩選查詢的資料表，方便使用者快速瀏覽與比較各地長照資源分布。<br />
   資料來源：<a href="https://ltcpap.mohw.gov.tw/publish/abc.csv" target="_blank" rel="noopener">衛生福利部 長照ABC據點</a> ·
   <a href="https://email.chcg.gov.tw/df/pufnpn5i5741iy9efkn2rrz5ga6uhb" target="_blank" rel="noopener">彰化縣政府社會處 巷弄長照站</a> ·
   <a href="https://opendata.tycg.gov.tw/api/dataset/536bb44b-b9f1-4336-ad26-34b9e25b3a68/resource/3d7e3b4c-8bc5-47c4-85a9-eec70415b189/download" target="_blank" rel="noopener">桃園市政府社會局 桃園市老人福利機構一覽表</a> ·
@@ -205,9 +211,10 @@
   <a href="https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/283/b14a70a1-784c-4586-babf-ade99a7e8277.json" target="_blank" rel="noopener">新竹縣政府社會處 新竹縣長照機構名冊</a> ·
   <a href="https://opendataap2.e-land.gov.tw/./resource/files/2019-12-03/a91e966d8b5b07d1e9bb8c3a767e9d1f.json" target="_blank" rel="noopener">宜蘭縣政府 立案老人長期照顧及安養機構名冊</a> ·
   <a href="https://odws.hccg.gov.tw/001/Upload/25/opendataback/9059/33/b253c75b-9e30-42d5-81bd-eb1f37e74af2.json" target="_blank" rel="noopener">新竹市政府社會處 新竹市老人福利機構一覽表</a> ·
-  <a href="https://data.tainan.gov.tw/File/ResourceCsvDownload/4de27549-893c-4e8e-8644-538a35076607" target="_blank" rel="noopener">臺南市政府衛生局 臺南市居家護理機構</a><br />
+  <a href="https://data.tainan.gov.tw/File/ResourceCsvDownload/4de27549-893c-4e8e-8644-538a35076607" target="_blank" rel="noopener">臺南市政府衛生局 臺南市居家護理機構</a> ·
+  <a href="https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=af086949-239b-41ef-8316-5c12dd26a672" target="_blank" rel="noopener">臺中市政府衛生局 臺中市一般護理之家清冊</a><br />
   依「政府資料開放授權條款-第1版」釋出，本站僅作資料視覺化整理，實際內容以原始資料集為準。<br />
-  <a href="changelog/index.html">網站更新紀錄</a>　|　本頁面最後更新時間：2026年7月14日
+  <a href="changelog/index.html">網站更新紀錄</a>　|　本頁面最後更新時間：2026年7月15日
 </footer>
 <script>
 fetch("data/meta.json").then(r => r.json()).then(meta => {
@@ -231,6 +238,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.tnHomecareNursing) {
     document.getElementById("tn-homecare-nursing-count").textContent = `共 ${meta.tnHomecareNursing.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.tcNursing) {
+    document.getElementById("tc-nursing-count").textContent = `共 ${meta.tcNursing.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
 }).catch(() => {});
 </script>

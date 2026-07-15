@@ -32,6 +32,13 @@
    機構名稱/機構代碼/行政區/地址/負責人/電話/分機，無經緯度座標但地址已含完整「臺南市OO區」字首可
    直接解析行政區；原始「行政區」欄位為數字代碼未提供對照表，本腳本改用地址解析取代；來源網址無
    CORS 標頭，改由本腳本於伺服器端下載，詳見 build_tn_homecare_nursing() 選用理由說明）
+10. 臺中市一般護理之家清冊（DCAT dataset https://data.gov.tw/dataset/8572）
+    https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=af086949-239b-41ef-8316-5c12dd26a672
+    （CSV，共60筆；「行政區」欄位已是中文名稱，不需從地址解析；無經緯度座標；來源網址本身已允許
+    CORS（Access-Control-Allow-Origin: *），但仍依專案慣例由本腳本於伺服器端下載，另輸出內嵌 JS
+    版本以避免依賴外部網址即時可用性；「附設日間照顧開放人數」多數為「-」（視為0）、「評鑑結果」／
+    「督考結果」欄位偶見同格夾帶兩個年度結果（如「112不合格113不合格」）、「開業日期」為民國年
+    字串，皆原文照登不重新拆分/轉換，詳見 build_tc_nursing()）
 
 用法：
     python3 scripts/build_data.py
@@ -52,6 +59,8 @@
     data/hccg-elder.js    (window.HCCG_ELDER_DATA，同上，供前端以 <script> 直接載入)
     data/tn-homecare-nursing.json
     data/tn-homecare-nursing.js  (window.TN_HOMECARE_NURSING_DATA，同上，供前端以 <script> 直接載入)
+    data/tc-nursing.json
+    data/tc-nursing.js    (window.TC_NURSING_DATA，同上，供前端以 <script> 直接載入)
     data/meta.json  (資料更新時間等資訊)
 
 額外相依套件：
@@ -77,6 +86,7 @@ HSC_LTC_URL = "https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/283/b14a70a1
 YL_LTC_URL = "https://opendataap2.e-land.gov.tw/./resource/files/2019-12-03/a91e966d8b5b07d1e9bb8c3a767e9d1f.json"
 HCCG_ELDER_URL = "https://odws.hccg.gov.tw/001/Upload/25/opendataback/9059/33/b253c75b-9e30-42d5-81bd-eb1f37e74af2.json"
 TN_HOMECARE_NURSING_URL = "https://data.tainan.gov.tw/File/ResourceCsvDownload/4de27549-893c-4e8e-8644-538a35076607"
+TC_NURSING_URL = "https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=af086949-239b-41ef-8316-5c12dd26a672"
 
 # 宜蘭縣行政區清單，用於補上原始地址欄位缺漏的「宜蘭縣」前綴（部分機構地址僅寫鄉鎮市區名，
 # 未包含縣名，例如「羅東鎮站前南路11號」）。
@@ -440,6 +450,50 @@ def build_tn_homecare_nursing():
     return {"fields": fields, "rows": records}
 
 
+def build_tc_nursing():
+    """臺中市一般護理之家清冊（DCAT dataset https://data.gov.tw/dataset/8572）。
+
+    來源 CSV 欄位：編號/機構名稱/行政區/一般床許可床數/一般床開放床數/呼吸器依賴許可床數/
+    呼吸器依賴開放床數/開業日期/評鑑結果/督考結果/負責人/電話/住址/附設日間照顧開放人數，
+    與 DCAT description 完全一致。「行政區」欄位已是中文名稱（中區、西區…），不需從地址欄位
+    解析。無經緯度座標。來源網址本身已允許 CORS（Access-Control-Allow-Origin: *），但仍依專案
+    慣例由本腳本於伺服器端下載並輸出內嵌 JS 版本，避免依賴外部網址即時可用性。
+
+    已知資料品質備註：「附設日間照顧開放人數」多數為「-」（無附設日照），本腳本以 _to_int()
+    轉數字時視為 0；「評鑑結果」／「督考結果」欄位偶見同一格內夾帶兩個年度結果（例如
+    「112不合格113不合格」），原文照登不重新拆分；「開業日期」為民國年格式字串（如
+    「101/11/16」），原文呈現不轉換曆法；「負責人」欄位已由來源做隱私遮蔽（如「劉O媛」）。
+    """
+    print("下載 臺中市一般護理之家清冊 ...", file=sys.stderr)
+    # 來源 CSV 檔頭含兩個連續 BOM（\ufeff\ufeff），fetch() 的 utf-8-sig 解碼只會去掉一個，
+    # 剩餘一個會殘留在第一欄「編號」欄名前導致 DictReader 讀不到該欄，故額外 lstrip 處理。
+    text = fetch(TC_NURSING_URL).lstrip("\ufeff")
+    reader = csv.DictReader(io.StringIO(text))
+    records = []
+    for row in reader:
+        records.append([
+            row.get("編號", "").strip(),                       # 0 id
+            row.get("機構名稱", "").strip(),                   # 1 name
+            row.get("行政區", "").strip(),                     # 2 district
+            _to_int(row.get("一般床許可床數")),                # 3 generalBedsLicensed
+            _to_int(row.get("一般床開放床數")),                # 4 generalBedsOpen
+            _to_int(row.get("呼吸器依賴許可床數")),            # 5 ventBedsLicensed
+            _to_int(row.get("呼吸器依賴開放床數")),            # 6 ventBedsOpen
+            row.get("開業日期", "").strip(),                   # 7 openDate
+            row.get("評鑑結果", "").strip(),                   # 8 rating
+            row.get("督考結果", "").strip(),                   # 9 superviseRating
+            row.get("負責人", "").strip(),                     # 10 director
+            row.get("電話", "").strip(),                       # 11 phone
+            row.get("住址", "").strip(),                       # 12 address
+            _to_int(row.get("附設日間照顧開放人數")),          # 13 dayCareOpen
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "name", "district", "generalBedsLicensed", "generalBedsOpen",
+              "ventBedsLicensed", "ventBedsOpen", "openDate", "rating", "superviseRating",
+              "director", "phone", "address", "dayCareOpen"]
+    return {"fields": fields, "rows": records}
+
+
 def _specialty_norm(s):
     """去除 PDF 儲存格內因欄寬過窄產生的換行，並還原被誤用的 CJK 部首符號為正常漢字。"""
     if not s:
@@ -524,6 +578,7 @@ def main():
     yl_ltc = build_yl_ltc()
     hccg_elder = build_hccg_elder()
     tn_homecare_nursing = build_tn_homecare_nursing()
+    tc_nursing = build_tc_nursing()
 
     with open("data/abc.json", "w", encoding="utf-8") as f:
         json.dump(abc, f, ensure_ascii=False, separators=(",", ":"))
@@ -572,6 +627,13 @@ def main():
         f.write("window.TN_HOMECARE_NURSING_DATA = ")
         json.dump(tn_homecare_nursing, f, ensure_ascii=False, separators=(",", ":"))
         f.write(";\n")
+    with open("data/tc-nursing.json", "w", encoding="utf-8") as f:
+        json.dump(tc_nursing, f, ensure_ascii=False, separators=(",", ":"))
+    # 同 tyc-elder，另外輸出內嵌式 JS 版本（window.TC_NURSING_DATA），供前端以 <script> 直接載入。
+    with open("data/tc-nursing.js", "w", encoding="utf-8") as f:
+        f.write("window.TC_NURSING_DATA = ")
+        json.dump(tc_nursing, f, ensure_ascii=False, separators=(",", ":"))
+        f.write(";\n")
 
     meta = {
         "generatedAt": datetime.now(timezone.utc).isoformat(),
@@ -606,6 +668,11 @@ def main():
             "count": len(tn_homecare_nursing["rows"]),
             "source": TN_HOMECARE_NURSING_URL,
             "title": "臺南市居家護理機構",
+        },
+        "tcNursing": {
+            "count": len(tc_nursing["rows"]),
+            "source": TC_NURSING_URL,
+            "title": "臺中市一般護理之家清冊",
         },
     }
 

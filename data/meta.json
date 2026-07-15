@@ -44,5 +44,10 @@
     "count": 36,
     "source": "https://data.tainan.gov.tw/File/ResourceCsvDownload/4de27549-893c-4e8e-8644-538a35076607",
     "title": "臺南市居家護理機構"
+  },
+  "tcNursing": {
+    "count": 60,
+    "source": "https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=af086949-239b-41ef-8316-5c12dd26a672",
+    "title": "臺中市一般護理之家清冊"
   }
 }
