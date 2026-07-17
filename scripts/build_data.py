@@ -39,6 +39,12 @@
     版本以避免依賴外部網址即時可用性；「附設日間照顧開放人數」多數為「-」（視為0）、「評鑑結果」／
     「督考結果」欄位偶見同格夾帶兩個年度結果（如「112不合格113不合格」）、「開業日期」為民國年
     字串，皆原文照登不重新拆分/轉換，詳見 build_tc_nursing()）
+11. 新北市一般護理之家清冊  https://data.ntpc.gov.tw/datasets/467cb02f-1f94-4fa1-a440-4f08575cf181
+    https://data.ntpc.gov.tw/api/datasets/467cb02f-1f94-4fa1-a440-4f08575cf181/csv?page=0&size=100
+    （正式分頁 CSV API，共75筆，更新頻率每年；地址已含完整「新北市OO區」字首可直接解析行政區，
+    無經緯度座標；來源網址 CORS 標頭僅允許 data.ntpc.gov.tw 網域，改由本腳本於伺服器端下載，
+    另輸出內嵌 JS 版本；「聯絡人姓名」欄位來源未做遮蔽處理，忠實照登；「特約類別」欄位實測全數為
+    常數值無篩選意義，本腳本不輸出，詳見 build_ntpc_nursing()）
 
 用法：
     python3 scripts/build_data.py
@@ -61,6 +67,8 @@
     data/tn-homecare-nursing.js  (window.TN_HOMECARE_NURSING_DATA，同上，供前端以 <script> 直接載入)
     data/tc-nursing.json
     data/tc-nursing.js    (window.TC_NURSING_DATA，同上，供前端以 <script> 直接載入)
+    data/ntpc-nursing.json
+    data/ntpc-nursing.js  (window.NTPC_NURSING_DATA，同上，供前端以 <script> 直接載入)
     data/meta.json  (資料更新時間等資訊)
 
 額外相依套件：
@@ -87,6 +95,12 @@ YL_LTC_URL = "https://opendataap2.e-land.gov.tw/./resource/files/2019-12-03/a91e
 HCCG_ELDER_URL = "https://odws.hccg.gov.tw/001/Upload/25/opendataback/9059/33/b253c75b-9e30-42d5-81bd-eb1f37e74af2.json"
 TN_HOMECARE_NURSING_URL = "https://data.tainan.gov.tw/File/ResourceCsvDownload/4de27549-893c-4e8e-8644-538a35076607"
 TC_NURSING_URL = "https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=af086949-239b-41ef-8316-5c12dd26a672"
+# {page} 佔位符，page 從 0 起算，size=100；資料集目前僅 75 筆一頁即可取完，
+# 但保留分頁迴圈以防未來筆數超過 100（見 build_ntpc_nursing()）。
+NTPC_NURSING_URL_TEMPLATE = (
+    "https://data.ntpc.gov.tw/api/datasets/467cb02f-1f94-4fa1-a440-4f08575cf181/csv"
+    "?page={page}&size=100"
+)
 
 # 宜蘭縣行政區清單，用於補上原始地址欄位缺漏的「宜蘭縣」前綴（部分機構地址僅寫鄉鎮市區名，
 # 未包含縣名，例如「羅東鎮站前南路11號」）。
@@ -494,6 +508,56 @@ def build_tc_nursing():
     return {"fields": fields, "rows": records}
 
 
+def build_ntpc_nursing():
+    """新北市一般護理之家清冊（新北市政府衛生局，新北市資料開放平臺
+    dataset https://data.ntpc.gov.tw/datasets/467cb02f-1f94-4fa1-a440-4f08575cf181，
+    授權：政府資料開放授權條款-第1版，更新頻率：每年）。
+
+    來源為正式分頁 CSV API（NTPC_NURSING_URL_TEMPLATE，page 從 0 起算、size=100），本腳本迴圈
+    遞增 page 直到某頁回傳空白列為止，避免未來筆數超過單頁上限時漏抓資料（實測目前共 75 筆，
+    一頁即可取完）。
+
+    來源欄位：seqno(序號)/hosp_name(機構名稱)/hospcnttype(特約類別)/hosp_addr(地址)/
+    name(聯絡人姓名)/tel(電話)/extension(分機)/bed(開放床數)/number(機構應配置護理人員數)/
+    date(資料日期，YYYYMMDD)。其中 hospcnttype 實測全數為常數 "6"，無篩選意義，本腳本不輸出
+    此欄位。「聯絡人姓名」欄位來源**未做遮蔽處理**（不同於其他資料集常見的「劉O媛」式遮蔽），
+    本腳本忠實照登，不額外遮蔽或移除。
+
+    地址欄位固定為「新北市」＋行政區字首（如「新北市板橋區...」），用 parse_county_district()
+    搭配 fallback_county="新北市" 可完整解析行政區；「電話」欄位部分尾端含多餘空白，做 strip()。
+    無經緯度座標，前端不呈現地圖。
+    """
+    print("下載 新北市一般護理之家清冊 ...", file=sys.stderr)
+    records = []
+    page = 0
+    while True:
+        text = fetch(NTPC_NURSING_URL_TEMPLATE.format(page=page))
+        reader = csv.DictReader(io.StringIO(text))
+        rows = list(reader)
+        if not rows:
+            break
+        for row in rows:
+            addr = (row.get("hosp_addr", "") or "").strip()
+            _county, district = parse_county_district(addr, fallback_county="新北市", strict=True)
+            records.append([
+                row.get("seqno", "").strip(),          # 0 id
+                row.get("hosp_name", "").strip(),      # 1 name
+                district,                                # 2 district
+                addr,                                    # 3 address
+                row.get("name", "").strip(),           # 4 contact
+                (row.get("tel", "") or "").strip(),    # 5 phone
+                (row.get("extension", "") or "").strip(),  # 6 extension
+                _to_int(row.get("bed")),               # 7 bed
+                _to_int(row.get("number")),            # 8 staffRequired
+                row.get("date", "").strip(),           # 9 date
+            ])
+        page += 1
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "name", "district", "address", "contact", "phone", "extension",
+              "bed", "staffRequired", "date"]
+    return {"fields": fields, "rows": records}
+
+
 def _specialty_norm(s):
     """去除 PDF 儲存格內因欄寬過窄產生的換行，並還原被誤用的 CJK 部首符號為正常漢字。"""
     if not s:
@@ -579,6 +643,7 @@ def main():
     hccg_elder = build_hccg_elder()
     tn_homecare_nursing = build_tn_homecare_nursing()
     tc_nursing = build_tc_nursing()
+    ntpc_nursing = build_ntpc_nursing()
 
     with open("data/abc.json", "w", encoding="utf-8") as f:
         json.dump(abc, f, ensure_ascii=False, separators=(",", ":"))
@@ -634,6 +699,13 @@ def main():
         f.write("window.TC_NURSING_DATA = ")
         json.dump(tc_nursing, f, ensure_ascii=False, separators=(",", ":"))
         f.write(";\n")
+    with open("data/ntpc-nursing.json", "w", encoding="utf-8") as f:
+        json.dump(ntpc_nursing, f, ensure_ascii=False, separators=(",", ":"))
+    # 來源 CORS 標頭僅允許 data.ntpc.gov.tw 網域，改用內嵌式 JS 版本（window.NTPC_NURSING_DATA）。
+    with open("data/ntpc-nursing.js", "w", encoding="utf-8") as f:
+        f.write("window.NTPC_NURSING_DATA = ")
+        json.dump(ntpc_nursing, f, ensure_ascii=False, separators=(",", ":"))
+        f.write(";\n")
 
     meta = {
         "generatedAt": datetime.now(timezone.utc).isoformat(),
@@ -673,6 +745,11 @@ def main():
             "count": len(tc_nursing["rows"]),
             "source": TC_NURSING_URL,
             "title": "臺中市一般護理之家清冊",
+        },
+        "ntpcNursing": {
+            "count": len(ntpc_nursing["rows"]),
+            "source": NTPC_NURSING_URL_TEMPLATE.format(page=0),
+            "title": "新北市一般護理之家清冊",
         },
     }
 
