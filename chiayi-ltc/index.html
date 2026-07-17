@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>嘉義縣立案長照及護理之家機構一覽儀表板｜長照機構查詢</title>
+<meta name="description" content="嘉義縣政府長期照護管理中心提供之嘉義縣立案住宿長照機構與護理之家名冊視覺化，收錄機構類型、機構名稱、鄉鎮市、地址、電話、負責人、許可／開業床數與核准開業日期，提供機構類型與鄉鎮市篩選、關鍵字搜尋與統計圖表。" />
+<meta name="keywords" content="嘉義縣長照機構,嘉義縣護理之家,嘉義縣住宿長照機構,嘉義縣長照,長照資源查詢,嘉義縣政府長期照護管理中心" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://www.sunkuo.cc/gov-open-data-dashboard/chiayi-ltc/index.html" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="政府開放資料儀表板" />
+<meta property="og:locale" content="zh_TW" />
+<meta property="og:title" content="嘉義縣立案長照及護理之家機構一覽儀表板" />
+<meta property="og:description" content="嘉義縣立案住宿長照機構與護理之家資料，提供機構類型、鄉鎮市篩選、關鍵字搜尋與統計圖表。" />
+<meta property="og:url" content="https://www.sunkuo.cc/gov-open-data-dashboard/chiayi-ltc/index.html" />
+<meta property="og:image" content="https://www.sunkuo.cc/gov-open-data-dashboard/assets/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="嘉義縣立案長照及護理之家機構一覽儀表板" />
+<meta name="twitter:description" content="嘉義縣立案住宿長照機構與護理之家資料，提供機構類型、鄉鎮市篩選、關鍵字搜尋與統計圖表。" />
+<meta name="twitter:image" content="https://www.sunkuo.cc/gov-open-data-dashboard/assets/og-image.png" />
+
+<link rel="icon" type="image/png" href="../assets/favicon.png" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+<link rel="stylesheet" href="../assets/style.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "嘉義縣立案長照及護理之家機構一覽",
+  "description": "嘉義縣政府長期照護管理中心提供之嘉義縣立案住宿長照機構名單與護理之家名單，合併收錄機構類型、機構名稱、鄉鎮市、地址、電話、負責人、許可床數、開業床數與核准開業日期等資訊。",
+  "url": "https://www.sunkuo.cc/gov-open-data-dashboard/chiayi-ltc/index.html",
+  "license": "http://data.gov.tw/license",
+  "isAccessibleForFree": true,
+  "inLanguage": "zh-Hant-TW",
+  "keywords": ["長期照顧", "嘉義縣", "住宿長照機構", "護理之家"],
+  "spatialCoverage": {
+    "@type": "Place",
+    "name": "嘉義縣"
+  },
+  "creator": {
+    "@type": "Organization",
+    "name": "嘉義縣政府長期照護管理中心",
+    "url": "https://ltccenter.cyhg.gov.tw/cp.aspx?n=F7AEF7883C88532B"
+  }
+}
+</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <h1>嘉義縣立案長照及護理之家機構一覽儀表板</h1>
+    <div class="meta"><a href="../index.html" style="color:#fff">← 回首頁</a></div>
+  </div>
+  <div class="header-inner">
+    <nav>
+      提供機關：嘉義縣政府長期照護管理中心　|　更新頻率：不定期（人工提供，無公開下載網址）　|　
+      <a href="https://ltccenter.cyhg.gov.tw/cp.aspx?n=F7AEF7883C88532B" target="_blank" rel="noopener">資料來源機關網站</a>
+    </nav>
+    <div class="meta" id="meta-updated"></div>
+  </div>
+</header>
+<noscript>
+  <p style="max-width:1280px;margin:16px auto;padding:0 24px;color:#b91c1c;">
+    本頁需要啟用 JavaScript 才能載入資料與圖表，請於瀏覽器設定中開啟 JavaScript 後重新整理頁面。
+  </p>
+</noscript>
+<main>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="num" id="stat-total">-</div><div class="label">篩選後機構數</div></div>
+    <div class="stat-card"><div class="num" id="stat-inst">-</div><div class="label">住宿長照機構數</div></div>
+    <div class="stat-card"><div class="num" id="stat-nurse">-</div><div class="label">護理之家數</div></div>
+    <div class="stat-card"><div class="num" id="stat-approved-beds">-</div><div class="label">許可床數合計</div></div>
+    <div class="stat-card"><div class="num" id="stat-operating-beds">-</div><div class="label">開業床數合計</div></div>
+    <div class="stat-card"><div class="num" id="stat-townships">-</div><div class="label">涵蓋鄉鎮市數</div></div>
+  </div>
+
+  <div class="card">
+    <div class="filters">
+      <div class="field">
+        <label>機構類型</label>
+        <select id="f-category"><option value="">全部</option></select>
+      </div>
+      <div class="field">
+        <label>鄉鎮市</label>
+        <select id="f-township"><option value="">全部</option></select>
+      </div>
+      <div class="field" style="flex:1;">
+        <label>關鍵字（機構名稱 / 地址 / 電話 / 負責人）</label>
+        <input type="text" id="f-keyword" placeholder="例如：機構名稱、負責人姓名…" />
+      </div>
+      <button class="ghost" id="f-reset">重設篩選</button>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="chart-box" style="height:320px;"><h3>機構類型佔比</h3><div class="chart-canvas-wrap"><canvas id="chart-category"></canvas></div></div>
+    </div>
+    <div class="card">
+      <div class="chart-box" style="height:320px;"><h3>各鄉鎮市機構數</h3><div class="chart-canvas-wrap"><canvas id="chart-township"></canvas></div></div>
+    </div>
+  </div>
+
+  <h2 class="section-title">資料明細</h2>
+  <div class="card">
+    <div id="table-container"></div>
+  </div>
+</main>
+<footer class="site-footer">
+  資料來源：<a href="https://ltccenter.cyhg.gov.tw/cp.aspx?n=F7AEF7883C88532B" target="_blank" rel="noopener">嘉義縣政府長期照護管理中心 嘉義縣立案住宿長照機構名單、嘉義縣護理之家名單</a>（人工提供，無公開下載網址）。
+  依「政府資料開放授權條款-第1版」釋出，本站僅作資料視覺化整理，實際內容以原始名冊為準。鄉鎮市由本站依原始
+  地址欄位解析產生，僅供參考；此資料集無自動更新來源，如發現資料過時歡迎來信告知。
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="../assets/table.js"></script>
+<script src="../data/chiayi-ltc.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

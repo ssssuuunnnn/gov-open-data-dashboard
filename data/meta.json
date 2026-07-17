@@ -1,1 +1,63 @@
-{"generatedAt":"2026-07-12T01:12:20.859727+00:00","abc":{"count":31729,"source":"https://ltcpap.mohw.gov.tw/publish/abc.csv","title":"長照ABC據點"},"lane":{"count":250,"source":"https://email.chcg.gov.tw/df/pufnpn5i5741iy9efkn2rrz5ga6uhb","title":"巷弄長照站"},"tycElder":{"count":67,"source":"https://opendata.tycg.gov.tw/api/dataset/536bb44b-b9f1-4336-ad26-34b9e25b3a68/resource/3d7e3b4c-8bc5-47c4-85a9-eec70415b189/download","title":"桃園市老人福利機構一覽表"},"kcgHomecare":{"count":115,"source":"https://data.kcg.gov.tw/File/DirectDownload/59ac925f-10dd-42f7-a540-ab6c4218b93d","title":"銀髮族服務-居家長照機構"},"hscLtc":{"count":55,"source":"https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/283/b14a70a1-784c-4586-babf-ade99a7e8277.json","title":"新竹縣長照機構名冊"},"ylLtc":{"count":39,"source":"https://opendataap2.e-land.gov.tw/./resource/files/2019-12-03/a91e966d8b5b07d1e9bb8c3a767e9d1f.json","title":"宜蘭縣立案老人長期照顧及安養機構名冊"},"specialty":{"count":75,"source":"https://health.gov.taipei/News_Content.aspx?n=F0D7A5A451D2493C&sms=549F98C9E5942A2B&s=9138F86B8A3CBF69","title":"臺北市長照專業服務特約單位"},"hccgElder":{"count":8,"source":"https://odws.hccg.gov.tw/001/Upload/25/opendataback/9059/33/b253c75b-9e30-42d5-81bd-eb1f37e74af2.json","title":"新竹市老人福利機構一覽表"},"tnHomecareNursing":{"count":36,"source":"https://data.tainan.gov.tw/File/ResourceCsvDownload/4de27549-893c-4e8e-8644-538a35076607","title":"臺南市居家護理機構"},"tcNursing":{"count":60,"source":"https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=af086949-239b-41ef-8316-5c12dd26a672","title":"臺中市一般護理之家清冊"},"ntpcNursing":{"count":75,"source":"https://data.ntpc.gov.tw/api/datasets/467cb02f-1f94-4fa1-a440-4f08575cf181/csv?page=0&size=100","title":"新北市一般護理之家清冊"}}
+{
+  "generatedAt": "2026-07-17T23:33:31.248490+00:00",
+  "abc": {
+    "count": 32073,
+    "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
+    "title": "長照ABC據點"
+  },
+  "lane": {
+    "count": 250,
+    "source": "https://email.chcg.gov.tw/df/pufnpn5i5741iy9efkn2rrz5ga6uhb",
+    "title": "巷弄長照站"
+  },
+  "tycElder": {
+    "count": 67,
+    "source": "https://opendata.tycg.gov.tw/api/dataset/536bb44b-b9f1-4336-ad26-34b9e25b3a68/resource/3d7e3b4c-8bc5-47c4-85a9-eec70415b189/download",
+    "title": "桃園市老人福利機構一覽表"
+  },
+  "kcgHomecare": {
+    "count": 115,
+    "source": "https://data.kcg.gov.tw/File/DirectDownload/59ac925f-10dd-42f7-a540-ab6c4218b93d",
+    "title": "銀髮族服務-居家長照機構"
+  },
+  "hscLtc": {
+    "count": 55,
+    "source": "https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/283/b14a70a1-784c-4586-babf-ade99a7e8277.json",
+    "title": "新竹縣長照機構名冊"
+  },
+  "ylLtc": {
+    "count": 39,
+    "source": "https://opendataap2.e-land.gov.tw/./resource/files/2019-12-03/a91e966d8b5b07d1e9bb8c3a767e9d1f.json",
+    "title": "宜蘭縣立案老人長期照顧及安養機構名冊"
+  },
+  "hccgElder": {
+    "count": 8,
+    "source": "https://odws.hccg.gov.tw/001/Upload/25/opendataback/9059/33/b253c75b-9e30-42d5-81bd-eb1f37e74af2.json",
+    "title": "新竹市老人福利機構一覽表"
+  },
+  "tnHomecareNursing": {
+    "count": 36,
+    "source": "https://data.tainan.gov.tw/File/ResourceCsvDownload/4de27549-893c-4e8e-8644-538a35076607",
+    "title": "臺南市居家護理機構"
+  },
+  "tcNursing": {
+    "count": 60,
+    "source": "https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=af086949-239b-41ef-8316-5c12dd26a672",
+    "title": "臺中市一般護理之家清冊"
+  },
+  "ntpcNursing": {
+    "count": 75,
+    "source": "https://data.ntpc.gov.tw/api/datasets/467cb02f-1f94-4fa1-a440-4f08575cf181/csv?page=0&size=100",
+    "title": "新北市一般護理之家清冊"
+  },
+  "chiayiLtc": {
+    "count": 17,
+    "source": "https://ltccenter.cyhg.gov.tw/cp.aspx?n=F7AEF7883C88532B",
+    "title": "嘉義縣立案長照及護理之家機構一覽"
+  },
+  "specialty": {
+    "count": 75,
+    "source": "https://health.gov.taipei/News_Content.aspx?n=F0D7A5A451D2493C&sms=549F98C9E5942A2B&s=9138F86B8A3CBF69",
+    "title": "臺北市長照專業服務特約單位"
+  }
+}

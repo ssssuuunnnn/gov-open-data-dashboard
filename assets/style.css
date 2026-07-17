@@ -10,6 +10,8 @@
   --cat-a: #2563eb;
   --cat-b: #16a34a;
   --cat-c: #d97706;
+  --cat-inst: #7c3aed;
+  --cat-nurse: #0891b2;
   --radius: 10px;
   --shadow: 0 1px 3px rgba(15, 23, 42, .08), 0 1px 2px rgba(15, 23, 42, .06);
 }
@@ -214,6 +216,8 @@ table.data-table tbody tr:hover { background: #f1f7f5; }
 .badge.a { background: var(--cat-a); }
 .badge.b { background: var(--cat-b); }
 .badge.c { background: var(--cat-c); }
+.badge.inst { background: var(--cat-inst); }
+.badge.nurse { background: var(--cat-nurse); }
 .badge.cap { background: var(--color-primary); margin: 1px 2px 1px 0; }
 
 .pagination {

@@ -38,7 +38,7 @@
   "description": "整理衛生福利部「長照ABC據點」與彰化縣政府社會處「巷弄長照站」政府開放資料，提供互動地圖、統計圖表與可篩選查詢資料表。",
   "inLanguage": "zh-Hant-TW",
   "datePublished": "2026-07-05",
-  "dateModified": "2026-07-17",
+  "dateModified": "2026-07-18",
   "hasPart": [
     {
       "@type": "Dataset",
@@ -163,6 +163,18 @@
         "@type": "Organization",
         "name": "新北市政府衛生局"
       }
+    },
+    {
+      "@type": "Dataset",
+      "name": "嘉義縣立案長照及護理之家機構一覽",
+      "description": "嘉義縣政府長期照護管理中心提供之嘉義縣立案住宿長照機構名單與護理之家名單，合併收錄機構類型、機構名稱、鄉鎮市、地址、電話、負責人、許可床數、開業床數與核准開業日期等資訊，人工提供、無公開下載網址。",
+      "url": "https://www.sunkuo.cc/gov-open-data-dashboard/chiayi-ltc/index.html",
+      "license": "http://data.gov.tw/license",
+      "creator": {
+        "@type": "Organization",
+        "name": "嘉義縣政府長期照護管理中心",
+        "url": "https://ltccenter.cyhg.gov.tw/cp.aspx?n=F7AEF7883C88532B"
+      }
     }
   ]
 }
@@ -197,6 +209,7 @@
           <label><input type="checkbox" value="臺南市" /> 臺南市</label>
           <label><input type="checkbox" value="高雄市" /> 高雄市</label>
           <label><input type="checkbox" value="新北市" /> 新北市</label>
+          <label><input type="checkbox" value="嘉義縣" /> 嘉義縣</label>
         </div>
       </div>
       <button class="ghost" id="county-reset">重設篩選</button>
@@ -269,13 +282,19 @@
       <div class="desc">新北市政府衛生局提供，列出各行政區護理之家機構名稱、地址、聯絡人、電話、開放床數與應配置護理人員數，可依行政區、關鍵字篩選並瀏覽統計圖表。</div>
       <div class="footline" id="ntpc-nursing-count">資料筆數載入中…</div>
     </a>
+    <a class="home-card" href="chiayi-ltc/index.html" data-county="嘉義縣">
+      <span class="tag">嘉義縣</span>
+      <h2>嘉義縣立案長照及護理之家機構一覽</h2>
+      <div class="desc">嘉義縣政府長期照護管理中心提供，合併立案住宿長照機構與護理之家名單，列出機構類型、機構名稱、鄉鎮市、地址、電話、負責人與許可／開業床數，可依機構類型、鄉鎮市、關鍵字篩選並瀏覽統計圖表。</div>
+      <div class="footline" id="chiayi-ltc-count">資料筆數載入中…</div>
+    </a>
     <p class="no-match" id="county-no-match" style="display:none; grid-column: 1 / -1; text-align:center; color: var(--color-muted); padding: 24px 0;">
       沒有符合所選縣市的資料集，請調整篩選條件。
     </p>
   </div>
 </main>
 <footer class="site-footer">
-  本網站整理衛生福利部「長照ABC據點」、彰化縣政府社會處「巷弄長照站」、桃園市政府社會局「桃園市老人福利機構一覽表」、臺北市政府衛生局「長照專業服務特約單位」、高雄市政府社會局「銀髮族服務-居家長照機構」、新竹縣政府社會處「新竹縣長照機構名冊」、宜蘭縣政府「立案老人長期照顧及安養機構名冊」、新竹市政府社會處「新竹市老人福利機構一覽表」、臺南市政府衛生局「臺南市居家護理機構」、臺中市政府衛生局「臺中市一般護理之家清冊」與新北市政府衛生局「新北市一般護理之家清冊」公開之長期照顧相關資料集，提供地圖、統計圖表與可篩選查詢的資料表，方便使用者快速瀏覽與比較各地長照資源分布。<br />
+  本網站整理衛生福利部「長照ABC據點」、彰化縣政府社會處「巷弄長照站」、桃園市政府社會局「桃園市老人福利機構一覽表」、臺北市政府衛生局「長照專業服務特約單位」、高雄市政府社會局「銀髮族服務-居家長照機構」、新竹縣政府社會處「新竹縣長照機構名冊」、宜蘭縣政府「立案老人長期照顧及安養機構名冊」、新竹市政府社會處「新竹市老人福利機構一覽表」、臺南市政府衛生局「臺南市居家護理機構」、臺中市政府衛生局「臺中市一般護理之家清冊」、新北市政府衛生局「新北市一般護理之家清冊」與嘉義縣政府長期照護管理中心「嘉義縣立案長照及護理之家機構一覽」公開之長期照顧相關資料集，提供地圖、統計圖表與可篩選查詢的資料表，方便使用者快速瀏覽與比較各地長照資源分布。<br />
   資料來源：<a href="https://ltcpap.mohw.gov.tw/publish/abc.csv" target="_blank" rel="noopener">衛生福利部 長照ABC據點</a> ·
   <a href="https://email.chcg.gov.tw/df/pufnpn5i5741iy9efkn2rrz5ga6uhb" target="_blank" rel="noopener">彰化縣政府社會處 巷弄長照站</a> ·
   <a href="https://opendata.tycg.gov.tw/api/dataset/536bb44b-b9f1-4336-ad26-34b9e25b3a68/resource/3d7e3b4c-8bc5-47c4-85a9-eec70415b189/download" target="_blank" rel="noopener">桃園市政府社會局 桃園市老人福利機構一覽表</a> ·
@@ -286,7 +305,8 @@
   <a href="https://odws.hccg.gov.tw/001/Upload/25/opendataback/9059/33/b253c75b-9e30-42d5-81bd-eb1f37e74af2.json" target="_blank" rel="noopener">新竹市政府社會處 新竹市老人福利機構一覽表</a> ·
   <a href="https://data.tainan.gov.tw/File/ResourceCsvDownload/4de27549-893c-4e8e-8644-538a35076607" target="_blank" rel="noopener">臺南市政府衛生局 臺南市居家護理機構</a> ·
   <a href="https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=af086949-239b-41ef-8316-5c12dd26a672" target="_blank" rel="noopener">臺中市政府衛生局 臺中市一般護理之家清冊</a> ·
-  <a href="https://data.ntpc.gov.tw/datasets/467cb02f-1f94-4fa1-a440-4f08575cf181" target="_blank" rel="noopener">新北市政府衛生局 新北市一般護理之家清冊</a><br />
+  <a href="https://data.ntpc.gov.tw/datasets/467cb02f-1f94-4fa1-a440-4f08575cf181" target="_blank" rel="noopener">新北市政府衛生局 新北市一般護理之家清冊</a> ·
+  <a href="https://ltccenter.cyhg.gov.tw/cp.aspx?n=F7AEF7883C88532B" target="_blank" rel="noopener">嘉義縣政府長期照護管理中心 嘉義縣立案長照及護理之家機構一覽</a><br />
   依「政府資料開放授權條款-第1版」釋出，本站僅作資料視覺化整理，實際內容以原始資料集為準。<br />
   <a href="changelog/index.html">網站更新紀錄</a>　|　本頁面最後更新時間：2026年7月15日
 </footer>
@@ -318,6 +338,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.ntpcNursing) {
     document.getElementById("ntpc-nursing-count").textContent = `共 ${meta.ntpcNursing.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.chiayiLtc) {
+    document.getElementById("chiayi-ltc-count").textContent = `共 ${meta.chiayiLtc.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
 }).catch(() => {});
 

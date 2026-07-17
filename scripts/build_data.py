@@ -45,6 +45,17 @@
     無經緯度座標；來源網址 CORS 標頭僅允許 data.ntpc.gov.tw 網域，改由本腳本於伺服器端下載，
     另輸出內嵌 JS 版本；「聯絡人姓名」欄位來源未做遮蔽處理，忠實照登；「特約類別」欄位實測全數為
     常數值無篩選意義，本腳本不輸出，詳見 build_ntpc_nursing()）
+12. 嘉義縣立案長照及護理之家機構一覽（嘉義縣政府長期照護管理中心
+    https://ltccenter.cyhg.gov.tw/cp.aspx?n=F7AEF7883C88532B ，人工提供，非開放資料 CSV/API）
+    （此資料集由使用者提供兩份本機 CSV：「嘉義縣立案住宿長照機構名單」（2筆，欄位：序號/機構名稱/
+    許可床數/開業床數/地址/電話，地址已含「嘉義縣」字首）與「嘉義縣護理之家名單」（15筆，欄位：
+    序號/機構名稱/負責人或聯絡人/許可床數/開業床數/核准開業日期/地址/電話，地址多數不含縣名字首，
+    僅1筆例外）；因無公開下載網址，原始 CSV 已存放於 scripts/sources/chiayi-ltc/institutions.csv
+    與 scripts/sources/chiayi-ltc/nursing-homes.csv，供本腳本讀取，未來如需更新資料需人工以最新
+    CSV 覆蓋這兩個檔案後再重新執行本腳本；兩份資料合併為單一資料集並以 category 欄位
+    （住宿長照機構／護理之家）分類，鄉鎮市由地址欄位解析（先移除可能存在的「嘉義縣」字首，再比對
+    嘉義縣18個鄉鎮市清單）；住宿長照機構因原始欄位無「負責人」「核准開業日期」，該兩欄位留空；
+    「核准開業日期」為民國年字串（如「88.3.22」），原文照登不轉換為西元年，詳見 build_chiayi_ltc()）
 
 用法：
     python3 scripts/build_data.py
@@ -69,12 +80,15 @@
     data/tc-nursing.js    (window.TC_NURSING_DATA，同上，供前端以 <script> 直接載入)
     data/ntpc-nursing.json
     data/ntpc-nursing.js  (window.NTPC_NURSING_DATA，同上，供前端以 <script> 直接載入)
+    data/chiayi-ltc.json
+    data/chiayi-ltc.js    (window.CHIAYI_LTC_DATA，同上，供前端以 <script> 直接載入)
     data/meta.json  (資料更新時間等資訊)
 
 額外相依套件：
     僅 build_specialty() 需要 pdfplumber（`python3 -m pip install pdfplumber`）解析 PDF 表格，
     其餘資料集仍只用標準庫 urllib/csv 下載/解析 CSV。
 """
+import argparse
 import csv
 import glob
 import io
@@ -101,12 +115,23 @@ NTPC_NURSING_URL_TEMPLATE = (
     "https://data.ntpc.gov.tw/api/datasets/467cb02f-1f94-4fa1-a440-4f08575cf181/csv"
     "?page={page}&size=100"
 )
+CHIAYI_LTC_SOURCE_PAGE = "https://ltccenter.cyhg.gov.tw/cp.aspx?n=F7AEF7883C88532B"
+CHIAYI_LTC_INSTITUTIONS_CSV = "scripts/sources/chiayi-ltc/institutions.csv"
+CHIAYI_LTC_NURSING_CSV = "scripts/sources/chiayi-ltc/nursing-homes.csv"
 
 # 宜蘭縣行政區清單，用於補上原始地址欄位缺漏的「宜蘭縣」前綴（部分機構地址僅寫鄉鎮市區名，
 # 未包含縣名，例如「羅東鎮站前南路11號」）。
 YL_DISTRICTS = [
     "宜蘭市", "羅東鎮", "蘇澳鎮", "頭城鎮", "礁溪鄉", "壯圍鄉", "員山鄉",
     "五結鄉", "冬山鄉", "三星鄉", "大同鄉", "南澳鄉",
+]
+
+# 嘉義縣18個鄉鎮市清單，用於從地址欄位解析鄉鎮市（部分機構地址未含「嘉義縣」前綴，
+# 例如「竹崎鄉灣橋村石麻園38號」），詳見 build_chiayi_ltc()。
+CHIAYI_TOWNSHIPS = [
+    "番路鄉", "梅山鄉", "竹崎鄉", "阿里山鄉", "中埔鄉", "大埔鄉", "水上鄉", "鹿草鄉",
+    "太保市", "朴子市", "東石鄉", "六腳鄉", "新港鄉", "民雄鄉", "大林鎮", "溪口鄉",
+    "義竹鄉", "布袋鎮",
 ]
 
 # 服務碼中文全名（8 項專業服務能力，PDF 表頭欄位）
@@ -558,6 +583,75 @@ def build_ntpc_nursing():
     return {"fields": fields, "rows": records}
 
 
+def _chiayi_township(address: str) -> str:
+    """從嘉義縣地址欄位解析鄉鎮市：先移除可能存在的「嘉義縣」前綴，
+    再比對 CHIAYI_TOWNSHIPS 清單找出地址開頭的鄉鎮市名稱。"""
+    addr = (address or "").strip()
+    if addr.startswith("嘉義縣"):
+        addr = addr[len("嘉義縣"):]
+    for township in CHIAYI_TOWNSHIPS:
+        if addr.startswith(township):
+            return township
+    return ""
+
+
+def build_chiayi_ltc():
+    """嘉義縣立案長照及護理之家機構一覽（嘉義縣政府長期照護管理中心，
+    https://ltccenter.cyhg.gov.tw/cp.aspx?n=F7AEF7883C88532B ，人工提供，非開放資料 CSV/API）。
+
+    使用者提供兩份本機 CSV（已存放於 scripts/sources/chiayi-ltc/，供未來人工更新資料使用）：
+      1. institutions.csv（原檔名「嘉義縣立案住宿長照機構名單.csv」，2筆）
+         欄位：序號/機構名稱/許可床數/開業床數/地址/電話，地址已含「嘉義縣」字首。
+      2. nursing-homes.csv（原檔名「嘉義縣護理之家名單.csv」，15筆）
+         欄位：序號/機構名稱/負責人或聯絡人/許可床數/開業床數/核准開業日期/地址/電話，
+         地址多數不含「嘉義縣」字首（僅鄉鎮市＋路名），僅1筆例外。
+
+    兩份資料合併為單一資料集，以 category 欄位（住宿長照機構／護理之家）分類；因全部資料同屬
+    嘉義縣，不需縣市篩選，僅解析鄉鎮市（見 _chiayi_township()）。住宿長照機構原始欄位無
+    「負責人」「核准開業日期」，統一輸出時該兩欄位留空字串。「核准開業日期」為民國年字串
+    （如「88.3.22」），原文照登不轉換為西元年，與 build_tc_nursing() 的處理方式一致。
+    此資料集無公開下載網址、無法自動更新，未來如需更新資料須人工以最新 CSV 覆蓋
+    scripts/sources/chiayi-ltc/ 下的兩個檔案後，重新執行本腳本。
+    """
+    print("讀取 嘉義縣立案長照及護理之家機構一覽 ...", file=sys.stderr)
+    records = []
+
+    with open(CHIAYI_LTC_INSTITUTIONS_CSV, encoding="utf-8-sig") as f:
+        for row in csv.DictReader(f):
+            addr = (row.get("地址", "") or "").strip()
+            records.append([
+                "住宿長照機構",                          # 0 category
+                row.get("機構名稱", "").strip(),        # 1 name
+                _chiayi_township(addr),                    # 2 township
+                addr,                                       # 3 address
+                row.get("電話", "").strip(),            # 4 phone
+                "",                                         # 5 director（此類機構原始資料無此欄）
+                _to_int(row.get("許可床數")),           # 6 approvedBeds
+                _to_int(row.get("開業床數")),           # 7 operatingBeds
+                "",                                         # 8 approvalDate（此類機構原始資料無此欄）
+            ])
+
+    with open(CHIAYI_LTC_NURSING_CSV, encoding="utf-8-sig") as f:
+        for row in csv.DictReader(f):
+            addr = (row.get("地址", "") or "").strip()
+            records.append([
+                "護理之家",                              # 0 category
+                row.get("機構名稱", "").strip(),        # 1 name
+                _chiayi_township(addr),                    # 2 township
+                addr,                                       # 3 address
+                row.get("電話", "").strip(),            # 4 phone
+                row.get("負責人或聯絡人", "").strip(),  # 5 director
+                _to_int(row.get("許可床數")),           # 6 approvedBeds
+                _to_int(row.get("開業床數")),           # 7 operatingBeds
+                row.get("核准開業日期", "").strip(),    # 8 approvalDate
+            ])
+
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["category", "name", "township", "address", "phone", "director",
+              "approvedBeds", "operatingBeds", "approvalDate"]
+    return {"fields": fields, "rows": records}
+
+
 def _specialty_norm(s):
     """去除 PDF 儲存格內因欄寬過窄產生的換行，並還原被誤用的 CJK 部首符號為正常漢字。"""
     if not s:
@@ -632,141 +726,193 @@ def _to_int(v):
         return 0
 
 
-def main():
-    abc = build_abc()
-    lane = build_lane()
-    tyc_elder = build_tyc_elder()
-    specialty = build_specialty()
-    kcg_homecare = build_kcg_homecare()
-    hsc_ltc = build_hsc_ltc()
-    yl_ltc = build_yl_ltc()
-    hccg_elder = build_hccg_elder()
-    tn_homecare_nursing = build_tn_homecare_nursing()
-    tc_nursing = build_tc_nursing()
-    ntpc_nursing = build_ntpc_nursing()
+DATASETS = [
+    {
+        "key": "abc",
+        "builder": build_abc,
+        "json": "data/abc.json",
+        "js_var": None,
+        "meta_key": "abc",
+        "title": "長照ABC據點",
+        "source": lambda: ABC_URL,
+    },
+    {
+        "key": "lane",
+        "builder": build_lane,
+        "json": "data/lane.json",
+        "js_var": None,
+        "meta_key": "lane",
+        "title": "巷弄長照站",
+        "source": lambda: LANE_URL,
+    },
+    {
+        "key": "tyc-elder",
+        "builder": build_tyc_elder,
+        "json": "data/tyc-elder.json",
+        "js_var": "TYC_ELDER_DATA",
+        "meta_key": "tycElder",
+        "title": "桃園市老人福利機構一覽表",
+        "source": lambda: TYC_ELDER_URL,
+    },
+    {
+        "key": "specialty",
+        "builder": build_specialty,
+        "json": "data/specialty.json",
+        "js_var": "SPECIALTY_DATA",
+        "meta_key": "specialty",
+        "title": "臺北市長照專業服務特約單位",
+        "source": lambda: SPECIALTY_SOURCE_PAGE,
+        "optional": True,
+    },
+    {
+        "key": "kcg-homecare",
+        "builder": build_kcg_homecare,
+        "json": "data/kcg-homecare.json",
+        "js_var": "KCG_HOMECARE_DATA",
+        "meta_key": "kcgHomecare",
+        "title": "銀髮族服務-居家長照機構",
+        "source": lambda: KCG_HOMECARE_URL,
+    },
+    {
+        "key": "hsc-ltc",
+        "builder": build_hsc_ltc,
+        "json": "data/hsc-ltc.json",
+        "js_var": "HSC_LTC_DATA",
+        "meta_key": "hscLtc",
+        "title": "新竹縣長照機構名冊",
+        "source": lambda: HSC_LTC_URL,
+    },
+    {
+        "key": "yl-ltc",
+        "builder": build_yl_ltc,
+        "json": "data/yl-ltc.json",
+        "js_var": "YL_LTC_DATA",
+        "meta_key": "ylLtc",
+        "title": "宜蘭縣立案老人長期照顧及安養機構名冊",
+        "source": lambda: YL_LTC_URL,
+    },
+    {
+        "key": "hccg-elder",
+        "builder": build_hccg_elder,
+        "json": "data/hccg-elder.json",
+        "js_var": "HCCG_ELDER_DATA",
+        "meta_key": "hccgElder",
+        "title": "新竹市老人福利機構一覽表",
+        "source": lambda: HCCG_ELDER_URL,
+    },
+    {
+        "key": "tn-homecare-nursing",
+        "builder": build_tn_homecare_nursing,
+        "json": "data/tn-homecare-nursing.json",
+        "js_var": "TN_HOMECARE_NURSING_DATA",
+        "meta_key": "tnHomecareNursing",
+        "title": "臺南市居家護理機構",
+        "source": lambda: TN_HOMECARE_NURSING_URL,
+    },
+    {
+        "key": "tc-nursing",
+        "builder": build_tc_nursing,
+        "json": "data/tc-nursing.json",
+        "js_var": "TC_NURSING_DATA",
+        "meta_key": "tcNursing",
+        "title": "臺中市一般護理之家清冊",
+        "source": lambda: TC_NURSING_URL,
+    },
+    {
+        "key": "ntpc-nursing",
+        "builder": build_ntpc_nursing,
+        "json": "data/ntpc-nursing.json",
+        "js_var": "NTPC_NURSING_DATA",
+        "meta_key": "ntpcNursing",
+        "title": "新北市一般護理之家清冊",
+        "source": lambda: NTPC_NURSING_URL_TEMPLATE.format(page=0),
+    },
+    {
+        "key": "chiayi-ltc",
+        "builder": build_chiayi_ltc,
+        "json": "data/chiayi-ltc.json",
+        "js_var": "CHIAYI_LTC_DATA",
+        "meta_key": "chiayiLtc",
+        "title": "嘉義縣立案長照及護理之家機構一覽",
+        "source": lambda: CHIAYI_LTC_SOURCE_PAGE,
+    },
+]
 
-    with open("data/abc.json", "w", encoding="utf-8") as f:
-        json.dump(abc, f, ensure_ascii=False, separators=(",", ":"))
-    with open("data/lane.json", "w", encoding="utf-8") as f:
-        json.dump(lane, f, ensure_ascii=False, separators=(",", ":"))
-    with open("data/tyc-elder.json", "w", encoding="utf-8") as f:
-        json.dump(tyc_elder, f, ensure_ascii=False, separators=(",", ":"))
-    # 額外輸出內嵌式 JS 版本（window.TYC_ELDER_DATA），前端以 <script> 標籤直接載入，
-    # 不透過 fetch()，避免任何網路請求/快取/部署時序問題導致資料顯示空白。
-    with open("data/tyc-elder.js", "w", encoding="utf-8") as f:
-        f.write("window.TYC_ELDER_DATA = ")
-        json.dump(tyc_elder, f, ensure_ascii=False, separators=(",", ":"))
-        f.write(";\n")
-    with open("data/kcg-homecare.json", "w", encoding="utf-8") as f:
-        json.dump(kcg_homecare, f, ensure_ascii=False, separators=(",", ":"))
-    # 同 tyc-elder，來源網址無 CORS 標頭，改用內嵌式 JS 版本（window.KCG_HOMECARE_DATA）。
-    with open("data/kcg-homecare.js", "w", encoding="utf-8") as f:
-        f.write("window.KCG_HOMECARE_DATA = ")
-        json.dump(kcg_homecare, f, ensure_ascii=False, separators=(",", ":"))
-        f.write(";\n")
-    with open("data/hsc-ltc.json", "w", encoding="utf-8") as f:
-        json.dump(hsc_ltc, f, ensure_ascii=False, separators=(",", ":"))
-    # 同 tyc-elder，來源網址無 CORS 標頭，改用內嵌式 JS 版本（window.HSC_LTC_DATA）。
-    with open("data/hsc-ltc.js", "w", encoding="utf-8") as f:
-        f.write("window.HSC_LTC_DATA = ")
-        json.dump(hsc_ltc, f, ensure_ascii=False, separators=(",", ":"))
-        f.write(";\n")
-    with open("data/yl-ltc.json", "w", encoding="utf-8") as f:
-        json.dump(yl_ltc, f, ensure_ascii=False, separators=(",", ":"))
-    # 同 tyc-elder，來源網址無 CORS 標頭，改用內嵌式 JS 版本（window.YL_LTC_DATA）。
-    with open("data/yl-ltc.js", "w", encoding="utf-8") as f:
-        f.write("window.YL_LTC_DATA = ")
-        json.dump(yl_ltc, f, ensure_ascii=False, separators=(",", ":"))
-        f.write(";\n")
-    with open("data/hccg-elder.json", "w", encoding="utf-8") as f:
-        json.dump(hccg_elder, f, ensure_ascii=False, separators=(",", ":"))
-    # 同 tyc-elder，來源網址無 CORS 標頭，改用內嵌式 JS 版本（window.HCCG_ELDER_DATA）。
-    with open("data/hccg-elder.js", "w", encoding="utf-8") as f:
-        f.write("window.HCCG_ELDER_DATA = ")
-        json.dump(hccg_elder, f, ensure_ascii=False, separators=(",", ":"))
-        f.write(";\n")
-    with open("data/tn-homecare-nursing.json", "w", encoding="utf-8") as f:
-        json.dump(tn_homecare_nursing, f, ensure_ascii=False, separators=(",", ":"))
-    # 同 tyc-elder，來源網址無 CORS 標頭，改用內嵌式 JS 版本（window.TN_HOMECARE_NURSING_DATA）。
-    with open("data/tn-homecare-nursing.js", "w", encoding="utf-8") as f:
-        f.write("window.TN_HOMECARE_NURSING_DATA = ")
-        json.dump(tn_homecare_nursing, f, ensure_ascii=False, separators=(",", ":"))
-        f.write(";\n")
-    with open("data/tc-nursing.json", "w", encoding="utf-8") as f:
-        json.dump(tc_nursing, f, ensure_ascii=False, separators=(",", ":"))
-    # 同 tyc-elder，另外輸出內嵌式 JS 版本（window.TC_NURSING_DATA），供前端以 <script> 直接載入。
-    with open("data/tc-nursing.js", "w", encoding="utf-8") as f:
-        f.write("window.TC_NURSING_DATA = ")
-        json.dump(tc_nursing, f, ensure_ascii=False, separators=(",", ":"))
-        f.write(";\n")
-    with open("data/ntpc-nursing.json", "w", encoding="utf-8") as f:
-        json.dump(ntpc_nursing, f, ensure_ascii=False, separators=(",", ":"))
-    # 來源 CORS 標頭僅允許 data.ntpc.gov.tw 網域，改用內嵌式 JS 版本（window.NTPC_NURSING_DATA）。
-    with open("data/ntpc-nursing.js", "w", encoding="utf-8") as f:
-        f.write("window.NTPC_NURSING_DATA = ")
-        json.dump(ntpc_nursing, f, ensure_ascii=False, separators=(",", ":"))
-        f.write(";\n")
+DATASET_KEYS = [d["key"] for d in DATASETS]
 
-    meta = {
-        "generatedAt": datetime.now(timezone.utc).isoformat(),
-        "abc": {"count": len(abc["rows"]), "source": ABC_URL, "title": "長照ABC據點"},
-        "lane": {"count": len(lane["rows"]), "source": LANE_URL, "title": "巷弄長照站"},
-        "tycElder": {
-            "count": len(tyc_elder["rows"]),
-            "source": TYC_ELDER_URL,
-            "title": "桃園市老人福利機構一覽表",
-        },
-        "kcgHomecare": {
-            "count": len(kcg_homecare["rows"]),
-            "source": KCG_HOMECARE_URL,
-            "title": "銀髮族服務-居家長照機構",
-        },
-        "hscLtc": {
-            "count": len(hsc_ltc["rows"]),
-            "source": HSC_LTC_URL,
-            "title": "新竹縣長照機構名冊",
-        },
-        "ylLtc": {
-            "count": len(yl_ltc["rows"]),
-            "source": YL_LTC_URL,
-            "title": "宜蘭縣立案老人長期照顧及安養機構名冊",
-        },
-        "hccgElder": {
-            "count": len(hccg_elder["rows"]),
-            "source": HCCG_ELDER_URL,
-            "title": "新竹市老人福利機構一覽表",
-        },
-        "tnHomecareNursing": {
-            "count": len(tn_homecare_nursing["rows"]),
-            "source": TN_HOMECARE_NURSING_URL,
-            "title": "臺南市居家護理機構",
-        },
-        "tcNursing": {
-            "count": len(tc_nursing["rows"]),
-            "source": TC_NURSING_URL,
-            "title": "臺中市一般護理之家清冊",
-        },
-        "ntpcNursing": {
-            "count": len(ntpc_nursing["rows"]),
-            "source": NTPC_NURSING_URL_TEMPLATE.format(page=0),
-            "title": "新北市一般護理之家清冊",
-        },
-    }
 
-    if specialty is not None:
-        with open("data/specialty.json", "w", encoding="utf-8") as f:
-            json.dump(specialty, f, ensure_ascii=False, separators=(",", ":"))
-        # 同 tyc-elder，另外輸出內嵌式 JS 版本（window.SPECIALTY_DATA），供前端以 <script> 直接載入。
-        with open("data/specialty.js", "w", encoding="utf-8") as f:
-            f.write("window.SPECIALTY_DATA = ")
-            json.dump(specialty, f, ensure_ascii=False, separators=(",", ":"))
+def _write_dataset(dataset, data):
+    """寫出單一資料集的 json（一律）與內嵌 js（若有設定 js_var）。"""
+    with open(dataset["json"], "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
+    if dataset["js_var"]:
+        js_path = dataset["json"][:-len(".json")] + ".js"
+        with open(js_path, "w", encoding="utf-8") as f:
+            f.write(f"window.{dataset['js_var']} = ")
+            json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
             f.write(";\n")
-        meta["specialty"] = {
-            "count": len(specialty["rows"]),
-            "source": SPECIALTY_SOURCE_PAGE,
-            "title": "臺北市長照專業服務特約單位",
+
+
+def main(argv=None):
+    """執行資料建置。
+
+    預設（不帶參數）會重新下載並轉換**全部**資料集，這是較耗時、且會對外發送多個網路請求的
+    完整流程，僅在明確需要「全面更新」時才執行。
+
+    若只是新增/調整單一資料集（例如剛新增一個 build_xxx()），可指定資料集 key 只重跑該資料集，
+    不影響其他資料集的 json/js 輸出，也不會覆寫 meta.json 中其他資料集的既有紀錄：
+
+        python3 scripts/build_data.py chiayi-ltc
+        python3 scripts/build_data.py tc-nursing ntpc-nursing   # 可同時指定多個
+
+    可用的 key 清單：見 DATASET_KEYS（等同各資料集 data/<key>.json 的檔名）。
+    """
+    parser = argparse.ArgumentParser(
+        description=main.__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "datasets",
+        nargs="*",
+        choices=DATASET_KEYS,
+        metavar="dataset",
+        help=(
+            "只重新產生指定資料集（可指定多個，以空白分隔）。"
+            f"可用值：{', '.join(DATASET_KEYS)}。不帶此參數則重新產生全部資料集。"
+        ),
+    )
+    args = parser.parse_args(argv)
+
+    selected_keys = args.datasets or DATASET_KEYS
+    full_run = not args.datasets
+    if full_run:
+        print("未指定資料集，將重新產生全部資料集（完整流程，耗時較久）...", file=sys.stderr)
+    else:
+        print(f"僅重新產生指定資料集：{', '.join(selected_keys)}", file=sys.stderr)
+
+    try:
+        with open("data/meta.json", "r", encoding="utf-8") as f:
+            meta = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        meta = {}
+
+    for dataset in DATASETS:
+        if dataset["key"] not in selected_keys:
+            continue
+        data = dataset["builder"]()
+        if data is None:
+            if dataset.get("optional"):
+                continue
+            print(f"警告：{dataset['key']} 未產生資料，略過寫入", file=sys.stderr)
+            continue
+        _write_dataset(dataset, data)
+        meta[dataset["meta_key"]] = {
+            "count": len(data["rows"]),
+            "source": dataset["source"](),
+            "title": dataset["title"],
         }
 
+    meta["generatedAt"] = datetime.now(timezone.utc).isoformat()
     with open("data/meta.json", "w", encoding="utf-8") as f:
         json.dump(meta, f, ensure_ascii=False, indent=2)
 
