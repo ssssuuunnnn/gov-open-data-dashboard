@@ -56,6 +56,14 @@
     （住宿長照機構／護理之家）分類，鄉鎮市由地址欄位解析（先移除可能存在的「嘉義縣」字首，再比對
     嘉義縣18個鄉鎮市清單）；住宿長照機構因原始欄位無「負責人」「核准開業日期」，該兩欄位留空；
     「核准開業日期」為民國年字串（如「88.3.22」），原文照登不轉換為西元年，詳見 build_chiayi_ltc()）
+13. 屏東縣老人長期照顧機構（DCAT dataset https://data.gov.tw/dataset/8572 ，提供機關：屏東縣政府
+    社會處）
+    https://www-ws.pthg.gov.tw/Upload/2015pthg/0/relfile/0/0/886f59e6-23b6-4de3-a04a-4de087bdf9b8.csv
+    （CSV，共57筆，欄位僅 name/address/phone 三欄；地址多數不含「屏東縣」字首（僅鄉鎮市名稱開頭，
+    如「竹田鄉六巷村太平路70巷20號」），本腳本先比對屏東縣33個鄉鎮市清單補上「屏東縣」前綴後再解析
+    鄉鎮市；機構類型由機構名稱結尾括號文字解析（如「(養護型)」「（養護型）」），無標示者歸類為
+    「未標示」，與 build_yl_ltc() 處理方式一致；無經緯度座標；來源網址無 CORS 標頭，改由本腳本於
+    伺服器端下載，詳見 build_pingtung_ltc()）
 
 用法：
     python3 scripts/build_data.py
@@ -82,6 +90,8 @@
     data/ntpc-nursing.js  (window.NTPC_NURSING_DATA，同上，供前端以 <script> 直接載入)
     data/chiayi-ltc.json
     data/chiayi-ltc.js    (window.CHIAYI_LTC_DATA，同上，供前端以 <script> 直接載入)
+    data/pingtung-ltc.json
+    data/pingtung-ltc.js  (window.PINGTUNG_LTC_DATA，同上，供前端以 <script> 直接載入)
     data/meta.json  (資料更新時間等資訊)
 
 額外相依套件：
@@ -118,6 +128,10 @@ NTPC_NURSING_URL_TEMPLATE = (
 CHIAYI_LTC_SOURCE_PAGE = "https://ltccenter.cyhg.gov.tw/cp.aspx?n=F7AEF7883C88532B"
 CHIAYI_LTC_INSTITUTIONS_CSV = "scripts/sources/chiayi-ltc/institutions.csv"
 CHIAYI_LTC_NURSING_CSV = "scripts/sources/chiayi-ltc/nursing-homes.csv"
+PINGTUNG_LTC_URL = (
+    "https://www-ws.pthg.gov.tw/Upload/2015pthg/0/relfile/0/0/"
+    "886f59e6-23b6-4de3-a04a-4de087bdf9b8.csv"
+)
 
 # 宜蘭縣行政區清單，用於補上原始地址欄位缺漏的「宜蘭縣」前綴（部分機構地址僅寫鄉鎮市區名，
 # 未包含縣名，例如「羅東鎮站前南路11號」）。
@@ -132,6 +146,16 @@ CHIAYI_TOWNSHIPS = [
     "番路鄉", "梅山鄉", "竹崎鄉", "阿里山鄉", "中埔鄉", "大埔鄉", "水上鄉", "鹿草鄉",
     "太保市", "朴子市", "東石鄉", "六腳鄉", "新港鄉", "民雄鄉", "大林鎮", "溪口鄉",
     "義竹鄉", "布袋鎮",
+]
+
+# 屏東縣33個鄉鎮市清單，用於從地址欄位解析鄉鎮市（多數機構地址未含「屏東縣」前綴，
+# 例如「竹田鄉六巷村太平路70巷20號」），詳見 build_pingtung_ltc()。
+PINGTUNG_TOWNSHIPS = [
+    "屏東市", "潮州鎮", "東港鎮", "恆春鎮",
+    "萬丹鄉", "長治鄉", "麟洛鄉", "九如鄉", "里港鄉", "鹽埔鄉", "高樹鄉", "萬巒鄉",
+    "內埔鄉", "竹田鄉", "新埤鄉", "枋寮鄉", "新園鄉", "崁頂鄉", "林邊鄉", "南州鄉",
+    "佳冬鄉", "琉球鄉", "車城鄉", "滿州鄉", "枋山鄉", "三地門鄉", "霧台鄉", "瑪家鄉",
+    "泰武鄉", "來義鄉", "春日鄉", "獅子鄉", "牡丹鄉",
 ]
 
 # 服務碼中文全名（8 項專業服務能力，PDF 表頭欄位）
@@ -652,6 +676,50 @@ def build_chiayi_ltc():
     return {"fields": fields, "rows": records}
 
 
+def _pingtung_township(address: str) -> str:
+    """從屏東縣地址欄位解析鄉鎮市：先移除可能存在的「屏東縣」前綴，
+    再比對 PINGTUNG_TOWNSHIPS 清單找出地址開頭的鄉鎮市名稱。"""
+    addr = (address or "").strip()
+    if addr.startswith("屏東縣"):
+        addr = addr[len("屏東縣"):]
+    for township in PINGTUNG_TOWNSHIPS:
+        if addr.startswith(township):
+            return township
+    return ""
+
+
+def build_pingtung_ltc():
+    """屏東縣老人長期照顧機構（屏東縣政府社會處，DCAT dataset https://data.gov.tw/dataset/8572）。
+
+    來源為 CSV（PINGTUNG_LTC_URL），欄位僅 name、address、phone 三欄，共57筆。地址多數不含
+    「屏東縣」前綴（僅鄉鎮市名稱開頭，如「竹田鄉六巷村太平路70巷20號」），少數例外已含完整前綴
+    （如「屏東縣竹田鄉六巷村太平路70巷20號」）。因全部資料同屬屏東縣，不需縣市篩選，僅用
+    _pingtung_township() 比對屏東縣33個鄉鎮市清單解析鄉鎮市。機構類型由機構名稱結尾括號文字解析
+    （如「(養護型)」「（養護型）」），無標示者歸類為「未標示」，與 build_yl_ltc() 處理方式一致。
+    無經緯度座標；來源網址無 CORS 標頭，改由本腳本於伺服器端下載。
+    """
+    print("下載 屏東縣老人長期照顧機構 ...", file=sys.stderr)
+    text = fetch(PINGTUNG_LTC_URL)
+    reader = csv.DictReader(io.StringIO(text))
+    type_re = re.compile(r"[（(]([^）)]+)[）)]\s*$")
+    records = []
+    for row in reader:
+        name = (row.get("name", "") or "").strip()
+        addr = (row.get("address", "") or "").strip()
+        m = type_re.search(name)
+        inst_type = m.group(1).strip() if m else "未標示"
+        records.append([
+            name,                              # 0 name
+            inst_type,                          # 1 type
+            _pingtung_township(addr),           # 2 township
+            addr,                               # 3 address
+            (row.get("phone", "") or "").strip(),  # 4 phone
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["name", "type", "township", "address", "phone"]
+    return {"fields": fields, "rows": records}
+
+
 def _specialty_norm(s):
     """去除 PDF 儲存格內因欄寬過窄產生的換行，並還原被誤用的 CJK 部首符號為正常漢字。"""
     if not s:
@@ -835,6 +903,15 @@ DATASETS = [
         "meta_key": "chiayiLtc",
         "title": "嘉義縣立案長照及護理之家機構一覽",
         "source": lambda: CHIAYI_LTC_SOURCE_PAGE,
+    },
+    {
+        "key": "pingtung-ltc",
+        "builder": build_pingtung_ltc,
+        "json": "data/pingtung-ltc.json",
+        "js_var": "PINGTUNG_LTC_DATA",
+        "meta_key": "pingtungLtc",
+        "title": "屏東縣老人長期照顧機構",
+        "source": lambda: PINGTUNG_LTC_URL,
     },
 ]
 
