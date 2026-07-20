@@ -143,6 +143,16 @@ main {
   gap: 4px;
   cursor: pointer;
 }
+/* 適用於選項數量較多的多選篩選（例如依行政區多選），自動換行並限制高度可捲動 */
+.filters .checkbox-group.scroll {
+  flex-wrap: wrap;
+  max-height: 130px;
+  overflow-y: auto;
+  padding: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: #fafafa;
+}
 
 button {
   cursor: pointer;

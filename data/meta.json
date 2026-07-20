@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-18T23:37:37.036428+00:00",
+  "generatedAt": "2026-07-20T13:38:34.125076+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -64,5 +64,10 @@
     "count": 56,
     "source": "https://www-ws.pthg.gov.tw/Upload/2015pthg/0/relfile/0/0/886f59e6-23b6-4de3-a04a-4de087bdf9b8.csv",
     "title": "屏東縣老人長期照顧機構"
+  },
+  "tcTransport": {
+    "count": 47,
+    "source": "https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=96251524-861c-4b92-9401-590444adcb8f",
+    "title": "臺中市失能者交通接送服務"
   }
 }

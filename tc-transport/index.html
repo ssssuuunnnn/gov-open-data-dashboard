@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DNHVGQP5W8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DNHVGQP5W8');
+</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>臺中市失能者交通接送服務地圖儀表板｜長照交通接送查詢</title>
+<meta name="description" content="臺中市政府衛生局提供之失能者交通接送服務開放資料視覺化，協助中重度失能者滿足以就醫及使用長期照顧服務為主要目的之交通服務需求，收錄辦理單位、連絡電話、地址與服務區域，提供地圖、服務區域多選篩選、行政區篩選、關鍵字搜尋與統計圖表。" />
+<meta name="keywords" content="臺中市交通接送,失能者交通接送,長照交通接送,臺中長照資源,復康巴士,臺中市政府衛生局開放資料" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://www.sunkuo.cc/gov-open-data-dashboard/tc-transport/index.html" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="政府開放資料儀表板" />
+<meta property="og:locale" content="zh_TW" />
+<meta property="og:title" content="臺中市失能者交通接送服務地圖儀表板" />
+<meta property="og:description" content="臺中市失能者交通接送服務辦理單位資料，提供地圖、服務區域篩選與統計圖表。" />
+<meta property="og:url" content="https://www.sunkuo.cc/gov-open-data-dashboard/tc-transport/index.html" />
+<meta property="og:image" content="https://www.sunkuo.cc/gov-open-data-dashboard/assets/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="臺中市失能者交通接送服務地圖儀表板" />
+<meta name="twitter:description" content="臺中市失能者交通接送服務辦理單位資料，提供地圖、服務區域篩選與統計圖表。" />
+<meta name="twitter:image" content="https://www.sunkuo.cc/gov-open-data-dashboard/assets/og-image.png" />
+
+<link rel="icon" type="image/png" href="../assets/favicon.png" />
+<link rel="preconnect" href="https://unpkg.com" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+<link rel="stylesheet" href="../assets/style.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "臺中市失能者交通接送服務",
+  "description": "臺中市政府衛生局提供之失能者交通接送服務辦理單位清冊，主要目的為協助中重度失能者滿足以就醫及使用長期照顧服務為主要目的之交通服務需求，含經緯度座標，收錄辦理單位、連絡電話、地址與服務區域等資訊。",
+  "url": "https://www.sunkuo.cc/gov-open-data-dashboard/tc-transport/index.html",
+  "license": "http://data.gov.tw/license",
+  "isAccessibleForFree": true,
+  "inLanguage": "zh-Hant-TW",
+  "keywords": ["長照", "交通接送", "失能者服務", "復康巴士", "臺中市"],
+  "spatialCoverage": {
+    "@type": "Place",
+    "name": "臺中市"
+  },
+  "creator": {
+    "@type": "Organization",
+    "name": "臺中市政府衛生局"
+  },
+  "distribution": {
+    "@type": "DataDownload",
+    "encodingFormat": "CSV",
+    "contentUrl": "https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=96251524-861c-4b92-9401-590444adcb8f"
+  }
+}
+</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <h1>臺中市失能者交通接送服務地圖儀表板</h1>
+    <div class="meta"><a href="../index.html" style="color:#fff">← 回首頁</a></div>
+  </div>
+  <div class="header-inner">
+    <nav>
+      提供機關：臺中市政府衛生局　|　更新頻率：不定期　|　
+      <a href="https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=96251524-861c-4b92-9401-590444adcb8f" target="_blank" rel="noopener">原始資料下載</a>
+    </nav>
+    <div class="meta" id="meta-updated"></div>
+  </div>
+</header>
+<noscript>
+  <p style="max-width:1280px;margin:16px auto;padding:0 24px;color:#b91c1c;">
+    本頁需要啟用 JavaScript 才能載入地圖、資料與圖表，請於瀏覽器設定中開啟 JavaScript 後重新整理頁面。
+  </p>
+</noscript>
+<main>
+  <p style="max-width:1280px;margin:0 auto 16px;padding:0 24px;color:var(--color-muted);">
+    協助中重度失能者滿足以就醫及使用長期照顧服務為主要目的之交通服務需求，可依「服務區域」篩選出實際
+    服務您所在行政區的辦理單位。
+  </p>
+  <div class="stat-grid" id="stat-grid">
+    <div class="stat-card"><div class="num" id="stat-total">-</div><div class="label">篩選後辦理單位數</div></div>
+    <div class="stat-card"><div class="num" id="stat-org-districts">-</div><div class="label">辦理單位涵蓋行政區數</div></div>
+    <div class="stat-card"><div class="num" id="stat-service-districts">-</div><div class="label">服務涵蓋行政區數</div></div>
+    <div class="stat-card"><div class="num" id="stat-all-area">-</div><div class="label">服務全臺中市單位數</div></div>
+  </div>
+
+  <div class="card">
+    <div class="filters">
+      <div class="field">
+        <label>辦理單位所在行政區</label>
+        <select id="f-district"><option value="">全部</option></select>
+      </div>
+      <div class="field" style="flex:1;">
+        <label>關鍵字（辦理單位 / 地址）</label>
+        <input type="text" id="f-keyword" placeholder="例如：機構名稱、路名…" />
+      </div>
+      <button class="ghost" id="f-reset">重設篩選</button>
+    </div>
+    <div class="filters" style="margin-top:12px;">
+      <div class="field" style="flex:1;">
+        <label>服務區域（可多選，符合任一即顯示；「全區」單位恆顯示）</label>
+        <div class="checkbox-group scroll" id="f-service-area"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div id="map"></div>
+    </div>
+    <div class="card">
+      <div class="chart-box"><h3>各行政區可服務辦理單位家數</h3><div class="chart-canvas-wrap"><canvas id="chart-service-area"></canvas></div></div>
+      <div class="chart-box"><h3>辦理單位所在行政區分布</h3><div class="chart-canvas-wrap"><canvas id="chart-org-district"></canvas></div></div>
+    </div>
+  </div>
+
+  <h2 class="section-title">資料明細</h2>
+  <div class="card">
+    <div id="table-container"></div>
+  </div>
+</main>
+<footer class="site-footer">
+  資料來源：<a href="https://data.gov.tw/dataset/8572" target="_blank" rel="noopener">臺中市政府衛生局 臺中市失能者交通接送服務</a>（原始資料 CSV）。
+  依「政府資料開放授權條款-第1版」釋出。地址對應之經緯度座標由本站將原始 TWD97 TM2 平面座標換算為 WGS84
+  經緯度產生，僅供參考，實際請以原始資料為準。
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="../assets/table.js"></script>
+<script src="../data/tc-transport.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

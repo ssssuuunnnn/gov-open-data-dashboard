@@ -64,6 +64,21 @@
     鄉鎮市；機構類型由機構名稱結尾括號文字解析（如「(養護型)」「（養護型）」），無標示者歸類為
     「未標示」，與 build_yl_ltc() 處理方式一致；無經緯度座標；來源網址無 CORS 標頭，改由本腳本於
     伺服器端下載，詳見 build_pingtung_ltc()）
+14. 臺中市失能者交通接送服務（DCAT dataset https://data.gov.tw/dataset/8572 ，提供機關：臺中市
+    政府衛生局）
+    https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=96251524-861c-4b92-9401-590444adcb8f
+    （CSV，欄位：辦理單位/連絡電話/地址/X坐標/Y坐標/服務區域，與 DCAT description 一致；地址已含
+    完整「臺中市OO區」字首可用 parse_county_district() 直接解析辦理單位所在行政區；X/Y 坐標為
+    **TWD97 TM2 平面座標（EPSG:3826）**而非經緯度，本腳本用 twd97_to_wgs84() 以標準反算公式
+    （GRS80 橢球、中央經線121°E、縮放係數0.9999、東移250000）自行換算為 WGS84 經緯度，未新增
+    任何外部套件依賴；「服務區域」欄位是以「、」分隔的行政區清單字串，少數為「全區」代表服務臺中市
+    全部行政區，本腳本拆解為 serviceAreas 陣列供前端多選篩選（比對時「全區」視為符合任一行政區）；
+    「連絡電話」欄位格式不一，混雜市話/手機並偶夾帶「分機」文字（如「(04)23950256分機15」），
+    原文照登不重新格式化，前端另行去除非數字字元組成可用的 tel: 連結；來源檔案本身在最後一筆資料的
+    「服務區域」欄位處疑似遭伺服器端截斷（結尾停在一個多位元組 UTF-8 字元中間），本腳本會過濾掉
+    因此產生的解碼替換字元片段；另有一筆服務區域含「棲棲」錯字（應為「梧棲」），原文照登不修正；
+    來源網址與同網域的臺中市一般護理之家清冊相同平台，仍依專案慣例由本腳本於伺服器端下載並輸出內嵌
+    JS 版本，詳見 build_tc_transport()）
 
 用法：
     python3 scripts/build_data.py
@@ -92,6 +107,8 @@
     data/chiayi-ltc.js    (window.CHIAYI_LTC_DATA，同上，供前端以 <script> 直接載入)
     data/pingtung-ltc.json
     data/pingtung-ltc.js  (window.PINGTUNG_LTC_DATA，同上，供前端以 <script> 直接載入)
+    data/tc-transport.json
+    data/tc-transport.js  (window.TC_TRANSPORT_DATA，同上，供前端以 <script> 直接載入)
     data/meta.json  (資料更新時間等資訊)
 
 額外相依套件：
@@ -103,6 +120,7 @@ import csv
 import glob
 import io
 import json
+import math
 import re
 import sys
 import urllib.request
@@ -132,6 +150,7 @@ PINGTUNG_LTC_URL = (
     "https://www-ws.pthg.gov.tw/Upload/2015pthg/0/relfile/0/0/"
     "886f59e6-23b6-4de3-a04a-4de087bdf9b8.csv"
 )
+TC_TRANSPORT_URL = "https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=96251524-861c-4b92-9401-590444adcb8f"
 
 # 宜蘭縣行政區清單，用於補上原始地址欄位缺漏的「宜蘭縣」前綴（部分機構地址僅寫鄉鎮市區名，
 # 未包含縣名，例如「羅東鎮站前南路11號」）。
@@ -198,6 +217,56 @@ def fetch(url: str) -> str:
     with urllib.request.urlopen(req, timeout=60) as resp:
         raw = resp.read()
     return raw.decode("utf-8-sig", errors="replace")
+
+
+def twd97_to_wgs84(x: float, y: float) -> tuple[float, float]:
+    """將 TWD97 TM2 平面座標（EPSG:3826，臺灣政府單位常見的 X/Y 坐標系統）轉換為
+    WGS84 經緯度（EPSG:4326）。使用標準橫麥卡托投影反算公式（Redfearn 系列展開），
+    GRS80 橢球參數、中央經線 121°E、縮放係數 k0=0.9999、東移(false easting) 250000、
+    北移(false northing) 0，為公開通用的地理座標轉換演算法，不依賴任何外部套件。
+
+    回傳 (lat, lng)。
+    """
+    a = 6378137.0
+    b = 6356752.314245
+    long0 = math.radians(121)
+    k0 = 0.9999
+    dx = 250000.0
+
+    e = math.sqrt(1 - (b / a) ** 2)
+    x = x - dx
+    y = y
+
+    m = y / k0
+    mu = m / (a * (1 - e ** 2 / 4 - 3 * e ** 4 / 64 - 5 * e ** 6 / 256))
+
+    e1 = (1 - (1 - e ** 2) ** 0.5) / (1 + (1 - e ** 2) ** 0.5)
+    j1 = 3 * e1 / 2 - 27 * e1 ** 3 / 32
+    j2 = 21 * e1 ** 2 / 16 - 55 * e1 ** 4 / 32
+    j3 = 151 * e1 ** 3 / 96
+    j4 = 1097 * e1 ** 4 / 512
+    fp = (mu + j1 * math.sin(2 * mu) + j2 * math.sin(4 * mu)
+          + j3 * math.sin(6 * mu) + j4 * math.sin(8 * mu))
+
+    e2 = (e * a / b) ** 2
+    c1 = e2 * math.cos(fp) ** 2
+    t1 = math.tan(fp) ** 2
+    r1 = a * (1 - e ** 2) / (1 - e ** 2 * math.sin(fp) ** 2) ** 1.5
+    n1 = a / (1 - e ** 2 * math.sin(fp) ** 2) ** 0.5
+    d = x / (n1 * k0)
+
+    q1 = n1 * math.tan(fp) / r1
+    q2 = d ** 2 / 2
+    q3 = (5 + 3 * t1 + 10 * c1 - 4 * c1 ** 2 - 9 * e2) * d ** 4 / 24
+    q4 = (61 + 90 * t1 + 298 * c1 + 45 * t1 ** 2 - 3 * c1 ** 2 - 252 * e2) * d ** 6 / 720
+    lat = fp - q1 * (q2 - q3 + q4)
+
+    q5 = d
+    q6 = (1 + 2 * t1 + c1) * d ** 3 / 6
+    q7 = (5 - 2 * c1 + 28 * t1 - 3 * c1 ** 2 + 8 * e2 + 24 * t1 ** 2) * d ** 5 / 120
+    lon = long0 + (q5 - q6 + q7) / math.cos(fp)
+
+    return math.degrees(lat), math.degrees(lon)
 
 
 def parse_county_district(address: str, fallback_county: str = "", strict: bool = False) -> tuple[str, str]:
@@ -720,6 +789,63 @@ def build_pingtung_ltc():
     return {"fields": fields, "rows": records}
 
 
+def build_tc_transport():
+    """臺中市失能者交通接送服務（臺中市政府衛生局，DCAT dataset https://data.gov.tw/dataset/8572，
+    dataset id 91903）。
+
+    來源為 CSV（TC_TRANSPORT_URL），欄位：辦理單位/連絡電話/地址/X坐標/Y坐標/服務區域，與 DCAT
+    description 一致。地址已含完整「臺中市OO區」字首，用 parse_county_district() 搭配
+    fallback_county="臺中市" 解析辦理單位所在行政區。
+
+    X/Y 坐標為 TWD97 TM2 平面座標（EPSG:3826）而非經緯度，用 twd97_to_wgs84() 換算為 WGS84
+    經緯度供地圖呈現。
+
+    「服務區域」欄位是以全形逗號「、」分隔的行政區清單字串（例如「潭子、中區、東區」），少數為
+    「全區」代表服務臺中市全部行政區；本腳本拆解為 serviceAreas 陣列，前端篩選時「全區」視為
+    符合任一行政區選項。
+
+    已知資料品質備註：「連絡電話」欄位格式不一，混雜市話「(04)xxxxxxxx」、手機「(09xx)xxxxxx」，
+    偶夾帶「分機」文字（如「(04)23950256分機15」），原文照登不重新格式化；地址門牌偶含全形逗號
+    列出多個樓層/單元（如「10樓之3、之4」），不影響地址解析；來源 CSV 檔案本身在最後一筆資料的
+    「服務區域」欄位處疑似被伺服器端截斷（實測原始 bytes 在檔案結尾停在一個多位元組 UTF-8 字元
+    的中間），導致該筆最後一個行政區名稱解碼成無法辨識的替換字元（U+FFFD），本腳本會過濾掉含有
+    此替換字元的服務區域片段（保留該筆資料其他欄位與已完整解碼的服務區域），不嘗試猜測被截斷的
+    原始行政區名稱；另有一筆服務區域含「棲棲」（應為「梧棲」的重複字錯字），原文照登不修正。
+    """
+    print("下載 臺中市失能者交通接送服務 ...", file=sys.stderr)
+    # 來源 CSV 檔頭含兩個連續 BOM（\ufeff\ufeff），fetch() 的 utf-8-sig 解碼只會去掉一個，
+    # 剩餘一個會殘留在第一欄「辦理單位」欄名前導致 DictReader 讀不到該欄，故額外 lstrip 處理
+    # （與 build_tc_nursing() 相同問題，同網域來源共用此怪癖）。
+    text = fetch(TC_TRANSPORT_URL).lstrip("\ufeff")
+    reader = csv.DictReader(io.StringIO(text))
+    records = []
+    for row in reader:
+        addr = (row.get("地址", "") or "").strip()
+        _county, district = parse_county_district(addr, fallback_county="臺中市")
+        try:
+            x = float(row.get("X坐標") or 0)
+            y = float(row.get("Y坐標") or 0)
+            lat, lng = twd97_to_wgs84(x, y)
+        except (TypeError, ValueError):
+            lat, lng = 0.0, 0.0
+        # 過濾含解碼替換字元（U+FFFD）的片段，見上方 docstring 說明（來源檔案結尾疑似被截斷）。
+        service_areas = [
+            s for s in (row.get("服務區域", "") or "").split("、") if s and "\ufffd" not in s
+        ]
+        records.append([
+            row.get("辦理單位", "").strip(),   # 0 name
+            (row.get("連絡電話", "") or "").strip(),  # 1 phone
+            addr,                                        # 2 address
+            district,                                     # 3 district
+            round(lng, 6),                                 # 4 lng
+            round(lat, 6),                                 # 5 lat
+            service_areas,                                 # 6 serviceAreas
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["name", "phone", "address", "district", "lng", "lat", "serviceAreas"]
+    return {"fields": fields, "rows": records}
+
+
 def _specialty_norm(s):
     """去除 PDF 儲存格內因欄寬過窄產生的換行，並還原被誤用的 CJK 部首符號為正常漢字。"""
     if not s:
@@ -912,6 +1038,15 @@ DATASETS = [
         "meta_key": "pingtungLtc",
         "title": "屏東縣老人長期照顧機構",
         "source": lambda: PINGTUNG_LTC_URL,
+    },
+    {
+        "key": "tc-transport",
+        "builder": build_tc_transport,
+        "json": "data/tc-transport.json",
+        "js_var": "TC_TRANSPORT_DATA",
+        "meta_key": "tcTransport",
+        "title": "臺中市失能者交通接送服務",
+        "source": lambda: TC_TRANSPORT_URL,
     },
 ]
 
