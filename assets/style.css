@@ -351,9 +351,12 @@ footer.site-footer {
   text-decoration: none;
   color: var(--color-text);
   border-top: 6px solid var(--color-primary);
-  transition: transform .15s ease;
+  transition: transform .15s ease, border-top-color .15s ease;
 }
-.home-card:hover { transform: translateY(-3px); }
+.home-card:hover {
+  transform: translateY(-3px);
+  border-top-color: var(--color-accent);
+}
 .home-card h2 { margin: 0; color: var(--color-primary-dark); }
 .home-card .tag {
   font-size: .74rem;
