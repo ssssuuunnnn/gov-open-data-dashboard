@@ -79,6 +79,19 @@
     因此產生的解碼替換字元片段；另有一筆服務區域含「棲棲」錯字（應為「梧棲」），原文照登不修正；
     來源網址與同網域的臺中市一般護理之家清冊相同平台，仍依專案慣例由本腳本於伺服器端下載並輸出內嵌
     JS 版本，詳見 build_tc_transport()）
+15. 桃園市長期照護專業服務特約單位（DCAT dataset https://data.gov.tw/dataset/8572 ，
+    dataset id 94306，提供機關：桃園市政府衛生局）
+    https://opendata.tycg.gov.tw/api/dataset/2e087011-3a3d-4ae1-9038-19b2f3f43a9a/resource/cc33a2eb-c1cf-47f1-b6f7-d4b37ba4c797/download
+    （CSV，共約121筆，**編碼為 BIG5(cp950)**，與本專案其他資料集慣用的 utf-8-sig 不同，fetch() 已
+    支援自訂 encoding 參數處理此例外；欄位為性質/資源彙整機關/辦理單位/成立日期/立案文號/負責人/
+    連絡電話/傳真/電子郵件/地址/服務區域/相關網址/X坐標/Y坐標/備註/最後更新時間，與 DCAT description
+    一致，但實測「性質」「成立日期」「立案文號」「服務區域」「相關網址」「X坐標」「Y坐標」「備註」
+    全數為空值，**無經緯度座標**，故不含地圖；「地址」為特約單位（辦理單位）本身的地址，約12%機構
+    位於新北市/臺北市等桃園市以外縣市（服務桃園市民但機構設址於外縣市），不可假設地址一律在桃園市，
+    本腳本先判斷是否以「桃園市」開頭並用既有 TYC_DISTRICTS 固定清單解析行政區，否則改用
+    parse_county_district() 一般規則解析其他縣市；「服務類型」欄位為本腳本依「辦理單位」名稱關鍵字
+    啟發式推斷（如含「居家式服務類機構」「職能治療所」「物理治療所」「護理之家」「日間照顧」等），
+    **非官方分類欄位**，前端會明確標注為推斷值，詳見 build_tyltc() 與 TYLTC_TYPE_RULES）
 
 用法：
     python3 scripts/build_data.py
@@ -109,6 +122,8 @@
     data/pingtung-ltc.js  (window.PINGTUNG_LTC_DATA，同上，供前端以 <script> 直接載入)
     data/tc-transport.json
     data/tc-transport.js  (window.TC_TRANSPORT_DATA，同上，供前端以 <script> 直接載入)
+    data/tyltc.json
+    data/tyltc.js         (window.TYLTC_DATA，同上，供前端以 <script> 直接載入)
     data/meta.json  (資料更新時間等資訊)
 
 額外相依套件：
@@ -151,6 +166,23 @@ PINGTUNG_LTC_URL = (
     "886f59e6-23b6-4de3-a04a-4de087bdf9b8.csv"
 )
 TC_TRANSPORT_URL = "https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=96251524-861c-4b92-9401-590444adcb8f"
+TYLTC_URL = (
+    "https://opendata.tycg.gov.tw/api/dataset/2e087011-3a3d-4ae1-9038-19b2f3f43a9a/"
+    "resource/cc33a2eb-c1cf-47f1-b6f7-d4b37ba4c797/download"
+)
+
+# 桃園市長期照護專業服務特約單位「服務類型」啟發式分類規則：依「辦理單位」名稱關鍵字比對，
+# 由上到下第一個命中的關鍵字決定分類，非官方分類欄位，僅供篩選/圖表參考用途。
+TYLTC_TYPE_RULES = [
+    ("居家式服務類機構", "居家式服務類機構"),
+    ("職能治療所", "職能治療所"),
+    ("物理治療所", "物理治療所"),
+    ("護理之家", "護理之家"),
+    ("護理站", "護理之家"),
+    ("日間照顧", "日間照顧中心"),
+    ("治療所", "其他治療所"),
+    ("居家", "居家式服務（其他）"),
+]
 
 # 宜蘭縣行政區清單，用於補上原始地址欄位缺漏的「宜蘭縣」前綴（部分機構地址僅寫鄉鎮市區名，
 # 未包含縣名，例如「羅東鎮站前南路11號」）。
@@ -212,11 +244,11 @@ ADDR_RE = re.compile(r"^(..[市縣])(.*?[市區鄉鎮])")
 ADDR_RE_STRICT = re.compile(r"^(..[市縣])(.*?[市區鄉鎮])(?![市區鄉鎮])")
 
 
-def fetch(url: str) -> str:
+def fetch(url: str, encoding: str = "utf-8-sig") -> str:
     req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
     with urllib.request.urlopen(req, timeout=60) as resp:
         raw = resp.read()
-    return raw.decode("utf-8-sig", errors="replace")
+    return raw.decode(encoding, errors="replace")
 
 
 def twd97_to_wgs84(x: float, y: float) -> tuple[float, float]:
@@ -846,6 +878,69 @@ def build_tc_transport():
     return {"fields": fields, "rows": records}
 
 
+def _tyltc_service_type(name: str) -> str:
+    """依「辦理單位」名稱關鍵字啟發式推斷服務類型，見 TYLTC_TYPE_RULES 說明。"""
+    for keyword, label in TYLTC_TYPE_RULES:
+        if keyword in (name or ""):
+            return label
+    return "其他"
+
+
+def build_tyltc():
+    """桃園市長期照護專業服務特約單位（桃園市政府衛生局，DCAT dataset id 94306）。
+
+    來源為 CSV（TYLTC_URL），共約121筆，**編碼為 BIG5(cp950)**——與本專案其他資料集慣用的
+    utf-8-sig 不同，需以 fetch(url, encoding="cp950") 下載解碼。原始欄位：性質、資源彙整機關、
+    辦理單位、成立日期、立案文號、負責人、連絡電話、傳真、電子郵件、地址、服務區域、相關網址、
+    X坐標、Y坐標、備註、最後更新時間，與 DCAT description 一致；實測「性質」「成立日期」
+    「立案文號」「服務區域」「相關網址」「X坐標」「Y坐標」「備註」全數為空值，**無經緯度座標**，
+    故本頁不含地圖。
+
+    「地址」為特約單位（辦理單位）本身的地址，實測約12%機構位於新北市/臺北市等桃園市以外縣市
+    （服務桃園市民但機構設址於外縣市），不可假設地址一律在桃園市：地址以「桃園市」開頭者，用既有
+    TYC_DISTRICTS 固定清單解析行政區（沿用 build_tyc_elder() 的理由：ADDR_RE 對「平鎮區」等名稱
+    中途含「鎮」字的行政區會誤判）；其餘縣市則改用 parse_county_district() 搭配 strict=True 解析。
+
+    「服務類型」為本腳本依「辦理單位」名稱關鍵字啟發式推斷（TYLTC_TYPE_RULES，如含「居家式服務類
+    機構」「職能治療所」「物理治療所」「護理之家」「日間照顧」等），**非官方分類欄位**，前端需標注
+    為推斷值，僅供篩選/圖表參考，不代表衛生局正式分類。
+
+    「連絡電話」欄位偶有跨行的多組號碼/分機備註（CSV 已用引號包住換行內容），本腳本統一以
+    " / " 合併成單行，與 build_kcg_homecare() 的 informtel 處理方式一致。
+    """
+    print("下載 桃園市長期照護專業服務特約單位 ...", file=sys.stderr)
+    text = fetch(TYLTC_URL, encoding="cp950")
+    reader = csv.DictReader(io.StringIO(text))
+    records = []
+    for row in reader:
+        name = (row.get("辦理單位", "") or "").strip()
+        addr = (row.get("地址", "") or "").strip()
+        if addr.startswith("桃園市"):
+            county = "桃園市"
+            rest = addr[len("桃園市"):]
+            district = next((d for d in TYC_DISTRICTS if rest.startswith(d)), "")
+        else:
+            county, district = parse_county_district(addr, strict=True)
+        phone_lines = [p.strip() for p in (row.get("連絡電話", "") or "").splitlines() if p.strip()]
+        phone = " / ".join(phone_lines)
+        records.append([
+            name,                                              # 0 name
+            _tyltc_service_type(name),                         # 1 type
+            county,                                             # 2 county
+            district,                                          # 3 district
+            addr,                                              # 4 address
+            (row.get("負責人", "") or "").strip(),          # 5 owner
+            phone,                                              # 6 phone
+            (row.get("傳真", "") or "").strip(),            # 7 fax
+            (row.get("電子郵件", "") or "").strip(),        # 8 email
+            (row.get("最後更新時間", "") or "").strip(),   # 9 updatedAt
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["name", "type", "county", "district", "address", "owner",
+              "phone", "fax", "email", "updatedAt"]
+    return {"fields": fields, "rows": records}
+
+
 def _specialty_norm(s):
     """去除 PDF 儲存格內因欄寬過窄產生的換行，並還原被誤用的 CJK 部首符號為正常漢字。"""
     if not s:
@@ -1047,6 +1142,15 @@ DATASETS = [
         "meta_key": "tcTransport",
         "title": "臺中市失能者交通接送服務",
         "source": lambda: TC_TRANSPORT_URL,
+    },
+    {
+        "key": "tyltc",
+        "builder": build_tyltc,
+        "json": "data/tyltc.json",
+        "js_var": "TYLTC_DATA",
+        "meta_key": "tyltc",
+        "title": "桃園市長期照護專業服務特約單位",
+        "source": lambda: TYLTC_URL,
     },
 ]
 

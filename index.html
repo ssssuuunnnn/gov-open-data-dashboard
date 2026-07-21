@@ -47,7 +47,7 @@
   "description": "整理衛生福利部「長照ABC據點」與彰化縣政府社會處「巷弄長照站」政府開放資料，提供互動地圖、統計圖表與可篩選查詢資料表。",
   "inLanguage": "zh-Hant-TW",
   "datePublished": "2026-07-05",
-  "dateModified": "2026-07-20",
+  "dateModified": "2026-07-21",
   "hasPart": [
     {
       "@type": "Dataset",
@@ -205,6 +205,17 @@
       "creator": {
         "@type": "Organization",
         "name": "臺中市政府衛生局"
+      }
+    },
+    {
+      "@type": "Dataset",
+      "name": "桃園市長期照護專業服務特約單位",
+      "description": "桃園市政府衛生局公告之長期照護專業服務特約單位清冊，收錄約115筆居家護理所、物理／職能治療所等特約單位的名稱、負責人、電話、地址與服務類型（依機構名稱推斷），部分機構位於新北市、臺北市等鄰近縣市但服務桃園市民。",
+      "url": "https://www.sunkuo.cc/gov-open-data-dashboard/tyltc/index.html",
+      "license": "http://data.gov.tw/license",
+      "creator": {
+        "@type": "Organization",
+        "name": "桃園市政府衛生局"
       }
     }
   ]
@@ -420,6 +431,12 @@
       <div class="desc">臺中市政府衛生局提供，協助中重度失能者滿足以就醫及使用長期照顧服務為主要目的之交通服務需求，列出辦理單位名稱、連絡電話、地址與經緯度，可依服務區域（多選）、所在行政區篩選並於地圖上瀏覽分布。</div>
       <div class="footline" id="tc-transport-count">資料筆數載入中…</div>
     </a>
+    <a class="home-card" href="tyltc/index.html" data-county="桃園市">
+      <span class="tag">桃園市</span>
+      <h2>桃園市長期照護專業服務特約單位</h2>
+      <div class="desc">桃園市政府衛生局提供，列出居家護理所、物理／職能治療所等長期照護專業服務特約單位名稱、負責人、電話、地址與服務類型（依名稱推斷），可依縣市、鄉鎮市區、服務類型與關鍵字篩選並瀏覽統計圖表。</div>
+      <div class="footline" id="tyltc-count">資料筆數載入中…</div>
+    </a>
     <p class="no-match" id="county-no-match" style="display:none; grid-column: 1 / -1; text-align:center; color: var(--color-muted); padding: 24px 0;">
       沒有符合所選縣市的資料集，請調整篩選條件。
     </p>
@@ -586,6 +603,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.tcTransport) {
     document.getElementById("tc-transport-count").textContent = `共 ${meta.tcTransport.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.tyltc) {
+    document.getElementById("tyltc-count").textContent = `共 ${meta.tyltc.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
 }).catch(() => {});
 

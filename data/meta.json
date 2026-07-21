@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-20T13:38:34.125076+00:00",
+  "generatedAt": "2026-07-21T13:18:03.666464+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -69,5 +69,10 @@
     "count": 47,
     "source": "https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=96251524-861c-4b92-9401-590444adcb8f",
     "title": "臺中市失能者交通接送服務"
+  },
+  "tyltc": {
+    "count": 115,
+    "source": "https://opendata.tycg.gov.tw/api/dataset/2e087011-3a3d-4ae1-9038-19b2f3f43a9a/resource/cc33a2eb-c1cf-47f1-b6f7-d4b37ba4c797/download",
+    "title": "桃園市長期照護專業服務特約單位"
   }
 }
