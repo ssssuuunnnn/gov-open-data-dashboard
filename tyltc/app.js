@@ -25,13 +25,51 @@
       { key: "type", label: "服務類型（推斷）" },
       { key: "county", label: "縣市" },
       { key: "district", label: "鄉鎮市區" },
-      { key: "address", label: "地址" },
+      { key: "address", label: "地址", render: (r) => addressLink(r.address) },
       { key: "owner", label: "負責人" },
-      { key: "phone", label: "電話" },
-      { key: "email", label: "電子郵件" },
+      { key: "phone", label: "電話", render: (r) => phoneLink(r.phone) },
+      { key: "email", label: "電子郵件", render: (r) => emailLink(r.email) },
       { key: "updatedAt", label: "最後更新時間" },
     ],
   });
+
+  function escapeHtml(s) {
+    return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+
+  // 電話欄位可能含「分機」「#」裝飾字元，且少數資料以「 / 」合併多組號碼（見 build_data.py
+  // 合併邏輯），逐段轉成 tel: 連結，無法辨識數字的片段（如單獨的分機片段）維持原文顯示。
+  function phoneLink(phone) {
+    if (!phone) return "";
+    return String(phone)
+      .split(" / ")
+      .map((seg) => singlePhoneLink(seg.trim()))
+      .join(" / ");
+  }
+
+  function singlePhoneLink(seg) {
+    if (!seg) return "";
+    const m = seg.match(/^(.*?)(?:分機|#)(\d+)\s*$/);
+    const main = m ? m[1] : seg;
+    const ext = m ? m[2] : "";
+    const digits = main.replace(/[^\d+]/g, "");
+    if (!digits) return escapeHtml(seg);
+    const href = ext ? `tel:${digits};ext=${ext}` : `tel:${digits}`;
+    return `<a href="${href}">${escapeHtml(seg)}</a>`;
+  }
+
+  // 地址轉成 Google Maps 搜尋連結；因部分機構地址位於桃園市以外縣市，一律用完整地址文字
+  // 搜尋，不假設座標範圍。
+  function addressLink(address) {
+    if (!address) return "";
+    const href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+    return `<a href="${href}" target="_blank" rel="noopener">${escapeHtml(address)}</a>`;
+  }
+
+  function emailLink(email) {
+    if (!email) return "";
+    return `<a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a>`;
+  }
 
   function rowToObj(row) {
     const o = {};
