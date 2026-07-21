@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://www.sunkuo.cc/gov-open-data-dashboard/sitemap.xml
+# LLM-friendly site summary: https://www.sunkuo.cc/gov-open-data-dashboard/llms.txt

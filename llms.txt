@@ -1,0 +1,32 @@
+# 政府開放資料儀表板
+
+> 以政府開放資料建置的靜態網站，整理十五個長照/老人福利相關資料集為互動式儀表板，提供篩選、統計圖表與分頁表格，部分資料集含地圖呈現。無後端、無建置工具，直接部署於 GitHub Pages。
+
+本站所有資料皆來自各縣市政府開放資料平台或公告頁面，經清理、地址解析與格式轉換後靜態化，原始來源與授權資訊詳見各資料集頁面下方連結的 llms.txt。
+
+## 資料集頁面
+
+- [長照ABC據點](https://www.sunkuo.cc/gov-open-data-dashboard/abc/index.html): 全國 A/B/C 三級長照據點，含經緯度座標，於地圖上呈現，並提供縣市／鄉鎮／類別／關鍵字篩選與統計圖表。 (https://www.sunkuo.cc/gov-open-data-dashboard/abc/llms.txt)
+- [巷弄長照站](https://www.sunkuo.cc/gov-open-data-dashboard/lane/index.html): 彰化縣各鄉鎮巷弄長照站清單，提供鄉鎮篩選、關鍵字搜尋與統計圖表。 (https://www.sunkuo.cc/gov-open-data-dashboard/lane/llms.txt)
+- [桃園市老人福利機構一覽表](https://www.sunkuo.cc/gov-open-data-dashboard/tyc-elder/index.html): 桃園市私立老人福利機構（養護/長照/安養）清單，提供鄉鎮市區／收容對象／評鑑成績／關鍵字篩選與統計圖表。 (https://www.sunkuo.cc/gov-open-data-dashboard/tyc-elder/llms.txt)
+- [臺北市長照專業服務特約單位](https://www.sunkuo.cc/gov-open-data-dashboard/specialty/index.html): 臺北市居家護理所、物理／職能治療所等長照專業服務特約單位清單，標示是否提供8項專業服務能力（復能照護、營養照護、進食與吞嚥照護等），提供服務區域／服務能力／關鍵字篩選與統計圖表。資料來源僅為公告頁面的 PDF 附件、非開放資料 CSV/API，需人工下載更新。 (https://www.sunkuo.cc/gov-open-data-dashboard/specialty/llms.txt)
+- [銀髮族服務-居家長照機構](https://www.sunkuo.cc/gov-open-data-dashboard/kcg-homecare/index.html): 高雄市居家式服務類長期照顧服務機構清單，含經緯度座標，於地圖上呈現，並提供行政區／服務時段／關鍵字篩選與統計圖表。 (https://www.sunkuo.cc/gov-open-data-dashboard/kcg-homecare/llms.txt)
+- [新竹縣長照機構名冊](https://www.sunkuo.cc/gov-open-data-dashboard/hsc-ltc/index.html): 新竹縣居家服務、日間照顧、小規模多機能、家庭托顧、團體家屋等長照機構清單，提供鄉鎮市區／服務類型／關鍵字篩選與統計圖表。 (https://www.sunkuo.cc/gov-open-data-dashboard/hsc-ltc/llms.txt)
+- [宜蘭縣立案老人長期照顧及安養機構名冊](https://www.sunkuo.cc/gov-open-data-dashboard/yl-ltc/index.html): 宜蘭縣養護型、長期照護型等立案老人長期照顧及安養機構清單，提供鄉鎮市區／機構類型／關鍵字篩選與統計圖表。 (https://www.sunkuo.cc/gov-open-data-dashboard/yl-ltc/llms.txt)
+- [新竹市老人福利機構一覽表](https://www.sunkuo.cc/gov-open-data-dashboard/hccg-elder/index.html): 新竹市立案老人福利機構清單，含經緯度座標，於地圖上呈現，並提供行政區／收容對象／關鍵字篩選與統計圖表。 (https://www.sunkuo.cc/gov-open-data-dashboard/hccg-elder/llms.txt)
+- [臺南市居家護理機構](https://www.sunkuo.cc/gov-open-data-dashboard/tn-homecare-nursing/index.html): 臺南市各行政區居家護理所清單（114年度），提供行政區／關鍵字篩選與統計圖表。 (https://www.sunkuo.cc/gov-open-data-dashboard/tn-homecare-nursing/llms.txt)
+- [臺中市一般護理之家清冊](https://www.sunkuo.cc/gov-open-data-dashboard/tc-nursing/index.html): 臺中市各行政區一般護理之家清單，含一般床／呼吸器依賴床許可與開放床數、評鑑結果、督考結果，提供行政區／關鍵字篩選與統計圖表。 (https://www.sunkuo.cc/gov-open-data-dashboard/tc-nursing/llms.txt)
+- [新北市一般護理之家清冊](https://www.sunkuo.cc/gov-open-data-dashboard/ntpc-nursing/index.html): 新北市各行政區一般護理之家清單，含地址、聯絡人、電話、開放床數、機構應配置護理人員數，提供行政區／關鍵字篩選與統計圖表。 (https://www.sunkuo.cc/gov-open-data-dashboard/ntpc-nursing/llms.txt)
+- [嘉義縣立案長照及護理之家機構一覽](https://www.sunkuo.cc/gov-open-data-dashboard/chiayi-ltc/index.html): 合併嘉義縣立案住宿長照機構名單與護理之家名單，收錄機構類型、機構名稱、鄉鎮市、地址、電話、負責人、許可／開業床數，提供機構類型／鄉鎮市／關鍵字篩選與統計圖表。資料來源為使用者提供之本機 CSV、無公開下載網址，需人工更新。 (https://www.sunkuo.cc/gov-open-data-dashboard/chiayi-ltc/llms.txt)
+- [屏東縣老人長期照顧機構](https://www.sunkuo.cc/gov-open-data-dashboard/pingtung-ltc/index.html): 屏東縣老人長期照顧機構清單，收錄機構名稱、地址、電話，機構類型（養護型／失智型／未標示）由機構名稱解析而來，鄉鎮市由地址欄位解析，提供鄉鎮市／機構類型／關鍵字篩選與統計圖表，無經緯度座標。 (https://www.sunkuo.cc/gov-open-data-dashboard/pingtung-ltc/llms.txt)
+- [臺中市失能者交通接送服務](https://www.sunkuo.cc/gov-open-data-dashboard/tc-transport/index.html): 協助中重度失能者滿足以就醫及使用長期照顧服務為主要目的之交通服務需求，收錄辦理單位名稱、連絡電話、地址、服務區域，含經緯度座標（由原始 TWD97 TM2 平面座標換算），於地圖上呈現，並提供服務區域（多選）／辦理單位所在行政區／關鍵字篩選與統計圖表。 (https://www.sunkuo.cc/gov-open-data-dashboard/tc-transport/llms.txt)
+- [桃園市長期照護專業服務特約單位](https://www.sunkuo.cc/gov-open-data-dashboard/tyltc/index.html): 桃園市居家護理所、物理／職能治療所等長期照護專業服務特約單位清單，收錄機構名稱、負責人、電話、傳真、電子郵件、地址與最後更新時間；「服務類型」由機構名稱關鍵字啟發式推斷（非官方分類），部分機構地址位於新北市、臺北市等鄰近縣市，提供縣市／鄉鎮市區／服務類型／關鍵字篩選與統計圖表，無經緯度座標。 (https://www.sunkuo.cc/gov-open-data-dashboard/tyltc/llms.txt)
+
+## 其他頁面
+
+- [更新紀錄](https://www.sunkuo.cc/gov-open-data-dashboard/changelog/index.html): 網站更新紀錄，記錄新增資料集與功能異動歷程。
+
+## 補充資訊
+
+- 授權方式：政府資料開放授權條款-第1版（各資料集皆同）。
+- 專案原始碼：https://github.com/ssssuuunnnn/gov-open-data-dashboard

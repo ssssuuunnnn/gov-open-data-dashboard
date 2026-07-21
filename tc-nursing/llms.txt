@@ -1,0 +1,20 @@
+# 臺中市一般護理之家清冊
+
+> 臺中市各行政區一般護理之家清單，含一般床／呼吸器依賴床許可與開放床數、評鑑結果、督考結果，提供行政區／關鍵字篩選與統計圖表。
+
+- 提供機關：臺中市政府衛生局
+- 資料筆數：約 60 筆（隨資料來源更新而變動，實際筆數以頁面即時載入為準）
+- 原始資料來源：https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=af086949-239b-41ef-8316-5c12dd26a672
+- 授權方式：政府資料開放授權條款-第1版
+- 建議查看頻率：每月
+
+## 頁面內容
+
+- 儀表板頁面：https://www.sunkuo.cc/gov-open-data-dashboard/tc-nursing/index.html
+- 篩選條件、統計卡片、圖表與分頁表格皆基於上述原始資料即時運算，不含額外人工詮釋（除文中另有註記的啟發式推斷欄位）。
+
+## 相關連結
+
+- 網站首頁：https://www.sunkuo.cc/gov-open-data-dashboard/
+- 更新紀錄：https://www.sunkuo.cc/gov-open-data-dashboard/changelog/index.html
+- 專案原始碼：https://github.com/ssssuuunnnn/gov-open-data-dashboard

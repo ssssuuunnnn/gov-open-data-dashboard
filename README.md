@@ -45,6 +45,7 @@
 
 ```
 index.html          首頁，連結至十五個儀表板與更新紀錄頁
+llms.txt             全站給 LLM 閱讀的摘要（含各資料集頁面連結與說明），依 llmstxt.org 慣例放在網站根目錄
 changelog/index.html 網站更新紀錄頁（純靜態文字，供 SEO 與使用者查看網站更新歷程）
 abc/index.html       長照ABC據點地圖儀表板（Leaflet 地圖 + Chart.js 圖表 + 篩選表格）
 abc/app.js
@@ -214,6 +215,10 @@ python3 -m http.server 8000
   `WebSite` JSON-LD 的 `hasPart` 陣列新增對應 `Dataset` 條目（name/description/url/license/creator），並更新
   `dateModified`，否則搜尋引擎讀到的結構化資料會與實際頁面數量不一致。**
 - 根目錄提供 `robots.txt` 與 `sitemap.xml`，並加入 `favicon.png`/`favicon.ico`。
+- 根目錄 `llms.txt`（依 [llmstxt.org](https://llmstxt.org/) 慣例）提供全站 Markdown 摘要，列出各資料集頁面
+  連結與簡介；每個資料集頁面資料夾下另有一份專屬 `<dataset>/llms.txt`，說明該資料集的提供機關、原始資料
+  來源、授權方式與筆數，供 LLM 快速理解單一資料集內容。**新增資料集頁面時，記得同步在根目錄 `llms.txt` 的
+  「資料集頁面」清單新增一筆條目，並在該資料集資料夾新增對應的 `llms.txt`。**
 - 加入 `<noscript>` 提示文字，因本站內容需 JavaScript 動態載入 JSON 資料才能顯示。
 - 若更換部署網域，請同步更新 `robots.txt`、`sitemap.xml` 及各頁面內的 canonical／og:url／JSON-LD 網址。
 - `changelog/index.html` 為純靜態的網站更新紀錄頁，記錄各資料集/功能上線時間，內嵌 `WebPage` + `ItemList`

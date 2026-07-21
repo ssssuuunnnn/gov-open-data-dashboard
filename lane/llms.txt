@@ -1,0 +1,20 @@
+# 巷弄長照站
+
+> 彰化縣各鄉鎮巷弄長照站清單，提供鄉鎮篩選、關鍵字搜尋與統計圖表。
+
+- 提供機關：彰化縣政府社會處
+- 資料筆數：約 250 筆（隨資料來源更新而變動，實際筆數以頁面即時載入為準）
+- 原始資料來源：https://email.chcg.gov.tw/df/pufnpn5i5741iy9efkn2rrz5ga6uhb
+- 授權方式：政府資料開放授權條款-第1版
+- 建議查看頻率：每年
+
+## 頁面內容
+
+- 儀表板頁面：https://www.sunkuo.cc/gov-open-data-dashboard/lane/index.html
+- 篩選條件、統計卡片、圖表與分頁表格皆基於上述原始資料即時運算，不含額外人工詮釋（除文中另有註記的啟發式推斷欄位）。
+
+## 相關連結
+
+- 網站首頁：https://www.sunkuo.cc/gov-open-data-dashboard/
+- 更新紀錄：https://www.sunkuo.cc/gov-open-data-dashboard/changelog/index.html
+- 專案原始碼：https://github.com/ssssuuunnnn/gov-open-data-dashboard
