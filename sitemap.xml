@@ -86,6 +86,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://www.sunkuo.cc/gov-open-data-dashboard/tyc-disability-hospitals/index.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://www.sunkuo.cc/gov-open-data-dashboard/changelog/index.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>

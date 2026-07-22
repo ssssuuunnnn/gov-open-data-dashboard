@@ -237,6 +237,24 @@ button.ghost {
   border: 1px solid var(--color-primary);
 }
 
+.category-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.category-tab {
+  background: transparent;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: .9rem;
+  cursor: pointer;
+}
+.category-tab:hover { background: #f1f7f5; }
+.category-tab.active { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+.category-tab[data-category="disability"].active { background: #be185d; border-color: #be185d; }
+
 .grid-2 {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -352,6 +370,8 @@ footer.site-footer {
   color: var(--color-text);
   border-top: 6px solid var(--color-primary);
   transition: transform .15s ease, border-top-color .15s ease;
+  width: 100%;
+  max-width: 420px;
 }
 .home-card:hover {
   transform: translateY(-3px);
@@ -369,6 +389,13 @@ footer.site-footer {
 }
 .home-card .desc { font-size: .88rem; color: var(--color-muted); }
 .home-card .footline { font-size: .78rem; color: var(--color-muted); margin-top: auto; }
+.home-card.disability {
+  border-top-color: #be185d;
+  background: linear-gradient(180deg, #fdf2f8 0%, var(--color-card) 60px);
+}
+.home-card.disability:hover { border-top-color: #9d174d; }
+.home-card.disability h2 { color: #9d174d; }
+.home-card.disability .tag { background: #be185d; }
 
 .changelog-list {
   list-style: none;

@@ -12,8 +12,8 @@
 </script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>台灣長照機構查詢儀表板｜全台護理之家與安養中心資料總整理|郭愷</title>
-<meta name="description" content="整理衛生福利部「長照ABC據點」、彰化縣政府社會處「巷弄長照站」、桃園市政府社會局「桃園市老人福利機構一覽表」與臺北市政府衛生局「長照專業服務特約單位」政府開放資料，提供互動地圖、統計圖表與可篩選查詢資料表，快速瀏覽各地長照資源分布。" />
+<title>台灣長照機構與身心障礙鑑定查詢儀表板｜全台護理之家與合約醫院互動地圖|郭愷</title>
+<meta name="description" content="找長照機構不用霧煞煞！一站式查詢全台長照 ABC 據點、老人福利機構、假牙補助與桃園身心障礙鑑定合約醫院。支援多縣市篩選與地圖座標，幫您快速找到對應的社福與醫療資源。" />
 <meta name="keywords" content="長照,長照2.0,長照ABC據點,巷弄長照站,政府開放資料,open data,長照地圖,長照資源查詢" />
 <meta name="robots" content="index, follow" />
 <meta name="author" content="政府開放資料儀表板" />
@@ -228,6 +228,17 @@
         "@type": "Organization",
         "name": "桃園市政府衛生局"
       }
+    },
+    {
+      "@type": "Dataset",
+      "name": "桃園市身心障礙類別、向度之鑑定醫院名冊",
+      "description": "桃園市政府衛生局公告之身心障礙類別、向度之鑑定醫院名冊，收錄8大類、49個鑑定向度項目與全市17家鑑定醫院之對應關係（含備註條件），展開為約623筆長格式紀錄。",
+      "url": "https://www.sunkuo.cc/gov-open-data-dashboard/tyc-disability-hospitals/index.html",
+      "license": "http://data.gov.tw/license",
+      "creator": {
+        "@type": "Organization",
+        "name": "桃園市政府衛生局"
+      }
     }
   ]
 }
@@ -336,6 +347,13 @@
 <main>
   <p>因為台灣社會已經邁向高齡社會，對於長照的需求只會更高，因為作者身邊也曾遇到類似的需求，所以希望這個頁面的資訊可以幫助到大家，若資訊有落後可寄email至<a href="mailto:sun889999@gmail.com">sun889999@gmail.com</a>。</p>
   <div class="card">
+    <div class="category-tabs" id="category-tabs" role="tablist">
+      <button type="button" class="category-tab active" data-category="all" role="tab" aria-selected="true">全部資料集</button>
+      <button type="button" class="category-tab" data-category="ltc" role="tab" aria-selected="false">長照 / 老人福利</button>
+      <button type="button" class="category-tab" data-category="disability" role="tab" aria-selected="false">身心障礙鑑定</button>
+    </div>
+  </div>
+  <div class="card">
     <div class="filters">
       <div class="field" style="flex:1;">
         <label>依縣市篩選（可多選，未選則顯示全部）</label>
@@ -358,101 +376,107 @@
     </div>
   </div>
   <div class="home-grid" id="home-grid">
-    <a class="home-card" href="abc/index.html" data-county="all">
+    <a class="home-card" href="abc/index.html" data-county="all" data-category="ltc">
       <span class="tag">全國 · 含地圖座標</span>
       <h2>全國長照ABC據點地圖儀表板</h2>
       <div class="desc">衛生福利部提供，涵蓋全國 A（旗艦店）、B（複合型服務中心）、C（巷弄長照站）三級長照據點，包含地址、經緯度、特約服務項目、開放床數與現有住民等資訊。</div>
       <div class="footline" id="abc-count">資料筆數載入中…</div>
     </a>
-    <a class="home-card" href="lane/index.html" data-county="彰化縣">
+    <a class="home-card" href="lane/index.html" data-county="彰化縣" data-category="ltc">
       <span class="tag">彰化縣</span>
       <h2>彰化縣巷弄長照站儀表板</h2>
       <div class="desc">彰化縣政府社會處提供，列出各鄉鎮市區之巷弄長照站（C級據點）名稱與地址，可依鄉鎮篩選並瀏覽站所分布統計。</div>
       <div class="footline" id="lane-count">資料筆數載入中…</div>
     </a>
-    <a class="home-card" href="tyc-elder/index.html" data-county="桃園市">
+    <a class="home-card" href="tyc-elder/index.html" data-county="桃園市" data-category="ltc">
       <span class="tag">桃園市</span>
       <h2>桃園市老人福利機構一覽表</h2>
       <div class="desc">桃園市政府社會局提供，列出私立老人福利機構（養護、長照、安養）名稱、地址、負責人、床數與最近1次評鑑成績，可依鄉鎮市區、收容對象、評鑑成績篩選並瀏覽統計圖表。</div>
       <div class="footline" id="tyc-elder-count">資料筆數載入中…</div>
     </a>
-    <a class="home-card" href="specialty/index.html" data-county="臺北市">
+    <a class="home-card" href="specialty/index.html" data-county="臺北市" data-category="ltc">
       <span class="tag">臺北市</span>
       <h2>臺北市長照專業服務特約單位</h2>
       <div class="desc">臺北市政府衛生局提供，列出長照專業服務特約單位（居家護理所、物理／職能治療所等）名稱、服務區域、地址與聯絡方式，並標示是否提供復能照護、營養照護、進食與吞嚥照護等8項專業服務能力，可依服務區域與服務能力篩選並瀏覽統計圖表。</div>
       <div class="footline" id="specialty-count">資料筆數載入中…</div>
     </a>
-    <a class="home-card" href="kcg-homecare/index.html" data-county="高雄市">
+    <a class="home-card" href="kcg-homecare/index.html" data-county="高雄市" data-category="ltc">
       <span class="tag">高雄市 · 含地圖座標</span>
       <h2>高雄市銀髮族服務-居家長照機構</h2>
       <div class="desc">高雄市政府社會局提供，列出居家式服務類長期照顧服務機構名稱、地址、經緯度、電話、服務項目與服務時段，可依行政區、服務時段篩選並於地圖上瀏覽分布。</div>
       <div class="footline" id="kcg-homecare-count">資料筆數載入中…</div>
     </a>
-    <a class="home-card" href="hsc-ltc/index.html" data-county="新竹縣">
+    <a class="home-card" href="hsc-ltc/index.html" data-county="新竹縣" data-category="ltc">
       <span class="tag">新竹縣</span>
       <h2>新竹縣長照機構名冊</h2>
       <div class="desc">新竹縣政府社會處提供，列出居家服務、日間照顧、小規模多機能、家庭托顧、團體家屋等長照機構名稱、地址與電話，可依鄉鎮市區、服務類型篩選並瀏覽統計圖表。</div>
       <div class="footline" id="hsc-ltc-count">資料筆數載入中…</div>
     </a>
-    <a class="home-card" href="yl-ltc/index.html" data-county="宜蘭縣">
+    <a class="home-card" href="yl-ltc/index.html" data-county="宜蘭縣" data-category="ltc">
       <span class="tag">宜蘭縣</span>
       <h2>宜蘭縣立案老人長期照顧及安養機構名冊</h2>
       <div class="desc">宜蘭縣政府提供，列出養護型、長期照護型等立案老人長期照顧及安養機構名稱、負責人、地址與電話，可依鄉鎮市區、機構類型篩選並瀏覽統計圖表。</div>
       <div class="footline" id="yl-ltc-count">資料筆數載入中…</div>
     </a>
-    <a class="home-card" href="hccg-elder/index.html" data-county="新竹市">
+    <a class="home-card" href="hccg-elder/index.html" data-county="新竹市" data-category="ltc">
       <span class="tag">新竹市 · 含地圖座標</span>
       <h2>新竹市老人福利機構一覽表</h2>
       <div class="desc">新竹市政府社會處提供，列出立案老人福利機構名稱、負責人、地址、經緯度、電話、收容對象與核定收容人數，可依行政區、收容對象篩選並於地圖上瀏覽分布。</div>
       <div class="footline" id="hccg-elder-count">資料筆數載入中…</div>
     </a>
-    <a class="home-card" href="tn-homecare-nursing/index.html" data-county="臺南市">
+    <a class="home-card" href="tn-homecare-nursing/index.html" data-county="臺南市" data-category="ltc">
       <span class="tag">臺南市</span>
       <h2>臺南市居家護理機構</h2>
       <div class="desc">臺南市政府衛生局提供，列出各行政區居家護理所機構名稱、機構代碼、地址、負責人與聯絡電話，可依行政區、關鍵字篩選並瀏覽統計圖表。</div>
       <div class="footline" id="tn-homecare-nursing-count">資料筆數載入中…</div>
     </a>
-    <a class="home-card" href="tc-nursing/index.html" data-county="臺中市">
+    <a class="home-card" href="tc-nursing/index.html" data-county="臺中市" data-category="ltc">
       <span class="tag">臺中市</span>
       <h2>臺中市一般護理之家清冊</h2>
       <div class="desc">臺中市政府衛生局提供，列出各行政區護理之家機構名稱、一般床／呼吸器依賴床許可與開放床數、開業日期、評鑑與督考結果、負責人與聯絡電話，可依行政區、關鍵字篩選並瀏覽統計圖表。</div>
       <div class="footline" id="tc-nursing-count">資料筆數載入中…</div>
     </a>
-    <a class="home-card" href="ntpc-nursing/index.html" data-county="新北市">
+    <a class="home-card" href="ntpc-nursing/index.html" data-county="新北市" data-category="ltc">
       <span class="tag">新北市</span>
       <h2>新北市一般護理之家清冊</h2>
       <div class="desc">新北市政府衛生局提供，列出各行政區護理之家機構名稱、地址、聯絡人、電話、開放床數與應配置護理人員數，可依行政區、關鍵字篩選並瀏覽統計圖表。</div>
       <div class="footline" id="ntpc-nursing-count">資料筆數載入中…</div>
     </a>
-    <a class="home-card" href="chiayi-ltc/index.html" data-county="嘉義縣">
+    <a class="home-card" href="chiayi-ltc/index.html" data-county="嘉義縣" data-category="ltc">
       <span class="tag">嘉義縣</span>
       <h2>嘉義縣立案長照及護理之家機構一覽</h2>
       <div class="desc">嘉義縣政府長期照護管理中心提供，合併立案住宿長照機構與護理之家名單，列出機構類型、機構名稱、鄉鎮市、地址、電話、負責人與許可／開業床數，可依機構類型、鄉鎮市、關鍵字篩選並瀏覽統計圖表。</div>
       <div class="footline" id="chiayi-ltc-count">資料筆數載入中…</div>
     </a>
-    <a class="home-card" href="pingtung-ltc/index.html" data-county="屏東縣">
+    <a class="home-card" href="pingtung-ltc/index.html" data-county="屏東縣" data-category="ltc">
       <span class="tag">屏東縣</span>
       <h2>屏東縣老人長期照顧機構</h2>
       <div class="desc">屏東縣政府社會處提供，列出養護型、失智型等老人長期照顧機構名稱、地址與電話，可依鄉鎮市、機構類型篩選並瀏覽統計圖表。</div>
       <div class="footline" id="pingtung-ltc-count">資料筆數載入中…</div>
     </a>
-    <a class="home-card" href="tc-transport/index.html" data-county="臺中市">
+    <a class="home-card" href="tc-transport/index.html" data-county="臺中市" data-category="ltc">
       <span class="tag">臺中市 · 含地圖座標</span>
       <h2>臺中市失能者交通接送服務</h2>
       <div class="desc">臺中市政府衛生局提供，協助中重度失能者滿足以就醫及使用長期照顧服務為主要目的之交通服務需求，列出辦理單位名稱、連絡電話、地址與經緯度，可依服務區域（多選）、所在行政區篩選並於地圖上瀏覽分布。</div>
       <div class="footline" id="tc-transport-count">資料筆數載入中…</div>
     </a>
-    <a class="home-card" href="tyltc/index.html" data-county="桃園市">
+    <a class="home-card" href="tyltc/index.html" data-county="桃園市" data-category="ltc">
       <span class="tag">桃園市</span>
       <h2>桃園市長期照護專業服務特約單位</h2>
       <div class="desc">桃園市政府衛生局提供，列出居家護理所、物理／職能治療所等長期照護專業服務特約單位名稱、負責人、電話、地址與服務類型（依名稱推斷），可依縣市、鄉鎮市區、服務類型與關鍵字篩選並瀏覽統計圖表。</div>
       <div class="footline" id="tyltc-count">資料筆數載入中…</div>
     </a>
-    <a class="home-card" href="tyc-denture/index.html" data-county="桃園市">
+    <a class="home-card" href="tyc-denture/index.html" data-county="桃園市" data-category="ltc">
       <span class="tag">桃園市</span>
       <h2>桃園市長者假牙補助合約醫療院所</h2>
       <div class="desc">桃園市政府衛生局提供，列出長者裝置活動假牙補助合約醫療院所（牙醫診所/醫院）名稱、區別、地址與電話，並整理補助對象、補助基準、申請流程說明，可依行政區、機構類型與關鍵字篩選並瀏覽統計圖表。</div>
       <div class="footline" id="tyc-denture-count">資料筆數載入中…</div>
+    </a>
+    <a class="home-card disability" href="tyc-disability-hospitals/index.html" data-county="桃園市" data-category="disability">
+      <span class="tag">桃園市</span>
+      <h2>桃園市身心障礙鑑定醫院名冊</h2>
+      <div class="desc">桃園市政府衛生局提供，列出身心障礙類別、向度之鑑定醫院對應清單，可依鑑定類別、向度、醫院與關鍵字篩選，快速查詢各鑑定項目可到哪些醫院辦理並瀏覽統計圖表。</div>
+      <div class="footline" id="tyc-disability-hospitals-count">資料筆數載入中…</div>
     </a>
     <p class="no-match" id="county-no-match" style="display:none; grid-column: 1 / -1; text-align:center; color: var(--color-muted); padding: 24px 0;">
       沒有符合所選縣市的資料集，請調整篩選條件。
@@ -580,7 +604,8 @@
   <a href="https://ltccenter.cyhg.gov.tw/cp.aspx?n=F7AEF7883C88532B" target="_blank" rel="noopener">嘉義縣政府長期照護管理中心 嘉義縣立案長照及護理之家機構一覽</a> ·
   <a href="https://www-ws.pthg.gov.tw/Upload/2015pthg/0/relfile/0/0/886f59e6-23b6-4de3-a04a-4de087bdf9b8.csv" target="_blank" rel="noopener">屏東縣政府社會處 屏東縣老人長期照顧機構</a> ·
   <a href="https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=96251524-861c-4b92-9401-590444adcb8f" target="_blank" rel="noopener">臺中市政府衛生局 臺中市失能者交通接送服務</a> ·
-  <a href="https://opendata.tycg.gov.tw/api/dataset/c0c21e97-fc4a-4b65-aa31-0550b4a007b6/resource/433a97d4-c947-4ecd-9e9f-a1860f8cc0d5/download" target="_blank" rel="noopener">桃園市政府衛生局 桃園市長者裝置活動假牙合約醫療院所</a><br />
+  <a href="https://opendata.tycg.gov.tw/api/dataset/c0c21e97-fc4a-4b65-aa31-0550b4a007b6/resource/433a97d4-c947-4ecd-9e9f-a1860f8cc0d5/download" target="_blank" rel="noopener">桃園市政府衛生局 桃園市長者裝置活動假牙合約醫療院所</a> ·
+  <a href="https://opendata.tycg.gov.tw/api/dataset/628c2789-10f8-4c73-bafc-58dac276fa6f/resource/a2b6559b-9265-4854-b1be-97c0f8cde3a6/download" target="_blank" rel="noopener">桃園市政府衛生局 桃園市身心障礙類別、向度之鑑定醫院名冊</a><br />
   依「政府資料開放授權條款-第1版」釋出，本站僅作資料視覺化整理，實際內容以原始資料集為準。<br />
   <a href="changelog/index.html">網站更新紀錄</a>　|　本頁面最後更新時間：2026年7月22日
 </footer>
@@ -628,33 +653,52 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   if (meta.tycDenture) {
     document.getElementById("tyc-denture-count").textContent = `共 ${meta.tycDenture.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
+  if (meta.tycDisabilityHospitals) {
+    document.getElementById("tyc-disability-hospitals-count").textContent = `共 ${meta.tycDisabilityHospitals.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
 }).catch(() => {});
 
-// 首頁縣市多選篩選：勾選一個或多個縣市時，只顯示對應縣市的資料集卡片；
-// 全國性資料集（data-county="all"，如長照ABC據點）因涵蓋所有縣市，篩選時一律顯示；
-// 未勾選任何縣市時顯示全部卡片。
+// 首頁分類頁籤（長照/老人福利、身心障礙鑑定）＋ 縣市多選篩選：
+// 頁籤決定資料集大分類（data-category），縣市篩選在該分類內進一步縮小範圍；
+// 全國性資料集（data-county="all"，如長照ABC據點）因涵蓋所有縣市，縣市篩選時一律顯示。
 (function () {
+  const tabs = Array.from(document.querySelectorAll("#category-tabs .category-tab"));
   const checkboxes = Array.from(document.querySelectorAll("#county-filter input[type=checkbox]"));
   const cards = Array.from(document.querySelectorAll("#home-grid .home-card"));
   const noMatch = document.getElementById("county-no-match");
   const resetBtn = document.getElementById("county-reset");
+  let activeCategory = "all";
 
-  function applyCountyFilter() {
+  function applyFilters() {
     const selected = checkboxes.filter((cb) => cb.checked).map((cb) => cb.value);
     let visibleCount = 0;
     cards.forEach((card) => {
       const county = card.dataset.county;
-      const visible = selected.length === 0 || county === "all" || selected.includes(county);
+      const category = card.dataset.category;
+      const categoryMatch = activeCategory === "all" || category === activeCategory;
+      const countyMatch = selected.length === 0 || county === "all" || selected.includes(county);
+      const visible = categoryMatch && countyMatch;
       card.style.display = visible ? "" : "none";
       if (visible) visibleCount++;
     });
     noMatch.style.display = visibleCount === 0 ? "" : "none";
   }
 
-  checkboxes.forEach((cb) => cb.addEventListener("change", applyCountyFilter));
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      activeCategory = tab.dataset.category;
+      tabs.forEach((t) => {
+        t.classList.toggle("active", t === tab);
+        t.setAttribute("aria-selected", t === tab ? "true" : "false");
+      });
+      applyFilters();
+    });
+  });
+
+  checkboxes.forEach((cb) => cb.addEventListener("change", applyFilters));
   resetBtn.addEventListener("click", () => {
     checkboxes.forEach((cb) => (cb.checked = false));
-    applyCountyFilter();
+    applyFilters();
   });
 })();
 </script>

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-22T13:09:23.039861+00:00",
+  "generatedAt": "2026-07-22T14:19:59.702982+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -79,5 +79,10 @@
     "count": 155,
     "source": "https://opendata.tycg.gov.tw/api/dataset/c0c21e97-fc4a-4b65-aa31-0550b4a007b6/resource/433a97d4-c947-4ecd-9e9f-a1860f8cc0d5/download",
     "title": "桃園市長者裝置活動假牙合約醫療院所"
+  },
+  "tycDisabilityHospitals": {
+    "count": 623,
+    "source": "https://opendata.tycg.gov.tw/api/dataset/628c2789-10f8-4c73-bafc-58dac276fa6f/resource/a2b6559b-9265-4854-b1be-97c0f8cde3a6/download",
+    "title": "桃園市身心障礙類別、向度之鑑定醫院名冊"
   }
 }

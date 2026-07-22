@@ -102,6 +102,18 @@
     「機構類型」（醫院／診所），**非官方分類欄位**，僅供篩選/圖表參考，詳見 build_tyc_denture()；
     來源網址與同平台其他 opendata.tycg.gov.tw 資料集一致，CORS 僅允許該平台網域，改由本腳本於
     伺服器端下載並額外輸出內嵌 JS 版本）
+17. 桃園市身心障礙類別、向度之鑑定醫院名冊（DCAT dataset https://data.gov.tw/dataset/8572 ，
+    dataset id 128335，提供機關：桃園市政府衛生局）
+    https://opendata.tycg.gov.tw/api/dataset/628c2789-10f8-4c73-bafc-58dac276fa6f/resource/a2b6559b-9265-4854-b1be-97c0f8cde3a6/download
+    （CSV，原始格式為「鑑定類別×向度×17家醫院」勾選矩陣，非機構名冊；欄位為 新制鑑定類別／
+    新制鑑定向度／新制鑑定向度_名稱／相關疾病類別，加上17個醫院欄位（值為V／空白／V+備註）；
+    使用合併儲存格，「新制鑑定類別」「新制鑑定向度」欄位本腳本以 forward-fill 還原完整分組；
+    含一筆特例「整體心理功能：發展遲緩」不屬於「第X類」編號格式，獨立於分組之外處理；結尾有
+    「更新日期：112.1.19」備註列，本腳本偵測後略過；本腳本將矩陣展開為長格式（category/
+    dimension/item/disease/hospital/note，僅保留有勾選的組合，預估400~500筆）以套用既有分頁
+    表格元件；無地址、無電話、無經緯度座標，故不含地圖也不套用超連結慣例；來源網址與同平台其他
+    opendata.tycg.gov.tw 資料集一致，CORS 僅允許該平台網域，改由本腳本於伺服器端下載，但資料量小
+    不需另外輸出內嵌 JS 版本，詳見 build_tyc_disability_hospitals()）
 
 用法：
     python3 scripts/build_data.py
@@ -136,6 +148,7 @@
     data/tyltc.js         (window.TYLTC_DATA，同上，供前端以 <script> 直接載入)
     data/tyc-denture.json
     data/tyc-denture.js   (window.TYC_DENTURE_DATA，同上，供前端以 <script> 直接載入)
+    data/tyc-disability-hospitals.json  (資料量小且無 CORS 前端 fetch 需求，不輸出內嵌 JS)
     data/meta.json  (資料更新時間等資訊)
 
 額外相依套件：
@@ -186,6 +199,32 @@ TYC_DENTURE_URL = (
     "https://opendata.tycg.gov.tw/api/dataset/c0c21e97-fc4a-4b65-aa31-0550b4a007b6/"
     "resource/433a97d4-c947-4ecd-9e9f-a1860f8cc0d5/download"
 )
+TYC_DISABILITY_HOSPITALS_URL = (
+    "https://opendata.tycg.gov.tw/api/dataset/628c2789-10f8-4c73-bafc-58dac276fa6f/"
+    "resource/a2b6559b-9265-4854-b1be-97c0f8cde3a6/download"
+)
+
+# 桃園市身心障礙類別、向度之鑑定醫院名冊：17家醫院欄位順序（CSV 表頭欄位名稱，
+# 同時也是長格式展開後 hospital 欄位的值），供 build_tyc_disability_hospitals() 使用。
+TYC_DISABILITY_HOSPITALS = [
+    "衛生福利部桃園醫院",
+    "桃園醫院新屋分院",
+    "林口長庚紀念醫院",
+    "桃園長庚紀念醫院",
+    "聯新國際醫院",
+    "天晟醫院",
+    "天成醫院",
+    "聖保祿醫院",
+    "臺北榮總桃園分院",
+    "居善醫院",
+    "衛生福利部桃園療養院",
+    "國軍桃園總醫院",
+    "敏盛綜合醫院",
+    "龍潭敏盛醫院",
+    "大園敏盛醫院",
+    "怡仁綜合醫院",
+    "中壢長榮醫院",
+]
 
 # 桃園市長期照護專業服務特約單位「服務類型」啟發式分類規則：依「辦理單位」名稱關鍵字比對，
 # 由上到下第一個命中的關鍵字決定分類，非官方分類欄位，僅供篩選/圖表參考用途。
@@ -996,7 +1035,93 @@ def build_tyc_denture():
     return {"fields": fields, "rows": records}
 
 
-def _specialty_norm(s):
+def _tyc_disability_note(cell: str) -> str:
+    """解析單一儲存格內容，回傳 (是否可鑑定, 備註文字)。
+    儲存格格式：空白＝不可鑑定；"V"＝可鑑定無條件；"V\\n(備註文字)"＝可鑑定但有條件限制，
+    備註文字保留原始描述（去除外層括號）。"""
+    cell = (cell or "").strip()
+    if not cell:
+        return None
+    if not cell.startswith("V"):
+        return ""  # 非預期格式，視為可鑑定且無備註，忠實照登
+    note = cell[1:].strip()
+    if note.startswith("(") and note.endswith(")"):
+        note = note[1:-1]
+    elif note.startswith("（") and note.endswith("）"):
+        note = note[1:-1]
+    return note
+
+
+def build_tyc_disability_hospitals():
+    """桃園市身心障礙類別、向度之鑑定醫院名冊（桃園市政府衛生局，DCAT dataset id 128335）。
+
+    來源為 CSV（TYC_DISABILITY_HOSPITALS_URL），原始格式是一份「鑑定類別×向度×17家醫院」的勾選
+    矩陣，而非機構名冊：欄位為 新制鑑定類別／新制鑑定向度／新制鑑定向度_名稱／相關疾病類別，接著
+    17 個欄位對應 TYC_DISABILITY_HOSPITALS 清單的醫院，儲存格值為「V」（可鑑定）、空白（不可鑑定）
+    或「V\\n(備註文字)」（有條件可鑑定，如「僅鑑定失智症」「限18歲以上民眾」「無鑑定智能障礙」）。
+
+    原始 CSV 使用合併儲存格：「新制鑑定類別」（第一類～第八類）與「新制鑑定向度」（向度大分組）
+    欄位只在該分組第一列填值，其餘列留空，本腳本以 forward-fill（沿用前一筆非空值）還原完整分組。
+    有一筆特例「整體心理功能：發展遲緩」不屬於「第X類」編號格式，是獨立於分組之外的項目，本腳本
+    偵測「新制鑑定類別」欄位非空但不以「第」開頭時，視為獨立項目（不做 dimension 的 forward-fill，
+    以該欄位值本身作為 item 名稱）。檔案最後一列是「,,,,...,更新日期：112.1.19,...」的更新日期
+    備註列，非資料列，本腳本偵測任一醫院欄位含「更新日期」字樣即略過整列。
+
+    本腳本將矩陣展開為「長格式」：每筆 row 代表「一個類別＋向度＋相關疾病類別＋可鑑定醫院＋備註」
+    的組合，只保留該醫院欄位有勾選（V 或 V+備註）的組合，欄位為 category／dimension／item／
+    disease／hospital／note（note 為單純 V 時為空字串）。此格式可直接套用既有分頁表格元件與
+    篩選/圖表模式；若需要原始矩陣視圖，可另外由 rows 依 item+hospital 重建。
+
+    無地址、無電話、無經緯度座標欄位，故本頁不含地圖，也不套用地址/電話超連結慣例。
+
+    來源網址與同平台的 tyc-elder／tyltc／tyc-denture 資料集一致，CORS 僅允許 opendata.tycg.gov.tw
+    網域，改由本腳本於伺服器端下載，惟資料量小（預估400~500筆），前端以一般 fetch() 讀取本地靜態
+    json 即可，不需另外輸出內嵌 JS 版本。
+    """
+    print("下載 桃園市身心障礙類別、向度之鑑定醫院名冊 ...", file=sys.stderr)
+    text = fetch(TYC_DISABILITY_HOSPITALS_URL)
+    reader = csv.reader(io.StringIO(text))
+    rows_raw = list(reader)
+    header, data_rows = rows_raw[0], rows_raw[1:]
+
+    records = []
+    prev_category = ""
+    prev_dimension = ""
+    for row in data_rows:
+        row = row + [""] * (21 - len(row))  # 補齊欄位數避免索引錯誤
+        # 原始 CSV 部分儲存格內容跨行斷開（如「神經系統構造\n及精神、心智功能」），屬版面換行，
+        # 與資料語意無關，統一去除內部換行後再使用。
+        cat, dim, item, disease = ((c or "").replace("\n", "").strip() for c in row[:4])
+        hospital_cells = row[4:21]
+
+        if any("更新日期" in (c or "") for c in hospital_cells):
+            continue  # 結尾更新日期備註列，非資料列
+
+        if cat and not cat.startswith("第"):
+            # 特例：不屬於「第X類」編號格式的獨立項目（如「整體心理功能：發展遲緩」）
+            category, dimension, item_name = cat, "", cat
+        else:
+            if cat:
+                prev_category = cat
+            if dim:
+                prev_dimension = dim
+            category, dimension, item_name = prev_category, prev_dimension, item
+
+        if not disease:
+            continue
+
+        for hospital, cell in zip(TYC_DISABILITY_HOSPITALS, hospital_cells):
+            note = _tyc_disability_note(cell)
+            if note is None:
+                continue
+            records.append([category, dimension, item_name, disease, hospital, note])
+
+    print(f"  共 {len(records)} 筆（展開為長格式後）", file=sys.stderr)
+    fields = ["category", "dimension", "item", "disease", "hospital", "note"]
+    return {"fields": fields, "hospitals": TYC_DISABILITY_HOSPITALS, "rows": records}
+
+
+
     """去除 PDF 儲存格內因欄寬過窄產生的換行，並還原被誤用的 CJK 部首符號為正常漢字。"""
     if not s:
         return ""
@@ -1215,6 +1340,15 @@ DATASETS = [
         "meta_key": "tycDenture",
         "title": "桃園市長者裝置活動假牙合約醫療院所",
         "source": lambda: TYC_DENTURE_URL,
+    },
+    {
+        "key": "tyc-disability-hospitals",
+        "builder": build_tyc_disability_hospitals,
+        "json": "data/tyc-disability-hospitals.json",
+        "js_var": None,
+        "meta_key": "tycDisabilityHospitals",
+        "title": "桃園市身心障礙類別、向度之鑑定醫院名冊",
+        "source": lambda: TYC_DISABILITY_HOSPITALS_URL,
     },
 ]
 

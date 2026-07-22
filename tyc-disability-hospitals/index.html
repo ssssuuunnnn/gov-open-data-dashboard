@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DNHVGQP5W8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DNHVGQP5W8');
+</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>桃園市身心障礙鑑定醫院查詢｜17家合約醫院與鑑定項目總覽|郭愷</title>
+<meta name="description" content="提供桃園市 17 家身心障礙鑑定合約醫院名冊查詢。支援新制 ICF 8 大類別與向度篩選，快速查出各醫院可鑑定的疾病項目、年齡限制與相關備註，幫您輕鬆找到對應的鑑定醫院。" />
+<meta name="keywords" content="桃園市,身心障礙鑑定,身障鑑定醫院,鑑定類別,鑑定向度,身心障礙證明,政府開放資料" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://www.sunkuo.cc/gov-open-data-dashboard/tyc-disability-hospitals/index.html" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="台灣長照機構查詢儀表板" />
+<meta property="og:locale" content="zh_TW" />
+<meta property="og:title" content="桃園市身心障礙類別、向度之鑑定醫院名冊查詢" />
+<meta property="og:description" content="桃園市身心障礙類別、向度之鑑定醫院名冊，提供鑑定類別、向度、醫院篩選與統計圖表，快速查詢各鑑定項目可到哪些醫院辦理。" />
+<meta property="og:url" content="https://www.sunkuo.cc/gov-open-data-dashboard/tyc-disability-hospitals/index.html" />
+<meta property="og:image" content="https://www.sunkuo.cc/gov-open-data-dashboard/assets/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="桃園市身心障礙類別、向度之鑑定醫院名冊查詢" />
+<meta name="twitter:description" content="桃園市身心障礙類別、向度之鑑定醫院名冊，提供鑑定類別、向度、醫院篩選與統計圖表，快速查詢各鑑定項目可到哪些醫院辦理。" />
+<meta name="twitter:image" content="https://www.sunkuo.cc/gov-open-data-dashboard/assets/og-image.png" />
+
+<link rel="icon" type="image/png" href="../assets/favicon.png" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+<link rel="stylesheet" href="../assets/style.css" />
+<style>
+  table.disability-matrix th, table.disability-matrix td { text-align: center; white-space: normal; }
+  table.disability-matrix td:nth-child(1), table.disability-matrix td:nth-child(2) { font-weight: 600; background: #f8fafc; }
+  table.disability-matrix .note { display: block; font-size: .74rem; color: #b45309; font-style: italic; }
+  table.disability-matrix th.hl-col, table.disability-matrix td.hl-col { background: #eaf3f0; }
+  table.disability-matrix th { white-space: nowrap; }
+  .category-guide { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+  .category-guide-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--color-border); border-radius: 8px; font-size: .88rem; background: #fafafa; }
+  .category-guide-item .tag { flex: 0 0 auto; padding: 2px 10px; border-radius: 999px; background: #1f6f5c; color: #fff; font-size: .78rem; white-space: nowrap; }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "桃園市身心障礙類別、向度之鑑定醫院名冊",
+  "description": "桃園市政府衛生局公告之身心障礙類別、向度之鑑定醫院名冊，收錄8大類、46個鑑定向度項目與全市17家鑑定醫院之對應關係，含備註條件。",
+  "url": "https://www.sunkuo.cc/gov-open-data-dashboard/tyc-disability-hospitals/index.html",
+  "license": "https://data.gov.tw/license",
+  "isAccessibleForFree": true,
+  "inLanguage": "zh-Hant-TW",
+  "keywords": ["身心障礙鑑定", "鑑定醫院", "鑑定類別", "鑑定向度", "桃園市"],
+  "spatialCoverage": {
+    "@type": "Place",
+    "name": "桃園市"
+  },
+  "creator": {
+    "@type": "Organization",
+    "name": "桃園市政府衛生局"
+  },
+  "distribution": {
+    "@type": "DataDownload",
+    "encodingFormat": "CSV",
+    "contentUrl": "https://opendata.tycg.gov.tw/api/dataset/628c2789-10f8-4c73-bafc-58dac276fa6f/resource/a2b6559b-9265-4854-b1be-97c0f8cde3a6/download"
+  }
+}
+</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <h1>桃園市身心障礙類別、向度之鑑定醫院名冊</h1>
+    <div class="meta"><a href="../index.html" style="color:#fff">← 回首頁</a></div>
+  </div>
+  <div class="header-inner">
+    <nav>
+      提供機關：桃園市政府衛生局　|　更新頻率：不定期更新　|　
+      <a href="https://data.gov.tw/dataset/8572" target="_blank" rel="noopener">政府資料開放平台頁面</a>
+    </nav>
+    <div class="meta" id="meta-updated"></div>
+  </div>
+</header>
+<noscript>
+  <p style="max-width:1280px;margin:16px auto;padding:0 24px;color:#b91c1c;">
+    本頁需要啟用 JavaScript 才能載入資料與圖表，請於瀏覽器設定中開啟 JavaScript 後重新整理頁面。
+  </p>
+</noscript>
+<main>
+  <div class="card">
+    <h2 class="section-title" style="margin-top:0;">如何使用本頁</h2>
+    <p style="color:var(--color-muted);margin-top:-6px;margin-bottom:0;">
+      本頁整理桃園市身心障礙鑑定「新制鑑定類別（第一類～第八類）」與「鑑定向度」（如意識功能、視覺功能等）
+      可到哪些合約醫院辦理鑑定。請先選擇鑑定類別，再選擇欲鑑定的向度，即可查看可鑑定醫院清單；部分醫院
+      對特定向度僅能鑑定特定疾病或有年齡限制，將以「備註」欄位標示（如「僅鑑定失智症」「限18歲以上民眾」）。
+      資料來源更新日期為 112 年 1 月 19 日，實際鑑定服務範圍請以醫院或衛生局最新公告為準。
+    </p>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title" style="margin-top:0;">身心障礙鑑定類別說明</h2>
+    <p style="color:var(--color-muted);margin-top:-6px;">
+      我國身心障礙鑑定新制依國際健康功能與身心障礙分類系統（ICF）分為以下 8 大類「身體功能與構造」，
+      鑑定時需依失能情形指定對應類別；「整體心理功能：發展遲緩」則是針對未滿 6 歲兒童的特殊鑑定項目，
+      不屬於 8 大類編號。
+    </p>
+    <div class="category-guide">
+      <div class="category-guide-item"><span class="tag">第一類</span>神經系統構造及精神、心智功能</div>
+      <div class="category-guide-item"><span class="tag">第二類</span>眼、耳及相關構造與感官功能及疼痛</div>
+      <div class="category-guide-item"><span class="tag">第三類</span>涉及聲音與言語構造及其功能</div>
+      <div class="category-guide-item"><span class="tag">第四類</span>循環、造血、免疫與呼吸系統構造及其功能</div>
+      <div class="category-guide-item"><span class="tag">第五類</span>消化、新陳代謝與內分泌系統相關構造及其功能</div>
+      <div class="category-guide-item"><span class="tag">第六類</span>泌尿與生殖系統相關構造及其功能</div>
+      <div class="category-guide-item"><span class="tag">第七類</span>神經、肌肉、骨骼之移動相關構造及其功能</div>
+      <div class="category-guide-item"><span class="tag">第八類</span>皮膚與相關構造及其功能</div>
+      <div class="category-guide-item"><span class="tag">發展遲緩</span>整體心理功能：發展遲緩（限未滿6歲兒童適用）</div>
+    </div>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card"><div class="num" id="stat-total">-</div><div class="label">篩選後鑑定項目數</div></div>
+    <div class="stat-card"><div class="num" id="stat-categories">-</div><div class="label">涵蓋鑑定類別數</div></div>
+    <div class="stat-card"><div class="num" id="stat-hospitals">-</div><div class="label">涵蓋醫院數</div></div>
+    <div class="stat-card"><div class="num" id="stat-note">-</div><div class="label">含備註條件筆數</div></div>
+  </div>
+
+  <div class="card">
+    <div class="filters">
+      <div class="field">
+        <label>鑑定類別</label>
+        <select id="f-category"><option value="">全部</option></select>
+      </div>
+      <div class="field">
+        <label>鑑定向度</label>
+        <select id="f-item"><option value="">全部</option></select>
+      </div>
+      <div class="field">
+        <label>醫院</label>
+        <select id="f-hospital"><option value="">全部</option></select>
+      </div>
+      <div class="field" style="flex:1;">
+        <label>關鍵字（向度 / 相關疾病類別）</label>
+        <input type="text" id="f-keyword" placeholder="例如：失智症、視覺障礙…" />
+      </div>
+      <button class="ghost" id="f-reset">重設篩選</button>
+    </div>
+  </div>
+
+  <h2 class="section-title">資料明細</h2>
+  <div class="card">
+    <p style="color:var(--color-muted);margin-top:0;">
+      本表依照原始資料「鑑定類別×向度×17家醫院」勾選矩陣呈現：每列為一個鑑定向度／相關疾病類別組合，
+      各醫院欄位顯示「V」表示可鑑定，「V（備註）」表示附帶條件（如年齡、疾病限制）才可鑑定，空白表示
+      該醫院不提供此項目鑑定。可用上方篩選縮小顯示範圍；選擇特定醫院時，該醫院欄位會以顏色標示。
+    </p>
+    <div id="table-container"></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="chart-box" style="height:420px;"><h3>各醫院可鑑定項目數排行</h3><div class="chart-canvas-wrap"><canvas id="chart-hospital"></canvas></div></div>
+    </div>
+    <div class="card">
+      <div class="chart-box" style="height:340px;"><h3>各鑑定類別項目分布</h3><div class="chart-canvas-wrap"><canvas id="chart-category"></canvas></div></div>
+    </div>
+  </div>
+</main>
+<footer class="site-footer">
+  資料來源：<a href="https://opendata.tycg.gov.tw/api/dataset/628c2789-10f8-4c73-bafc-58dac276fa6f/resource/a2b6559b-9265-4854-b1be-97c0f8cde3a6/download" target="_blank" rel="noopener">桃園市政府衛生局 桃園市身心障礙類別、向度之鑑定醫院名冊</a>（桃園市政府開放資料平台）。
+  依「政府資料開放授權條款-第1版」釋出，本站僅作資料視覺化整理，實際內容以原始資料集為準。無地址、電話、
+  座標資料，故本頁不提供地圖與超連結查詢。
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
