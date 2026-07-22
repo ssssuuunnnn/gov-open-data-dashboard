@@ -12,7 +12,7 @@
 </script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>台灣長照機構查詢儀表板｜全台護理之家與安養中心資料總整理</title>
+<title>台灣長照機構查詢儀表板｜全台護理之家與安養中心資料總整理|郭愷</title>
 <meta name="description" content="整理衛生福利部「長照ABC據點」、彰化縣政府社會處「巷弄長照站」、桃園市政府社會局「桃園市老人福利機構一覽表」與臺北市政府衛生局「長照專業服務特約單位」政府開放資料，提供互動地圖、統計圖表與可篩選查詢資料表，快速瀏覽各地長照資源分布。" />
 <meta name="keywords" content="長照,長照2.0,長照ABC據點,巷弄長照站,政府開放資料,open data,長照地圖,長照資源查詢" />
 <meta name="robots" content="index, follow" />
@@ -212,6 +212,17 @@
       "name": "桃園市長期照護專業服務特約單位",
       "description": "桃園市政府衛生局公告之長期照護專業服務特約單位清冊，收錄約115筆居家護理所、物理／職能治療所等特約單位的名稱、負責人、電話、地址與服務類型（依機構名稱推斷），部分機構位於新北市、臺北市等鄰近縣市但服務桃園市民。",
       "url": "https://www.sunkuo.cc/gov-open-data-dashboard/tyltc/index.html",
+      "license": "http://data.gov.tw/license",
+      "creator": {
+        "@type": "Organization",
+        "name": "桃園市政府衛生局"
+      }
+    },
+    {
+      "@type": "Dataset",
+      "name": "桃園市長者裝置活動假牙合約醫療院所",
+      "description": "桃園市政府衛生局公告之長者裝置活動假牙補助合約醫療院所名冊，收錄約155筆特約診所/醫院名稱、區別、地址與電話，並整理補助對象、補助基準與申請流程說明。",
+      "url": "https://www.sunkuo.cc/gov-open-data-dashboard/tyc-denture/index.html",
       "license": "http://data.gov.tw/license",
       "creator": {
         "@type": "Organization",
@@ -437,6 +448,12 @@
       <div class="desc">桃園市政府衛生局提供，列出居家護理所、物理／職能治療所等長期照護專業服務特約單位名稱、負責人、電話、地址與服務類型（依名稱推斷），可依縣市、鄉鎮市區、服務類型與關鍵字篩選並瀏覽統計圖表。</div>
       <div class="footline" id="tyltc-count">資料筆數載入中…</div>
     </a>
+    <a class="home-card" href="tyc-denture/index.html" data-county="桃園市">
+      <span class="tag">桃園市</span>
+      <h2>桃園市長者假牙補助合約醫療院所</h2>
+      <div class="desc">桃園市政府衛生局提供，列出長者裝置活動假牙補助合約醫療院所（牙醫診所/醫院）名稱、區別、地址與電話，並整理補助對象、補助基準、申請流程說明，可依行政區、機構類型與關鍵字篩選並瀏覽統計圖表。</div>
+      <div class="footline" id="tyc-denture-count">資料筆數載入中…</div>
+    </a>
     <p class="no-match" id="county-no-match" style="display:none; grid-column: 1 / -1; text-align:center; color: var(--color-muted); padding: 24px 0;">
       沒有符合所選縣市的資料集，請調整篩選條件。
     </p>
@@ -562,9 +579,10 @@
   <a href="https://data.ntpc.gov.tw/datasets/467cb02f-1f94-4fa1-a440-4f08575cf181" target="_blank" rel="noopener">新北市政府衛生局 新北市一般護理之家清冊</a> ·
   <a href="https://ltccenter.cyhg.gov.tw/cp.aspx?n=F7AEF7883C88532B" target="_blank" rel="noopener">嘉義縣政府長期照護管理中心 嘉義縣立案長照及護理之家機構一覽</a> ·
   <a href="https://www-ws.pthg.gov.tw/Upload/2015pthg/0/relfile/0/0/886f59e6-23b6-4de3-a04a-4de087bdf9b8.csv" target="_blank" rel="noopener">屏東縣政府社會處 屏東縣老人長期照顧機構</a> ·
-  <a href="https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=96251524-861c-4b92-9401-590444adcb8f" target="_blank" rel="noopener">臺中市政府衛生局 臺中市失能者交通接送服務</a><br />
+  <a href="https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=96251524-861c-4b92-9401-590444adcb8f" target="_blank" rel="noopener">臺中市政府衛生局 臺中市失能者交通接送服務</a> ·
+  <a href="https://opendata.tycg.gov.tw/api/dataset/c0c21e97-fc4a-4b65-aa31-0550b4a007b6/resource/433a97d4-c947-4ecd-9e9f-a1860f8cc0d5/download" target="_blank" rel="noopener">桃園市政府衛生局 桃園市長者裝置活動假牙合約醫療院所</a><br />
   依「政府資料開放授權條款-第1版」釋出，本站僅作資料視覺化整理，實際內容以原始資料集為準。<br />
-  <a href="changelog/index.html">網站更新紀錄</a>　|　本頁面最後更新時間：2026年7月20日
+  <a href="changelog/index.html">網站更新紀錄</a>　|　本頁面最後更新時間：2026年7月22日
 </footer>
 <script>
 fetch("data/meta.json").then(r => r.json()).then(meta => {
@@ -606,6 +624,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.tyltc) {
     document.getElementById("tyltc-count").textContent = `共 ${meta.tyltc.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.tycDenture) {
+    document.getElementById("tyc-denture-count").textContent = `共 ${meta.tycDenture.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
 }).catch(() => {});
 

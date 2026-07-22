@@ -1,6 +1,6 @@
 # 政府開放資料儀表板
 
-以政府開放資料建置的靜態網站，整理十五個長照/老人福利相關資料集為互動式儀表板，可直接部署於 GitHub Pages。
+以政府開放資料建置的靜態網站，整理十六個長照/老人福利相關資料集為互動式儀表板，可直接部署於 GitHub Pages。
 
 ## 資料集
 
@@ -21,6 +21,7 @@
 | `pingtung-ltc/` | 屏東縣老人長期照顧機構 | 屏東縣政府社會處 | 屏東縣老人長期照顧機構清單，收錄機構名稱、地址、電話，機構類型（養護型／失智型／未標示）由機構名稱解析而來，鄉鎮市由地址欄位解析，提供鄉鎮市／機構類型／關鍵字篩選與統計圖表，無經緯度座標 |
 | `tc-transport/` | 臺中市失能者交通接送服務 | 臺中市政府衛生局 | 協助中重度失能者滿足以就醫及使用長期照顧服務為主要目的之交通服務需求，收錄辦理單位名稱、連絡電話、地址、服務區域，含經緯度座標（由原始 TWD97 TM2 平面座標換算），於地圖上呈現，並提供服務區域（多選）／辦理單位所在行政區／關鍵字篩選與統計圖表 |
 | `tyltc/` | 桃園市長期照護專業服務特約單位 | 桃園市政府衛生局 | 桃園市居家護理所、物理／職能治療所等長期照護專業服務特約單位清單，收錄機構名稱、負責人、電話、傳真、電子郵件、地址與最後更新時間；「服務類型」由機構名稱關鍵字啟發式推斷（非官方分類），部分機構地址位於新北市、臺北市等鄰近縣市，提供縣市／鄉鎮市區／服務類型／關鍵字篩選與統計圖表，無經緯度座標 |
+| `tyc-denture/` | 桃園市長者裝置活動假牙合約醫療院所 | 桃園市政府衛生局 | 桃園市長者裝置活動假牙補助合約醫療院所（牙醫診所/醫院）清單，收錄特約單位名稱、區別、地址、電話，並整理補助對象、補助基準（部分/半口/全口活動假牙、假牙維修）與申請流程說明；「機構類型」由名稱關鍵字啟發式推斷（非官方分類），提供行政區／機構類型／關鍵字篩選與統計圖表，無經緯度座標 |
 
 原始資料下載網址：
 - https://ltcpap.mohw.gov.tw/publish/abc.csv
@@ -38,13 +39,14 @@
 - https://www-ws.pthg.gov.tw/Upload/2015pthg/0/relfile/0/0/886f59e6-23b6-4de3-a04a-4de087bdf9b8.csv
 - https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=96251524-861c-4b92-9401-590444adcb8f
 - https://opendata.tycg.gov.tw/api/dataset/2e087011-3a3d-4ae1-9038-19b2f3f43a9a/resource/cc33a2eb-c1cf-47f1-b6f7-d4b37ba4c797/download　（BIG5(cp950) 編碼）
+- https://opendata.tycg.gov.tw/api/dataset/c0c21e97-fc4a-4b65-aa31-0550b4a007b6/resource/433a97d4-c947-4ecd-9e9f-a1860f8cc0d5/download
 
 授權方式：政府資料開放授權條款-第1版
 
 ## 網站架構
 
 ```
-index.html          首頁，連結至十五個儀表板與更新紀錄頁
+index.html          首頁，連結至十六個儀表板與更新紀錄頁
 llms.txt             全站給 LLM 閱讀的摘要（含各資料集頁面連結與說明），依 llmstxt.org 慣例放在網站根目錄
 changelog/index.html 網站更新紀錄頁（純靜態文字，供 SEO 與使用者查看網站更新歷程）
 abc/index.html       長照ABC據點地圖儀表板（Leaflet 地圖 + Chart.js 圖表 + 篩選表格）
@@ -77,6 +79,9 @@ tc-transport/index.html 臺中市失能者交通接送服務地圖儀表板（Le
 tc-transport/app.js
 tyltc/index.html     桃園市長期照護專業服務特約單位儀表板（Chart.js 圖表 + 篩選表格，無地圖）
 tyltc/app.js
+tyc-denture/index.html 桃園市長者裝置活動假牙合約醫療院所儀表板（Chart.js 圖表 + 篩選表格，無地圖；
+                       頁面上方另有補助制度說明靜態卡片）
+tyc-denture/app.js
 assets/style.css     共用樣式
 assets/table.js       共用分頁表格元件
 data/abc.json         長照ABC據點資料（由 scripts/build_data.py 產生）
@@ -119,6 +124,9 @@ data/tc-transport.js   同上資料的內嵌 JS 版本（window.TC_TRANSPORT_DAT
                        <script> 標籤直接載入，避免依賴外部網址即時可用性
 data/tyltc.json       桃園市長期照護專業服務特約單位資料（由 scripts/build_data.py 產生，BIG5(cp950) 解碼）
 data/tyltc.js         同上資料的內嵌 JS 版本（window.TYLTC_DATA），供 tyltc 頁面以
+                       <script> 標籤直接載入，因來源網址無 CORS 標頭，不透過 fetch()
+data/tyc-denture.json 桃園市長者裝置活動假牙合約醫療院所資料（由 scripts/build_data.py 產生）
+data/tyc-denture.js   同上資料的內嵌 JS 版本（window.TYC_DENTURE_DATA），供 tyc-denture 頁面以
                        <script> 標籤直接載入，因來源網址無 CORS 標頭，不透過 fetch()
 data/source/          長照專業服務特約單位來源 PDF（人工下載存放於此，供 build_data.py 解析）
 data/meta.json        資料筆數與更新時間
@@ -283,5 +291,15 @@ python3 -m http.server 8000
   治療所」「護理之家」「日間照顧」等）啟發式推斷，**非衛生局官方分類欄位**，僅供篩選與圖表參考；
   「連絡電話」欄位偶有跨行的多組號碼/分機備註，前端與建置腳本皆合併為單行顯示；來源網址無 CORS
   標頭，改以內嵌式 JS（`window.TYLTC_DATA`）載入。
+- 「桃園市長者裝置活動假牙合約醫療院所」資料約155筆，原始欄位為編號／特約單位名稱／區別／地址／
+  電話；「區別」欄位本身即為乾淨的桃園市鄉鎮市區中文名稱（如「八德區」），**不需**從地址欄位解析，
+  比「桃園市老人福利機構一覽表」更單純；少數地址欄位（如編號140）本身多帶「桃園市」字首屬原始資料
+  不一致，原文照登不修正；**無經緯度座標**，故不含地圖，僅提供行政區／機構類型／關鍵字篩選、統計卡
+  與圖表。頁面上方另加一張補助制度說明靜態卡片（目的／補助對象／補助基準四項金額／申請流程五步驟／
+  注意事項），內容整理自桃園市政府衛生局公告，**非資料集欄位**，純為靜態文字說明，不影響下方
+  篩選/圖表/表格運作。「機構類型」（醫院／診所）為本站依「特約單位名稱」是否含「醫院」二字啟發式
+  推斷，**非官方分類欄位**，僅供篩選與圖表參考；來源網址與同平台的桃園市老人福利機構一覽表／桃園市
+  長期照護專業服務特約單位一致，CORS 僅允許 opendata.tycg.gov.tw 網域，改以內嵌式 JS
+  （`window.TYC_DENTURE_DATA`）載入。
 
 

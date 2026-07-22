@@ -1,6 +1,6 @@
 # 政府開放資料儀表板
 
-> 以政府開放資料建置的靜態網站，整理十五個長照/老人福利相關資料集為互動式儀表板，提供篩選、統計圖表與分頁表格，部分資料集含地圖呈現。無後端、無建置工具，直接部署於 GitHub Pages。
+> 以政府開放資料建置的靜態網站，整理十六個長照/老人福利相關資料集為互動式儀表板，提供篩選、統計圖表與分頁表格，部分資料集含地圖呈現。無後端、無建置工具，直接部署於 GitHub Pages。
 
 本站所有資料皆來自各縣市政府開放資料平台或公告頁面，經清理、地址解析與格式轉換後靜態化，原始來源與授權資訊詳見各資料集頁面下方連結的 llms.txt。
 
@@ -21,6 +21,7 @@
 - [屏東縣老人長期照顧機構](https://www.sunkuo.cc/gov-open-data-dashboard/pingtung-ltc/index.html): 屏東縣老人長期照顧機構清單，收錄機構名稱、地址、電話，機構類型（養護型／失智型／未標示）由機構名稱解析而來，鄉鎮市由地址欄位解析，提供鄉鎮市／機構類型／關鍵字篩選與統計圖表，無經緯度座標。 (https://www.sunkuo.cc/gov-open-data-dashboard/pingtung-ltc/llms.txt)
 - [臺中市失能者交通接送服務](https://www.sunkuo.cc/gov-open-data-dashboard/tc-transport/index.html): 協助中重度失能者滿足以就醫及使用長期照顧服務為主要目的之交通服務需求，收錄辦理單位名稱、連絡電話、地址、服務區域，含經緯度座標（由原始 TWD97 TM2 平面座標換算），於地圖上呈現，並提供服務區域（多選）／辦理單位所在行政區／關鍵字篩選與統計圖表。 (https://www.sunkuo.cc/gov-open-data-dashboard/tc-transport/llms.txt)
 - [桃園市長期照護專業服務特約單位](https://www.sunkuo.cc/gov-open-data-dashboard/tyltc/index.html): 桃園市居家護理所、物理／職能治療所等長期照護專業服務特約單位清單，收錄機構名稱、負責人、電話、傳真、電子郵件、地址與最後更新時間；「服務類型」由機構名稱關鍵字啟發式推斷（非官方分類），部分機構地址位於新北市、臺北市等鄰近縣市，提供縣市／鄉鎮市區／服務類型／關鍵字篩選與統計圖表，無經緯度座標。 (https://www.sunkuo.cc/gov-open-data-dashboard/tyltc/llms.txt)
+- [桃園市長者裝置活動假牙合約醫療院所](https://www.sunkuo.cc/gov-open-data-dashboard/tyc-denture/index.html): 桃園市長者裝置活動假牙補助合約醫療院所（牙醫診所/醫院）清單，收錄特約單位名稱、區別、地址、電話，並整理補助對象、補助基準（部分/半口/全口活動假牙、假牙維修）與申請流程說明；「機構類型」由名稱關鍵字啟發式推斷（非官方分類），提供行政區／機構類型／關鍵字篩選與統計圖表，無經緯度座標。 (https://www.sunkuo.cc/gov-open-data-dashboard/tyc-denture/llms.txt)
 
 ## 其他頁面
 

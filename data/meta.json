@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-21T13:18:03.666464+00:00",
+  "generatedAt": "2026-07-22T13:09:23.039861+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -74,5 +74,10 @@
     "count": 115,
     "source": "https://opendata.tycg.gov.tw/api/dataset/2e087011-3a3d-4ae1-9038-19b2f3f43a9a/resource/cc33a2eb-c1cf-47f1-b6f7-d4b37ba4c797/download",
     "title": "桃園市長期照護專業服務特約單位"
+  },
+  "tycDenture": {
+    "count": 155,
+    "source": "https://opendata.tycg.gov.tw/api/dataset/c0c21e97-fc4a-4b65-aa31-0550b4a007b6/resource/433a97d4-c947-4ecd-9e9f-a1860f8cc0d5/download",
+    "title": "桃園市長者裝置活動假牙合約醫療院所"
   }
 }

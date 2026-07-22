@@ -92,6 +92,16 @@
     parse_county_district() 一般規則解析其他縣市；「服務類型」欄位為本腳本依「辦理單位」名稱關鍵字
     啟發式推斷（如含「居家式服務類機構」「職能治療所」「物理治療所」「護理之家」「日間照顧」等），
     **非官方分類欄位**，前端會明確標注為推斷值，詳見 build_tyltc() 與 TYLTC_TYPE_RULES）
+16. 桃園市長者裝置活動假牙合約醫療院所（DCAT dataset https://data.gov.tw/dataset/8572 ，
+    dataset id 26030，提供機關：桃園市政府衛生局）
+    https://opendata.tycg.gov.tw/api/dataset/c0c21e97-fc4a-4b65-aa31-0550b4a007b6/resource/433a97d4-c947-4ecd-9e9f-a1860f8cc0d5/download
+    （CSV，共約155筆；欄位為編號/特約單位名稱/區別/地址/電話，與 DCAT description 一致；「區別」
+    欄位本身即為乾淨的桃園市鄉鎮市區中文名稱（如「八德區」），**不需**從地址欄位解析，比
+    build_tyc_elder() 更單純；少數地址欄位（如編號140）本身多帶「桃園市」字首屬原始資料不一致，
+    原文照登不修正；無經緯度座標，故不含地圖；本腳本額外依「特約單位名稱」是否含「醫院」二字推斷
+    「機構類型」（醫院／診所），**非官方分類欄位**，僅供篩選/圖表參考，詳見 build_tyc_denture()；
+    來源網址與同平台其他 opendata.tycg.gov.tw 資料集一致，CORS 僅允許該平台網域，改由本腳本於
+    伺服器端下載並額外輸出內嵌 JS 版本）
 
 用法：
     python3 scripts/build_data.py
@@ -124,6 +134,8 @@
     data/tc-transport.js  (window.TC_TRANSPORT_DATA，同上，供前端以 <script> 直接載入)
     data/tyltc.json
     data/tyltc.js         (window.TYLTC_DATA，同上，供前端以 <script> 直接載入)
+    data/tyc-denture.json
+    data/tyc-denture.js   (window.TYC_DENTURE_DATA，同上，供前端以 <script> 直接載入)
     data/meta.json  (資料更新時間等資訊)
 
 額外相依套件：
@@ -169,6 +181,10 @@ TC_TRANSPORT_URL = "https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resourc
 TYLTC_URL = (
     "https://opendata.tycg.gov.tw/api/dataset/2e087011-3a3d-4ae1-9038-19b2f3f43a9a/"
     "resource/cc33a2eb-c1cf-47f1-b6f7-d4b37ba4c797/download"
+)
+TYC_DENTURE_URL = (
+    "https://opendata.tycg.gov.tw/api/dataset/c0c21e97-fc4a-4b65-aa31-0550b4a007b6/"
+    "resource/433a97d4-c947-4ecd-9e9f-a1860f8cc0d5/download"
 )
 
 # 桃園市長期照護專業服務特約單位「服務類型」啟發式分類規則：依「辦理單位」名稱關鍵字比對，
@@ -941,6 +957,45 @@ def build_tyltc():
     return {"fields": fields, "rows": records}
 
 
+def _tyc_denture_type(name: str) -> str:
+    """依「特約單位名稱」是否含「醫院」二字，啟發式推斷機構類型（醫院／診所），
+    非官方分類欄位，僅供前端篩選/圖表參考。"""
+    return "醫院" if "醫院" in (name or "") else "診所"
+
+
+def build_tyc_denture():
+    """桃園市長者裝置活動假牙合約醫療院所（桃園市政府衛生局，DCAT dataset id 26030）。
+
+    來源為 CSV（TYC_DENTURE_URL），共約155筆，欄位：編號、特約單位名稱、區別、地址、電話，與 DCAT
+    description 一致。「區別」欄位本身即為乾淨的桃園市鄉鎮市區中文名稱（如「八德區」），**不需**從
+    地址欄位解析行政區，比 build_tyc_elder() 更單純；少數地址欄位（如編號140）本身多帶「桃園市」
+    字首，屬原始資料不一致，原文照登不修正。無經緯度座標，故本頁不含地圖。
+
+    「機構類型」為本腳本依「特約單位名稱」是否含「醫院」二字啟發式推斷（見 _tyc_denture_type()），
+    **非官方分類欄位**，前端需標注為推斷值。
+
+    來源網址與同平台的 tyc-elder／tyltc 資料集一致，CORS 僅允許 opendata.tycg.gov.tw 網域，改由
+    本腳本於伺服器端下載，另輸出內嵌 JS 版本避免依賴外部網址即時可用性。
+    """
+    print("下載 桃園市長者裝置活動假牙合約醫療院所 ...", file=sys.stderr)
+    text = fetch(TYC_DENTURE_URL)
+    reader = csv.DictReader(io.StringIO(text))
+    records = []
+    for row in reader:
+        name = (row.get("特約單位名稱", "") or "").strip()
+        records.append([
+            (row.get("編號", "") or "").strip(),   # 0 id
+            name,                                     # 1 name
+            _tyc_denture_type(name),                  # 2 type
+            (row.get("區別", "") or "").strip(),    # 3 district
+            (row.get("地址", "") or "").strip(),    # 4 address
+            (row.get("電話", "") or "").strip(),    # 5 phone
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "name", "type", "district", "address", "phone"]
+    return {"fields": fields, "rows": records}
+
+
 def _specialty_norm(s):
     """去除 PDF 儲存格內因欄寬過窄產生的換行，並還原被誤用的 CJK 部首符號為正常漢字。"""
     if not s:
@@ -1151,6 +1206,15 @@ DATASETS = [
         "meta_key": "tyltc",
         "title": "桃園市長期照護專業服務特約單位",
         "source": lambda: TYLTC_URL,
+    },
+    {
+        "key": "tyc-denture",
+        "builder": build_tyc_denture,
+        "json": "data/tyc-denture.json",
+        "js_var": "TYC_DENTURE_DATA",
+        "meta_key": "tycDenture",
+        "title": "桃園市長者裝置活動假牙合約醫療院所",
+        "source": lambda: TYC_DENTURE_URL,
     },
 ]
 
