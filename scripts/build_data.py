@@ -114,6 +114,25 @@
     表格元件；無地址、無電話、無經緯度座標，故不含地圖也不套用超連結慣例；來源網址與同平台其他
     opendata.tycg.gov.tw 資料集一致，CORS 僅允許該平台網域，改由本腳本於伺服器端下載，但資料量小
     不需另外輸出內嵌 JS 版本，詳見 build_tyc_disability_hospitals()）
+18. 桃園市失能老人接受長期照顧機構服務暨老人保護安置機構名冊（DCAT dataset https://data.gov.tw/dataset/8572 ，
+    dataset id 75570，提供機關：桃園市政府社會局；distribution 備註「115-116年失能老人公費安置機構
+    簽約名冊」）
+    https://opendata.tycg.gov.tw/api/dataset/d771e458-6e10-45c0-9ec0-83fd820266b5/resource/f7339a27-6360-4a34-a7ec-11f5dc0b2135/download
+    （CSV，共123筆，**編碼為 BIG5(cp950)**，與 tyltc 相同例外，fetch() 用 encoding="cp950" 下載；
+    欄位為編號/機構名稱/電話/地址，與 DCAT description 一致；無經緯度座標，故不含地圖；「機構名稱」
+    結尾偶帶括號分類文字，本腳本只擷取以「型」結尾的括號內容作為「機構類型」（如「養護型」
+    「長期照護型」），避免誤擷取名稱中其他非分類用途的括號備註（如「（更名前：海森）」「（玉里
+    園區）」這類改名/分院備註），無法擷取到「型」結尾括號者歸類「未標示」，**非官方分類欄位**，
+    僅供篩選/圖表參考；「地址」多數為「桃園市OO區」，但因屬跨縣市公費安置合約名冊，實測約13筆
+    位於新竹縣/花蓮縣/彰化縣/新北市/臺南市等桃園市以外縣市，本腳本比照 build_tyltc() 的作法：地址
+    以「桃園市」開頭者用既有 TYC_DISTRICTS 固定清單解析行政區，其餘縣市改用
+    parse_county_district(strict=True) 一般規則解析；第92筆地址欄位以引號包住跨行兩筆地址（機構
+    行政聯絡地址＋實際所在地地址），CSV 已用 csv.DictReader 正確讀入，原文照登不拆分成兩筆；第3筆
+    地址欄位內容誤填為與機構名稱相同的文字（原始資料品質問題，非本腳本解析錯誤），原文照登不修正，
+    該筆行政區因文字不含合法鄉鎮市區字尾而解析為空字串；電話欄位格式不一（夾帶空格、「分機」文字、
+    「#」分機、聯絡人姓名如「03-8886141#1153葉小姐」），原文照登不重新格式化；來源網址與同平台其他
+    opendata.tycg.gov.tw 資料集一致，CORS 僅允許該平台網域，改由本腳本於伺服器端下載並輸出內嵌 JS
+    版本，詳見 build_tyc_placement()）
 
 用法：
     python3 scripts/build_data.py
@@ -149,6 +168,8 @@
     data/tyc-denture.json
     data/tyc-denture.js   (window.TYC_DENTURE_DATA，同上，供前端以 <script> 直接載入)
     data/tyc-disability-hospitals.json  (資料量小且無 CORS 前端 fetch 需求，不輸出內嵌 JS)
+    data/tyc-placement.json
+    data/tyc-placement.js  (window.TYC_PLACEMENT_DATA，同上，供前端以 <script> 直接載入)
     data/meta.json  (資料更新時間等資訊)
 
 額外相依套件：
@@ -202,6 +223,10 @@ TYC_DENTURE_URL = (
 TYC_DISABILITY_HOSPITALS_URL = (
     "https://opendata.tycg.gov.tw/api/dataset/628c2789-10f8-4c73-bafc-58dac276fa6f/"
     "resource/a2b6559b-9265-4854-b1be-97c0f8cde3a6/download"
+)
+TYC_PLACEMENT_URL = (
+    "https://opendata.tycg.gov.tw/api/dataset/d771e458-6e10-45c0-9ec0-83fd820266b5/"
+    "resource/f7339a27-6360-4a34-a7ec-11f5dc0b2135/download"
 )
 
 # 桃園市身心障礙類別、向度之鑑定醫院名冊：17家醫院欄位順序（CSV 表頭欄位名稱，
@@ -1121,6 +1146,75 @@ def build_tyc_disability_hospitals():
     return {"fields": fields, "hospitals": TYC_DISABILITY_HOSPITALS, "rows": records}
 
 
+TYC_PLACEMENT_TYPE_RE = re.compile(r"[（(]([^）(]*型)[）)]")
+
+# 第3筆「桃園市私立建元老人長期照顧中心（養護型）」地址欄位原始資料誤填為機構名稱本身（非真實
+# 地址，原始資料品質問題）；經人工查證該機構實際地址為「330桃園市桃園區雲林里大豐路56號」，於此
+# 手動補上正確地址（僅此一筆套用覆寫，其餘機構地址仍以原始 CSV 資料為準）。
+TYC_PLACEMENT_ADDRESS_OVERRIDES = {
+    "桃園市私立建元老人長期照顧中心（養護型）": "330桃園市桃園區雲林里大豐路56號",
+}
+
+
+def build_tyc_placement():
+    """桃園市失能老人接受長期照顧機構服務暨老人保護安置機構名冊（桃園市政府社會局，
+    DCAT dataset id 75570，distribution 備註「115-116年失能老人公費安置機構簽約名冊」）。
+
+    來源為 CSV（TYC_PLACEMENT_URL），共123筆，**編碼為 BIG5(cp950)**，與 build_tyltc() 同一例外，
+    需 fetch(url, encoding="cp950") 下載解碼。原始欄位：編號、機構名稱、電話、地址，與 DCAT
+    description 一致，**無經緯度座標**，故本頁不含地圖。
+
+    「機構名稱」結尾偶帶括號分類文字，本腳本只擷取以「型」結尾的括號內容作為「機構類型」（實測
+    僅出現「養護型」「長期照護型」兩種），刻意排除名稱中其他非分類用途的括號備註（如「（更名前：
+    海森）」「（玉里園區）」這類改名/分院說明，不以「型」結尾），避免誤判；無法擷取到「型」結尾
+    括號者歸類「未標示」（實測占約46%，多為「OO護理之家」「OO精神護理之家」類機構，原始資料本身
+    未在名稱標示分類），**非官方分類欄位**，僅供篩選/圖表參考。
+
+    「地址」多數為「桃園市OO區」開頭，但因屬跨縣市公費安置合約名冊，實測約13筆位於新竹縣、花蓮縣、
+    彰化縣、新北市、臺南市等桃園市以外縣市：比照 build_tyltc() 的作法，地址以「桃園市」開頭者用
+    既有 TYC_DISTRICTS 固定清單解析行政區（避免「平鎮區」等名稱誤判），其餘縣市改用
+    parse_county_district(strict=True) 一般規則解析。
+
+    已知資料品質備註／人工修正：第92筆地址欄位以引號包住跨行兩段地址（機構行政聯絡地址＋實際
+    所在地地址），csv.DictReader 已正確讀入為單一欄位值；第3筆「桃園市私立建元老人長期照顧中心
+    （養護型）」原始地址欄位內容誤填為與機構名稱相同的文字（非本腳本解析錯誤），經人工查證該
+    機構實際地址為「330桃園市桃園區雲林里大豐路56號」，以 TYC_PLACEMENT_ADDRESS_OVERRIDES
+    手動覆寫該筆 address 後再解析 county/district（僅此一筆套用覆寫）；電話欄位格式不一，夾帶
+    空格、「分機」文字、「#」分機、聯絡人姓名（如「03-8886141#1153葉小姐」），不重新格式化。
+
+    來源網址與同平台其他 opendata.tycg.gov.tw 資料集一致，CORS 僅允許該平台網域，改由本腳本於
+    伺服器端下載並輸出內嵌 JS 版本。
+    """
+    print("下載 桃園市失能老人接受長期照顧機構服務暨老人保護安置機構名冊 ...", file=sys.stderr)
+    text = fetch(TYC_PLACEMENT_URL, encoding="cp950")
+    reader = csv.DictReader(io.StringIO(text))
+    records = []
+    for row in reader:
+        name = (row.get("機構名稱", "") or "").strip()
+        addr = (row.get("地址", "") or "").strip()
+        if name in TYC_PLACEMENT_ADDRESS_OVERRIDES:
+            addr = TYC_PLACEMENT_ADDRESS_OVERRIDES[name]
+        m = TYC_PLACEMENT_TYPE_RE.search(name)
+        inst_type = m.group(1) if m else "未標示"
+        addr_no_zip = re.sub(r"^\d{3,6}", "", addr)  # 部分地址帶郵遞區號字首，解析前先去除
+        if addr_no_zip.startswith("桃園市"):
+            county = "桃園市"
+            rest = addr_no_zip[len("桃園市"):]
+            district = next((d for d in TYC_DISTRICTS if rest.startswith(d)), "")
+        else:
+            county, district = parse_county_district(addr_no_zip, strict=True)
+        records.append([
+            name,                                  # 0 name
+            inst_type,                              # 1 type
+            county,                                  # 2 county
+            district,                                # 3 district
+            addr,                                    # 4 address
+            (row.get("電話", "") or "").strip(),  # 5 phone
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["name", "type", "county", "district", "address", "phone"]
+    return {"fields": fields, "rows": records}
+
 
     """去除 PDF 儲存格內因欄寬過窄產生的換行，並還原被誤用的 CJK 部首符號為正常漢字。"""
     if not s:
@@ -1349,6 +1443,15 @@ DATASETS = [
         "meta_key": "tycDisabilityHospitals",
         "title": "桃園市身心障礙類別、向度之鑑定醫院名冊",
         "source": lambda: TYC_DISABILITY_HOSPITALS_URL,
+    },
+    {
+        "key": "tyc-placement",
+        "builder": build_tyc_placement,
+        "json": "data/tyc-placement.json",
+        "js_var": "TYC_PLACEMENT_DATA",
+        "meta_key": "tycPlacement",
+        "title": "桃園市失能老人接受長期照顧機構服務暨老人保護安置機構名冊",
+        "source": lambda: TYC_PLACEMENT_URL,
     },
 ]
 

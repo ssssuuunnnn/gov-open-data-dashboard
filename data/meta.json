@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-22T14:19:59.702982+00:00",
+  "generatedAt": "2026-07-23T13:23:41.134960+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -84,5 +84,10 @@
     "count": 623,
     "source": "https://opendata.tycg.gov.tw/api/dataset/628c2789-10f8-4c73-bafc-58dac276fa6f/resource/a2b6559b-9265-4854-b1be-97c0f8cde3a6/download",
     "title": "桃園市身心障礙類別、向度之鑑定醫院名冊"
+  },
+  "tycPlacement": {
+    "count": 123,
+    "source": "https://opendata.tycg.gov.tw/api/dataset/d771e458-6e10-45c0-9ec0-83fd820266b5/resource/f7339a27-6360-4a34-a7ec-11f5dc0b2135/download",
+    "title": "桃園市失能老人接受長期照顧機構服務暨老人保護安置機構名冊"
   }
 }

@@ -239,6 +239,17 @@
         "@type": "Organization",
         "name": "桃園市政府衛生局"
       }
+    },
+    {
+      "@type": "Dataset",
+      "name": "桃園市失能老人接受長期照顧機構服務暨老人保護安置機構名冊",
+      "description": "桃園市政府社會局公告之115-116年失能老人公費安置機構簽約名冊，收錄約123筆機構名稱、電話、地址，機構多數位於桃園市但亦有少數位於外縣市。",
+      "url": "https://www.sunkuo.cc/gov-open-data-dashboard/tyc-placement/index.html",
+      "license": "http://data.gov.tw/license",
+      "creator": {
+        "@type": "Organization",
+        "name": "桃園市政府社會局"
+      }
     }
   ]
 }
@@ -478,6 +489,12 @@
       <div class="desc">桃園市政府衛生局提供，列出身心障礙類別、向度之鑑定醫院對應清單，可依鑑定類別、向度、醫院與關鍵字篩選，快速查詢各鑑定項目可到哪些醫院辦理並瀏覽統計圖表。</div>
       <div class="footline" id="tyc-disability-hospitals-count">資料筆數載入中…</div>
     </a>
+    <a class="home-card" href="tyc-placement/index.html" data-county="桃園市" data-category="ltc">
+      <span class="tag">桃園市</span>
+      <h2>桃園市失能老人長照暨老人保護安置機構名冊</h2>
+      <div class="desc">桃園市政府社會局提供，列出失能老人接受長期照顧機構服務暨老人保護安置機構（115-116年公費安置機構簽約名冊）名稱、電話、地址與機構類型（依名稱解析），機構多數位於桃園市但亦有少數位於外縣市，可依縣市、鄉鎮市區、機構類型與關鍵字篩選並瀏覽統計圖表。</div>
+      <div class="footline" id="tyc-placement-count">資料筆數載入中…</div>
+    </a>
     <p class="no-match" id="county-no-match" style="display:none; grid-column: 1 / -1; text-align:center; color: var(--color-muted); padding: 24px 0;">
       沒有符合所選縣市的資料集，請調整篩選條件。
     </p>
@@ -655,6 +672,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.tycDisabilityHospitals) {
     document.getElementById("tyc-disability-hospitals-count").textContent = `共 ${meta.tycDisabilityHospitals.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.tycPlacement) {
+    document.getElementById("tyc-placement-count").textContent = `共 ${meta.tycPlacement.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
 }).catch(() => {});
 

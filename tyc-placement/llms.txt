@@ -1,0 +1,20 @@
+# 桃園市失能老人接受長期照顧機構服務暨老人保護安置機構名冊
+
+> 桃園市失能老人接受長期照顧機構服務暨老人保護安置機構名冊（115-116年失能老人公費安置機構簽約名冊），收錄機構名稱、電話、地址；機構多數位於桃園市各鄉鎮市區，另有少數位於新竹縣、花蓮縣、彰化縣、新北市、臺南市等縣市；「機構類型」由機構名稱結尾括號中以「型」結尾的文字解析（如「養護型」「長期照護型」），無標示者歸類「未標示」（非官方分類），提供縣市／鄉鎮市區／機構類型／關鍵字篩選與統計圖表，無經緯度座標。
+
+- 提供機關：桃園市政府社會局
+- 資料筆數：約 123 筆（隨資料來源更新而變動，實際筆數以頁面即時載入為準）
+- 原始資料來源：https://opendata.tycg.gov.tw/api/dataset/d771e458-6e10-45c0-9ec0-83fd820266b5/resource/f7339a27-6360-4a34-a7ec-11f5dc0b2135/download
+- 授權方式：政府資料開放授權條款-第1版
+- 建議查看頻率：每年
+
+## 頁面內容
+
+- 儀表板頁面：https://www.sunkuo.cc/gov-open-data-dashboard/tyc-placement/index.html
+- 篩選條件、統計卡片、圖表與分頁表格皆基於上述原始資料即時運算，不含額外人工詮釋（除文中另有註記的啟發式推斷欄位）。
+
+## 相關連結
+
+- 網站首頁：https://www.sunkuo.cc/gov-open-data-dashboard/
+- 更新紀錄：https://www.sunkuo.cc/gov-open-data-dashboard/changelog/index.html
+- 專案原始碼：https://github.com/ssssuuunnnn/gov-open-data-dashboard
