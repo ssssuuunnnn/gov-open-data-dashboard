@@ -134,6 +134,19 @@
     opendata.tycg.gov.tw 資料集一致，CORS 僅允許該平台網域，改由本腳本於伺服器端下載並輸出內嵌 JS
     版本，詳見 build_tyc_placement()）
 
+19. 臺北市假牙補助醫療院所名單（DCAT dataset https://data.gov.tw/dataset/8572 ，
+    dataset id 129840，提供機關：臺北市政府社會局）
+    https://data.taipei/api/dataset/76b8b514-e793-4cca-8dcf-065d5af4b760/resource/d6522c9f-2026-4ab0-9642-65df9218a9bc/download
+    （CSV，**編碼為 BIG5(cp950)**，與 tyltc/tyc-placement 同一例外，fetch() 用 encoding="cp950"
+    下載；欄位為補助類型/區域/院所名稱/地址/連絡電話，與 DCAT description 一致；實測僅**6筆資料**，
+    「補助類型」全數為常數值「假牙補助」無篩選/圖表意義，本腳本仍照原文輸出該欄位但前端不另外
+    製作分布圖表；6家院所全為「臺北市立聯合醫院」不同分院，地址已含完整「臺北市OO區」字首可直接用
+    parse_county_district(strict=True) 解析行政區（臺北市12個行政區名稱互不含子字串歧義，不需
+    像 TYC_DISTRICTS 那樣額外處理）；無經緯度座標，故不含地圖；「區域」欄位本身即為乾淨的臺北市
+    行政區中文名稱，與從地址解析出的行政區一致，僅作為交叉驗證，前端仍以地址解析結果為準；來源網址
+    data.taipei 平台無 CORS 標頭，改由本腳本於伺服器端下載，因資料量極小仍輸出內嵌 JS 版本以維持
+    與其他資料集一致的載入方式，詳見 build_tpe_denture()）
+
 用法：
     python3 scripts/build_data.py
 輸出：
@@ -170,6 +183,8 @@
     data/tyc-disability-hospitals.json  (資料量小且無 CORS 前端 fetch 需求，不輸出內嵌 JS)
     data/tyc-placement.json
     data/tyc-placement.js  (window.TYC_PLACEMENT_DATA，同上，供前端以 <script> 直接載入)
+    data/tpe-denture.json
+    data/tpe-denture.js    (window.TPE_DENTURE_DATA，同上，供前端以 <script> 直接載入)
     data/meta.json  (資料更新時間等資訊)
 
 額外相依套件：
@@ -227,6 +242,10 @@ TYC_DISABILITY_HOSPITALS_URL = (
 TYC_PLACEMENT_URL = (
     "https://opendata.tycg.gov.tw/api/dataset/d771e458-6e10-45c0-9ec0-83fd820266b5/"
     "resource/f7339a27-6360-4a34-a7ec-11f5dc0b2135/download"
+)
+TPE_DENTURE_URL = (
+    "https://data.taipei/api/dataset/76b8b514-e793-4cca-8dcf-065d5af4b760/"
+    "resource/d6522c9f-2026-4ab0-9642-65df9218a9bc/download"
 )
 
 # 桃園市身心障礙類別、向度之鑑定醫院名冊：17家醫院欄位順序（CSV 表頭欄位名稱，
@@ -1216,6 +1235,40 @@ def build_tyc_placement():
     return {"fields": fields, "rows": records}
 
 
+def build_tpe_denture():
+    """臺北市假牙補助醫療院所名單（臺北市政府社會局，DCAT dataset id 129840）。
+
+    來源為 CSV（TPE_DENTURE_URL），**編碼為 BIG5(cp950)**，與 build_tyltc()/build_tyc_placement()
+    同一例外，需 fetch(url, encoding="cp950") 下載解碼。原始欄位：補助類型、區域、院所名稱、地址、
+    連絡電話，與 DCAT description 一致。
+
+    實測**僅6筆資料**，「補助類型」全數為常數值「假牙補助」，無篩選/圖表意義；6家院所全部是
+    「臺北市立聯合醫院」不同分院（中興、仁愛、和平、陽明、忠孝、婦幼），分布於5個行政區（中正區
+    有2家）。「地址」已含完整「臺北市OO區」字首，用 parse_county_district(strict=True) 直接解析
+    即可（臺北市12個行政區名稱互不含子字串歧義，不需像桃園市 TYC_DISTRICTS 那樣額外處理）；「區域」
+    欄位本身也是乾淨的行政區中文名稱，與地址解析結果一致，僅保留供交叉核對，前端仍以地址解析出的
+    district 為準。無經緯度座標，故本頁不含地圖。
+
+    來源網址 data.taipei 平台無 CORS 標頭，改由本腳本於伺服器端下載；雖資料量極小，仍輸出內嵌 JS
+    版本以維持與其他資料集一致的載入方式（避免 fetch 時序問題）。
+    """
+    print("下載 臺北市假牙補助醫療院所名單 ...", file=sys.stderr)
+    text = fetch(TPE_DENTURE_URL, encoding="cp950")
+    reader = csv.DictReader(io.StringIO(text))
+    records = []
+    for row in reader:
+        addr = (row.get("地址", "") or "").strip()
+        county, district = parse_county_district(addr, strict=True)
+        records.append([
+            (row.get("補助類型", "") or "").strip(),  # 0 type
+            (row.get("區域", "") or district).strip(),  # 1 district（優先用地址解析結果，缺值才退回原始欄位）
+            (row.get("院所名稱", "") or "").strip(),   # 2 name
+            addr,                                        # 3 address
+            (row.get("連絡電話", "") or "").strip(),   # 4 phone
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["type", "district", "name", "address", "phone"]
+    return {"fields": fields, "rows": records}
     """去除 PDF 儲存格內因欄寬過窄產生的換行，並還原被誤用的 CJK 部首符號為正常漢字。"""
     if not s:
         return ""
@@ -1452,6 +1505,15 @@ DATASETS = [
         "meta_key": "tycPlacement",
         "title": "桃園市失能老人接受長期照顧機構服務暨老人保護安置機構名冊",
         "source": lambda: TYC_PLACEMENT_URL,
+    },
+    {
+        "key": "tpe-denture",
+        "builder": build_tpe_denture,
+        "json": "data/tpe-denture.json",
+        "js_var": "TPE_DENTURE_DATA",
+        "meta_key": "tpeDenture",
+        "title": "臺北市假牙補助醫療院所名單",
+        "source": lambda: TPE_DENTURE_URL,
     },
 ]
 

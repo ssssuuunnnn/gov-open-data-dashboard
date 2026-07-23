@@ -1,0 +1,20 @@
+# 臺北市假牙補助醫療院所名單
+
+> 臺北市政府社會局公告之中低收入老人裝置假牙補助合約醫療院所名單，共6筆，全數為「臺北市立聯合醫院」不同分院（中興、仁愛、和平、陽明、忠孝、婦幼），分布於5個行政區；提供行政區／關鍵字篩選、統計卡片與各行政區院所數圖表，無經緯度座標。
+
+- 提供機關：臺北市政府社會局
+- 資料筆數：6 筆（隨資料來源更新而變動，實際筆數以頁面即時載入為準）
+- 原始資料來源：https://data.taipei/api/dataset/76b8b514-e793-4cca-8dcf-065d5af4b760/resource/d6522c9f-2026-4ab0-9642-65df9218a9bc/download
+- 授權方式：政府資料開放授權條款-第1版
+- 建議查看頻率：不定期
+
+## 頁面內容
+
+- 儀表板頁面：https://www.sunkuo.cc/gov-open-data-dashboard/tpe-denture/index.html
+- 篩選條件、統計卡片、圖表與分頁表格皆基於上述原始資料即時運算；「補助類型」欄位原始資料全為單一值「假牙補助」，故本頁不另外製作補助類型分布圖表。
+
+## 相關連結
+
+- 網站首頁：https://www.sunkuo.cc/gov-open-data-dashboard/
+- 更新紀錄：https://www.sunkuo.cc/gov-open-data-dashboard/changelog/index.html
+- 專案原始碼：https://github.com/ssssuuunnnn/gov-open-data-dashboard

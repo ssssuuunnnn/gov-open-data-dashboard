@@ -250,6 +250,17 @@
         "@type": "Organization",
         "name": "桃園市政府社會局"
       }
+    },
+    {
+      "@type": "Dataset",
+      "name": "臺北市假牙補助醫療院所名單",
+      "description": "臺北市政府社會局公告之中低收入老人裝置假牙補助合約醫療院所名單，收錄6筆臺北市立聯合醫院分院名稱、區域、地址與電話。",
+      "url": "https://www.sunkuo.cc/gov-open-data-dashboard/tpe-denture/index.html",
+      "license": "http://data.gov.tw/license",
+      "creator": {
+        "@type": "Organization",
+        "name": "臺北市政府社會局"
+      }
     }
   ]
 }
@@ -495,6 +506,12 @@
       <div class="desc">桃園市政府社會局提供，列出失能老人接受長期照顧機構服務暨老人保護安置機構（115-116年公費安置機構簽約名冊）名稱、電話、地址與機構類型（依名稱解析），機構多數位於桃園市但亦有少數位於外縣市，可依縣市、鄉鎮市區、機構類型與關鍵字篩選並瀏覽統計圖表。</div>
       <div class="footline" id="tyc-placement-count">資料筆數載入中…</div>
     </a>
+    <a class="home-card" href="tpe-denture/index.html" data-county="臺北市" data-category="ltc">
+      <span class="tag">臺北市</span>
+      <h2>臺北市老人假牙補助合約醫療院所</h2>
+      <div class="desc">臺北市政府社會局提供，列出中低收入老人裝置假牙補助合約醫療院所（臺北市立聯合醫院各分院）名稱、行政區、地址與電話，並整理補助制度說明，可依行政區與關鍵字篩選並瀏覽統計圖表。</div>
+      <div class="footline" id="tpe-denture-count">資料筆數載入中…</div>
+    </a>
     <p class="no-match" id="county-no-match" style="display:none; grid-column: 1 / -1; text-align:center; color: var(--color-muted); padding: 24px 0;">
       沒有符合所選縣市的資料集，請調整篩選條件。
     </p>
@@ -675,6 +692,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.tycPlacement) {
     document.getElementById("tyc-placement-count").textContent = `共 ${meta.tycPlacement.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.tpeDenture) {
+    document.getElementById("tpe-denture-count").textContent = `共 ${meta.tpeDenture.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
 }).catch(() => {});
 

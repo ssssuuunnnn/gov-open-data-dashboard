@@ -1,6 +1,6 @@
 # 政府開放資料儀表板
 
-> 以政府開放資料建置的靜態網站，整理十八個長照/老人福利/身心障礙相關資料集為互動式儀表板，提供篩選、統計圖表與分頁表格，部分資料集含地圖呈現。無後端、無建置工具，直接部署於 GitHub Pages。
+> 以政府開放資料建置的靜態網站，整理十九個長照/老人福利/身心障礙相關資料集為互動式儀表板，提供篩選、統計圖表與分頁表格，部分資料集含地圖呈現。無後端、無建置工具，直接部署於 GitHub Pages。
 
 本站所有資料皆來自各縣市政府開放資料平台或公告頁面，經清理、地址解析與格式轉換後靜態化，原始來源與授權資訊詳見各資料集頁面下方連結的 llms.txt。
 
@@ -24,6 +24,7 @@
 - [桃園市長者裝置活動假牙合約醫療院所](https://www.sunkuo.cc/gov-open-data-dashboard/tyc-denture/index.html): 桃園市長者裝置活動假牙補助合約醫療院所（牙醫診所/醫院）清單，收錄特約單位名稱、區別、地址、電話，並整理補助對象、補助基準（部分/半口/全口活動假牙、假牙維修）與申請流程說明；「機構類型」由名稱關鍵字啟發式推斷（非官方分類），提供行政區／機構類型／關鍵字篩選與統計圖表，無經緯度座標。 (https://www.sunkuo.cc/gov-open-data-dashboard/tyc-denture/llms.txt)
 - [桃園市身心障礙類別、向度之鑑定醫院名冊](https://www.sunkuo.cc/gov-open-data-dashboard/tyc-disability-hospitals/index.html): 桃園市身心障礙「鑑定類別（第一類～第八類）×鑑定向度×17家醫院」勾選矩陣，本站展開為長格式（約623筆），收錄鑑定類別、向度、相關疾病類別、可鑑定醫院與備註條件（如年齡/疾病限制），提供鑑定類別／向度／醫院／關鍵字篩選與統計圖表，無地址、電話、經緯度座標。 (https://www.sunkuo.cc/gov-open-data-dashboard/tyc-disability-hospitals/llms.txt)
 - [桃園市失能老人接受長期照顧機構服務暨老人保護安置機構名冊](https://www.sunkuo.cc/gov-open-data-dashboard/tyc-placement/index.html): 桃園市115-116年失能老人公費安置機構簽約名冊，收錄約123筆機構名稱、電話、地址，機構多數位於桃園市但亦有少數位於外縣市；「機構類型」由機構名稱結尾括號中以「型」結尾的文字解析（非官方分類），提供縣市／鄉鎮市區／機構類型／關鍵字篩選與統計圖表，無經緯度座標。 (https://www.sunkuo.cc/gov-open-data-dashboard/tyc-placement/llms.txt)
+- [臺北市假牙補助醫療院所名單](https://www.sunkuo.cc/gov-open-data-dashboard/tpe-denture/index.html): 臺北市政府社會局公告之中低收入老人裝置假牙補助合約醫療院所名單，共6筆，全數為「臺北市立聯合醫院」不同分院，分布於5個行政區，提供行政區／關鍵字篩選、統計卡片與各行政區院所數圖表，無經緯度座標。 (https://www.sunkuo.cc/gov-open-data-dashboard/tpe-denture/llms.txt)
 
 ## 其他頁面
 

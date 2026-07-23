@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-23T13:23:41.134960+00:00",
+  "generatedAt": "2026-07-23T14:11:36.831763+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -89,5 +89,10 @@
     "count": 123,
     "source": "https://opendata.tycg.gov.tw/api/dataset/d771e458-6e10-45c0-9ec0-83fd820266b5/resource/f7339a27-6360-4a34-a7ec-11f5dc0b2135/download",
     "title": "桃園市失能老人接受長期照顧機構服務暨老人保護安置機構名冊"
+  },
+  "tpeDenture": {
+    "count": 6,
+    "source": "https://data.taipei/api/dataset/76b8b514-e793-4cca-8dcf-065d5af4b760/resource/d6522c9f-2026-4ab0-9642-65df9218a9bc/download",
+    "title": "臺北市假牙補助醫療院所名單"
   }
 }
