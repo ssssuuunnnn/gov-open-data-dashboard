@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-23T14:11:36.831763+00:00",
+  "generatedAt": "2026-07-24T14:22:41.760496+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -94,5 +94,10 @@
     "count": 6,
     "source": "https://data.taipei/api/dataset/76b8b514-e793-4cca-8dcf-065d5af4b760/resource/d6522c9f-2026-4ab0-9642-65df9218a9bc/download",
     "title": "臺北市假牙補助醫療院所名單"
+  },
+  "tycTransport": {
+    "count": 14,
+    "source": "https://opendata.tycg.gov.tw/api/dataset/ad10c5d0-b128-4daf-866e-4cfc9a78dadb/resource/e21c957c-1ff5-4c7e-9fcc-7132b96b0033/download",
+    "title": "桃園市長照交通接送服務單位"
   }
 }

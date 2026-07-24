@@ -147,6 +147,18 @@
     data.taipei 平台無 CORS 標頭，改由本腳本於伺服器端下載，因資料量極小仍輸出內嵌 JS 版本以維持
     與其他資料集一致的載入方式，詳見 build_tpe_denture()）
 
+20. 桃園市長照交通接送服務單位（DCAT dataset https://data.gov.tw/dataset/8572 ，
+    dataset id 148536，提供機關：桃園市政府社會局）
+    https://opendata.tycg.gov.tw/api/dataset/ad10c5d0-b128-4daf-866e-4cfc9a78dadb/resource/e21c957c-1ff5-4c7e-9fcc-7132b96b0033/download
+    （CSV，**編碼為 BIG5**，共14筆，欄位：辦理單位/連絡電話/地址/服務區域，與 DCAT description
+    一致；「地址」分布多個縣市（桃園市/臺北市/新北市等，服務桃園市民但辦理單位本身設址於外縣市），
+    不可假設地址一律在桃園市，改用 parse_county_district() 一般規則解析；少數地址僅以「OO區」
+    開頭缺少「桃園市」字首（如「桃園區大興西路二段61號11樓」），本腳本用既有 TYC_DISTRICTS 固定
+    清單額外判斷補上「桃園市」；無經緯度座標，故不含地圖；「連絡電話」欄位偶有跨行的多組號碼
+    （CSV 已用引號包住換行內容），統一以 " / " 合併成單行，與 build_tyltc() 處理方式一致；
+    「服務區域」幾乎全為「桃園市全區」，僅3筆為「復興區(專車)」，資料量小不拆解為陣列；因僅14筆，
+    比照 build_tyc_denture() 另輸出內嵌 JS 版本，詳見 build_tyc_transportation()）
+
 用法：
     python3 scripts/build_data.py
 輸出：
@@ -246,6 +258,10 @@ TYC_PLACEMENT_URL = (
 TPE_DENTURE_URL = (
     "https://data.taipei/api/dataset/76b8b514-e793-4cca-8dcf-065d5af4b760/"
     "resource/d6522c9f-2026-4ab0-9642-65df9218a9bc/download"
+)
+TYC_TRANSPORT_URL = (
+    "https://opendata.tycg.gov.tw/api/dataset/ad10c5d0-b128-4daf-866e-4cfc9a78dadb/"
+    "resource/e21c957c-1ff5-4c7e-9fcc-7132b96b0033/download"
 )
 
 # 桃園市身心障礙類別、向度之鑑定醫院名冊：17家醫院欄位順序（CSV 表頭欄位名稱，
@@ -1269,6 +1285,64 @@ def build_tpe_denture():
     print(f"  共 {len(records)} 筆", file=sys.stderr)
     fields = ["type", "district", "name", "address", "phone"]
     return {"fields": fields, "rows": records}
+
+
+def _tyc_transport_county_district(addr: str) -> tuple[str, str]:
+    """解析辦理單位地址所在縣市／行政區。地址分布多個縣市（桃園市/臺北市/新北市等，服務桃園市民但
+    辦理單位本身設址於外縣市），若以「桃園市」開頭或直接以桃園市13個行政區名稱開頭（少數地址缺少
+    「桃園市」字首，如「桃園區大興西路二段61號11樓」），改用既有 TYC_DISTRICTS 固定清單比對解析，
+    與 build_tyc_elder()/build_tyltc() 理由一致：一般規則 ADDR_RE 對「平鎮區」等行政區名稱中途
+    含「鎮」字會提前誤判（貪婪度不足，將「平鎮區」誤判為「平鎮」）；其餘縣市改用
+    parse_county_district(strict=True) 解析。"""
+    if addr.startswith("桃園市"):
+        rest = addr[len("桃園市"):]
+        district = next((d for d in TYC_DISTRICTS if rest.startswith(d)), "")
+        return "桃園市", district
+    matched = next((d for d in TYC_DISTRICTS if addr.startswith(d)), "")
+    if matched:
+        return "桃園市", matched
+    return parse_county_district(addr, strict=True)
+
+
+def build_tyc_transportation():
+    """桃園市長照交通接送服務單位（桃園市政府社會局，DCAT dataset id 148536）。
+
+    來源為 CSV（TYC_TRANSPORT_URL），**編碼為 BIG5**，需 fetch(url, encoding="big5") 下載解碼。
+    共14筆，欄位：辦理單位、連絡電話、地址、服務區域，與 DCAT description（辦理單位、連絡電話、
+    地址、服務區域）一致。
+
+    「地址」為辦理單位本身的地址，實測分布桃園市/臺北市/新北市等多個縣市（服務桃園市民但辦理單位
+    設址於外縣市），不可假設地址一律在桃園市，見 _tyc_transport_county_district() 解析規則。
+
+    「連絡電話」欄位偶有跨行的多組號碼/分機（CSV 已用引號包住換行內容），本腳本統一以 " / " 合併
+    成單行，與 build_tyltc() 處理方式一致。
+
+    「服務區域」欄位實測僅兩種值：「桃園市全區」（11家）與「復興區(專車)」（3家，服務原住民區及
+    偏遠地區之專車），資料量小不拆解為陣列，原文照登。
+
+    無經緯度座標，故本頁不含地圖；因僅14筆資料量極小，比照 build_tyc_denture() 另輸出內嵌 JS 版本
+    以維持與其他資料集一致的載入方式。
+    """
+    print("下載 桃園市長照交通接送服務單位 ...", file=sys.stderr)
+    text = fetch(TYC_TRANSPORT_URL, encoding="big5")
+    reader = csv.DictReader(io.StringIO(text))
+    records = []
+    for row in reader:
+        addr = (row.get("地址", "") or "").strip()
+        county, district = _tyc_transport_county_district(addr)
+        phone_lines = [p.strip() for p in (row.get("連絡電話", "") or "").splitlines() if p.strip()]
+        phone = " / ".join(phone_lines)
+        records.append([
+            (row.get("辦理單位", "") or "").strip(),      # 0 name
+            phone,                                            # 1 phone
+            addr,                                             # 2 address
+            county,                                           # 3 county
+            district,                                         # 4 district
+            (row.get("服務區域", "") or "").strip(),      # 5 serviceArea
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["name", "phone", "address", "county", "district", "serviceArea"]
+    return {"fields": fields, "rows": records}
     """去除 PDF 儲存格內因欄寬過窄產生的換行，並還原被誤用的 CJK 部首符號為正常漢字。"""
     if not s:
         return ""
@@ -1514,6 +1588,15 @@ DATASETS = [
         "meta_key": "tpeDenture",
         "title": "臺北市假牙補助醫療院所名單",
         "source": lambda: TPE_DENTURE_URL,
+    },
+    {
+        "key": "tyc-transport",
+        "builder": build_tyc_transportation,
+        "json": "data/tyc-transport.json",
+        "js_var": "TYC_TRANSPORT_DATA",
+        "meta_key": "tycTransport",
+        "title": "桃園市長照交通接送服務單位",
+        "source": lambda: TYC_TRANSPORT_URL,
     },
 ]
 
