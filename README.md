@@ -1,6 +1,6 @@
 # 政府開放資料儀表板
 
-以政府開放資料建置的靜態網站，整理二十個長照/老人福利/身心障礙相關資料集為互動式儀表板，可直接部署於 GitHub Pages。
+以政府開放資料建置的靜態網站，整理二十一個長照/老人福利/身心障礙相關資料集為互動式儀表板，可直接部署於 GitHub Pages。
 
 ## 資料集
 
@@ -26,6 +26,7 @@
 | `tyc-placement/` | 桃園市失能老人接受長期照顧機構服務暨老人保護安置機構名冊 | 桃園市政府社會局 | 115-116年失能老人公費安置機構簽約名冊，收錄約123筆機構名稱、電話、地址，機構多數位於桃園市但亦有少數位於新竹縣、花蓮縣、彰化縣、新北市、臺南市等縣市；「機構類型」由機構名稱結尾括號中以「型」結尾的文字解析（非官方分類），提供縣市／鄉鎮市區／機構類型／關鍵字篩選與統計圖表，無經緯度座標 |
 | `tpe-denture/` | 臺北市假牙補助醫療院所名單 | 臺北市政府社會局 | 臺北市中低收入老人裝置假牙補助合約醫療院所名單，共6筆，全數為「臺北市立聯合醫院」不同分院，分布於5個行政區，並整理補助制度說明，提供行政區／關鍵字篩選與統計圖表，無經緯度座標 |
 | `tyc-transport/` | 桃園市長照交通接送服務單位 | 桃園市政府社會局 | 桃園市長照交通接送服務單位清單，共14筆，收錄辦理單位名稱、連絡電話、地址、服務區域，辦理單位地址分布桃園市、臺北市、新北市等多個縣市，並整理洽辦單位、服務對象資格、一般服務地區與復興區偏遠地區補助金額說明，提供縣市／關鍵字篩選與統計圖表，無經緯度座標 |
+| `tyc-hospice/` | 桃園市社區安寧療護資源一覽表 | 桃園市政府衛生局 | 桃園市社區安寧療護資源一覽表，收錄安寧病房、安寧共照、居家及社區安寧（居家護理所/診所/衛生所）共54筆機構名稱、電話、地址，並整理服務對象、服務內容、申請流程說明；「機構型態」由名稱關鍵字啟發式推斷（非官方分類，僅居家及社區安寧類別適用），提供行政區／服務類別／機構型態／關鍵字篩選與統計圖表，無經緯度座標 |
 
 原始資料下載網址：
 - https://ltcpap.mohw.gov.tw/publish/abc.csv
@@ -47,6 +48,7 @@
 - https://opendata.tycg.gov.tw/api/dataset/628c2789-10f8-4c73-bafc-58dac276fa6f/resource/a2b6559b-9265-4854-b1be-97c0f8cde3a6/download
 - https://opendata.tycg.gov.tw/api/dataset/d771e458-6e10-45c0-9ec0-83fd820266b5/resource/f7339a27-6360-4a34-a7ec-11f5dc0b2135/download　（BIG5(cp950) 編碼）
 - https://data.taipei/api/dataset/76b8b514-e793-4cca-8dcf-065d5af4b760/resource/d6522c9f-2026-4ab0-9642-65df9218a9bc/download　（BIG5(cp950) 編碼）
+- https://opendata.tycg.gov.tw/api/dataset/7d03add1-aef5-4bbf-9b1b-7d601abd43a4/resource/5e7907b0-5418-4c36-9723-b6f786ad5871/download　（BIG5(cp950) 編碼）
 
 授權方式：政府資料開放授權條款-第1版
 
@@ -101,6 +103,9 @@ tpe-denture/app.js
 tyc-transport/index.html 桃園市長照交通接送服務單位儀表板（Chart.js 圖表 + 篩選表格，無地圖；
                        頁面上方另有洽辦單位/服務對象/補助金額說明靜態卡片）
 tyc-transport/app.js
+tyc-hospice/index.html 桃園市社區安寧療護資源一覽表儀表板（Chart.js 圖表 + 篩選表格，無地圖；
+                       頁面上方另有服務對象/服務內容/申請流程/諮詢窗口說明靜態卡片）
+tyc-hospice/app.js
 assets/style.css     共用樣式
 assets/table.js       共用分頁表格元件
 data/abc.json         長照ABC據點資料（由 scripts/build_data.py 產生）
@@ -160,6 +165,10 @@ data/tpe-denture.js   同上資料的內嵌 JS 版本（window.TPE_DENTURE_DATA�
 data/tyc-transport.json 桃園市長照交通接送服務單位資料（由 scripts/build_data.py 產生，BIG5 解碼）
 data/tyc-transport.js  同上資料的內嵌 JS 版本（window.TYC_TRANSPORT_DATA），供 tyc-transport
                        頁面以 <script> 標籤直接載入，因來源網址無 CORS 標頭，不透過 fetch()
+data/tyc-hospice.json 桃園市社區安寧療護資源一覽表資料（由 scripts/build_data.py 產生，BIG5(cp950)
+                       解碼；原始 CSV 無標準表頭，靠三段分類標題列切分服務類別）
+data/tyc-hospice.js   同上資料的內嵌 JS 版本（window.TYC_HOSPICE_DATA），供 tyc-hospice
+                       頁面以 <script> 標籤直接載入，因來源網址無 CORS 標頭，不透過 fetch()
 data/source/          長照專業服務特約單位來源 PDF（人工下載存放於此，供 build_data.py 解析）
 data/meta.json        資料筆數與更新時間
 scripts/build_data.py 資料下載與轉換腳本
@@ -179,13 +188,13 @@ scripts/sources/chiayi-ltc/  嘉義縣立案長照及護理之家機構一覽的
 python3 scripts/build_data.py
 ```
 
-不帶參數執行會重新下載十八份 CSV/JSON（長照ABC據點、巷弄長照站、桃園市老人福利機構一覽表、
+不帶參數執行會重新下載十九份 CSV/JSON（長照ABC據點、巷弄長照站、桃園市老人福利機構一覽表、
 銀髮族服務-居家長照機構、新竹縣長照機構名冊、宜蘭縣立案老人長期照顧及安養機構名冊、
 新竹市老人福利機構一覽表、臺南市居家護理機構、臺中市一般護理之家清冊、新北市一般護理之家清冊、
 屏東縣老人長期照顧機構、臺中市失能者交通接送服務、桃園市長期照護專業服務特約單位、
 桃園市長者裝置活動假牙合約醫療院所、桃園市身心障礙類別、向度之鑑定醫院名冊、
 桃園市失能老人接受長期照顧機構服務暨老人保護安置機構名冊、臺北市假牙補助醫療院所名單、
-桃園市長照交通接送服務單位）並覆寫對應
+桃園市長照交通接送服務單位、桃園市社區安寧療護資源一覽表）並覆寫對應
 `data/*.json`；同時嘗試解析
 `data/source/tp-ltc-specialty-*.pdf`
 （若存在）產生 `data/specialty.json`／`data/specialty.js`，並讀取 `scripts/sources/chiayi-ltc/` 下的
@@ -205,6 +214,7 @@ python3 scripts/build_data.py tc-transport        # 只重新產生臺中市失�
 python3 scripts/build_data.py tyc-placement       # 只重新產生桃園市失能老人長照暨老人保護安置機構名冊
 python3 scripts/build_data.py tpe-denture         # 只重新產生臺北市假牙補助醫療院所名單
 python3 scripts/build_data.py tyc-transport       # 只重新產生桃園市長照交通接送服務單位
+python3 scripts/build_data.py tyc-hospice         # 只重新產生桃園市社區安寧療護資源一覽表
 python3 scripts/build_data.py tc-nursing ntpc-nursing   # 可同時指定多個，以空白分隔
 python3 scripts/build_data.py --help              # 列出所有可用的資料集 key
 ```

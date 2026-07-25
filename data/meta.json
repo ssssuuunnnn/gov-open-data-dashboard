@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-24T14:22:41.760496+00:00",
+  "generatedAt": "2026-07-25T13:07:34.345662+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -99,5 +99,10 @@
     "count": 14,
     "source": "https://opendata.tycg.gov.tw/api/dataset/ad10c5d0-b128-4daf-866e-4cfc9a78dadb/resource/e21c957c-1ff5-4c7e-9fcc-7132b96b0033/download",
     "title": "桃園市長照交通接送服務單位"
+  },
+  "tycHospice": {
+    "count": 54,
+    "source": "https://opendata.tycg.gov.tw/api/dataset/7d03add1-aef5-4bbf-9b1b-7d601abd43a4/resource/5e7907b0-5418-4c36-9723-b6f786ad5871/download",
+    "title": "桃園市社區安寧療護資源一覽表"
   }
 }

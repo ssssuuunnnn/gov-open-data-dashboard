@@ -146,8 +146,28 @@
     行政區中文名稱，與從地址解析出的行政區一致，僅作為交叉驗證，前端仍以地址解析結果為準；來源網址
     data.taipei 平台無 CORS 標頭，改由本腳本於伺服器端下載，因資料量極小仍輸出內嵌 JS 版本以維持
     與其他資料集一致的載入方式，詳見 build_tpe_denture()）
+20. 桃園市社區安寧療護資源一覽表（DCAT dataset https://data.gov.tw/dataset/8572 ，
+    dataset id 45675，提供機關：桃園市政府衛生局）
+    https://opendata.tycg.gov.tw/api/dataset/7d03add1-aef5-4bbf-9b1b-7d601abd43a4/resource/5e7907b0-5418-4c36-9723-b6f786ad5871/download
+    （CSV，**編碼為 BIG5(cp950)**，與 tyltc/tyc-placement/tpe-denture 同一例外，fetch() 用
+    encoding="cp950" 下載；檔案僅62行、**無標準表頭列**，而是用三段「分類標題列」把資料切成三個
+    服務類別區塊：「安寧病房,聯繫方式,地址」「安寧共照,聯繫方式,地址」「安寧,居家及社區安寧,」，
+    本腳本偵測這三種標題列作為服務類別分段依據（欄位固定 3 欄：機構名稱／電話／地址）；少數資料列
+    機構名稱欄位為空、僅有電話（如同一機構的第二支聯絡電話），本腳本會將這類列的電話合併進前一筆
+    機構的電話欄位（以「、」分隔），不輸出空名稱的資料列；同一機構常出現在多個服務類別（如「臺北
+    榮民總醫院桃園分院」同時提供安寧病房／安寧共照／居家及社區安寧），屬資料集本身設計（一機構可
+    對應多種服務），忠實照登為多筆（機構,服務類別）組合，不視為重複資料；地址已含完整「桃園市OO區」
+    字首，但共用的 ADDR_RE 對「平鎮區」等名稱中途含「鎮」字的行政區會誤判（截斷成「平鎮」），比照
+    build_tyc_elder() 改用桃園市固定13區清單（TYC_DISTRICTS）比對取代 parse_county_district()；
+    無經緯度座標，故不含地圖；「居家及社區安寧」
+    類別內混雜性質不同的院所（居家護理所／診所／衛生所），原始欄位未區分，本腳本另外依機構名稱關鍵字
+    啟發式推斷「機構型態」（含「居家護理所」→居家護理所；含「衛生所」→衛生所；其餘→診所；非居家
+    及社區安寧類別留空字串不推斷），**非官方分類欄位**，前端會標注為推斷值；電話欄位格式不一（有無
+    括號區碼、夾帶「分機」文字、以「/」分隔多組號碼），原文照登不重新格式化；來源網址與同平台其他
+    opendata.tycg.gov.tw 資料集一致，CORS 僅允許該平台網域，改由本腳本於伺服器端下載並輸出內嵌 JS
+    版本，詳見 build_tyc_hospice()）
 
-20. 桃園市長照交通接送服務單位（DCAT dataset https://data.gov.tw/dataset/8572 ，
+21. 桃園市長照交通接送服務單位（DCAT dataset https://data.gov.tw/dataset/8572 ，
     dataset id 148536，提供機關：桃園市政府社會局）
     https://opendata.tycg.gov.tw/api/dataset/ad10c5d0-b128-4daf-866e-4cfc9a78dadb/resource/e21c957c-1ff5-4c7e-9fcc-7132b96b0033/download
     （CSV，**編碼為 BIG5**，共14筆，欄位：辦理單位/連絡電話/地址/服務區域，與 DCAT description
@@ -197,6 +217,10 @@
     data/tyc-placement.js  (window.TYC_PLACEMENT_DATA，同上，供前端以 <script> 直接載入)
     data/tpe-denture.json
     data/tpe-denture.js    (window.TPE_DENTURE_DATA，同上，供前端以 <script> 直接載入)
+    data/tyc-transport.json
+    data/tyc-transport.js  (window.TYC_TRANSPORT_DATA，同上，供前端以 <script> 直接載入)
+    data/tyc-hospice.json
+    data/tyc-hospice.js    (window.TYC_HOSPICE_DATA，同上，供前端以 <script> 直接載入)
     data/meta.json  (資料更新時間等資訊)
 
 額外相依套件：
@@ -262,6 +286,10 @@ TPE_DENTURE_URL = (
 TYC_TRANSPORT_URL = (
     "https://opendata.tycg.gov.tw/api/dataset/ad10c5d0-b128-4daf-866e-4cfc9a78dadb/"
     "resource/e21c957c-1ff5-4c7e-9fcc-7132b96b0033/download"
+)
+TYC_HOSPICE_URL = (
+    "https://opendata.tycg.gov.tw/api/dataset/7d03add1-aef5-4bbf-9b1b-7d601abd43a4/"
+    "resource/5e7907b0-5418-4c36-9723-b6f786ad5871/download"
 )
 
 # 桃園市身心障礙類別、向度之鑑定醫院名冊：17家醫院欄位順序（CSV 表頭欄位名稱，
@@ -1343,6 +1371,92 @@ def build_tyc_transportation():
     print(f"  共 {len(records)} 筆", file=sys.stderr)
     fields = ["name", "phone", "address", "county", "district", "serviceArea"]
     return {"fields": fields, "rows": records}
+
+
+TYC_HOSPICE_CATEGORY_HEADERS = {
+    "安寧病房": "安寧病房",
+    "安寧共照": "安寧共照",
+    "安寧": "居家及社區安寧",  # 第三段標題列為「安寧,居家及社區安寧,」，取第二欄作為類別名稱
+}
+
+
+def _tyc_hospice_subtype(name: str, category: str) -> str:
+    """依機構名稱關鍵字啟發式推斷「居家及社區安寧」類別內的機構型態，非官方分類欄位。
+    僅對「居家及社區安寧」類別推斷，其餘類別（安寧病房／安寧共照）留空字串。"""
+    if category != "居家及社區安寧":
+        return ""
+    if "居家護理所" in name:
+        return "居家護理所"
+    if "衛生所" in name:
+        return "衛生所"
+    return "診所"
+
+
+def build_tyc_hospice():
+    """桃園市社區安寧療護資源一覽表（桃園市政府衛生局，DCAT dataset https://data.gov.tw/dataset/8572 ，
+    dataset id 45675）。
+
+    來源為 CSV（TYC_HOSPICE_URL），**編碼為 BIG5(cp950)**，與 build_tyltc()/build_tyc_placement()/
+    build_tpe_denture() 同一例外，需 fetch(url, encoding="cp950") 下載解碼。
+
+    檔案僅62行、**無標準表頭列**，而是用三段「分類標題列」把資料切成三個服務類別區塊：
+    「安寧病房,聯繫方式,地址」「安寧共照,聯繫方式,地址」「安寧,居家及社區安寧,」，本函式偵測這三種
+    標題列（見 TYC_HOSPICE_CATEGORY_HEADERS）作為服務類別分段依據，欄位固定 3 欄：機構名稱／電話／
+    地址。
+
+    少數資料列機構名稱欄位為空、僅有電話（實測是前一筆機構的第二支聯絡電話），本函式會將這類列的
+    電話合併進前一筆機構的電話欄位（以「、」分隔多支電話），不輸出空名稱的資料列。
+
+    同一機構常出現在多個服務類別（例如「臺北榮民總醫院桃園分院」同時提供安寧病房／安寧共照／居家
+    及社區安寧），屬資料集本身設計（一機構可對應多種服務），忠實照登為多筆（機構,服務類別）組合，
+    不視為重複資料。
+
+    地址已含完整「桃園市OO區」字首，但共用的 ADDR_RE 對「平鎮區」等名稱中途含「鎮」字的行政區會誤判
+    （截斷成「平鎮」），比照 build_tyc_elder() 改用桃園市固定13區清單（TYC_DISTRICTS）比對取代
+    parse_county_district()。無經緯度座標，故本頁不含地圖。
+
+    「居家及社區安寧」類別內混雜性質不同的院所（居家護理所／診所／衛生所），原始欄位未區分，本函式
+    另外依機構名稱關鍵字啟發式推斷「機構型態」（見 _tyc_hospice_subtype()），**非官方分類欄位**，
+    僅對此類別推斷，其餘類別留空字串，前端會標注為推斷值。
+
+    電話欄位格式不一（有無括號區碼、夾帶「分機」文字、以「/」分隔多組號碼），原文照登不重新格式化。
+
+    來源網址與同平台其他 opendata.tycg.gov.tw 資料集一致，CORS 僅允許該平台網域，改由本函式於
+    伺服器端下載並輸出內嵌 JS 版本，避免依賴外部網址即時可用性。
+    """
+    print("下載 桃園市社區安寧療護資源一覽表 ...", file=sys.stderr)
+    text = fetch(TYC_HOSPICE_URL, encoding="cp950")
+    reader = csv.reader(io.StringIO(text))
+    rows_raw = [row for row in reader if any((c or "").strip() for c in row)]
+
+    records = []
+    category = ""
+    for row in rows_raw:
+        row = row + [""] * (3 - len(row))
+        col0, col1, col2 = ((c or "").strip() for c in row[:3])
+        header_category = TYC_HOSPICE_CATEGORY_HEADERS.get(col0)
+        if header_category and col2 in ("地址", "", "聯繫方式"):
+            # 分類標題列本身不是資料列（如「安寧病房,聯繫方式,地址」「安寧,居家及社區安寧,」）
+            category = header_category
+            continue
+        name, phone, addr = col0, col1, col2
+        if not name and phone:
+            # 空名稱列＝前一筆機構的第二支電話，合併進前一筆的電話欄位
+            if records and records[-1][0] == category:
+                records[-1][2] = f"{records[-1][2]}、{phone}" if records[-1][2] else phone
+            continue
+        if not name and not phone and not addr:
+            continue
+        # 地址已含「桃園市OO區」字首，但共用的 ADDR_RE 對「平鎮區」等名稱中途含「鎮」字的行政區
+        # 會誤判（截斷成「平鎮」），比照 build_tyc_elder() 改用桃園市固定13區清單比對。
+        district = next((d for d in TYC_DISTRICTS if d in addr), "")
+        subtype = _tyc_hospice_subtype(name, category)
+        records.append([category, name, phone, district, addr, subtype])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["category", "name", "phone", "district", "address", "subtype"]
+    return {"fields": fields, "rows": records}
+
+
     """去除 PDF 儲存格內因欄寬過窄產生的換行，並還原被誤用的 CJK 部首符號為正常漢字。"""
     if not s:
         return ""
@@ -1597,6 +1711,15 @@ DATASETS = [
         "meta_key": "tycTransport",
         "title": "桃園市長照交通接送服務單位",
         "source": lambda: TYC_TRANSPORT_URL,
+    },
+    {
+        "key": "tyc-hospice",
+        "builder": build_tyc_hospice,
+        "json": "data/tyc-hospice.json",
+        "js_var": "TYC_HOSPICE_DATA",
+        "meta_key": "tycHospice",
+        "title": "桃園市社區安寧療護資源一覽表",
+        "source": lambda: TYC_HOSPICE_URL,
     },
 ]
 
