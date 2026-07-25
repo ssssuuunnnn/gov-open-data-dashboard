@@ -677,6 +677,7 @@
   依「政府資料開放授權條款-第1版」釋出，本站僅作資料視覺化整理，實際內容以原始資料集為準。<br />
   <a href="changelog/index.html">網站更新紀錄</a>　|　本頁面最後更新時間：2026年7月22日
 </footer>
+<script src="assets/analytics.js"></script>
 <script>
 fetch("data/meta.json").then(r => r.json()).then(meta => {
   document.getElementById("abc-count").textContent = `共 ${meta.abc.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
