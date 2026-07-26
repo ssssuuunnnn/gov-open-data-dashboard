@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# git pre-push hook：在每次 push 前掃描即將推送的 commit 內容，若偵測到常見 API key／密鑰格式，
+# 就中止 push 並列出可疑內容，避免密鑰意外上傳到遠端。
+#
+# 安裝方式（每個 clone 只需設定一次）：
+#   git config core.hooksPath .githooks
+#
+# 涵蓋的格式（可依需要在下方 PATTERN 增補）：
+#   - Google API key            AIzaSy...
+#   - AWS Access Key ID         AKIA...
+#   - GitHub token              gh[pousr]_...
+#   - OpenAI key                sk-...
+#   - Google OAuth access token ya29....
+set -euo pipefail
+
+PATTERN='AIzaSy[0-9A-Za-z_-]{33}|AKIA[0-9A-Z]{16}|gh[pousr]_[0-9A-Za-z]{36,}|sk-[0-9A-Za-z]{20,}|ya29\.[0-9A-Za-z_-]+'
+
+zero="0000000000000000000000000000000000000000"
+found=0
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+  # local_sha 為全 0 代表刪除遠端分支，不需檢查
+  if [ "$local_sha" = "$zero" ]; then
+    continue
+  fi
+
+  if [ "$remote_sha" = "$zero" ]; then
+    # 遠端尚無此分支（第一次推送），改用「本地端獨有、遠端所有分支都沒有」的 commit 範圍，
+    # 避免整條歷史都被重新掃描。
+    range=$(git rev-list "$local_sha" --not --remotes 2>/dev/null || echo "$local_sha")
+  else
+    range="$remote_sha..$local_sha"
+  fi
+
+  [ -z "$range" ] && continue
+
+  matches=$(git log -p --no-color $range -- . 2>/dev/null | grep -nE "$PATTERN" || true)
+  if [ -n "$matches" ]; then
+    echo "❌ 偵測到即將推送的內容中含有疑似 API key／密鑰，已阻擋 push：" >&2
+    echo "$matches" | head -20 >&2
+    echo "---" >&2
+    echo "請先從程式碼/commit 中移除密鑰（必要時用 git commit --amend 或互動式 rebase 改寫歷史），" >&2
+    echo "並改用環境變數等方式傳入後再重新 push。" >&2
+    found=1
+  fi
+done
+
+if [ "$found" -ne 0 ]; then
+  exit 1
+fi
+
+exit 0

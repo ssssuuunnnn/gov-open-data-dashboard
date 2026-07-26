@@ -263,6 +263,21 @@ python3 -m http.server 8000
 2. 到 repository 的 Settings → Pages，Source 選擇 `main` 分支、根目錄 `/`。
 3. 儲存後幾分鐘即可透過 `https://<你的帳號>.github.io/<repo名稱>/` 瀏覽。
 
+## Push 前自動檢查 API key
+
+專案內建 `.githooks/pre-push` hook，會在每次 `git push` 前掃描即將推送的 commit 內容，若偵測到常見
+API key／密鑰格式（Google API key、AWS Access Key、GitHub token、OpenAI key 等），會直接中止 push
+並列出可疑內容所在行，避免密鑰意外上傳到遠端。
+
+**每個 clone 都要先啟用一次**（hook 檔案本身會隨 repo 一起 clone，但 Git 預設不會自動套用
+`.githooks/` 目錄，需手動指定）：
+
+```bash
+git config core.hooksPath .githooks
+```
+
+若真的需要略過檢查（例如確認是誤判），可用 `git push --no-verify`，但務必先確認內容真的安全。
+
 ## SEO 優化
 
 - 每頁皆有獨立的 `<title>` 與 `meta description`／`keywords`，並設定 `canonical` 網址避免重複內容問題。
