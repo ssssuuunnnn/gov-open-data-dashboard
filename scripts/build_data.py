@@ -145,7 +145,10 @@
     像 TYC_DISTRICTS 那樣額外處理）；無經緯度座標，故不含地圖；「區域」欄位本身即為乾淨的臺北市
     行政區中文名稱，與從地址解析出的行政區一致，僅作為交叉驗證，前端仍以地址解析結果為準；來源網址
     data.taipei 平台無 CORS 標頭，改由本腳本於伺服器端下載，因資料量極小仍輸出內嵌 JS 版本以維持
-    與其他資料集一致的載入方式，詳見 build_tpe_denture()）
+    與其他資料集一致的載入方式，詳見 build_tpe_denture()；本資料集另外附加 rating／review_count
+    兩欄，為 2026-07-26 用 scripts/fetch_tpe_denture_ratings.py 一次性呼叫 Google Places API
+    (Legacy) Text Search 人工核對後，寫死於 build_tpe_denture() 內的 TPE_DENTURE_GOOGLE_RATINGS
+    常數，非政府開放資料且未來不會重新抓取，詳見該常數與函式註解）
 20. 桃園市社區安寧療護資源一覽表（DCAT dataset https://data.gov.tw/dataset/8572 ，
     dataset id 45675，提供機關：桃園市政府衛生局）
     https://opendata.tycg.gov.tw/api/dataset/7d03add1-aef5-4bbf-9b1b-7d601abd43a4/resource/5e7907b0-5418-4c36-9723-b6f786ad5871/download
@@ -1279,6 +1282,22 @@ def build_tyc_placement():
     return {"fields": fields, "rows": records}
 
 
+# 一次性 Google 評分／評論數／place_id 靜態資料（2026-07-26 用 scripts/fetch_tpe_denture_ratings.py
+# 呼叫 Google Places API (Legacy) Text Search 人工核對後謄寫），key 為「院所名稱」，value 為
+# (rating, review_count, place_id)。place_id 用於前端評論連結直接導向 Google 地圖評論頁
+# （https://search.google.com/local/reviews?placeid=）。此資料集僅6家院所且未來不會變動，故直接
+# 寫死於此，不會隨 build_data.py 重跑而重新抓取或遺失；查無資料的院所（若有）不需列在字典中，
+# 組裝 rows 時會自動補空字串。
+TPE_DENTURE_GOOGLE_RATINGS = {
+    "臺北市立聯合醫院中興院區": (3.7, 1322, "ChIJKfilEBKpQjQRiqgmYP6pC2g"),
+    "臺北市立聯合醫院仁愛院區": (3.5, 1704, "ChIJmYpUC9GrQjQRT9YO_88LhP0"),
+    "臺北市立聯合醫院和平院區": (3.5, 1234, "ChIJrZ0_kaapQjQRR4lFD2M6Lq0"),
+    "臺北市立聯合醫院陽明院區": (3.7, 1114, "ChIJC5p2fJyuQjQRtS1OLXC18F4"),
+    "臺北市立聯合醫院忠孝院區": (3.5, 1628, "ChIJZ4C2N3SrQjQRJnIHuKK6utU"),
+    "臺北市立聯合醫院婦幼院區": (4.1, 818, "ChIJzf5reJmpQjQR-XZs3RiwfGI"),
+}
+
+
 def build_tpe_denture():
     """臺北市假牙補助醫療院所名單（臺北市政府社會局，DCAT dataset id 129840）。
 
@@ -1295,6 +1314,11 @@ def build_tpe_denture():
 
     來源網址 data.taipei 平台無 CORS 標頭，改由本腳本於伺服器端下載；雖資料量極小，仍輸出內嵌 JS
     版本以維持與其他資料集一致的載入方式（避免 fetch 時序問題）。
+
+    額外欄位 rating／review_count／place_id：使用者需求為呈現各院區 Google 評分與評論數，且明確
+    表示「未來都不更新，只抓這一次」，故不透過即時 API 呼叫產生，而是查表套用上方
+    TPE_DENTURE_GOOGLE_RATINGS 常數（見該常數註解）。place_id 用於前端把評論數連結直接導向該院所
+    的 Google 地圖評論頁面。查無對照資料的院所此三欄留空字串，前端顯示為「-」。
     """
     print("下載 臺北市假牙補助醫療院所名單 ...", file=sys.stderr)
     text = fetch(TPE_DENTURE_URL, encoding="cp950")
@@ -1303,15 +1327,20 @@ def build_tpe_denture():
     for row in reader:
         addr = (row.get("地址", "") or "").strip()
         county, district = parse_county_district(addr, strict=True)
+        name = (row.get("院所名稱", "") or "").strip()
+        rating, review_count, place_id = TPE_DENTURE_GOOGLE_RATINGS.get(name, ("", "", ""))
         records.append([
             (row.get("補助類型", "") or "").strip(),  # 0 type
             (row.get("區域", "") or district).strip(),  # 1 district（優先用地址解析結果，缺值才退回原始欄位）
-            (row.get("院所名稱", "") or "").strip(),   # 2 name
+            name,                                        # 2 name
             addr,                                        # 3 address
             (row.get("連絡電話", "") or "").strip(),   # 4 phone
+            rating,                                       # 5 rating（一次性 Google 評分，查無資料留空字串）
+            review_count,                                 # 6 review_count（一次性 Google 評論數，查無資料留空字串）
+            place_id,                                     # 7 place_id（一次性 Google Place ID，用於評論連結）
         ])
     print(f"  共 {len(records)} 筆", file=sys.stderr)
-    fields = ["type", "district", "name", "address", "phone"]
+    fields = ["type", "district", "name", "address", "phone", "rating", "review_count", "place_id"]
     return {"fields": fields, "rows": records}
 
 

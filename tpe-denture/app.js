@@ -22,6 +22,8 @@
       { key: "district", label: "區域" },
       { key: "address", label: "地址", render: (r) => addressLink(r.address) },
       { key: "phone", label: "連絡電話", render: (r) => phoneLink(r.phone) },
+      { key: "rating", label: "Google Map 星等", render: (r) => (r.rating ? `⭐ ${r.rating}` : "-") },
+      { key: "review_count", label: "Google Map 評論數", render: (r) => (r.review_count ? mapReviewLink(r) : "-") },
     ],
   });
 
@@ -40,6 +42,15 @@
     if (!address) return "";
     const href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
     return `<a href="${href}" target="_blank" rel="noopener">${escapeHtml(address)}</a>`;
+  }
+
+  // 評論數欄位連結到該院所的 Google 地圖評論頁面：有 place_id 時直接連到評論頁籤，否則退回一般地圖搜尋。
+  function mapReviewLink(row) {
+    const label = `${Number(row.review_count).toLocaleString()} 則`;
+    const href = row.place_id
+      ? `https://search.google.com/local/reviews?placeid=${encodeURIComponent(row.place_id)}`
+      : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${row.name} ${row.address || ""}`.trim())}`;
+    return `<a href="${href}" target="_blank" rel="noopener">${label}</a>`;
   }
 
   function rowToObj(row) {
@@ -73,6 +84,13 @@
       if (r.address) item.address = r.address;
       const telephone = firstPhoneDigits(r.phone);
       if (telephone) item.telephone = telephone;
+      if (r.rating && r.review_count) {
+        item.aggregateRating = {
+          "@type": "AggregateRating",
+          ratingValue: r.rating,
+          reviewCount: r.review_count,
+        };
+      }
       return { "@type": "ListItem", position: i + 1, item };
     });
     const jsonLd = {
