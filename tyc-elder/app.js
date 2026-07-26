@@ -37,8 +37,20 @@
       { key: "occupants", label: "收容對象", render: (r) => r.occupants.join("、") },
       { key: "beds", label: "立案床數" },
       { key: "rating", label: "最近1次評鑑成績" },
+      { key: "google_rating", label: "Google Map 星等", render: (r) => (r.google_rating ? `⭐ ${r.google_rating}` : "-") },
+      { key: "google_review_count", label: "Google Map 評論數", render: (r) => googleReviewCell(r) },
     ],
   });
+
+  // Google Map 評論數欄位：有 google_place_id 時做成可點擊連結直接連到該機構的 Google 地圖評論頁，
+  // 沒有 place_id（一次性抓取時查無對照資料或已排除誤配對）則只顯示數字或「-」，不猜測連結。
+  function googleReviewCell(r) {
+    if (!r.google_review_count) return "-";
+    const label = `${Number(r.google_review_count).toLocaleString()} 則`;
+    if (!r.google_place_id) return label;
+    const href = `https://search.google.com/local/reviews?placeid=${encodeURIComponent(r.google_place_id)}`;
+    return `<a href="${href}" target="_blank" rel="noopener">${label}</a>`;
+  }
 
   function rowToObj(row) {
     const o = {};

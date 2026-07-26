@@ -7,7 +7,10 @@
 2. 巷弄長照站    https://email.chcg.gov.tw/df/pufnpn5i5741iy9efkn2rrz5ga6uhb
 3. 桃園市老人福利機構一覽表  https://opendata.tycg.gov.tw/api/dataset/536bb44b-b9f1-4336-ad26-34b9e25b3a68/resource/3d7e3b4c-8bc5-47c4-85a9-eec70415b189/download
    （來源網址的 CORS 標頭僅允許 opendata.tycg.gov.tw 網域，前端無法直接 fetch，
-   需由本腳本於伺服器端下載）
+   需由本腳本於伺服器端下載；另附加 google_rating／google_review_count／google_place_id 三欄，
+   為 2026-07-26 用 scripts/fetch_google_ratings.py --dataset tyc-elder 一次性呼叫 Google Places
+   API (Legacy) Text Search 人工核對後，整理成 data/source/tyc-elder-google-ratings.json 供
+   build_tyc_elder() 讀取合併，非政府開放資料且未來不會重新抓取，詳見該函式與來源 JSON 說明）
 4. 臺北市長照專業服務特約單位  https://health.gov.taipei/News_Content.aspx?n=F0D7A5A451D2493C&sms=549F98C9E5942A2B&s=9138F86B8A3CBF69
    （此資料集**非開放資料 CSV/API**，臺北市政府衛生局僅以公告頁面附加 PDF 附件釋出，因此無法在
    本腳本自動下載，須將衛生局公告的最新 PDF 手動存成 data/source/tp-ltc-specialty-*.pdf 後才能
@@ -536,12 +539,42 @@ TYC_DISTRICTS = [
 ]
 
 
+TYC_ELDER_GOOGLE_RATINGS_FILE = "data/source/tyc-elder-google-ratings.json"
+
+
 def build_tyc_elder():
-    """桃園市老人福利機構一覽表（桃園市政府開放資料平台，CORS 僅允許該平台網域，改由本腳本下載）。"""
+    """桃園市老人福利機構一覽表（桃園市政府開放資料平台，CORS 僅允許該平台網域，改由本腳本下載）。
+
+    額外欄位 google_rating／google_review_count／google_place_id：使用者需求為呈現各機構的
+    Google 地圖星等與評論數，且明確表示「一次性資料，之後不會重新抓取」。由於本資料集既有
+    `rating` 欄位是桃園市政府「最近1次評鑑成績」（甲/乙/丙），不可與 Google 星等混用同一欄位名，
+    故另外開三個 google_ 前綴欄位。
+
+    資料來源：2026-07-26 用 scripts/fetch_google_ratings.py --dataset tyc-elder 一次性呼叫
+    Google Places API (Legacy) Text Search，取得 67 筆機構的比對結果後人工核對，整理成
+    data/source/tyc-elder-google-ratings.json（key 為「機構名稱」）。人工核對時發現並排除以下
+    情況：
+    - 「桃園市私立友愛老人長期照顧中心（養護型）」「桃園市私立宥恩老人長期照顧中心（養護型）」
+      「桃園市私立友德老人長期照顧中心(養護型)」三筆皆被 API 誤配對到「桃園市私立友緣老人長期
+      照顧中心」的 Google 地圖地點（用 Place Details 核對地址後確認地址完全不符，友愛/友德在
+      蘆竹區、友緣在龜山區），故排除這三筆，僅保留名稱與地址皆吻合的「友緣」；
+    - 2 筆機構 Google 回傳 rating 為 None（無評分資料），亦排除。
+    - 「桃園市私立同安老人長期照顧中心(養護型)」與「桃園市私立康健老人長期照顧中心(養護型)」
+      經 Place Details 核對地址完全相同（同一棟「新埔七街101號」不同樓層），Google 地圖上是
+      同一個地點列表（顯示為「同安/康健」），故兩筆皆保留、共用同一組評分資料。
+    查無對照資料的機構，此三欄留空字串，前端顯示為「-」。
+    """
     print("下載 桃園市老人福利機構一覽表 ...", file=sys.stderr)
     text = fetch(TYC_ELDER_URL)
     reader = csv.DictReader(io.StringIO(text))
     rows_in = list(reader)
+
+    try:
+        with open(TYC_ELDER_GOOGLE_RATINGS_FILE, "r", encoding="utf-8") as f:
+            google_ratings = json.load(f)
+    except FileNotFoundError:
+        google_ratings = {}
+
     records = []
     for row in rows_in:
         addr = (row.get("地址", "") or "").strip()
@@ -549,9 +582,11 @@ def build_tyc_elder():
         # 名稱中途含「鎮」字的行政區會誤判，故改用桃園市固定 13 區清單比對。
         district = next((d for d in TYC_DISTRICTS if addr.startswith(d)), "")
         occupants = [s for s in re.split(r"\s+", (row.get("收容對象", "") or "").strip()) if s]
+        name = row.get("機構名稱", "").strip()
+        g = google_ratings.get(name, {})
         records.append([
             row.get("編號", "").strip(),          # 0 id
-            row.get("機構名稱", "").strip(),      # 1 name
+            name,                                    # 1 name
             row.get("負責人", "").strip(),        # 2 director
             district,                               # 3 district
             addr,                                   # 4 address
@@ -559,10 +594,13 @@ def build_tyc_elder():
             ";".join(occupants),                    # 6 occupants (';' joined)
             _to_int(row.get("立案床數")),          # 7 beds
             row.get("最近1次評鑑成績", "").strip(), # 8 rating
+            g.get("rating", ""),                    # 9 google_rating（一次性資料，查無留空字串）
+            g.get("review_count", ""),              # 10 google_review_count（同上）
+            g.get("place_id", ""),                   # 11 google_place_id（同上，用於評論連結）
         ])
     print(f"  共 {len(records)} 筆", file=sys.stderr)
     fields = ["id", "name", "director", "district", "address", "phone",
-              "occupants", "beds", "rating"]
+              "occupants", "beds", "rating", "google_rating", "google_review_count", "google_place_id"]
     return {"fields": fields, "rows": records}
 
 
