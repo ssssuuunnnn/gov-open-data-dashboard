@@ -28,11 +28,15 @@
 - [桃園市長照交通接送服務單位](https://www.sunkuo.cc/gov-open-data-dashboard/tyc-transport/index.html): 桃園市政府社會局公告之長照交通接送服務單位名冊，共14筆，收錄辦理單位名稱、連絡電話、地址、服務區域，並整理洽辦單位、服務對象資格與補助金額說明，提供縣市／關鍵字篩選、統計卡片與縣市分布圖表，無經緯度座標。 (https://www.sunkuo.cc/gov-open-data-dashboard/tyc-transport/llms.txt)
 - [桃園市社區安寧療護資源一覽表](https://www.sunkuo.cc/gov-open-data-dashboard/tyc-hospice/index.html): 桃園市社區安寧療護資源一覽表，收錄安寧病房、安寧共照、居家及社區安寧（居家護理所／診所／衛生所）共54筆機構名稱、電話、地址，並整理服務對象、服務內容、申請流程說明，提供行政區／服務類別／機構型態／關鍵字篩選與統計圖表，無經緯度座標。 (https://www.sunkuo.cc/gov-open-data-dashboard/tyc-hospice/llms.txt)
 
+## 非政府開放資料（人工蒐集，僅供參考）
+
+- [看護／照服機構名錄](https://www.sunkuo.cc/gov-open-data-dashboard/caregiver/index.html): 使用者人工蒐集目前網路上找得到的私人看護／居家照護機構名單，收錄機構名稱、官網、收費頁面、聯絡電話、服務地區與統一編號，提供服務地區與是否有公開收費頁面篩選。非政府開放資料，未經官方驗證，僅供參考。 (https://www.sunkuo.cc/gov-open-data-dashboard/caregiver/llms.txt)
+
 ## 其他頁面
 
 - [更新紀錄](https://www.sunkuo.cc/gov-open-data-dashboard/changelog/index.html): 網站更新紀錄，記錄新增資料集與功能異動歷程。
 
 ## 補充資訊
 
-- 授權方式：政府資料開放授權條款-第1版（各資料集皆同）。
+- 授權方式：政府資料開放授權條款-第1版（除「看護／照服機構名錄」為使用者人工蒐集之非政府開放資料外，其餘資料集皆同）。
 - 專案原始碼：https://github.com/ssssuuunnnn/gov-open-data-dashboard

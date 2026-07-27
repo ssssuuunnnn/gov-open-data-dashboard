@@ -1,0 +1,21 @@
+# 看護／照服機構名錄
+
+> 使用者人工蒐集目前網路上公開可查得的私人看護／居家照護機構名單，收錄機構名稱、官網、收費頁面、聯絡電話、服務地區與統一編號，提供服務地區與是否有公開收費頁面篩選。非政府開放資料，未經官方驗證，僅供參考。
+
+- 提供機關：無（使用者人工蒐集網路公開資訊）
+- 資料筆數：約 27 筆（隨資料來源更新而變動，實際筆數以頁面即時載入為準）
+- 原始資料來源：無公開下載網址，來源為多個機構官方網站
+- 授權方式：不適用（非政府開放資料）
+- 建議查看頻率：不定期
+
+## 頁面內容
+
+- 儀表板頁面：https://www.sunkuo.cc/gov-open-data-dashboard/caregiver/index.html
+- 篩選條件、統計卡片與分頁表格皆基於上述原始資料即時運算。
+- 頁面頂部有明確免責聲明：本名錄非官方認證或推薦，機構合法性、服務品質與實際收費請自行向機構核實，或洽長照專線 1966。
+
+## 相關連結
+
+- 網站首頁：https://www.sunkuo.cc/gov-open-data-dashboard/
+- 更新紀錄：https://www.sunkuo.cc/gov-open-data-dashboard/changelog/index.html
+- 專案原始碼：https://github.com/ssssuuunnnn/gov-open-data-dashboard

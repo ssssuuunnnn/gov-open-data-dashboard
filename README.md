@@ -27,6 +27,7 @@
 | `tpe-denture/` | 臺北市假牙補助醫療院所名單 | 臺北市政府社會局 | 臺北市中低收入老人裝置假牙補助合約醫療院所名單，共6筆，全數為「臺北市立聯合醫院」不同分院，分布於5個行政區，並整理補助制度說明，提供行政區／關鍵字篩選與統計圖表，無經緯度座標 |
 | `tyc-transport/` | 桃園市長照交通接送服務單位 | 桃園市政府社會局 | 桃園市長照交通接送服務單位清單，共14筆，收錄辦理單位名稱、連絡電話、地址、服務區域，辦理單位地址分布桃園市、臺北市、新北市等多個縣市，並整理洽辦單位、服務對象資格、一般服務地區與復興區偏遠地區補助金額說明，提供縣市／關鍵字篩選與統計圖表，無經緯度座標 |
 | `tyc-hospice/` | 桃園市社區安寧療護資源一覽表 | 桃園市政府衛生局 | 桃園市社區安寧療護資源一覽表，收錄安寧病房、安寧共照、居家及社區安寧（居家護理所/診所/衛生所）共54筆機構名稱、電話、地址，並整理服務對象、服務內容、申請流程說明；「機構型態」由名稱關鍵字啟發式推斷（非官方分類，僅居家及社區安寧類別適用），提供行政區／服務類別／機構型態／關鍵字篩選與統計圖表，無經緯度座標 |
+| `caregiver/` | 看護／照服機構名錄 | **無（使用者人工蒐集）** | 使用者手動整理目前網路上找得到的私人看護／居家照護機構名單（共27筆），收錄機構名稱、官網、收費頁面、聯絡電話、服務地區、統一編號，提供服務地區／是否有公開收費頁面／關鍵字篩選；**非政府開放資料，無提供機關、無官方驗證**，頁面明確標示免責聲明，資料來源為使用者提供之本機 CSV、無公開下載網址，需人工更新，詳見下方「更新資料」說明 |
 
 原始資料下載網址：
 - https://ltcpap.mohw.gov.tw/publish/abc.csv
@@ -106,6 +107,9 @@ tyc-transport/app.js
 tyc-hospice/index.html 桃園市社區安寧療護資源一覽表儀表板（Chart.js 圖表 + 篩選表格，無地圖；
                        頁面上方另有服務對象/服務內容/申請流程/諮詢窗口說明靜態卡片）
 tyc-hospice/app.js
+caregiver/index.html  看護／照服機構名錄儀表板（無圖表無地圖，僅篩選表格 + 統計卡；頁面上方另有
+                       非官方資料免責聲明卡片）
+caregiver/app.js
 assets/style.css     共用樣式
 assets/table.js       共用分頁表格元件
 data/abc.json         長照ABC據點資料（由 scripts/build_data.py 產生）
@@ -169,11 +173,16 @@ data/tyc-hospice.json 桃園市社區安寧療護資源一覽表資料（由 scr
                        解碼；原始 CSV 無標準表頭，靠三段分類標題列切分服務類別）
 data/tyc-hospice.js   同上資料的內嵌 JS 版本（window.TYC_HOSPICE_DATA），供 tyc-hospice
                        頁面以 <script> 標籤直接載入，因來源網址無 CORS 標頭，不透過 fetch()
+data/caregiver.json   看護／照服機構名錄資料（由 scripts/build_data.py 讀取本機 CSV 產生）
+data/caregiver.js     同上資料的內嵌 JS 版本（window.CAREGIVER_DATA），供 caregiver 頁面以
+                       <script> 標籤直接載入，因無公開下載網址，不透過 fetch()
 data/source/          長照專業服務特約單位來源 PDF（人工下載存放於此，供 build_data.py 解析）
 data/meta.json        資料筆數與更新時間
 scripts/build_data.py 資料下載與轉換腳本
 scripts/sources/chiayi-ltc/  嘉義縣立案長照及護理之家機構一覽的原始 CSV（institutions.csv／
                        nursing-homes.csv，人工提供，無公開下載網址，需人工更新後重跑 build_data.py）
+scripts/sources/caregiver/   看護／照服機構名錄的原始 CSV（caregivers.csv，使用者人工蒐集，
+                       無公開下載網址，需人工更新後重跑 build_data.py）
 ```
 
 由於原始資料來源伺服器未開放跨網域（CORS）存取（僅允許來源平台自己的網域），且欄位中的「縣市」「鄉鎮市區」
@@ -197,8 +206,10 @@ python3 scripts/build_data.py
 桃園市長照交通接送服務單位、桃園市社區安寧療護資源一覽表）並覆寫對應
 `data/*.json`；同時嘗試解析
 `data/source/tp-ltc-specialty-*.pdf`
-（若存在）產生 `data/specialty.json`／`data/specialty.js`，並讀取 `scripts/sources/chiayi-ltc/` 下的
-本機 CSV 產生 `data/chiayi-ltc.json`／`data/chiayi-ltc.js`。這是**完整流程**，會對外發送多個網路請求且較耗時，
+（若存在）產生 `data/specialty.json`／`data/specialty.js`，並讀取 `scripts/sources/chiayi-ltc/`、
+`scripts/sources/caregiver/` 下的本機 CSV 分別產生 `data/chiayi-ltc.json`／`data/chiayi-ltc.js`
+與 `data/caregiver.json`／`data/caregiver.js`（後者為使用者人工蒐集之非政府開放資料，見下方
+「更新資料集列表」與「更新「看護／照服機構名錄」」說明）。這是**完整流程**，會對外發送多個網路請求且較耗時，
 **僅在明確需要全面更新所有資料集時才執行**；建議依資料集「更新頻率」（每1月 / 每1年 / 不定期）
 定期執行後再部署，平常開發（例如新增單一資料集頁面）不需要、也不應該每次都跑全部。
 
@@ -215,6 +226,7 @@ python3 scripts/build_data.py tyc-placement       # 只重新產生桃園市失�
 python3 scripts/build_data.py tpe-denture         # 只重新產生臺北市假牙補助醫療院所名單
 python3 scripts/build_data.py tyc-transport       # 只重新產生桃園市長照交通接送服務單位
 python3 scripts/build_data.py tyc-hospice         # 只重新產生桃園市社區安寧療護資源一覽表
+python3 scripts/build_data.py caregiver           # 只重新產生看護／照服機構名錄
 python3 scripts/build_data.py tc-nursing ntpc-nursing   # 可同時指定多個，以空白分隔
 python3 scripts/build_data.py --help              # 列出所有可用的資料集 key
 ```
@@ -249,6 +261,20 @@ python3 -m pip install pdfplumber
 3. 執行 `python3 scripts/build_data.py chiayi-ltc` 只重新產生 `data/chiayi-ltc.json`／`data/chiayi-ltc.js`。
 4. 建議抽樣核對幾筆機構名稱、鄉鎮市解析與床數是否正確（地址解析邏輯詳見
    `scripts/build_data.py` 的 `build_chiayi_ltc()` 與 `_chiayi_township()`）。
+
+### 更新「看護／照服機構名錄」
+
+此資料集**非政府開放資料**，為使用者手動蒐集目前網路上找得到的私人看護／居家照護機構名單，
+無公開下載網址、無官方驗證，因此無法由腳本自動下載，需手動維護：
+
+1. 取得最新版機構名單 CSV（UTF-8 編碼，欄位依序為：名稱／網址／收費頁面／聯絡電話／服務地區／
+   統一編號）。
+2. 覆蓋 `scripts/sources/caregiver/caregivers.csv`，維持原有欄位名稱與順序。
+3. 執行 `python3 scripts/build_data.py caregiver` 只重新產生 `data/caregiver.json`／`data/caregiver.js`。
+4. 「服務地區」欄位為自由文字，本站以子字串比對縣市清單方式解析（詳見
+   `scripts/build_data.py` 的 `build_caregivers()` 與 `_caregiver_regions()`），無法辨識出具體
+   縣市時 `regions` 會是空陣列，屬已知限制；建議抽樣核對幾筆機構名稱、服務地區解析是否合理。
+5. 因本資料集無官方驗證，頁面已於顯著位置加入免責聲明，新增/更新機構時請避免加入主觀評語或推薦排序。
 
 ## 本機預覽
 

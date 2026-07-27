@@ -395,6 +395,7 @@
       <button type="button" class="category-tab active" data-category="all" role="tab" aria-selected="true">全部資料集</button>
       <button type="button" class="category-tab" data-category="ltc" role="tab" aria-selected="false">長照 / 老人福利</button>
       <button type="button" class="category-tab" data-category="disability" role="tab" aria-selected="false">身心障礙鑑定</button>
+      <button type="button" class="category-tab" data-category="private" role="tab" aria-selected="false">私人機構名錄</button>
     </div>
   </div>
   <div class="card">
@@ -546,6 +547,12 @@
       <div class="desc">桃園市政府衛生局提供，列出安寧病房、安寧共照、居家及社區安寧（居家護理所/診所/衛生所）機構名稱、電話、地址，並整理服務對象、服務內容、申請流程說明，可依行政區、服務類別、機構型態與關鍵字篩選並瀏覽統計圖表。</div>
       <div class="footline" id="tyc-hospice-count">資料筆數載入中…</div>
     </a>
+    <a class="home-card private" href="caregiver/index.html" data-county="all" data-category="private">
+      <span class="tag">全國 · 非官方資料</span>
+      <h2>看護／照服機構名錄</h2>
+      <div class="desc">使用者人工蒐集目前網路上找得到的私人看護／居家照護機構名單，列出機構名稱、官網、收費頁面、聯絡電話、服務地區與統一編號，可依服務地區、是否有公開收費頁面篩選。<strong>非政府開放資料，未經官方驗證，僅供參考</strong>。</div>
+      <div class="footline" id="caregiver-count">資料筆數載入中…</div>
+    </a>
     <p class="no-match" id="county-no-match" style="display:none; grid-column: 1 / -1; text-align:center; color: var(--color-muted); padding: 24px 0;">
       沒有符合所選縣市的資料集，請調整篩選條件。
     </p>
@@ -673,9 +680,10 @@
   <a href="https://www-ws.pthg.gov.tw/Upload/2015pthg/0/relfile/0/0/886f59e6-23b6-4de3-a04a-4de087bdf9b8.csv" target="_blank" rel="noopener">屏東縣政府社會處 屏東縣老人長期照顧機構</a> ·
   <a href="https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=96251524-861c-4b92-9401-590444adcb8f" target="_blank" rel="noopener">臺中市政府衛生局 臺中市失能者交通接送服務</a> ·
   <a href="https://opendata.tycg.gov.tw/api/dataset/c0c21e97-fc4a-4b65-aa31-0550b4a007b6/resource/433a97d4-c947-4ecd-9e9f-a1860f8cc0d5/download" target="_blank" rel="noopener">桃園市政府衛生局 桃園市長者裝置活動假牙合約醫療院所</a> ·
-  <a href="https://opendata.tycg.gov.tw/api/dataset/628c2789-10f8-4c73-bafc-58dac276fa6f/resource/a2b6559b-9265-4854-b1be-97c0f8cde3a6/download" target="_blank" rel="noopener">桃園市政府衛生局 桃園市身心障礙類別、向度之鑑定醫院名冊</a><br />
+  <a href="https://opendata.tycg.gov.tw/api/dataset/628c2789-10f8-4c73-bafc-58dac276fa6f/resource/a2b6559b-9265-4854-b1be-97c0f8cde3a6/download" target="_blank" rel="noopener">桃園市政府衛生局 桃園市身心障礙類別、向度之鑑定醫院名冊</a> ·
+  看護／照服機構名錄（使用者人工蒐集網路公開資訊，非政府開放資料）<br />
   依「政府資料開放授權條款-第1版」釋出，本站僅作資料視覺化整理，實際內容以原始資料集為準。<br />
-  <a href="changelog/index.html">網站更新紀錄</a>　|　本頁面最後更新時間：2026年7月22日
+  <a href="changelog/index.html">網站更新紀錄</a>　|　本頁面最後更新時間：2026年7月27日
 </footer>
 <script src="assets/analytics.js"></script>
 <script>
@@ -736,6 +744,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.tycHospice) {
     document.getElementById("tyc-hospice-count").textContent = `共 ${meta.tycHospice.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.caregiver) {
+    document.getElementById("caregiver-count").textContent = `共 ${meta.caregiver.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
 }).catch(() => {});
 

@@ -184,6 +184,19 @@
     （CSV 已用引號包住換行內容），統一以 " / " 合併成單行，與 build_tyltc() 處理方式一致；
     「服務區域」幾乎全為「桃園市全區」，僅3筆為「復興區(專車)」，資料量小不拆解為陣列；因僅14筆，
     比照 build_tyc_denture() 另輸出內嵌 JS 版本，詳見 build_tyc_transportation()）
+22. 看護／照服機構名錄（使用者人工蒐集網路公開資訊，**非政府開放資料**，無提供機關、無官方驗證）
+    （此資料集由使用者手動整理目前網路上找得到的私人看護／居家照護機構名單，共27筆，原始 CSV
+    已存放於 scripts/sources/caregiver/caregivers.csv，欄位：名稱/網址/收費頁面/聯絡電話/
+    服務地區/統一編號；因無公開下載網址、非官方驗證資料，前端頁面會明確標示免責聲明；「服務地區」
+    為自由文字且分隔符不一致（「、」「,」「，」「.」「及」「與」等混用，如「雙北及桃園地區，台中」
+    「基隆.台北市.新北市.桃園市」），本腳本不強行 split，改用子字串比對偵測文字中出現的縣市
+    （見 _caregiver_regions()）：①先比對舊縣名別名（如「台北縣」對應「新北市」）②比對完整縣市
+    名稱（如「新竹市」）③比對去除「市／縣」字尾的簡稱（如「新竹」，會同時列出新竹市與新竹縣兩者，
+    嘉義同理，屬已知限制僅供參考；「雙北」等模糊描述未展開為個別縣市時不會被偵測到），輸出為
+    regions 陣列（可能為空陣列），縣市名稱統一輸出為「臺」的正式寫法；「聯絡電話」欄位偶有多餘
+    換行/空白，本腳本會 strip 處理；僅3筆有填「統一編號」，其餘留空字串；未來如需更新資料，需
+    人工以最新 CSV 覆蓋 scripts/sources/caregiver/caregivers.csv 後重新執行本腳本，
+    詳見 build_caregivers()）
 
 用法：
     python3 scripts/build_data.py
@@ -227,6 +240,8 @@
     data/tyc-transport.js  (window.TYC_TRANSPORT_DATA，同上，供前端以 <script> 直接載入)
     data/tyc-hospice.json
     data/tyc-hospice.js    (window.TYC_HOSPICE_DATA，同上，供前端以 <script> 直接載入)
+    data/caregiver.json
+    data/caregiver.js      (window.CAREGIVER_DATA，同上，供前端以 <script> 直接載入)
     data/meta.json  (資料更新時間等資訊)
 
 額外相依套件：
@@ -297,6 +312,17 @@ TYC_HOSPICE_URL = (
     "https://opendata.tycg.gov.tw/api/dataset/7d03add1-aef5-4bbf-9b1b-7d601abd43a4/"
     "resource/5e7907b0-5418-4c36-9723-b6f786ad5871/download"
 )
+CAREGIVER_CSV = "scripts/sources/caregiver/caregivers.csv"
+
+# 台灣22縣市清單（正式「臺」寫法），用於從看護機構「服務地區」自由文字欄位以子字串比對方式
+# 偵測涵蓋縣市，詳見 build_caregivers()。CAREGIVER_REGION_ALIASES 額外收錄常見「台」簡寫寫法，
+# 比對時會先將輸入文字中的「台」正規化為「臺」再比對，故此清單一律使用「臺」。
+CAREGIVER_REGIONS = [
+    "臺北市", "新北市", "桃園市", "臺中市", "臺南市", "高雄市",
+    "基隆市", "新竹市", "新竹縣", "苗栗縣", "彰化縣", "南投縣",
+    "雲林縣", "嘉義市", "嘉義縣", "屏東縣", "宜蘭縣", "花蓮縣",
+    "臺東縣", "澎湖縣", "金門縣", "連江縣",
+]
 
 # 桃園市身心障礙類別、向度之鑑定醫院名冊：17家醫院欄位順序（CSV 表頭欄位名稱，
 # 同時也是長格式展開後 hospital 欄位的值），供 build_tyc_disability_hospitals() 使用。
@@ -1524,6 +1550,67 @@ def build_tyc_hospice():
     return {"fields": fields, "rows": records}
 
 
+
+# 2010（五都合併）／2014（桃園升格）前的舊縣名，看護機構名單偶爾沿用舊稱（如「台北縣」），
+# 供 _caregiver_regions() 對應到現行縣市名稱。
+CAREGIVER_OLD_NAME_ALIASES = {
+    "臺北縣": "新北市", "桃園縣": "桃園市", "臺中縣": "臺中市",
+    "臺南縣": "臺南市", "高雄縣": "高雄市",
+}
+
+
+def _caregiver_regions(text: str) -> list:
+    """從看護機構「服務地區」自由文字欄位偵測涵蓋縣市：先將「台」正規化為「臺」，
+    再依序比對：①舊縣名別名（如「臺北縣」對應「新北市」）②完整縣市名稱（如「新竹市」）
+    ③去除「市／縣」字尾的簡稱（如「新竹」），對應到 CAREGIVER_REGIONS 中所有同名簡稱的縣市
+    （新竹、嘉義因同時有市/縣兩個現行行政區，簡稱比對到時會同時列出兩者，屬已知限制，僅供參考）。
+    找不到任何縣市（欄位空白或僅有模糊描述如「雙北」而未展開為個別縣市）時回傳空陣列。"""
+    normalized = (text or "").strip().replace("台", "臺")
+    found = []
+    for old_name, region in CAREGIVER_OLD_NAME_ALIASES.items():
+        if old_name in normalized and region not in found:
+            found.append(region)
+    for region in CAREGIVER_REGIONS:
+        if region in normalized and region not in found:
+            found.append(region)
+    for region in CAREGIVER_REGIONS:
+        stem = region.rstrip("市縣")
+        if stem and stem in normalized and region not in found:
+            found.append(region)
+    return found
+
+
+def build_caregivers():
+    """看護／照服機構名錄（使用者人工蒐集網路公開資訊，非政府開放資料，無提供機關、無官方驗證）。
+
+    原始 CSV 存放於 scripts/sources/caregiver/caregivers.csv（共27筆，欄位：名稱/網址/收費頁面/
+    聯絡電話/服務地區/統一編號），此資料集無公開下載網址、非官方驗證資料，前端頁面會明確標示
+    免責聲明。「服務地區」為自由文字且分隔符不一致（見 _caregiver_regions()），改用縣市清單子字串
+    比對偵測，輸出 regions 陣列（可能為空陣列，代表原始欄位未填或無法辨識出具體縣市）；「聯絡電話」
+    欄位偶有多餘換行/空白，逐一 strip 處理；僅3筆有填「統一編號」，其餘留空字串。
+    未來如需更新資料，需人工以最新 CSV 覆蓋 scripts/sources/caregiver/caregivers.csv 後
+    重新執行本腳本（`python3 scripts/build_data.py caregiver`）。
+    """
+    print("讀取 看護／照服機構名錄 ...", file=sys.stderr)
+    records = []
+    with open(CAREGIVER_CSV, encoding="utf-8-sig") as f:
+        for row in csv.DictReader(f):
+            name = (row.get("名稱") or "").strip()
+            if not name:
+                continue
+            records.append([
+                name,                                          # 0 name
+                (row.get("網址") or "").strip(),              # 1 url
+                (row.get("收費頁面") or "").strip(),          # 2 payUrl
+                " / ".join(p.strip() for p in (row.get("聯絡電話") or "").split("\n") if p.strip()),  # 3 phone
+                _caregiver_regions(row.get("服務地區")),        # 4 regions
+                (row.get("統一編號") or "").strip(),          # 5 uid
+            ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["name", "url", "payUrl", "phone", "regions", "uid"]
+    return {"fields": fields, "rows": records}
+
+
     """去除 PDF 儲存格內因欄寬過窄產生的換行，並還原被誤用的 CJK 部首符號為正常漢字。"""
     if not s:
         return ""
@@ -1787,6 +1874,15 @@ DATASETS = [
         "meta_key": "tycHospice",
         "title": "桃園市社區安寧療護資源一覽表",
         "source": lambda: TYC_HOSPICE_URL,
+    },
+    {
+        "key": "caregiver",
+        "builder": build_caregivers,
+        "json": "data/caregiver.json",
+        "js_var": "CAREGIVER_DATA",
+        "meta_key": "caregiver",
+        "title": "看護／照服機構名錄",
+        "source": lambda: "使用者人工蒐集網路公開資訊（非政府開放資料，無官方驗證）",
     },
 ]
 
