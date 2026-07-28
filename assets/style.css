@@ -344,6 +344,29 @@ footer.site-footer {
   padding: 24px;
 }
 
+.back-home-cta {
+  display: flex;
+  justify-content: center;
+  margin: 32px 0 8px;
+}
+.back-home-cta a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 14px 28px;
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(31, 111, 92, 0.35);
+  transition: background .15s ease, transform .15s ease;
+}
+.back-home-cta a:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
+}
+
 .section-title {
   font-size: 1.05rem;
   margin: 26px 0 10px;
