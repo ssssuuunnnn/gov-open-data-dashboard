@@ -283,6 +283,17 @@
         "@type": "Organization",
         "name": "桃園市政府衛生局"
       }
+    },
+    {
+      "@type": "Dataset",
+      "name": "臺南市115年度長者免費裝置全口活動假牙計畫合約醫療院所名單",
+      "description": "臺南市政府衛生局公告之長者免費裝置全口活動假牙計畫合約醫療院所名單，收錄161筆合約牙科醫療院所名稱、所在地區、地址與電話。",
+      "url": "https://www.sunkuo.cc/gov-open-data-dashboard/tn-denture/index.html",
+      "license": "http://data.gov.tw/license",
+      "creator": {
+        "@type": "GovernmentOrganization",
+        "name": "臺南市政府衛生局"
+      }
     }
   ]
 }
@@ -547,6 +558,12 @@
       <div class="desc">桃園市政府衛生局提供，列出安寧病房、安寧共照、居家及社區安寧（居家護理所/診所/衛生所）機構名稱、電話、地址，並整理服務對象、服務內容、申請流程說明，可依行政區、服務類別、機構型態與關鍵字篩選並瀏覽統計圖表。</div>
       <div class="footline" id="tyc-hospice-count">資料筆數載入中…</div>
     </a>
+    <a class="home-card" href="tn-denture/index.html" data-county="臺南市" data-category="ltc">
+      <span class="tag">臺南市</span>
+      <h2>臺南市長者免費裝置全口活動假牙計畫合約醫療院所</h2>
+      <div class="desc">臺南市政府衛生局提供，列出65歲以上長者及55歲以上原住民免費裝置全口活動假牙計畫的合約牙科醫療院所名稱、地區、地址與電話，並整理申請資格、補助金額（每人每顎上限2萬2,000元）、申請與核銷期程說明，可依地區與關鍵字篩選並瀏覽統計圖表。</div>
+      <div class="footline" id="tn-denture-count">資料筆數載入中…</div>
+    </a>
     <a class="home-card private" href="caregiver/index.html" data-county="all" data-category="private">
       <span class="tag">全國 · 非官方資料</span>
       <h2>看護／照服機構名錄</h2>
@@ -744,6 +761,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.tycHospice) {
     document.getElementById("tyc-hospice-count").textContent = `共 ${meta.tycHospice.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.tnDenture) {
+    document.getElementById("tn-denture-count").textContent = `共 ${meta.tnDenture.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
   if (meta.caregiver) {
     document.getElementById("caregiver-count").textContent = `共 ${meta.caregiver.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;

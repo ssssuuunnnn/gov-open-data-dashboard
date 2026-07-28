@@ -312,6 +312,10 @@ TYC_HOSPICE_URL = (
     "https://opendata.tycg.gov.tw/api/dataset/7d03add1-aef5-4bbf-9b1b-7d601abd43a4/"
     "resource/5e7907b0-5418-4c36-9723-b6f786ad5871/download"
 )
+TN_DENTURE_PDF_URL = (
+    "https://health.tainan.gov.tw/warehouse/F8BCB915-C08B-47F3-A731-1C30A3EE61EE/"
+    "F_1780645430477e.pdf"
+)
 CAREGIVER_CSV = "scripts/sources/caregiver/caregivers.csv"
 
 # 台灣22縣市清單（正式「臺」寫法），用於從看護機構「服務地區」自由文字欄位以子字串比對方式
@@ -424,6 +428,13 @@ def fetch(url: str, encoding: str = "utf-8-sig") -> str:
     with urllib.request.urlopen(req, timeout=60) as resp:
         raw = resp.read()
     return raw.decode(encoding, errors="replace")
+
+
+def fetch_bytes(url: str) -> bytes:
+    """與 fetch() 相同，但回傳原始位元組，供二進位格式（如 PDF）解析使用，不做文字解碼。"""
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    with urllib.request.urlopen(req, timeout=60) as resp:
+        return resp.read()
 
 
 def twd97_to_wgs84(x: float, y: float) -> tuple[float, float]:
@@ -1677,6 +1688,48 @@ def build_specialty():
     return {"fields": fields, "capabilityLabels": CAPABILITY_LABELS, "rows": records}
 
 
+def build_tn_denture():
+    """臺南市115年度長者免費裝置全口活動假牙計畫合約醫療院所名單（臺南市政府衛生局公告 PDF，
+    非 DCAT 開放資料 CSV/API）。
+
+    來源網址 TN_DENTURE_PDF_URL（health.tainan.gov.tw/warehouse/.../F_1780645430477e.pdf，PDF 標題
+    內註記「1150305更新」）本身即為可直接下載的檔案（非公告網頁轉址），故與 build_specialty() 不同，
+    本函式**直接於伺服器端自動下載並解析**，不需比照該函式將 PDF 存成 data/source/*.pdf 供人工更新；
+    若未來此網址改版失效或格式變動，需重新確認來源網址並視需要改回人工下載模式。
+
+    用 pdfplumber 解析 6 頁 PDF，每頁各含一張延續同一份表格的 table（僅第1頁表頭列含「編號」文字，
+    其餘頁無重複表頭），欄位固定為：編號、地區、合約牙科醫療院所名稱、地址、電話，共161筆，與
+    PDF 內文字內容一致，無需修正錯字或缺漏。
+
+    「地區」欄位本身已是乾淨的「臺南市OO區」格式（涵蓋28個行政區），與地址欄位開頭一致，直接
+    當作 district 使用；county 固定為「臺南市」，不需另外解析。無「機構類型」欄位（原始資料未提供
+    分類資訊，不比照 build_tyc_denture() 做啟發式推斷），也無經緯度座標，故本頁不含地圖。
+    """
+    print("下載 臺南市長者免費裝置全口活動假牙計畫合約醫療院所 PDF ...", file=sys.stderr)
+    import pdfplumber  # 延遲載入：僅此資料集需要，避免其他資料集重跑時強制安裝
+
+    data = fetch_bytes(TN_DENTURE_PDF_URL)
+    records = []
+    with pdfplumber.open(io.BytesIO(data)) as pdf:
+        for page in pdf.pages:
+            for table in page.extract_tables():
+                for row in table:
+                    row = row + [""] * (5 - len(row))
+                    rid = (row[0] or "").replace("\n", "").strip()
+                    if not rid.isdigit():
+                        continue  # 跳過表頭列（編號欄位為「編號」文字）與標題列
+                    records.append([
+                        rid,                                              # 0 id
+                        (row[1] or "").replace("\n", "").strip(),          # 1 district
+                        (row[2] or "").replace("\n", "").strip(),          # 2 name
+                        (row[3] or "").replace("\n", "").strip(),          # 3 address
+                        (row[4] or "").replace("\n", "").strip(),          # 4 phone
+                    ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "district", "name", "address", "phone"]
+    return {"fields": fields, "rows": records}
+
+
 def _to_int(v):
     try:
         return int(float(v))
@@ -1883,6 +1936,15 @@ DATASETS = [
         "meta_key": "caregiver",
         "title": "看護／照服機構名錄",
         "source": lambda: "使用者人工蒐集網路公開資訊（非政府開放資料，無官方驗證）",
+    },
+    {
+        "key": "tn-denture",
+        "builder": build_tn_denture,
+        "json": "data/tn-denture.json",
+        "js_var": "TN_DENTURE_DATA",
+        "meta_key": "tnDenture",
+        "title": "臺南市長者免費裝置全口活動假牙計畫合約醫療院所",
+        "source": lambda: TN_DENTURE_PDF_URL,
     },
 ]
 
