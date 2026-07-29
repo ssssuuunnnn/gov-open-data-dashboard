@@ -264,6 +264,8 @@ LANE_URL = "https://email.chcg.gov.tw/df/pufnpn5i5741iy9efkn2rrz5ga6uhb"
 TYC_ELDER_URL = "https://opendata.tycg.gov.tw/api/dataset/536bb44b-b9f1-4336-ad26-34b9e25b3a68/resource/3d7e3b4c-8bc5-47c4-85a9-eec70415b189/download"
 SPECIALTY_SOURCE_PAGE = "https://health.gov.taipei/News_Content.aspx?n=F0D7A5A451D2493C&sms=549F98C9E5942A2B&s=9138F86B8A3CBF69"
 SPECIALTY_PDF_GLOB = "data/source/tp-ltc-specialty-*.pdf"
+KCG_DENTURE_PDF_URL = "https://orgws.kcg.gov.tw/001/KcgOrgUploadFiles/463/RelFile/0/85588/23687658-8121-4268-8bf3-8def3a1e1bf8.pdf"
+KCG_DENTURE_MANUAL_JSON = "data/source/kcg-denture-manual.json"
 KCG_HOMECARE_URL = "https://data.kcg.gov.tw/File/DirectDownload/59ac925f-10dd-42f7-a540-ab6c4218b93d"
 HSC_LTC_URL = "https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/283/b14a70a1-784c-4586-babf-ade99a7e8277.json"
 YL_LTC_URL = "https://opendataap2.e-land.gov.tw/./resource/files/2019-12-03/a91e966d8b5b07d1e9bb8c3a767e9d1f.json"
@@ -1730,6 +1732,76 @@ def build_tn_denture():
     return {"fields": fields, "rows": records}
 
 
+def _kcg_denture_type(name: str) -> str:
+    """依「機構名稱」關鍵字啟發式推斷機構類型（醫院／衛生所／醫療站／牙醫診所），
+    非官方分類欄位，僅供前端篩選/圖表參考。"""
+    name = name or ""
+    if "醫院" in name:
+        return "醫院"
+    if "衛生所" in name:
+        return "衛生所"
+    if "醫療站" in name or "醫療服務站" in name:
+        return "醫療站"
+    return "牙醫診所"
+
+
+def build_kcg_denture():
+    """115年高雄市免費裝假牙特約牙醫醫療院所名冊（高雄市政府衛生局公告 PDF，
+    非 DCAT 開放資料 CSV/API）。
+
+    來源 PDF：KCG_DENTURE_PDF_URL
+    （orgws.kcg.gov.tw/001/KcgOrgUploadFiles/463/RelFile/0/85588/23687658-8121-4268-8bf3-8def3a1e1bf8.pdf），
+    2026-07-29 下載確認，共 8 頁：第1頁與第2~7頁為「行政區 × 機構名稱/電話/地址」表格（每頁2欄×2列，
+    共4個行政區區塊，最後一頁僅2個區塊），第8頁為「注意事項」7條文字說明（申請資格、篩檢期間地點、
+    保固/維修規定、諮詢電話等），該頁不含結構化資料，其文字內容改為人工節錄後寫入
+    `kcg-denture/index.html` 的靜態說明區塊，不進入本函式的資料處理。
+
+    **關鍵限制（務必先讀）**：此 PDF 的表格文字為「向量繪製曲線」而非可選取文字（常見政府文件防拷貝
+    手法）——用 pdfplumber 檢測全頁 `chars` 數為 0，`extract_tables()`/`extract_text()` 皆無法取得任何
+    內容；環境亦無 OCR（tesseract）可用。因此**無法比照 build_tn_denture()/build_specialty() 用程式自動
+    解析文字**，改用「pdfplumber 將每頁渲染成圖片 + AI 視覺閱讀」的方式，人工逐頁確認全部 34 個行政區、
+    189 筆機構資料（機構名稱／電話／地址），一次性轉寫為 KCG_DENTURE_MANUAL_JSON
+    （data/source/kcg-denture-manual.json，格式為 `[{district, name, phone, address}, ...]`），本函式僅
+    負責讀取該檔案並加上啟發式機構類型欄位、组装成標準 `{fields, rows}` 結構，**不會**重新下載/重新解析
+    PDF 本身。
+
+    後續影響：
+    1. 若使用者要更新此名冊（如次年度 116 年版），需提供新版 PDF 連結，重新走一次「下載 → pdfplumber
+       渲染成圖片 → AI 視覺閱讀轉寫 → 覆寫 KCG_DENTURE_MANUAL_JSON」的人工流程，無法單純重跑
+       `python3 scripts/build_data.py kcg-denture` 自動取得最新資料。
+    2. 轉寫結果建議人工抽樣核對（已抽查三民區32筆、苓雅區13筆等與原圖比對一致）。
+    3. 原始 PDF 僅涵蓋 34 個行政區（未列出高雄市其餘行政區，如那瑪夏區以外部分偏遠區僅1~3筆），
+       屬公告名冊原始範圍，非解析遺漏，如實呈現不另行標記。
+    4. 地址欄位皆為「OO區＋路名門牌」，未含「高雄市」字首；電話欄位少數含分機（如「#7003補綴科」）
+       或「及」「、」分隔多組分機，原文照登，前端 tel: 連結僅取第一組數字。
+
+    「機構類型」由 `_kcg_denture_type()` 依名稱關鍵字（醫院／衛生所／醫療站）啟發式判斷，其餘歸類
+    「牙醫診所」，非官方分類欄位。無經緯度座標，故本頁不含地圖。
+    """
+    print("讀取 115年高雄市免費裝假牙特約牙醫醫療院所 人工轉寫資料 ...", file=sys.stderr)
+    try:
+        with open(KCG_DENTURE_MANUAL_JSON, "r", encoding="utf-8") as f:
+            manual_records = json.load(f)
+    except FileNotFoundError:
+        print(f"  找不到人工轉寫資料（{KCG_DENTURE_MANUAL_JSON}），略過此資料集", file=sys.stderr)
+        return None
+
+    records = []
+    for i, r in enumerate(manual_records, start=1):
+        name = (r.get("name", "") or "").strip()
+        records.append([
+            i,                              # 0 id
+            (r.get("district", "") or "").strip(),  # 1 district
+            name,                            # 2 name
+            _kcg_denture_type(name),         # 3 type
+            (r.get("address", "") or "").strip(),   # 4 address
+            (r.get("phone", "") or "").strip(),     # 5 phone
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "district", "name", "type", "address", "phone"]
+    return {"fields": fields, "rows": records}
+
+
 def _to_int(v):
     try:
         return int(float(v))
@@ -1945,6 +2017,16 @@ DATASETS = [
         "meta_key": "tnDenture",
         "title": "臺南市長者免費裝置全口活動假牙計畫合約醫療院所",
         "source": lambda: TN_DENTURE_PDF_URL,
+    },
+    {
+        "key": "kcg-denture",
+        "builder": build_kcg_denture,
+        "json": "data/kcg-denture.json",
+        "js_var": "KCG_DENTURE_DATA",
+        "meta_key": "kcgDenture",
+        "title": "115年高雄市免費裝假牙特約牙醫醫療院所",
+        "source": lambda: KCG_DENTURE_PDF_URL,
+        "optional": True,
     },
 ]
 

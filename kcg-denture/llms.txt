@@ -1,0 +1,27 @@
+# 115年高雄市免費裝假牙特約牙醫醫療院所名冊
+
+> 高雄市政府衛生局公告之115年度免費裝假牙特約牙醫醫療院所名冊，共189筆，收錄機構名稱、所在行政區（34個行政區）、地址、電話；「機構類型」（醫院／衛生所／醫療站／牙醫診所）依機構名稱關鍵字啟發式推斷，非官方分類欄位。頁面另整理申請資格、篩檢期間地點、保固與維修規定等 Q&A 說明。提供行政區／機構類型／關鍵字篩選、統計卡片與圖表，無經緯度座標。
+
+- 提供機關：高雄市政府衛生局
+- 資料筆數：189 筆（原始公告 PDF 為固定名冊，非即時 API，如需更新需人工重新轉寫，詳見專案 README）
+- 原始資料來源：https://orgws.kcg.gov.tw/001/KcgOrgUploadFiles/463/RelFile/0/85588/23687658-8121-4268-8bf3-8def3a1e1bf8.pdf （PDF）
+- 授權方式：政府資料開放授權條款-第1版（精神比照辦理）
+- 建議查看頻率：不定期（每年公告新版名冊）
+
+## 頁面內容
+
+- 儀表板頁面：https://www.sunkuo.cc/gov-open-data-dashboard/kcg-denture/index.html
+- 篩選條件、統計卡片、圖表與分頁表格皆基於上述原始資料運算；表格地址欄可直接連結 Google 地圖搜尋、電話欄可直接撥打。
+- 頁面上方另整理免費裝假牙申請資格、篩檢期間地點、裝置期限、保固與維修規定、諮詢電話等常見問答（Q&A）。
+
+## 資料處理說明
+
+原始 PDF 表格文字為向量繪製圖形（無法程式化擷取文字），本站以「渲染成頁面圖片 + 人工視覺核對」方式逐頁轉寫全部
+資料，寫入 `data/source/kcg-denture-manual.json` 後由 `scripts/build_data.py` 的 `build_kcg_denture()` 組裝成標準
+`{fields, rows}` JSON 結構。若需更新為新年度名冊，需重新下載最新 PDF 並重新走一次人工轉寫流程。
+
+## 相關連結
+
+- 網站首頁：https://www.sunkuo.cc/gov-open-data-dashboard/
+- 更新紀錄：https://www.sunkuo.cc/gov-open-data-dashboard/changelog/index.html
+- 專案原始碼：https://github.com/ssssuuunnnn/gov-open-data-dashboard

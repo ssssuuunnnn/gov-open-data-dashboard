@@ -294,6 +294,17 @@
         "@type": "GovernmentOrganization",
         "name": "臺南市政府衛生局"
       }
+    },
+    {
+      "@type": "Dataset",
+      "name": "115年高雄市免費裝假牙特約牙醫醫療院所名冊",
+      "description": "高雄市政府衛生局公告之115年度免費裝假牙特約牙醫醫療院所名冊，收錄189筆院所名稱、所在行政區、地址與電話。",
+      "url": "https://www.sunkuo.cc/gov-open-data-dashboard/kcg-denture/index.html",
+      "license": "http://data.gov.tw/license",
+      "creator": {
+        "@type": "GovernmentOrganization",
+        "name": "高雄市政府衛生局"
+      }
     }
   ]
 }
@@ -564,6 +575,12 @@
       <div class="desc">臺南市政府衛生局提供，列出65歲以上長者及55歲以上原住民免費裝置全口活動假牙計畫的合約牙科醫療院所名稱、地區、地址與電話，並整理申請資格、補助金額（每人每顎上限2萬2,000元）、申請與核銷期程說明，可依地區與關鍵字篩選並瀏覽統計圖表。</div>
       <div class="footline" id="tn-denture-count">資料筆數載入中…</div>
     </a>
+    <a class="home-card" href="kcg-denture/index.html" data-county="高雄市" data-category="ltc">
+      <span class="tag">高雄市</span>
+      <h2>115年高雄市免費裝假牙特約牙醫醫療院所</h2>
+      <div class="desc">高雄市政府衛生局公告，列出115年度免費裝假牙特約牙醫醫療院所名稱、行政區、地址與電話，涵蓋34個行政區共189家院所，並整理申請資格、篩檢期間地點、保固與維修規定等注意事項，可依行政區、機構類型（醫院/衛生所/醫療站/牙醫診所）與關鍵字篩選並瀏覽統計圖表。</div>
+      <div class="footline" id="kcg-denture-count">資料筆數載入中…</div>
+    </a>
     <a class="home-card private" href="caregiver/index.html" data-county="all" data-category="private">
       <span class="tag">全國 · 非官方資料</span>
       <h2>看護／照服機構名錄</h2>
@@ -764,6 +781,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.tnDenture) {
     document.getElementById("tn-denture-count").textContent = `共 ${meta.tnDenture.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.kcgDenture) {
+    document.getElementById("kcg-denture-count").textContent = `共 ${meta.kcgDenture.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
   if (meta.caregiver) {
     document.getElementById("caregiver-count").textContent = `共 ${meta.caregiver.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;

@@ -1,6 +1,6 @@
 # 政府開放資料儀表板
 
-> 以政府開放資料建置的靜態網站，整理二十二個長照/老人福利/身心障礙相關資料集為互動式儀表板，提供篩選、統計圖表與分頁表格，部分資料集含地圖呈現。無後端、無建置工具，直接部署於 GitHub Pages。
+> 以政府開放資料建置的靜態網站，整理二十三個長照/老人福利/身心障礙相關資料集為互動式儀表板，提供篩選、統計圖表與分頁表格，部分資料集含地圖呈現。無後端、無建置工具，直接部署於 GitHub Pages。
 
 本站所有資料皆來自各縣市政府開放資料平台或公告頁面，經清理、地址解析與格式轉換後靜態化，原始來源與授權資訊詳見各資料集頁面下方連結的 llms.txt。
 
@@ -28,6 +28,7 @@
 - [桃園市長照交通接送服務單位](https://www.sunkuo.cc/gov-open-data-dashboard/tyc-transport/index.html): 桃園市政府社會局公告之長照交通接送服務單位名冊，共14筆，收錄辦理單位名稱、連絡電話、地址、服務區域，並整理洽辦單位、服務對象資格與補助金額說明，提供縣市／關鍵字篩選、統計卡片與縣市分布圖表，無經緯度座標。 (https://www.sunkuo.cc/gov-open-data-dashboard/tyc-transport/llms.txt)
 - [桃園市社區安寧療護資源一覽表](https://www.sunkuo.cc/gov-open-data-dashboard/tyc-hospice/index.html): 桃園市社區安寧療護資源一覽表，收錄安寧病房、安寧共照、居家及社區安寧（居家護理所／診所／衛生所）共54筆機構名稱、電話、地址，並整理服務對象、服務內容、申請流程說明，提供行政區／服務類別／機構型態／關鍵字篩選與統計圖表，無經緯度座標。 (https://www.sunkuo.cc/gov-open-data-dashboard/tyc-hospice/llms.txt)
 - [臺南市長者免費裝置全口活動假牙計畫合約醫療院所](https://www.sunkuo.cc/gov-open-data-dashboard/tn-denture/index.html): 臺南市政府衛生局公告之長者免費裝置全口活動假牙計畫合約醫療院所名單，共161筆，收錄編號、地區、機構名稱、地址、電話，並整理申請資格、補助金額（每人每顎上限2萬2,000元）、申請與核銷期程等說明，提供地區／關鍵字篩選與統計圖表，無經緯度座標。 (https://www.sunkuo.cc/gov-open-data-dashboard/tn-denture/llms.txt)
+- [115年高雄市免費裝假牙特約牙醫醫療院所](https://www.sunkuo.cc/gov-open-data-dashboard/kcg-denture/index.html): 高雄市政府衛生局公告之115年度免費裝假牙特約牙醫醫療院所名冊，共189筆，收錄機構名稱、行政區（34個行政區）、地址、電話，並整理申請資格、篩檢期間地點、保固與維修規定等說明；「機構類型」（醫院／衛生所／醫療站／牙醫診所）由名稱關鍵字啟發式推斷（非官方分類），提供行政區／機構類型／關鍵字篩選與統計圖表，無經緯度座標。原始 PDF 文字為向量繪製圖形，本站以人工視覺核對轉寫。 (https://www.sunkuo.cc/gov-open-data-dashboard/kcg-denture/llms.txt)
 
 ## 非政府開放資料（人工蒐集，僅供參考）
 

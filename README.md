@@ -1,6 +1,6 @@
 # 政府開放資料儀表板
 
-以政府開放資料建置的靜態網站，整理二十二個長照/老人福利/身心障礙相關資料集為互動式儀表板，可直接部署於 GitHub Pages。
+以政府開放資料建置的靜態網站，整理二十三個長照/老人福利/身心障礙相關資料集為互動式儀表板，可直接部署於 GitHub Pages。
 
 ## 資料集
 
@@ -28,6 +28,7 @@
 | `tyc-transport/` | 桃園市長照交通接送服務單位 | 桃園市政府社會局 | 桃園市長照交通接送服務單位清單，共14筆，收錄辦理單位名稱、連絡電話、地址、服務區域，辦理單位地址分布桃園市、臺北市、新北市等多個縣市，並整理洽辦單位、服務對象資格、一般服務地區與復興區偏遠地區補助金額說明，提供縣市／關鍵字篩選與統計圖表，無經緯度座標 |
 | `tyc-hospice/` | 桃園市社區安寧療護資源一覽表 | 桃園市政府衛生局 | 桃園市社區安寧療護資源一覽表，收錄安寧病房、安寧共照、居家及社區安寧（居家護理所/診所/衛生所）共54筆機構名稱、電話、地址，並整理服務對象、服務內容、申請流程說明；「機構型態」由名稱關鍵字啟發式推斷（非官方分類，僅居家及社區安寧類別適用），提供行政區／服務類別／機構型態／關鍵字篩選與統計圖表，無經緯度座標 |
 | `tn-denture/` | 臺南市長者免費裝置全口活動假牙計畫合約醫療院所 | 臺南市政府衛生局 | 臺南市65歲以上長者及55歲以上原住民免費裝置全口活動假牙計畫的合約牙科醫療院所名單，共161筆，收錄編號、地區、機構名稱、地址、電話，並整理申請資格、補助金額（每人每顎上限2萬2,000元、全口雙顎上限4萬4,000元）、申請與核銷期程等說明，提供地區／關鍵字篩選與統計圖表，無經緯度座標。**資料來源為衛生局公告 PDF、非結構化 CSV/API**，由 build_data.py 自動下載並用 pdfplumber 解析 |
+| `kcg-denture/` | 115年高雄市免費裝假牙特約牙醫醫療院所 | 高雄市政府衛生局 | 115年度免費裝假牙特約牙醫醫療院所名冊，共189筆，涵蓋34個行政區，收錄編號、行政區、機構名稱、地址、電話，並整理申請資格、篩檢期間地點、裝置期限、保固與維修規定、諮詢電話等說明；「機構類型」（醫院／衛生所／醫療站／牙醫診所）由名稱關鍵字啟發式推斷（非官方分類），提供行政區／機構類型／關鍵字篩選與統計圖表，無經緯度座標。**資料來源為衛生局公告 PDF，且 PDF 內文字為向量繪製圖形、無法程式化擷取文字**，改以人工視覺核對方式逐頁轉寫並寫死於 `data/source/kcg-denture-manual.json`，`build_kcg_denture()` 僅讀取該檔案組裝資料，**無法自動重新下載/解析更新**，需人工重新轉寫，詳見下方「更新資料」說明 |
 | `caregiver/` | 看護／照服機構名錄 | **無（使用者人工蒐集）** | 使用者手動整理目前網路上找得到的私人看護／居家照護機構名單（共27筆），收錄機構名稱、官網、收費頁面、聯絡電話、服務地區、統一編號，提供服務地區／是否有公開收費頁面／關鍵字篩選；**非政府開放資料，無提供機關、無官方驗證**，頁面明確標示免責聲明，資料來源為使用者提供之本機 CSV、無公開下載網址，需人工更新，詳見下方「更新資料」說明 |
 
 原始資料下載網址：
@@ -112,6 +113,9 @@ tyc-hospice/app.js
 tn-denture/index.html 臺南市長者免費裝置全口活動假牙計畫合約醫療院所儀表板（Chart.js 圖表 + 篩選表格，
                        無地圖；頁面上方另有申請資格/補助金額/申請與核銷期程/聯絡窗口 Q&A 說明）
 tn-denture/app.js
+kcg-denture/index.html 115年高雄市免費裝假牙特約牙醫醫療院所儀表板（Chart.js 圖表 + 篩選表格，無地圖；
+                       頁面上方另有申請資格/篩檢期間地點/裝置期限/保固維修/諮詢窗口 Q&A 說明）
+kcg-denture/app.js
 caregiver/index.html  看護／照服機構名錄儀表板（無圖表無地圖，僅篩選表格 + 統計卡；頁面上方另有
                        非官方資料免責聲明卡片）
 caregiver/app.js
@@ -182,10 +186,17 @@ data/tn-denture.json  臺南市長者免費裝置全口活動假牙計畫合約�
                        自動下載衛生局公告 PDF 並用 pdfplumber 解析產生）
 data/tn-denture.js    同上資料的內嵌 JS 版本（window.TN_DENTURE_DATA），供 tn-denture 頁面以
                        <script> 標籤直接載入，因來源為 PDF 檔案，不透過 fetch()
+data/kcg-denture.json 115年高雄市免費裝假牙特約牙醫醫療院所資料（由 scripts/build_data.py 讀取人工
+                       轉寫的 data/source/kcg-denture-manual.json 產生；原始 PDF 文字為向量繪製圖形，
+                       無法程式化解析，故非自動下載/解析，詳見下方「更新資料」說明）
+data/kcg-denture.js   同上資料的內嵌 JS 版本（window.KCG_DENTURE_DATA），供 kcg-denture 頁面以
+                       <script> 標籤直接載入，因來源為 PDF 檔案，不透過 fetch()
 data/caregiver.json   看護／照服機構名錄資料（由 scripts/build_data.py 讀取本機 CSV 產生）
 data/caregiver.js     同上資料的內嵌 JS 版本（window.CAREGIVER_DATA），供 caregiver 頁面以
                        <script> 標籤直接載入，因無公開下載網址，不透過 fetch()
-data/source/          長照專業服務特約單位來源 PDF（人工下載存放於此，供 build_data.py 解析）
+data/source/          長照專業服務特約單位來源 PDF（人工下載存放於此，供 build_data.py 解析）；
+                       另含 kcg-denture-manual.json（115年高雄市免費裝假牙名冊人工轉寫結果）與
+                       kcg-denture-115.pdf（原始公告 PDF 存檔，供未來人工核對/重新轉寫參考）
 data/meta.json        資料筆數與更新時間
 scripts/build_data.py 資料下載與轉換腳本
 scripts/sources/chiayi-ltc/  嘉義縣立案長照及護理之家機構一覽的原始 CSV（institutions.csv／
@@ -218,7 +229,9 @@ python3 scripts/build_data.py
 （若存在）產生 `data/specialty.json`／`data/specialty.js`，並讀取 `scripts/sources/chiayi-ltc/`、
 `scripts/sources/caregiver/` 下的本機 CSV 分別產生 `data/chiayi-ltc.json`／`data/chiayi-ltc.js`
 與 `data/caregiver.json`／`data/caregiver.js`（後者為使用者人工蒐集之非政府開放資料，見下方
-「更新資料集列表」與「更新「看護／照服機構名錄」」說明）。這是**完整流程**，會對外發送多個網路請求且較耗時，
+「更新資料集列表」與「更新「看護／照服機構名錄」」說明），以及讀取人工轉寫的
+`data/source/kcg-denture-manual.json` 產生 `data/kcg-denture.json`／`data/kcg-denture.js`
+（見下方「更新「115年高雄市免費裝假牙特約牙醫醫療院所」」說明）。這是**完整流程**，會對外發送多個網路請求且較耗時，
 **僅在明確需要全面更新所有資料集時才執行**；建議依資料集「更新頻率」（每1月 / 每1年 / 不定期）
 定期執行後再部署，平常開發（例如新增單一資料集頁面）不需要、也不應該每次都跑全部。
 
@@ -236,6 +249,7 @@ python3 scripts/build_data.py tpe-denture         # 只重新產生臺北市假�
 python3 scripts/build_data.py tyc-transport       # 只重新產生桃園市長照交通接送服務單位
 python3 scripts/build_data.py tyc-hospice         # 只重新產生桃園市社區安寧療護資源一覽表
 python3 scripts/build_data.py tn-denture          # 只重新產生臺南市長者免費裝置全口活動假牙計畫合約醫療院所
+python3 scripts/build_data.py kcg-denture         # 只重新產生115年高雄市免費裝假牙特約牙醫醫療院所
 python3 scripts/build_data.py caregiver           # 只重新產生看護／照服機構名錄
 python3 scripts/build_data.py tc-nursing ntpc-nursing   # 可同時指定多個，以空白分隔
 python3 scripts/build_data.py --help              # 列出所有可用的資料集 key
@@ -247,6 +261,23 @@ python3 scripts/build_data.py --help              # 列出所有可用的資料�
 python3 -m pip install pdfplumber
 ```
 
+
+### 更新「115年高雄市免費裝假牙特約牙醫醫療院所」
+
+此資料集**沒有開放資料 CSV/API**，來源為高雄市政府衛生局公告的固定名冊 PDF，且該 PDF 內文字為
+**向量繪製圖形**（無法用 pdfplumber 等工具程式化擷取文字/表格），因此**無法由腳本自動下載並解析**，
+需人工重新轉寫：
+
+1. 到高雄市政府衛生局官網或搜尋「115年高雄市免費裝假牙特約牙醫醫療院所」取得最新年度公告 PDF。
+2. 用 `pdfplumber` 將 PDF 每頁渲染成圖片（`page.to_image(resolution=150).save(...)`），逐頁以視覺方式
+   核對每個行政區的機構名稱、電話、地址，轉寫更新 `data/source/kcg-denture-manual.json`
+   （格式為 `[{district, name, phone, address}, ...]`），並將新版 PDF 存成
+   `data/source/kcg-denture-<年度>.pdf` 供日後核對。
+3. 若「注意事項」頁內容（申請資格、篩檢期間地點、保固維修規定等）有變動，需同步更新
+   `kcg-denture/index.html` 內對應的 Q&A 文字與 FAQPage JSON-LD。
+4. 執行 `python3 scripts/build_data.py kcg-denture` 只重新產生 `data/kcg-denture.json`／
+   `data/kcg-denture.js`（`build_kcg_denture()` 僅讀取上述人工轉寫 JSON，不會重新下載/解析 PDF）。
+5. 建議抽樣核對幾個行政區（如三民區、鳳山區）的筆數與內容是否與 PDF 原圖一致。
 
 ### 更新「臺北市長照專業服務特約單位」
 

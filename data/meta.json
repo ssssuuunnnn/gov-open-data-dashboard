@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-28T13:22:45.753903+00:00",
+  "generatedAt": "2026-07-29T13:21:11.204857+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -114,5 +114,10 @@
     "count": 161,
     "source": "https://health.tainan.gov.tw/warehouse/F8BCB915-C08B-47F3-A731-1C30A3EE61EE/F_1780645430477e.pdf",
     "title": "臺南市長者免費裝置全口活動假牙計畫合約醫療院所"
+  },
+  "kcgDenture": {
+    "count": 189,
+    "source": "https://orgws.kcg.gov.tw/001/KcgOrgUploadFiles/463/RelFile/0/85588/23687658-8121-4268-8bf3-8def3a1e1bf8.pdf",
+    "title": "115年高雄市免費裝假牙特約牙醫醫療院所"
   }
 }
