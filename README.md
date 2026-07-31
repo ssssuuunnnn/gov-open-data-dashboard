@@ -1,6 +1,6 @@
 # 政府開放資料儀表板
 
-以政府開放資料建置的靜態網站，整理二十三個長照/老人福利/身心障礙相關資料集為互動式儀表板，可直接部署於 GitHub Pages。
+以政府開放資料建置的靜態網站，整理二十四個長照/老人福利/身心障礙相關資料集為互動式儀表板，可直接部署於 GitHub Pages。
 
 ## 資料集
 
@@ -27,6 +27,7 @@
 | `tpe-denture/` | 臺北市假牙補助醫療院所名單 | 臺北市政府社會局 | 臺北市中低收入老人裝置假牙補助合約醫療院所名單，共6筆，全數為「臺北市立聯合醫院」不同分院，分布於5個行政區，並整理補助制度說明，提供行政區／關鍵字篩選與統計圖表，無經緯度座標 |
 | `tyc-transport/` | 桃園市長照交通接送服務單位 | 桃園市政府社會局 | 桃園市長照交通接送服務單位清單，共14筆，收錄辦理單位名稱、連絡電話、地址、服務區域，辦理單位地址分布桃園市、臺北市、新北市等多個縣市，並整理洽辦單位、服務對象資格、一般服務地區與復興區偏遠地區補助金額說明，提供縣市／關鍵字篩選與統計圖表，無經緯度座標 |
 | `tyc-hospice/` | 桃園市社區安寧療護資源一覽表 | 桃園市政府衛生局 | 桃園市社區安寧療護資源一覽表，收錄安寧病房、安寧共照、居家及社區安寧（居家護理所/診所/衛生所）共54筆機構名稱、電話、地址，並整理服務對象、服務內容、申請流程說明；「機構型態」由名稱關鍵字啟發式推斷（非官方分類，僅居家及社區安寧類別適用），提供行政區／服務類別／機構型態／關鍵字篩選與統計圖表，無經緯度座標 |
+| `tyc-respite/` | 桃園市喘息服務提供單位 | 桃園市政府衛生局 | 桃園市居家喘息、機構住宿式喘息服務提供單位清單，共238筆（居家喘息146筆、機構喘息92筆），收錄單位名稱、負責人、電話、傳真、電子郵件、地址、服務區域，並整理服務對象與服務內容說明；「服務區域」欄位於居家喘息單位為涵蓋多個行政區的文字，行政區篩選會同時比對地址所在區與服務區域涵蓋區，提供服務類別／行政區／關鍵字篩選與統計圖表，無經緯度座標 |
 | `tn-denture/` | 臺南市長者免費裝置全口活動假牙計畫合約醫療院所 | 臺南市政府衛生局 | 臺南市65歲以上長者及55歲以上原住民免費裝置全口活動假牙計畫的合約牙科醫療院所名單，共161筆，收錄編號、地區、機構名稱、地址、電話，並整理申請資格、補助金額（每人每顎上限2萬2,000元、全口雙顎上限4萬4,000元）、申請與核銷期程等說明，提供地區／關鍵字篩選與統計圖表，無經緯度座標。**資料來源為衛生局公告 PDF、非結構化 CSV/API**，由 build_data.py 自動下載並用 pdfplumber 解析 |
 | `kcg-denture/` | 115年高雄市免費裝假牙特約牙醫醫療院所 | 高雄市政府衛生局 | 115年度免費裝假牙特約牙醫醫療院所名冊，共189筆，涵蓋34個行政區，收錄編號、行政區、機構名稱、地址、電話，並整理申請資格、篩檢期間地點、裝置期限、保固與維修規定、諮詢電話等說明；「機構類型」（醫院／衛生所／醫療站／牙醫診所）由名稱關鍵字啟發式推斷（非官方分類），提供行政區／機構類型／關鍵字篩選與統計圖表，無經緯度座標。**資料來源為衛生局公告 PDF，且 PDF 內文字為向量繪製圖形、無法程式化擷取文字**，改以人工視覺核對方式逐頁轉寫並寫死於 `data/source/kcg-denture-manual.json`，`build_kcg_denture()` 僅讀取該檔案組裝資料，**無法自動重新下載/解析更新**，需人工重新轉寫，詳見下方「更新資料」說明 |
 | `caregiver/` | 看護／照服機構名錄 | **無（使用者人工蒐集）** | 使用者手動整理目前網路上找得到的私人看護／居家照護機構名單（共27筆），收錄機構名稱、官網、收費頁面、聯絡電話、服務地區、統一編號，提供服務地區／是否有公開收費頁面／關鍵字篩選；**非政府開放資料，無提供機關、無官方驗證**，頁面明確標示免責聲明，資料來源為使用者提供之本機 CSV、無公開下載網址，需人工更新，詳見下方「更新資料」說明 |
@@ -52,6 +53,8 @@
 - https://opendata.tycg.gov.tw/api/dataset/d771e458-6e10-45c0-9ec0-83fd820266b5/resource/f7339a27-6360-4a34-a7ec-11f5dc0b2135/download　（BIG5(cp950) 編碼）
 - https://data.taipei/api/dataset/76b8b514-e793-4cca-8dcf-065d5af4b760/resource/d6522c9f-2026-4ab0-9642-65df9218a9bc/download　（BIG5(cp950) 編碼）
 - https://opendata.tycg.gov.tw/api/dataset/7d03add1-aef5-4bbf-9b1b-7d601abd43a4/resource/5e7907b0-5418-4c36-9723-b6f786ad5871/download　（BIG5(cp950) 編碼）
+- https://opendata.tycg.gov.tw/api/dataset/7ae18138-74f9-4ebb-8b7d-f03d9ddb1ef5/resource/0b949cb1-bfc3-4d02-8474-35e42a932643/download　（居家喘息，BIG5(cp950) 編碼）
+- https://opendata.tycg.gov.tw/api/dataset/7ae18138-74f9-4ebb-8b7d-f03d9ddb1ef5/resource/b7c16660-f7ac-4bb6-b639-9c795581f160/download　（機構喘息，BIG5(cp950) 編碼）
 - https://health.tainan.gov.tw/warehouse/F8BCB915-C08B-47F3-A731-1C30A3EE61EE/F_1780645430477e.pdf　（衛生局公告 PDF，由 build_data.py 自動下載並用 pdfplumber 解析）
 
 授權方式：政府資料開放授權條款-第1版
@@ -110,6 +113,9 @@ tyc-transport/app.js
 tyc-hospice/index.html 桃園市社區安寧療護資源一覽表儀表板（Chart.js 圖表 + 篩選表格，無地圖；
                        頁面上方另有服務對象/服務內容/申請流程/諮詢窗口說明靜態卡片）
 tyc-hospice/app.js
+tyc-respite/index.html 桃園市喘息服務提供單位儀表板（Chart.js 圖表 + 篩選表格，無地圖；
+                       頁面上方另有服務對象/服務內容說明靜態卡片）
+tyc-respite/app.js
 tn-denture/index.html 臺南市長者免費裝置全口活動假牙計畫合約醫療院所儀表板（Chart.js 圖表 + 篩選表格，
                        無地圖；頁面上方另有申請資格/補助金額/申請與核銷期程/聯絡窗口 Q&A 說明）
 tn-denture/app.js
@@ -182,6 +188,10 @@ data/tyc-hospice.json 桃園市社區安寧療護資源一覽表資料（由 scr
                        解碼；原始 CSV 無標準表頭，靠三段分類標題列切分服務類別）
 data/tyc-hospice.js   同上資料的內嵌 JS 版本（window.TYC_HOSPICE_DATA），供 tyc-hospice
                        頁面以 <script> 標籤直接載入，因來源網址無 CORS 標頭，不透過 fetch()
+data/tyc-respite.json 桃園市喘息服務提供單位資料（由 scripts/build_data.py 產生，合併居家喘息與
+                       機構喘息兩份 BIG5(cp950) 編碼 CSV，機構喘息尾端空白列已過濾）
+data/tyc-respite.js  同上資料的內嵌 JS 版本（window.TYC_RESPITE_DATA），供 tyc-respite
+                       頁面以 <script> 標籤直接載入，因來源網址無 CORS 標頭，不透過 fetch()
 data/tn-denture.json  臺南市長者免費裝置全口活動假牙計畫合約醫療院所資料（由 scripts/build_data.py
                        自動下載衛生局公告 PDF 並用 pdfplumber 解析產生）
 data/tn-denture.js    同上資料的內嵌 JS 版本（window.TN_DENTURE_DATA），供 tn-denture 頁面以
@@ -248,6 +258,7 @@ python3 scripts/build_data.py tyc-placement       # 只重新產生桃園市失�
 python3 scripts/build_data.py tpe-denture         # 只重新產生臺北市假牙補助醫療院所名單
 python3 scripts/build_data.py tyc-transport       # 只重新產生桃園市長照交通接送服務單位
 python3 scripts/build_data.py tyc-hospice         # 只重新產生桃園市社區安寧療護資源一覽表
+python3 scripts/build_data.py tyc-respite         # 只重新產生桃園市喘息服務提供單位
 python3 scripts/build_data.py tn-denture          # 只重新產生臺南市長者免費裝置全口活動假牙計畫合約醫療院所
 python3 scripts/build_data.py kcg-denture         # 只重新產生115年高雄市免費裝假牙特約牙醫醫療院所
 python3 scripts/build_data.py caregiver           # 只重新產生看護／照服機構名錄

@@ -286,6 +286,17 @@
     },
     {
       "@type": "Dataset",
+      "name": "桃園市喘息服務提供單位",
+      "description": "桃園市政府衛生局公告之喘息服務提供單位名冊，收錄居家喘息、機構住宿式喘息共238筆服務單位名稱、電話、地址、服務區域。",
+      "url": "https://www.sunkuo.cc/gov-open-data-dashboard/tyc-respite/index.html",
+      "license": "http://data.gov.tw/license",
+      "creator": {
+        "@type": "Organization",
+        "name": "桃園市政府衛生局"
+      }
+    },
+    {
+      "@type": "Dataset",
       "name": "臺南市115年度長者免費裝置全口活動假牙計畫合約醫療院所名單",
       "description": "臺南市政府衛生局公告之長者免費裝置全口活動假牙計畫合約醫療院所名單，收錄161筆合約牙科醫療院所名稱、所在地區、地址與電話。",
       "url": "https://www.sunkuo.cc/gov-open-data-dashboard/tn-denture/index.html",
@@ -569,6 +580,12 @@
       <div class="desc">桃園市政府衛生局提供，列出安寧病房、安寧共照、居家及社區安寧（居家護理所/診所/衛生所）機構名稱、電話、地址，並整理服務對象、服務內容、申請流程說明，可依行政區、服務類別、機構型態與關鍵字篩選並瀏覽統計圖表。</div>
       <div class="footline" id="tyc-hospice-count">資料筆數載入中…</div>
     </a>
+    <a class="home-card" href="tyc-respite/index.html" data-county="桃園市" data-category="ltc">
+      <span class="tag">桃園市</span>
+      <h2>桃園市喘息服務提供單位</h2>
+      <div class="desc">桃園市政府衛生局提供，列出居家喘息、機構住宿式喘息服務單位名稱、負責人、電話、地址與服務區域，並整理服務對象與服務內容說明，可依行政區、服務類別與關鍵字篩選並瀏覽統計圖表。</div>
+      <div class="footline" id="tyc-respite-count">資料筆數載入中…</div>
+    </a>
     <a class="home-card" href="tn-denture/index.html" data-county="臺南市" data-category="ltc">
       <span class="tag">臺南市</span>
       <h2>臺南市長者免費裝置全口活動假牙計畫合約醫療院所</h2>
@@ -778,6 +795,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.tycHospice) {
     document.getElementById("tyc-hospice-count").textContent = `共 ${meta.tycHospice.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.tycRespite) {
+    document.getElementById("tyc-respite-count").textContent = `共 ${meta.tycRespite.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
   if (meta.tnDenture) {
     document.getElementById("tn-denture-count").textContent = `共 ${meta.tnDenture.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;

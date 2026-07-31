@@ -314,6 +314,14 @@ TYC_HOSPICE_URL = (
     "https://opendata.tycg.gov.tw/api/dataset/7d03add1-aef5-4bbf-9b1b-7d601abd43a4/"
     "resource/5e7907b0-5418-4c36-9723-b6f786ad5871/download"
 )
+TYC_RESPITE_HOME_URL = (
+    "https://opendata.tycg.gov.tw/api/dataset/7ae18138-74f9-4ebb-8b7d-f03d9ddb1ef5/"
+    "resource/0b949cb1-bfc3-4d02-8474-35e42a932643/download"
+)
+TYC_RESPITE_INST_URL = (
+    "https://opendata.tycg.gov.tw/api/dataset/7ae18138-74f9-4ebb-8b7d-f03d9ddb1ef5/"
+    "resource/b7c16660-f7ac-4bb6-b639-9c795581f160/download"
+)
 TN_DENTURE_PDF_URL = (
     "https://health.tainan.gov.tw/warehouse/F8BCB915-C08B-47F3-A731-1C30A3EE61EE/"
     "F_1780645430477e.pdf"
@@ -1563,6 +1571,91 @@ def build_tyc_hospice():
     return {"fields": fields, "rows": records}
 
 
+def _tyc_respite_parse_district(addr: str) -> tuple:
+    """解析喘息服務提供單位地址的縣市／行政區。地址多數為「桃園市OO區」開頭，但共用的 ADDR_RE
+    對「平鎮區」等名稱中途含「鎮」字的行政區會誤判（截斷成「平鎮」），比照 build_tyc_hospice()／
+    build_tyc_placement() 改用桃園市固定13區清單（TYC_DISTRICTS）比對；少數（居家/機構各2筆）
+    地址位於新北市、新竹縣等桃園市以外縣市，改用 parse_county_district(strict=True) 一般規則解析。"""
+    if addr.startswith("桃園市"):
+        district = next((d for d in TYC_DISTRICTS if d in addr), "")
+        return "桃園市", district
+    return parse_county_district(addr, strict=True)
+
+
+def _tyc_respite_read_csv(url: str, category: str) -> list:
+    """下載並解析單一喘息服務 CSV（居家或機構），回傳該類別的 records 陣列。"""
+    text = fetch(url, encoding="cp950")
+    reader = csv.DictReader(io.StringIO(text))
+    records = []
+    for row in reader:
+        name = (row.get("辦理單位", "") or "").strip()
+        if not name:
+            # 機構喘息 CSV 尾端有大量僅含「資源彙整機關」欄位的空白列，以「辦理單位」非空過濾
+            continue
+        addr = (row.get("地址", "") or "").strip()
+        county, district = _tyc_respite_parse_district(addr)
+        # 服務區域欄位在居家喘息 CSV 中為多行文字（同一單位可涵蓋多個行政區），機構喘息固定「全區」
+        service_area = (row.get("服務區域", "") or "").strip().replace("\n", "、").replace("\r", "")
+        records.append([
+            category,                                    # 0 category
+            name,                                         # 1 name
+            (row.get("負責人", "") or "").strip(),        # 2 contact
+            (row.get("連絡電話", "") or "").strip(),      # 3 phone
+            (row.get("傳真", "") or "").strip(),           # 4 fax
+            (row.get("電子郵件", "") or "").strip(),      # 5 email
+            county,                                        # 6 county
+            district,                                       # 7 district
+            service_area,                                    # 8 service_area
+            addr,                                             # 9 address
+        ])
+    return records
+
+
+def build_tyc_respite():
+    """桃園市喘息服務提供單位（桃園市政府衛生局，DCAT dataset https://data.gov.tw/dataset/8572 ，
+    dataset id 94332）。
+
+    來源為兩份 CSV（TYC_RESPITE_HOME_URL 居家喘息、TYC_RESPITE_INST_URL 機構喘息），**編碼皆為
+    BIG5(cp950)**，與 build_tyltc()/build_tyc_hospice() 同一例外，需 fetch(url, encoding="cp950")
+    下載解碼。原始欄位（兩檔一致）：性質、資源彙整機關、辦理單位、成立日期、立案文號、負責人、
+    連絡電話、傳真、電子郵件、地址、服務項目、服務區域、相關網址、X坐標、Y坐標、備註、最後更新時間。
+
+    實測「性質」「成立日期」「立案文號」「相關網址」「備註」欄位全部為空白，本函式不採用；「負責人」
+    「傳真」大多有值，予以保留。「服務項目」在居家喘息 CSV 固定為「居家喘息」、機構喘息 CSV 固定為
+    「機構喘息」，作為 category 欄位。
+
+    機構喘息 CSV 共153行，但尾端有大量僅含「資源彙整機關」欄位（值為「桃園市政府」）的空白列，本
+    函式以「辦理單位」欄位非空過濾，實際有效資料為92筆；居家喘息 CSV 146筆皆為有效資料。
+
+    **無經緯度座標**（X/Y坐標欄位全空），故本頁不含地圖。地址多數為「桃園市OO區」開頭，比照
+    build_tyc_hospice() 用固定13區清單（TYC_DISTRICTS）解析（避免「平鎮區」等名稱誤判為「平鎮」），
+    少數（居家/機構各2筆）位於新北市、新竹縣等桃園市以外縣市，改用 parse_county_district(strict=True)
+    一般規則解析，詳見 _tyc_respite_parse_district()。
+
+    「服務區域」欄位在居家喘息 CSV 為多行文字（同一居家喘息單位可同時涵蓋多個行政區，如「中壢區\\n
+    楊梅區\\n大園區」），代表該單位實際服務範圍，比機構本身地址所在區更貼近使用者「我住OO區，哪些
+    單位可服務我」的查詢情境；機構喘息 CSV 此欄位固定為「全區」。本函式將換行字元轉為頓號「、」
+    後原文保留，前端「行政區」篩選會同時比對地址所在區與此欄位是否包含所選行政區。
+
+    電話／傳真欄位格式不一（少數夾帶「分機」文字），原文照登不重新格式化。
+
+    來源網址與同平台其他 opendata.tycg.gov.tw 資料集一致，CORS 僅允許該平台網域，改由本函式於
+    伺服器端下載並輸出內嵌 JS 版本，避免依賴外部網址即時可用性。
+    """
+    print("下載 桃園市喘息服務提供單位（居家）...", file=sys.stderr)
+    home_records = _tyc_respite_read_csv(TYC_RESPITE_HOME_URL, "居家喘息")
+    print(f"  共 {len(home_records)} 筆", file=sys.stderr)
+    print("下載 桃園市喘息服務提供單位（機構）...", file=sys.stderr)
+    inst_records = _tyc_respite_read_csv(TYC_RESPITE_INST_URL, "機構喘息")
+    print(f"  共 {len(inst_records)} 筆", file=sys.stderr)
+    records = home_records + inst_records
+    fields = [
+        "category", "name", "contact", "phone", "fax", "email",
+        "county", "district", "service_area", "address",
+    ]
+    return {"fields": fields, "rows": records}
+
+
 
 # 2010（五都合併）／2014（桃園升格）前的舊縣名，看護機構名單偶爾沿用舊稱（如「台北縣」），
 # 供 _caregiver_regions() 對應到現行縣市名稱。
@@ -1999,6 +2092,15 @@ DATASETS = [
         "meta_key": "tycHospice",
         "title": "桃園市社區安寧療護資源一覽表",
         "source": lambda: TYC_HOSPICE_URL,
+    },
+    {
+        "key": "tyc-respite",
+        "builder": build_tyc_respite,
+        "json": "data/tyc-respite.json",
+        "js_var": "TYC_RESPITE_DATA",
+        "meta_key": "tycRespite",
+        "title": "桃園市喘息服務提供單位",
+        "source": lambda: TYC_RESPITE_HOME_URL,
     },
     {
         "key": "caregiver",
