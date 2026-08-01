@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-01T00:10:37.409975+00:00",
+  "generatedAt": "2026-08-01T02:14:22.924168+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -106,7 +106,7 @@
     "title": "桃園市社區安寧療護資源一覽表"
   },
   "caregiver": {
-    "count": 32,
+    "count": 33,
     "source": "使用者人工蒐集網路公開資訊（非政府開放資料，無官方驗證）",
     "title": "看護／照服機構名錄"
   },
