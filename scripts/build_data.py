@@ -278,6 +278,9 @@ NTPC_NURSING_URL_TEMPLATE = (
     "https://data.ntpc.gov.tw/api/datasets/467cb02f-1f94-4fa1-a440-4f08575cf181/csv"
     "?page={page}&size=100"
 )
+NTPC_SILVER_HAIR_CLUB_URL = (
+    "https://data.ntpc.gov.tw/api/datasets/f531a808-4aab-4e5e-93f0-c34f9ff97a78/csv/file"
+)
 CHIAYI_LTC_SOURCE_PAGE = "https://ltccenter.cyhg.gov.tw/cp.aspx?n=F7AEF7883C88532B"
 CHIAYI_LTC_INSTITUTIONS_CSV = "scripts/sources/chiayi-ltc/institutions.csv"
 CHIAYI_LTC_NURSING_CSV = "scripts/sources/chiayi-ltc/nursing-homes.csv"
@@ -936,6 +939,47 @@ def build_ntpc_nursing():
     print(f"  共 {len(records)} 筆", file=sys.stderr)
     fields = ["id", "name", "district", "address", "contact", "phone", "extension",
               "bed", "staffRequired", "date"]
+    return {"fields": fields, "rows": records}
+
+
+def build_ntpc_silver_hair_club():
+    """新北市銀髮俱樂部（新北市政府社會局，DCAT dataset
+    https://data.gov.tw/dataset/8572，dataset id 124643，授權：政府資料開放授權條款-第1版，
+    更新頻率：每1年）。
+
+    downloadURL：NTPC_SILVER_HAIR_CLUB_URL（單一 CSV 檔案，非分頁 API），共 1197 筆。來源網址
+    CORS 標頭僅允許 data.ntpc.gov.tw 網域（與 build_ntpc_nursing() 相同情況），前端無法直接
+    fetch，本腳本於伺服器端下載，另輸出內嵌 JS 版本供前端以 <script> 直接載入。
+
+    來源欄位：seqno(序號)/title(名稱)/county(縣市，固定為「新北市」)/countycode/
+    area(行政區，已是中文，如「板橋區」)/areacode/address(地址)/
+    localcall service(市話)/mobile telephone(手機)。county、area 皆已是中文名稱，
+    不需從地址解析行政區，直接採用 area 欄位。
+
+    address 欄位**不含**「新北市」＋行政區字首（例如僅「中山路二段250巷1號(埔墘福德宮)」），
+    前端顯示地址原文照登，但轉 Google Maps 連結時需自行補上「新北市」＋該筆 area 前綴才能正確
+    查到地點，見 ntpc-silver-hair-club/app.js 的 addressLink()。
+
+    電話分市話（localcall service）與手機（mobile telephone）兩欄，本腳本原樣輸出兩欄
+    （不合併字串），交由前端合併顯示並各自轉 tel: 連結，避免字串裁切/分隔符號歧義。
+
+    已知資料品質問題：極少數筆（實測 1 筆）市話與手機皆為空值，原文照登不處理。
+    """
+    print("下載 新北市銀髮俱樂部 ...", file=sys.stderr)
+    text = fetch(NTPC_SILVER_HAIR_CLUB_URL)
+    reader = csv.DictReader(io.StringIO(text))
+    records = []
+    for row in reader:
+        records.append([
+            (row.get("seqno", "") or "").strip(),                    # 0 id
+            (row.get("title", "") or "").strip(),                    # 1 name
+            (row.get("area", "") or "").strip(),                     # 2 district
+            (row.get("address", "") or "").strip(),                  # 3 address
+            (row.get("localcall service", "") or "").strip(),        # 4 localPhone
+            (row.get("mobile telephone", "") or "").strip(),         # 5 mobilePhone
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "name", "district", "address", "localPhone", "mobilePhone"]
     return {"fields": fields, "rows": records}
 
 
@@ -2002,6 +2046,15 @@ DATASETS = [
         "meta_key": "ntpcNursing",
         "title": "新北市一般護理之家清冊",
         "source": lambda: NTPC_NURSING_URL_TEMPLATE.format(page=0),
+    },
+    {
+        "key": "ntpc-silver-hair-club",
+        "builder": build_ntpc_silver_hair_club,
+        "json": "data/ntpc-silver-hair-club.json",
+        "js_var": "NTPC_SILVER_HAIR_CLUB_DATA",
+        "meta_key": "ntpcSilverHairClub",
+        "title": "新北市銀髮俱樂部",
+        "source": lambda: NTPC_SILVER_HAIR_CLUB_URL,
     },
     {
         "key": "chiayi-ltc",

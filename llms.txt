@@ -1,6 +1,6 @@
 # 政府開放資料儀表板
 
-> 以政府開放資料建置的靜態網站，整理二十三個長照/老人福利/身心障礙相關資料集為互動式儀表板，提供篩選、統計圖表與分頁表格，部分資料集含地圖呈現。無後端、無建置工具，直接部署於 GitHub Pages。
+> 以政府開放資料建置的靜態網站，整理二十五個長照/老人福利/身心障礙相關資料集為互動式儀表板，提供篩選、統計圖表與分頁表格，部分資料集含地圖呈現。無後端、無建置工具，直接部署於 GitHub Pages。
 
 本站所有資料皆來自各縣市政府開放資料平台或公告頁面，經清理、地址解析與格式轉換後靜態化，原始來源與授權資訊詳見各資料集頁面下方連結的 llms.txt。
 
@@ -17,6 +17,7 @@
 - [臺南市居家護理機構](https://www.sunkuo.cc/gov-open-data-dashboard/tn-homecare-nursing/index.html): 臺南市各行政區居家護理所清單（114年度），提供行政區／關鍵字篩選與統計圖表。 (https://www.sunkuo.cc/gov-open-data-dashboard/tn-homecare-nursing/llms.txt)
 - [臺中市一般護理之家清冊](https://www.sunkuo.cc/gov-open-data-dashboard/tc-nursing/index.html): 臺中市各行政區一般護理之家清單，含一般床／呼吸器依賴床許可與開放床數、評鑑結果、督考結果，提供行政區／關鍵字篩選與統計圖表。 (https://www.sunkuo.cc/gov-open-data-dashboard/tc-nursing/llms.txt)
 - [新北市一般護理之家清冊](https://www.sunkuo.cc/gov-open-data-dashboard/ntpc-nursing/index.html): 新北市各行政區一般護理之家清單，含地址、聯絡人、電話、開放床數、機構應配置護理人員數，提供行政區／關鍵字篩選與統計圖表。 (https://www.sunkuo.cc/gov-open-data-dashboard/ntpc-nursing/llms.txt)
+- [新北市銀髮俱樂部](https://www.sunkuo.cc/gov-open-data-dashboard/ntpc-silver-hair-club/index.html): 新北市各行政區銀髮俱樂部據點清單，收錄名稱、地址、市話／手機聯絡電話，並提供官方網站與各據點活動查詢連結，提供行政區／關鍵字篩選與統計圖表，無經緯度座標。 (https://www.sunkuo.cc/gov-open-data-dashboard/ntpc-silver-hair-club/llms.txt)
 - [嘉義縣立案長照及護理之家機構一覽](https://www.sunkuo.cc/gov-open-data-dashboard/chiayi-ltc/index.html): 合併嘉義縣立案住宿長照機構名單與護理之家名單，收錄機構類型、機構名稱、鄉鎮市、地址、電話、負責人、許可／開業床數，提供機構類型／鄉鎮市／關鍵字篩選與統計圖表。資料來源為使用者提供之本機 CSV、無公開下載網址，需人工更新。 (https://www.sunkuo.cc/gov-open-data-dashboard/chiayi-ltc/llms.txt)
 - [屏東縣老人長期照顧機構](https://www.sunkuo.cc/gov-open-data-dashboard/pingtung-ltc/index.html): 屏東縣老人長期照顧機構清單，收錄機構名稱、地址、電話，機構類型（養護型／失智型／未標示）由機構名稱解析而來，鄉鎮市由地址欄位解析，提供鄉鎮市／機構類型／關鍵字篩選與統計圖表，無經緯度座標。 (https://www.sunkuo.cc/gov-open-data-dashboard/pingtung-ltc/llms.txt)
 - [臺中市失能者交通接送服務](https://www.sunkuo.cc/gov-open-data-dashboard/tc-transport/index.html): 協助中重度失能者滿足以就醫及使用長期照顧服務為主要目的之交通服務需求，收錄辦理單位名稱、連絡電話、地址、服務區域，含經緯度座標（由原始 TWD97 TM2 平面座標換算），於地圖上呈現，並提供服務區域（多選）／辦理單位所在行政區／關鍵字篩選與統計圖表。 (https://www.sunkuo.cc/gov-open-data-dashboard/tc-transport/llms.txt)

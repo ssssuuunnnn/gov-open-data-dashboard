@@ -175,6 +175,17 @@
     },
     {
       "@type": "Dataset",
+      "name": "新北市銀髮俱樂部",
+      "description": "新北市政府社會局公告之銀髮俱樂部名冊，收錄各行政區據點名稱、地址、市話與手機聯絡電話，更新頻率每年。",
+      "url": "https://www.sunkuo.cc/gov-open-data-dashboard/ntpc-silver-hair-club/index.html",
+      "license": "http://data.gov.tw/license",
+      "creator": {
+        "@type": "Organization",
+        "name": "新北市政府社會局"
+      }
+    },
+    {
+      "@type": "Dataset",
       "name": "嘉義縣立案長照及護理之家機構一覽",
       "description": "嘉義縣政府長期照護管理中心提供之嘉義縣立案住宿長照機構名單與護理之家名單，合併收錄機構類型、機構名稱、鄉鎮市、地址、電話、負責人、許可床數、開業床數與核准開業日期等資訊，人工提供、無公開下載網址。",
       "url": "https://www.sunkuo.cc/gov-open-data-dashboard/chiayi-ltc/index.html",
@@ -520,6 +531,12 @@
       <div class="desc">新北市政府衛生局提供，列出各行政區護理之家機構名稱、地址、聯絡人、電話、開放床數與應配置護理人員數，可依行政區、關鍵字篩選並瀏覽統計圖表。</div>
       <div class="footline" id="ntpc-nursing-count">資料筆數載入中…</div>
     </a>
+    <a class="home-card" href="ntpc-silver-hair-club/index.html" data-county="新北市" data-category="ltc">
+      <span class="tag">新北市</span>
+      <h2>新北市銀髮俱樂部</h2>
+      <div class="desc">新北市政府社會局提供，列出各行政區銀髮俱樂部據點名稱、地址、市話與手機聯絡電話，並提供官方網站與各據點活動查詢連結，可依行政區、關鍵字篩選並瀏覽統計圖表。</div>
+      <div class="footline" id="ntpc-silver-hair-club-count">資料筆數載入中…</div>
+    </a>
     <a class="home-card" href="chiayi-ltc/index.html" data-county="嘉義縣" data-category="ltc">
       <span class="tag">嘉義縣</span>
       <h2>嘉義縣立案長照及護理之家機構一覽</h2>
@@ -765,6 +782,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.ntpcNursing) {
     document.getElementById("ntpc-nursing-count").textContent = `共 ${meta.ntpcNursing.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.ntpcSilverHairClub) {
+    document.getElementById("ntpc-silver-hair-club-count").textContent = `共 ${meta.ntpcSilverHairClub.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
   if (meta.chiayiLtc) {
     document.getElementById("chiayi-ltc-count").textContent = `共 ${meta.chiayiLtc.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-31T14:04:22.322586+00:00",
+  "generatedAt": "2026-08-01T00:10:37.409975+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -124,5 +124,10 @@
     "count": 238,
     "source": "https://opendata.tycg.gov.tw/api/dataset/7ae18138-74f9-4ebb-8b7d-f03d9ddb1ef5/resource/0b949cb1-bfc3-4d02-8474-35e42a932643/download",
     "title": "桃園市喘息服務提供單位"
+  },
+  "ntpcSilverHairClub": {
+    "count": 1197,
+    "source": "https://data.ntpc.gov.tw/api/datasets/f531a808-4aab-4e5e-93f0-c34f9ff97a78/csv/file",
+    "title": "新北市銀髮俱樂部"
   }
 }

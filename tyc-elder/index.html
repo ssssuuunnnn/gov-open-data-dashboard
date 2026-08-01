@@ -64,6 +64,26 @@
   }
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://www.sunkuo.cc/gov-open-data-dashboard/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "2026 桃園市長照機構查詢",
+      "item": "https://www.sunkuo.cc/gov-open-data-dashboard/tyc-elder/index.html"
+    }
+  ]
+}
+</script>
 </head>
 <body>
 <header class="site-header">
@@ -135,7 +155,14 @@
   </div>
 </main>
 <div class="back-home-cta">
-  <a href="../index.html">← 更多長照相關資訊</a>
+  <div class="related-pages">
+    <strong>相關資料集：</strong>
+    <a href="../tyc-placement/index.html">桃園市失能老人長照機構暨老人保護安置機構名冊</a>
+    <a href="../yl-ltc/index.html">宜蘭縣立案老人長期照顧及安養機構名冊</a>
+    <a href="../hccg-elder/index.html">新竹市老人安養機構地圖查詢</a>
+    <a href="../pingtung-ltc/index.html">屏東縣長照機構名冊查詢</a>
+  </div>
+  <a href="../index.html" class="home-cta-btn"><span class="arrow" aria-hidden="true">←</span>更多長照相關資訊</a>
 </div>
 <footer class="site-footer">
   資料來源：<a href="https://opendata.tycg.gov.tw/api/dataset/536bb44b-b9f1-4336-ad26-34b9e25b3a68/resource/3d7e3b4c-8bc5-47c4-85a9-eec70415b189/download" target="_blank" rel="noopener">桃園市政府社會局 桃園市老人福利機構一覽表</a>（桃園市政府開放資料平台）。

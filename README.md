@@ -1,6 +1,6 @@
 # 政府開放資料儀表板
 
-以政府開放資料建置的靜態網站，整理二十四個長照/老人福利/身心障礙相關資料集為互動式儀表板，可直接部署於 GitHub Pages。
+以政府開放資料建置的靜態網站，整理二十五個長照/老人福利/身心障礙相關資料集為互動式儀表板，可直接部署於 GitHub Pages。
 
 ## 資料集
 
@@ -17,6 +17,7 @@
 | `tn-homecare-nursing/` | 臺南市居家護理機構 | 臺南市政府衛生局 | 臺南市各行政區居家護理所清單（114年度），提供行政區／關鍵字篩選與統計圖表 |
 | `tc-nursing/` | 臺中市一般護理之家清冊 | 臺中市政府衛生局 | 臺中市各行政區一般護理之家清單，含一般床／呼吸器依賴床許可與開放床數、評鑑結果、督考結果，提供行政區／關鍵字篩選與統計圖表 |
 | `ntpc-nursing/` | 新北市一般護理之家清冊 | 新北市政府衛生局 | 新北市各行政區一般護理之家清單，含地址、聯絡人、電話、開放床數、機構應配置護理人員數，提供行政區／關鍵字篩選與統計圖表 |
+| `ntpc-silver-hair-club/` | 新北市銀髮俱樂部 | 新北市政府社會局 | 新北市各行政區銀髮俱樂部據點清單，收錄名稱、地址、市話與手機聯絡電話，並提供官方網站與各據點活動查詢連結，提供行政區／關鍵字篩選與統計圖表，無經緯度座標 |
 | `chiayi-ltc/` | 嘉義縣立案長照及護理之家機構一覽 | 嘉義縣政府長期照護管理中心 | 合併嘉義縣立案住宿長照機構名單與護理之家名單，收錄機構類型、機構名稱、鄉鎮市、地址、電話、負責人、許可／開業床數，提供機構類型／鄉鎮市／關鍵字篩選與統計圖表。**資料來源為使用者提供之本機 CSV、無公開下載網址**，需人工更新，詳見下方「更新資料」說明 |
 | `pingtung-ltc/` | 屏東縣老人長期照顧機構 | 屏東縣政府社會處 | 屏東縣老人長期照顧機構清單，收錄機構名稱、地址、電話，機構類型（養護型／失智型／未標示）由機構名稱解析而來，鄉鎮市由地址欄位解析，提供鄉鎮市／機構類型／關鍵字篩選與統計圖表，無經緯度座標 |
 | `tc-transport/` | 臺中市失能者交通接送服務 | 臺中市政府衛生局 | 協助中重度失能者滿足以就醫及使用長期照顧服務為主要目的之交通服務需求，收錄辦理單位名稱、連絡電話、地址、服務區域，含經緯度座標（由原始 TWD97 TM2 平面座標換算），於地圖上呈現，並提供服務區域（多選）／辦理單位所在行政區／關鍵字篩選與統計圖表 |
@@ -87,6 +88,8 @@ tc-nursing/index.html 臺中市一般護理之家清冊儀表板（Chart.js 圖�
 tc-nursing/app.js
 ntpc-nursing/index.html 新北市一般護理之家清冊儀表板（Chart.js 圖表 + 篩選表格，無地圖）
 ntpc-nursing/app.js
+ntpc-silver-hair-club/index.html 新北市銀髮俱樂部儀表板（Chart.js 圖表 + 篩選表格，無地圖）
+ntpc-silver-hair-club/app.js
 chiayi-ltc/index.html 嘉義縣立案長照及護理之家機構一覽儀表板（Chart.js 圖表 + 篩選表格，無地圖）
 chiayi-ltc/app.js
 pingtung-ltc/index.html 屏東縣老人長期照顧機構儀表板（Chart.js 圖表 + 篩選表格，無地圖）
@@ -156,6 +159,10 @@ data/tc-nursing.js    同上資料的內嵌 JS 版本（window.TC_NURSING_DATA�
 data/ntpc-nursing.json 新北市一般護理之家清冊資料（由 scripts/build_data.py 產生）
 data/ntpc-nursing.js   同上資料的內嵌 JS 版本（window.NTPC_NURSING_DATA），供 ntpc-nursing 頁面以
                        <script> 標籤直接載入，因來源網址 CORS 僅允許 data.ntpc.gov.tw 網域，不透過 fetch()
+data/ntpc-silver-hair-club.json 新北市銀髮俱樂部資料（由 scripts/build_data.py 產生）
+data/ntpc-silver-hair-club.js   同上資料的內嵌 JS 版本（window.NTPC_SILVER_HAIR_CLUB_DATA），供
+                       ntpc-silver-hair-club 頁面以 <script> 標籤直接載入，因來源網址 CORS 僅允許
+                       data.ntpc.gov.tw 網域，不透過 fetch()
 data/chiayi-ltc.json  嘉義縣立案長照及護理之家機構一覽資料（由 scripts/build_data.py 讀取本機 CSV 產生）
 data/chiayi-ltc.js    同上資料的內嵌 JS 版本（window.CHIAYI_LTC_DATA），供 chiayi-ltc 頁面以
                        <script> 標籤直接載入，因無公開下載網址，不透過 fetch()
@@ -227,10 +234,10 @@ scripts/sources/caregiver/   看護／照服機構名錄的原始 CSV（caregive
 python3 scripts/build_data.py
 ```
 
-不帶參數執行會重新下載十九份 CSV/JSON（長照ABC據點、巷弄長照站、桃園市老人福利機構一覽表、
+不帶參數執行會重新下載二十份 CSV/JSON（長照ABC據點、巷弄長照站、桃園市老人福利機構一覽表、
 銀髮族服務-居家長照機構、新竹縣長照機構名冊、宜蘭縣立案老人長期照顧及安養機構名冊、
 新竹市老人福利機構一覽表、臺南市居家護理機構、臺中市一般護理之家清冊、新北市一般護理之家清冊、
-屏東縣老人長期照顧機構、臺中市失能者交通接送服務、桃園市長期照護專業服務特約單位、
+新北市銀髮俱樂部、屏東縣老人長期照顧機構、臺中市失能者交通接送服務、桃園市長期照護專業服務特約單位、
 桃園市長者裝置活動假牙合約醫療院所、桃園市身心障礙類別、向度之鑑定醫院名冊、
 桃園市失能老人接受長期照顧機構服務暨老人保護安置機構名冊、臺北市假牙補助醫療院所名單、
 桃園市長照交通接送服務單位、桃園市社區安寧療護資源一覽表）並覆寫對應
@@ -263,6 +270,7 @@ python3 scripts/build_data.py tn-denture          # 只重新產生臺南市長�
 python3 scripts/build_data.py kcg-denture         # 只重新產生115年高雄市免費裝假牙特約牙醫醫療院所
 python3 scripts/build_data.py caregiver           # 只重新產生看護／照服機構名錄
 python3 scripts/build_data.py tc-nursing ntpc-nursing   # 可同時指定多個，以空白分隔
+python3 scripts/build_data.py ntpc-silver-hair-club     # 只重新產生新北市銀髮俱樂部
 python3 scripts/build_data.py --help              # 列出所有可用的資料集 key
 ```
 
