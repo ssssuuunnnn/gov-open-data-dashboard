@@ -621,6 +621,12 @@
       <div class="desc">使用者人工蒐集目前網路上找得到的私人看護／居家照護機構名單，列出機構名稱、官網、收費頁面、聯絡電話、服務地區與統一編號，可依服務地區、是否有公開收費頁面篩選。<strong>非政府開放資料，未經官方驗證，僅供參考</strong>。</div>
       <div class="footline" id="caregiver-count">資料筆數載入中…</div>
     </a>
+    <a class="home-card private" href="dialysis-transport/index.html" data-county="all" data-category="private">
+      <span class="tag">全國 · 部分非官方資料</span>
+      <h2>洗腎（透析）交通接送服務查詢</h2>
+      <div class="desc">整理長照司「交通接送服務」BD03／DA01 給付碼別官方制度說明（給付額度、給付內容、給付價格），並彙整使用者人工蒐集之全台洗腎（透析）就醫民間接送/租賃服務單位名稱、官網與聯絡電話，可依關鍵字搜尋。<strong>民間接送清單非政府開放資料，未經官方驗證，僅供參考</strong>。</div>
+      <div class="footline" id="dialysis-transport-count">資料筆數載入中…</div>
+    </a>
     <p class="no-match" id="county-no-match" style="display:none; grid-column: 1 / -1; text-align:center; color: var(--color-muted); padding: 24px 0;">
       沒有符合所選縣市的資料集，請調整篩選條件。
     </p>
@@ -827,6 +833,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.caregiver) {
     document.getElementById("caregiver-count").textContent = `共 ${meta.caregiver.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.dialysisTransport) {
+    document.getElementById("dialysis-transport-count").textContent = `共 ${meta.dialysisTransport.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
 }).catch(() => {});
 

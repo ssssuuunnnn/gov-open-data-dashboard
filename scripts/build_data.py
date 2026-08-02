@@ -197,6 +197,17 @@
     換行/空白，本腳本會 strip 處理；僅3筆有填「統一編號」，其餘留空字串；未來如需更新資料，需
     人工以最新 CSV 覆蓋 scripts/sources/caregiver/caregivers.csv 後重新執行本腳本，
     詳見 build_caregivers()）
+23. 洗腎（透析）接送資源清單（使用者人工蒐集網路公開資訊，**非政府開放資料**，無提供機關、無官方驗證）
+    （此資料集由使用者手動整理目前網路上找得到的洗腎/透析民間接送服務單位，共15筆，原始 CSV
+    已存放於 scripts/sources/dialysis-transport/dialysis-transport.csv，欄位：名稱/網址/
+    聯絡電話/服務地區；因無公開下載網址、非官方驗證資料，前端頁面會明確標示免責聲明；「服務地區」
+    欄位極度稀疏（15筆僅5筆有填）故不做縣市正規化篩選，直接保留原始字串；「聯絡電話」欄位偶有
+    多餘空白/tab 字元，本腳本會清理後輸出；未來如需更新資料，需人工以最新 CSV 覆蓋
+    scripts/sources/dialysis-transport/dialysis-transport.csv 後重新執行本腳本，
+    詳見 build_dialysis_transport()。頁面另有一段官方「交通接送服務」BD03/DA01 制度說明文字，
+    來源為長期照顧司 1966 長照專區公告頁 https://1966.gov.tw/LTC/cp-6452-69937-207.html
+    （建檔日期 111-06-10、更新時間 114-10-23），該頁僅為公告內容非可下載資料，不進入本腳本
+    下載流程，僅供頁面引用來源連結）
 
 用法：
     python3 scripts/build_data.py
@@ -242,6 +253,8 @@
     data/tyc-hospice.js    (window.TYC_HOSPICE_DATA，同上，供前端以 <script> 直接載入)
     data/caregiver.json
     data/caregiver.js      (window.CAREGIVER_DATA，同上，供前端以 <script> 直接載入)
+    data/dialysis-transport.json
+    data/dialysis-transport.js  (window.DIALYSIS_TRANSPORT_DATA，同上，供前端以 <script> 直接載入)
     data/meta.json  (資料更新時間等資訊)
 
 額外相依套件：
@@ -330,6 +343,8 @@ TN_DENTURE_PDF_URL = (
     "F_1780645430477e.pdf"
 )
 CAREGIVER_CSV = "scripts/sources/caregiver/caregivers.csv"
+
+DIALYSIS_TRANSPORT_CSV = "scripts/sources/dialysis-transport/dialysis-transport.csv"
 
 # 台灣22縣市清單（正式「臺」寫法），用於從看護機構「服務地區」自由文字欄位以子字串比對方式
 # 偵測涵蓋縣市，詳見 build_caregivers()。CAREGIVER_REGION_ALIASES 額外收錄常見「台」簡寫寫法，
@@ -1761,6 +1776,46 @@ def build_caregivers():
     return {"fields": fields, "rows": records}
 
 
+def build_dialysis_transport():
+    """洗腎（透析）接送資源清單（使用者人工蒐集網路公開資訊，非政府開放資料，無提供機關、無官方驗證）。
+
+    原始 CSV 存放於 scripts/sources/dialysis-transport/dialysis-transport.csv（共15筆，欄位：
+    名稱/網址/聯絡電話/服務地區），性質與 build_caregivers() 相同，皆為使用者自行整理之民間資源
+    清單，前端頁面會明確標示免責聲明。「服務地區」欄位極度稀疏（15筆僅5筆有填：新竹、基隆、屏東、
+    彰化），資料量過小不足以做縣市正規化／篩選下拉，直接保留原始字串（空白則為空字串，前端顯示
+    「—」），不比照 caregiver 的 regions 陣列偵測。「聯絡電話」欄位偶有多餘空白、tab 字元（來自
+    原始試算表複製貼上），逐一 strip 後輸出；部分欄位含分機或以其他符號分隔多組電話，原文照登
+    不重新拆分。
+
+    頁面另有一段「長照交通接送服務制度說明」（BD03 社區式服務交通接送／DA01 交通接送給付碼別），
+    文字來源為衛福部長期照顧司於 1966 長照專區之公告頁 https://1966.gov.tw/LTC/cp-6452-69937-207.html
+    （建檔日期 111-06-10、更新時間 114-10-23），該頁僅為公告內容非可下載 CSV/JSON，故不進入本
+    自動下載流程，僅作為頁面「制度說明」段落之引用來源連結。
+
+    未來如需更新民間接送清單，需人工以最新 CSV 覆蓋
+    scripts/sources/dialysis-transport/dialysis-transport.csv 後重新執行本腳本
+    （`python3 scripts/build_data.py dialysis-transport`）。
+    """
+    print("讀取 洗腎（透析）接送資源清單 ...", file=sys.stderr)
+    records = []
+    with open(DIALYSIS_TRANSPORT_CSV, encoding="utf-8-sig") as f:
+        for row in csv.DictReader(f):
+            name = (row.get("名稱") or "").strip()
+            if not name:
+                continue
+            phone_raw = (row.get("聯絡電話") or "").replace("\t", " ")
+            phone = " / ".join(p.strip() for p in phone_raw.split("/") if p.strip())
+            records.append([
+                name,                                     # 0 name
+                (row.get("網址") or "").strip(),          # 1 url
+                phone,                                     # 2 phone
+                (row.get("服務地區") or "").strip(),      # 3 serviceArea
+            ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["name", "url", "phone", "serviceArea"]
+    return {"fields": fields, "rows": records}
+
+
     """去除 PDF 儲存格內因欄寬過窄產生的換行，並還原被誤用的 CJK 部首符號為正常漢字。"""
     if not s:
         return ""
@@ -2162,6 +2217,15 @@ DATASETS = [
         "js_var": "CAREGIVER_DATA",
         "meta_key": "caregiver",
         "title": "看護／照服機構名錄",
+        "source": lambda: "使用者人工蒐集網路公開資訊（非政府開放資料，無官方驗證）",
+    },
+    {
+        "key": "dialysis-transport",
+        "builder": build_dialysis_transport,
+        "json": "data/dialysis-transport.json",
+        "js_var": "DIALYSIS_TRANSPORT_DATA",
+        "meta_key": "dialysisTransport",
+        "title": "洗腎（透析）接送資源清單",
         "source": lambda: "使用者人工蒐集網路公開資訊（非政府開放資料，無官方驗證）",
     },
     {

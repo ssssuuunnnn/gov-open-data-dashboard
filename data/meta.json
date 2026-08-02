@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-01T02:30:46.971608+00:00",
+  "generatedAt": "2026-08-02T12:54:15.875535+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -129,5 +129,10 @@
     "count": 1197,
     "source": "https://data.ntpc.gov.tw/api/datasets/f531a808-4aab-4e5e-93f0-c34f9ff97a78/csv/file",
     "title": "新北市銀髮俱樂部"
+  },
+  "dialysisTransport": {
+    "count": 16,
+    "source": "使用者人工蒐集網路公開資訊（非政府開放資料，無官方驗證）",
+    "title": "洗腎（透析）接送資源清單"
   }
 }

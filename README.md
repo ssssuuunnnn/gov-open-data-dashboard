@@ -1,6 +1,6 @@
 # 政府開放資料儀表板
 
-以政府開放資料建置的靜態網站，整理二十五個長照/老人福利/身心障礙相關資料集為互動式儀表板，可直接部署於 GitHub Pages。
+以政府開放資料建置的靜態網站，整理二十七個長照/老人福利/身心障礙相關資料集為互動式儀表板，可直接部署於 GitHub Pages。
 
 ## 資料集
 
@@ -32,6 +32,7 @@
 | `tn-denture/` | 臺南市長者免費裝置全口活動假牙計畫合約醫療院所 | 臺南市政府衛生局 | 臺南市65歲以上長者及55歲以上原住民免費裝置全口活動假牙計畫的合約牙科醫療院所名單，共161筆，收錄編號、地區、機構名稱、地址、電話，並整理申請資格、補助金額（每人每顎上限2萬2,000元、全口雙顎上限4萬4,000元）、申請與核銷期程等說明，提供地區／關鍵字篩選與統計圖表，無經緯度座標。**資料來源為衛生局公告 PDF、非結構化 CSV/API**，由 build_data.py 自動下載並用 pdfplumber 解析 |
 | `kcg-denture/` | 115年高雄市免費裝假牙特約牙醫醫療院所 | 高雄市政府衛生局 | 115年度免費裝假牙特約牙醫醫療院所名冊，共189筆，涵蓋34個行政區，收錄編號、行政區、機構名稱、地址、電話，並整理申請資格、篩檢期間地點、裝置期限、保固與維修規定、諮詢電話等說明；「機構類型」（醫院／衛生所／醫療站／牙醫診所）由名稱關鍵字啟發式推斷（非官方分類），提供行政區／機構類型／關鍵字篩選與統計圖表，無經緯度座標。**資料來源為衛生局公告 PDF，且 PDF 內文字為向量繪製圖形、無法程式化擷取文字**，改以人工視覺核對方式逐頁轉寫並寫死於 `data/source/kcg-denture-manual.json`，`build_kcg_denture()` 僅讀取該檔案組裝資料，**無法自動重新下載/解析更新**，需人工重新轉寫，詳見下方「更新資料」說明 |
 | `caregiver/` | 看護／照服機構名錄 | **無（使用者人工蒐集）** | 使用者手動整理目前網路上找得到的私人看護／居家照護機構名單（共35筆），收錄機構名稱、官網、收費頁面、聯絡電話、服務地區、統一編號，提供服務地區／是否有公開收費頁面／關鍵字篩選；**非政府開放資料，無提供機關、無官方驗證**，頁面明確標示免責聲明，資料來源為使用者提供之本機 CSV、無公開下載網址，需人工更新，詳見下方「更新資料」說明 |
+| `dialysis-transport/` | 洗腎（透析）交通接送服務查詢 | 部分為衛生福利部長期照顧司（制度說明）／**無（民間清單為使用者人工蒐集）** | 頁面上方整理長照司「交通接送服務」BD03（社區式服務交通接送）／DA01（交通接送）給付碼別官方制度說明（資料來源：1966長照專區公告頁），下方為使用者手動整理之全台洗腎（透析）就醫民間接送/租賃服務名單（共16筆），收錄名稱、官網、聯絡電話、服務地區，因資料量小且服務地區欄位稀疏僅提供關鍵字篩選；**民間接送清單非政府開放資料，無官方驗證**，頁面明確標示免責聲明，資料來源為使用者提供之本機 CSV、無公開下載網址，需人工更新，詳見下方「更新資料」說明 |
 
 原始資料下載網址：
 - https://ltcpap.mohw.gov.tw/publish/abc.csv
@@ -128,6 +129,9 @@ kcg-denture/app.js
 caregiver/index.html  看護／照服機構名錄儀表板（無圖表無地圖，僅篩選表格 + 統計卡；頁面上方另有
                        非官方資料免責聲明卡片）
 caregiver/app.js
+dialysis-transport/index.html  洗腎（透析）交通接送服務查詢儀表板（無圖表無地圖，僅關鍵字篩選表格 +
+                       統計卡；頁面上方另有 BD03/DA01 官方制度說明卡片與民間接送清單免責聲明卡片）
+dialysis-transport/app.js
 assets/style.css     共用樣式
 assets/table.js       共用分頁表格元件
 data/abc.json         長照ABC據點資料（由 scripts/build_data.py 產生）
@@ -211,6 +215,10 @@ data/kcg-denture.js   同上資料的內嵌 JS 版本（window.KCG_DENTURE_DATA�
 data/caregiver.json   看護／照服機構名錄資料（由 scripts/build_data.py 讀取本機 CSV 產生）
 data/caregiver.js     同上資料的內嵌 JS 版本（window.CAREGIVER_DATA），供 caregiver 頁面以
                        <script> 標籤直接載入，因無公開下載網址，不透過 fetch()
+data/dialysis-transport.json  洗腎（透析）接送資源清單資料（由 scripts/build_data.py 讀取本機
+                       CSV 產生；頁面上方 BD03/DA01 制度說明文字為靜態內容，未存於此檔案）
+data/dialysis-transport.js  同上資料的內嵌 JS 版本（window.DIALYSIS_TRANSPORT_DATA），供
+                       dialysis-transport 頁面以 <script> 標籤直接載入，因無公開下載網址，不透過 fetch()
 data/source/          長照專業服務特約單位來源 PDF（人工下載存放於此，供 build_data.py 解析）；
                        另含 kcg-denture-manual.json（115年高雄市免費裝假牙名冊人工轉寫結果）與
                        kcg-denture-115.pdf（原始公告 PDF 存檔，供未來人工核對/重新轉寫參考）
@@ -220,6 +228,8 @@ scripts/sources/chiayi-ltc/  嘉義縣立案長照及護理之家機構一覽的
                        nursing-homes.csv，人工提供，無公開下載網址，需人工更新後重跑 build_data.py）
 scripts/sources/caregiver/   看護／照服機構名錄的原始 CSV（caregivers.csv，使用者人工蒐集，
                        無公開下載網址，需人工更新後重跑 build_data.py）
+scripts/sources/dialysis-transport/  洗腎（透析）接送資源清單的原始 CSV（dialysis-transport.csv，
+                       使用者人工蒐集，無公開下載網址，需人工更新後重跑 build_data.py）
 ```
 
 由於原始資料來源伺服器未開放跨網域（CORS）存取（僅允許來源平台自己的網域），且欄位中的「縣市」「鄉鎮市區」
@@ -246,7 +256,9 @@ python3 scripts/build_data.py
 （若存在）產生 `data/specialty.json`／`data/specialty.js`，並讀取 `scripts/sources/chiayi-ltc/`、
 `scripts/sources/caregiver/` 下的本機 CSV 分別產生 `data/chiayi-ltc.json`／`data/chiayi-ltc.js`
 與 `data/caregiver.json`／`data/caregiver.js`（後者為使用者人工蒐集之非政府開放資料，見下方
-「更新資料集列表」與「更新「看護／照服機構名錄」」說明），以及讀取人工轉寫的
+「更新資料集列表」與「更新「看護／照服機構名錄」」說明），以及讀取 `scripts/sources/dialysis-transport/`
+下的本機 CSV 產生 `data/dialysis-transport.json`／`data/dialysis-transport.js`（同樣為使用者人工
+蒐集之非政府開放資料，見下方「更新「洗腎（透析）接送資源清單」」說明），還有讀取人工轉寫的
 `data/source/kcg-denture-manual.json` 產生 `data/kcg-denture.json`／`data/kcg-denture.js`
 （見下方「更新「115年高雄市免費裝假牙特約牙醫醫療院所」」說明）。這是**完整流程**，會對外發送多個網路請求且較耗時，
 **僅在明確需要全面更新所有資料集時才執行**；建議依資料集「更新頻率」（每1月 / 每1年 / 不定期）
@@ -269,6 +281,7 @@ python3 scripts/build_data.py tyc-respite         # 只重新產生桃園市喘�
 python3 scripts/build_data.py tn-denture          # 只重新產生臺南市長者免費裝置全口活動假牙計畫合約醫療院所
 python3 scripts/build_data.py kcg-denture         # 只重新產生115年高雄市免費裝假牙特約牙醫醫療院所
 python3 scripts/build_data.py caregiver           # 只重新產生看護／照服機構名錄
+python3 scripts/build_data.py dialysis-transport  # 只重新產生洗腎（透析）接送資源清單
 python3 scripts/build_data.py tc-nursing ntpc-nursing   # 可同時指定多個，以空白分隔
 python3 scripts/build_data.py ntpc-silver-hair-club     # 只重新產生新北市銀髮俱樂部
 python3 scripts/build_data.py --help              # 列出所有可用的資料集 key
@@ -335,6 +348,25 @@ python3 -m pip install pdfplumber
    `scripts/build_data.py` 的 `build_caregivers()` 與 `_caregiver_regions()`），無法辨識出具體
    縣市時 `regions` 會是空陣列，屬已知限制；建議抽樣核對幾筆機構名稱、服務地區解析是否合理。
 5. 因本資料集無官方驗證，頁面已於顯著位置加入免責聲明，新增/更新機構時請避免加入主觀評語或推薦排序。
+
+### 更新「洗腎（透析）交通接送服務查詢」
+
+此頁面分兩部分，更新方式不同：
+
+- **上方 BD03/DA01 制度說明**：內容為衛生福利部長期照顧司於
+  [1966長照專區公告頁](https://1966.gov.tw/LTC/cp-6452-69937-207.html) 公告之官方文字，屬靜態
+  內容直接寫在 `dialysis-transport/index.html`，非開放資料 CSV/JSON，若該公告頁內容有異動
+  （給付額度、給付價格等），需人工比對後更新頁面對應段落與「資料來源」附註的建檔/更新日期。
+- **下方民間洗腎接送資源清單**：**非政府開放資料**，為使用者手動蒐集目前網路上找得到的洗腎/透析
+  就醫民間接送業者，無公開下載網址、無官方驗證，需手動維護：
+  1. 取得最新版資源清單 CSV（UTF-8 編碼，欄位依序為：名稱／網址／聯絡電話／服務地區）。
+  2. 覆蓋 `scripts/sources/dialysis-transport/dialysis-transport.csv`，維持原有欄位名稱與順序。
+  3. 執行 `python3 scripts/build_data.py dialysis-transport` 只重新產生
+     `data/dialysis-transport.json`／`data/dialysis-transport.js`。
+  4. 「服務地區」欄位極度稀疏，本站不做縣市正規化，原文照登；建議抽樣核對幾筆名稱、電話、
+     網址連結是否有效。
+  5. 因本資料集無官方驗證，頁面已於顯著位置加入免責聲明，新增/更新業者時請避免加入主觀評語或
+     推薦排序。
 
 ## 本機預覽
 
