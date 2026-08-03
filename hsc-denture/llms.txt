@@ -1,0 +1,27 @@
+# 新竹縣中低收入老人補助裝置假牙特約醫療院所
+
+> 新竹縣政府社會處公告之中低收入老人補助裝置假牙特約醫療院所名冊，共7筆，收錄機構名稱、負責人、地址與電話。「機構類型」（醫院／牙醫診所）依機構名稱是否含「醫院」關鍵字啟發式推斷，非官方分類欄位。頁面另整理申請資格、補助內容/給付標準、申請方式/流程與應備文件等 Q&A 說明。提供鄉鎮市／機構類型／關鍵字篩選、統計卡片與圖表，無經緯度座標。
+
+- 提供機關：新竹縣政府社會處
+- 資料筆數：7 筆
+- 原始資料來源：https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/288/d6586e37-bce0-46eb-ae4e-08c5fa41a568.json （JSON）
+- 授權方式：政府資料開放授權條款-第1版
+- 建議查看頻率：不定期
+
+## 頁面內容
+
+- 儀表板頁面：https://www.sunkuo.cc/gov-open-data-dashboard/hsc-denture/index.html
+- 篩選條件、統計卡片、圖表與分頁表格皆基於上述原始資料運算；表格地址欄可直接連結 Google 地圖搜尋、電話欄可直接撥打。
+- 頁面上方另整理中低收入老人補助裝置假牙的申請資格、補助內容/給付標準、申請方式/流程/期限、應備文件、承辦單位聯絡資訊等常見問答（Q&A）。
+
+## 資料處理說明
+
+原始地址欄位為「郵遞區號＋鄉鎮市名稱＋路名門牌」（不含「新竹縣」字首），`scripts/build_data.py` 的
+`build_hsc_denture()` 會先移除開頭郵遞區號數字、補上「新竹縣」前綴後解析鄉鎮市，表格顯示仍保留原始地址
+文字。原始資料僅7筆，屬公告名冊範圍如實呈現，非解析遺漏。
+
+## 相關連結
+
+- 網站首頁：https://www.sunkuo.cc/gov-open-data-dashboard/
+- 更新紀錄：https://www.sunkuo.cc/gov-open-data-dashboard/changelog/index.html
+- 專案原始碼：https://github.com/ssssuuunnnn/gov-open-data-dashboard

@@ -281,6 +281,7 @@ KCG_DENTURE_PDF_URL = "https://orgws.kcg.gov.tw/001/KcgOrgUploadFiles/463/RelFil
 KCG_DENTURE_MANUAL_JSON = "data/source/kcg-denture-manual.json"
 KCG_HOMECARE_URL = "https://data.kcg.gov.tw/File/DirectDownload/59ac925f-10dd-42f7-a540-ab6c4218b93d"
 HSC_LTC_URL = "https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/283/b14a70a1-784c-4586-babf-ade99a7e8277.json"
+HSC_DENTURE_URL = "https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/288/d6586e37-bce0-46eb-ae4e-08c5fa41a568.json"
 YL_LTC_URL = "https://opendataap2.e-land.gov.tw/./resource/files/2019-12-03/a91e966d8b5b07d1e9bb8c3a767e9d1f.json"
 HCCG_ELDER_URL = "https://odws.hccg.gov.tw/001/Upload/25/opendataback/9059/33/b253c75b-9e30-42d5-81bd-eb1f37e74af2.json"
 TN_HOMECARE_NURSING_URL = "https://data.tainan.gov.tw/File/ResourceCsvDownload/4de27549-893c-4e8e-8644-538a35076607"
@@ -735,6 +736,55 @@ def build_hsc_ltc():
         ])
     print(f"  共 {len(records)} 筆", file=sys.stderr)
     fields = ["id", "servType", "name", "zipcode", "district", "address", "phone"]
+    return {"fields": fields, "rows": records}
+
+
+def _hsc_denture_type(name: str) -> str:
+    return "醫院" if "醫院" in name else "牙醫診所"
+
+
+def build_hsc_denture():
+    """新竹縣中低收入老人補助裝置假牙特約醫療院所（DCAT dataset id 109330，
+    https://data.gov.tw/dataset/8572，提供機關：新竹縣政府社會處）。
+
+    來源：HSC_DENTURE_URL（JSON 格式，共4種格式中選用 JSON，因 CSV 為 BIG5 編碼較麻煩、JSON 為
+    UTF-8 且欄位與 description 一致），來源網址無 CORS 標頭，改由本腳本於伺服器端下載。
+
+    實測欄位：名稱／負責人／郵遞區號33／地址／電話，共**僅7筆**（美利堅牙醫診所、湖口仁慈醫院(地區)、
+    范牙醫診所、柏齡牙醫診所、啟清牙醫診所、田牙醫診所、台北榮民總醫院新竹分院(地區)），資料量小屬
+    原始公告名冊範圍，如實呈現非解析遺漏。
+
+    地址欄位格式為「郵遞區號＋鄉鎮市名稱＋路名門牌」（如「310004竹東鎮仁愛路250號」），**不含「新竹縣」
+    字首**，與同網域 build_hsc_ltc() 的來源（地址已含「新竹縣」字首）不同；本函式先用正規表達式移除
+    開頭的郵遞區號數字，再補上「新竹縣」前綴後用 parse_county_district(fallback_county="新竹縣")
+    解析鄉鎮市，比照 build_lane() 的 fallback 模式；表格顯示仍保留原始地址文字（含郵遞區號開頭），
+    僅在轉 Google Maps 連結時才使用補上「新竹縣」的完整地址。
+
+    「機構類型」由 _hsc_denture_type() 依名稱是否含「醫院」關鍵字啟發式判斷（如「湖口仁慈醫院(地區)」
+    「台北榮民總醫院新竹分院(地區)」歸類「醫院」），其餘歸類「牙醫診所」，非官方分類欄位。無經緯度
+    座標，故本頁不含地圖。
+    """
+    print("下載 新竹縣中低收入老人補助裝置假牙特約醫療院所 ...", file=sys.stderr)
+    text = fetch(HSC_DENTURE_URL)
+    rows_in = json.loads(text)
+    records = []
+    for i, row in enumerate(rows_in, start=1):
+        addr = (row.get("地址", "") or "").strip()
+        addr_no_zip = re.sub(r"^\d+", "", addr)
+        addr_norm = "新竹縣" + addr_no_zip
+        _county, district = parse_county_district(addr_norm, fallback_county="新竹縣")
+        name = row.get("名稱", "").strip()
+        records.append([
+            i,                              # 0 id
+            district,                        # 1 district
+            name,                            # 2 name
+            _hsc_denture_type(name),         # 3 type
+            row.get("負責人", "").strip(), # 4 owner
+            addr,                            # 5 address
+            row.get("電話", "").strip(),   # 6 phone
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "district", "name", "type", "owner", "address", "phone"]
     return {"fields": fields, "rows": records}
 
 
@@ -2246,6 +2296,15 @@ DATASETS = [
         "title": "115年高雄市免費裝假牙特約牙醫醫療院所",
         "source": lambda: KCG_DENTURE_PDF_URL,
         "optional": True,
+    },
+    {
+        "key": "hsc-denture",
+        "builder": build_hsc_denture,
+        "json": "data/hsc-denture.json",
+        "js_var": "HSC_DENTURE_DATA",
+        "meta_key": "hscDenture",
+        "title": "新竹縣中低收入老人補助裝置假牙特約醫療院所",
+        "source": lambda: HSC_DENTURE_URL,
     },
 ]
 

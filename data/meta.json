@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-02T12:54:15.875535+00:00",
+  "generatedAt": "2026-08-03T13:15:31.318545+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -134,5 +134,10 @@
     "count": 16,
     "source": "使用者人工蒐集網路公開資訊（非政府開放資料，無官方驗證）",
     "title": "洗腎（透析）接送資源清單"
+  },
+  "hscDenture": {
+    "count": 7,
+    "source": "https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/288/d6586e37-bce0-46eb-ae4e-08c5fa41a568.json",
+    "title": "新竹縣中低收入老人補助裝置假牙特約醫療院所"
   }
 }
