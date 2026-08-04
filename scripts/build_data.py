@@ -343,6 +343,19 @@ TN_DENTURE_PDF_URL = (
     "https://health.tainan.gov.tw/warehouse/F8BCB915-C08B-47F3-A731-1C30A3EE61EE/"
     "F_1780645430477e.pdf"
 )
+# 嘉義市中低收入老人免費裝置假牙合約醫院名單（DCAT dataset https://data.gov.tw/dataset/8572
+# https://cms.data.gov.tw/dataset/130486，提供機關：嘉義市政府社會處）。
+CHIAYI_DENTURE_LOW_INCOME_URL = (
+    "https://data.chiayi.gov.tw/opendata/api/getResource"
+    "?oid=79cde0d6-7554-473d-9a0e-4c918afd36ac&rid=7fa5f790-9bfc-4465-83a0-e9007fc2ee18"
+)
+# 嘉義市115年度一般身分別老人補助裝置假牙合約院所（嘉義市政府社會處長青及社會行政科公告 PDF，
+# 非 DCAT 開放資料，無法查得穩定資料集網址，僅有此公告附件連結）。
+CHIAYI_DENTURE_GENERAL_PDF_URL = (
+    "https://icmp-ws.chiayi.gov.tw/Download.ashx"
+    "?u=LzAwMS9VcGxvYWQvNDA4L3JlbGZpbGUvOTU1NS83ODI3MDYvMTU3Y2Y5NTgtNGFiYi00ZGQxLTk3MjItMWExYmVhYTFjZTk3LnBkZg%3d%3d"
+    "&n=MTE15bm05bqm5LiA6Iis6ICB5Lq65YGH54mZ5ZCI57SE6Zmi5omA5ZCN5YaKLnBkZg%3d%3d"
+)
 CAREGIVER_CSV = "scripts/sources/caregiver/caregivers.csv"
 
 DIALYSIS_TRANSPORT_CSV = "scripts/sources/dialysis-transport/dialysis-transport.csv"
@@ -785,6 +798,102 @@ def build_hsc_denture():
         ])
     print(f"  共 {len(records)} 筆", file=sys.stderr)
     fields = ["id", "district", "name", "type", "owner", "address", "phone"]
+    return {"fields": fields, "rows": records}
+
+
+def _chiayi_denture_type(name: str) -> str:
+    return "醫院" if "醫院" in name else "牙醫診所"
+
+
+def build_chiayi_denture():
+    """嘉義市假牙補助合約醫療院所，合併兩個各自獨立的補助方案（合約診所名單有重疊但不完全相同，
+    刻意不做名稱比對合併，各自保留來源方案標記，如實呈現原始資料差異）：
+
+    1.「中低收入老人免費裝置假牙合約醫院名單」（DCAT dataset https://data.gov.tw/dataset/8572，
+       https://cms.data.gov.tw/dataset/130486，提供機關：嘉義市政府社會處）。
+       來源 CHIAYI_DENTURE_LOW_INCOME_URL 為 CSV（逗號分隔＋引號包欄位，UTF-8），實測欄位為
+       「序號,診所名稱,電話,地址,經度,緯度」，共 **27 筆，含經緯度座標**。地址已含「嘉義市東區/
+       西區」字首，可直接用 parse_county_district() 解析，不需 fallback。無 CORS 標頭，改由本腳本
+       於伺服器端下載。
+
+    2.「115年度一般身分別老人補助裝置假牙合約院所」（嘉義市政府社會處長青及社會行政科公告 PDF，
+       非 DCAT 開放資料，僅有 CHIAYI_DENTURE_GENERAL_PDF_URL 這個公告附件連結，未來若連結失效需
+       重新至嘉義市政府社會處公告頁面尋找最新 PDF）。用 pdfplumber 解析單頁表格，欄位為
+       「序號、診所名稱、地址、電話」，共 **29 筆，無經緯度座標**。PDF 文字每個中文字之間夾雜空白
+       （如「誠 一 牙 醫 診 所」「嘉義市東區光彩街 400 號」），一律用 re.sub(r"\\s+", "", ...) 移除
+       所有空白正規化。最後一筆「臺中榮民總醫院嘉義分院」的名稱／電話欄位跨兩行儲存格，換行以
+       "".join(...) 方式合併（電話含「轉5786」分機文字，不強行拆解格式，比照其餘資料集分機表示法
+       原樣保留）。地址同樣已含「嘉義市東區/西區」字首可直接解析。
+
+    兩方案的「機構類型」皆由 _chiayi_denture_type() 依名稱是否含「醫院」二字啟發式判斷（僅
+    臺中榮民總醫院嘉義分院歸類「醫院」，其餘歸類「牙醫診所」），非官方分類欄位。合併後統一重新
+    編號 id（1..N，跨兩方案連續編號，不沿用個別來源的序號)，並用 program 欄位標記「中低收入」／
+    「一般身分別」供前端篩選；一般身分別方案無座標，故該部分列不會出現在地圖上，僅在表格/統計/
+    圖表呈現，詳見 chiayi-denture/app.js 的地圖繪製邏輯。
+    """
+    print("下載 嘉義市中低收入老人免費裝置假牙合約醫院名單 ...", file=sys.stderr)
+    records = []
+    idx = 0
+
+    low_income_text = fetch(CHIAYI_DENTURE_LOW_INCOME_URL)
+    reader = csv.DictReader(io.StringIO(low_income_text))
+    for row in reader:
+        addr = (row.get("地址", "") or "").strip()
+        county, district = parse_county_district(addr)
+        name = (row.get("診所名稱", "") or "").strip()
+        lat_raw = (row.get("緯度", "") or "").strip()
+        lng_raw = (row.get("經度", "") or "").strip()
+        idx += 1
+        records.append([
+            idx,                                   # 0 id
+            "中低收入",                             # 1 program
+            district,                               # 2 district
+            name,                                   # 3 name
+            _chiayi_denture_type(name),             # 4 type
+            addr,                                   # 5 address
+            (row.get("電話", "") or "").strip(),  # 6 phone
+            float(lat_raw) if lat_raw else "",       # 7 lat
+            float(lng_raw) if lng_raw else "",       # 8 lng
+        ])
+    low_income_count = idx
+    print(f"  共 {low_income_count} 筆", file=sys.stderr)
+
+    print("下載 嘉義市115年度一般身分別老人補助裝置假牙合約院所 PDF ...", file=sys.stderr)
+    import pdfplumber  # 延遲載入：僅此資料集需要，避免其他資料集重跑時強制安裝
+
+    pdf_bytes = fetch_bytes(CHIAYI_DENTURE_GENERAL_PDF_URL)
+    general_count = 0
+    with pdfplumber.open(io.BytesIO(pdf_bytes)) as pdf:
+        for page in pdf.pages:
+            for table in page.extract_tables():
+                for row in table:
+                    # 實測本表格共5欄：序號/診所名稱/地址/(空白，版面產生的多餘欄位)/電話，
+                    # 第4欄（index 3）恆為 None，電話在 index 4，需以此為準，不可只補到4欄。
+                    row = row + [""] * (5 - len(row))
+                    rid_raw = re.sub(r"\s+", "", row[0] or "")
+                    if not rid_raw.isdigit():
+                        continue  # 跳過表頭列（序號欄位為「序號」文字）
+                    name = re.sub(r"\s+", "", row[1] or "")
+                    addr = re.sub(r"\s+", "", row[2] or "")
+                    phone = re.sub(r"\s+", "", row[4] or "")
+                    county, district = parse_county_district(addr)
+                    idx += 1
+                    general_count += 1
+                    records.append([
+                        idx,                          # 0 id
+                        "一般身分別",                  # 1 program
+                        district,                      # 2 district
+                        name,                          # 3 name
+                        _chiayi_denture_type(name),    # 4 type
+                        addr,                           # 5 address
+                        phone,                          # 6 phone
+                        "",                             # 7 lat（此方案來源無座標）
+                        "",                             # 8 lng
+                    ])
+    print(f"  共 {general_count} 筆", file=sys.stderr)
+
+    print(f"  合計 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "program", "district", "name", "type", "address", "phone", "lat", "lng"]
     return {"fields": fields, "rows": records}
 
 
@@ -2305,6 +2414,15 @@ DATASETS = [
         "meta_key": "hscDenture",
         "title": "新竹縣中低收入老人補助裝置假牙特約醫療院所",
         "source": lambda: HSC_DENTURE_URL,
+    },
+    {
+        "key": "chiayi-denture",
+        "builder": build_chiayi_denture,
+        "json": "data/chiayi-denture.json",
+        "js_var": "CHIAYI_DENTURE_DATA",
+        "meta_key": "chiayiDenture",
+        "title": "嘉義市假牙補助合約醫療院所（中低收入／一般身分別）",
+        "source": lambda: f"{CHIAYI_DENTURE_LOW_INCOME_URL} ; {CHIAYI_DENTURE_GENERAL_PDF_URL}",
     },
 ]
 
