@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-04T15:13:32.711577+00:00",
+  "generatedAt": "2026-08-04T15:23:00.271000+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -141,7 +141,7 @@
     "title": "新竹縣中低收入老人補助裝置假牙特約醫療院所"
   },
   "chiayiDenture": {
-    "count": 56,
+    "count": 59,
     "source": "https://data.chiayi.gov.tw/opendata/api/getResource?oid=79cde0d6-7554-473d-9a0e-4c918afd36ac&rid=7fa5f790-9bfc-4465-83a0-e9007fc2ee18 ; https://icmp-ws.chiayi.gov.tw/Download.ashx?u=LzAwMS9VcGxvYWQvNDA4L3JlbGZpbGUvOTU1NS83ODI3MDYvMTU3Y2Y5NTgtNGFiYi00ZGQxLTk3MjItMWExYmVhYTFjZTk3LnBkZg%3d%3d&n=MTE15bm05bqm5LiA6Iis6ICB5Lq65YGH54mZ5ZCI57SE6Zmi5omA5ZCN5YaKLnBkZg%3d%3d",
     "title": "嘉義市假牙補助合約醫療院所（中低收入／一般身分別）"
   }

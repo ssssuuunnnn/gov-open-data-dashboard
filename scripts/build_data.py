@@ -351,6 +351,7 @@ CHIAYI_DENTURE_LOW_INCOME_URL = (
 )
 # 嘉義市115年度一般身分別老人補助裝置假牙合約院所（嘉義市政府社會處長青及社會行政科公告 PDF，
 # 非 DCAT 開放資料，無法查得穩定資料集網址，僅有此公告附件連結）。
+CHIAYI_DENTURE_LOW_INCOME_ADDED_20260601 = {"杏林牙醫診所", "劍橋牙醫診所", "大明牙醫診所"}
 CHIAYI_DENTURE_GENERAL_PDF_URL = (
     "https://icmp-ws.chiayi.gov.tw/Download.ashx"
     "?u=LzAwMS9VcGxvYWQvNDA4L3JlbGZpbGUvOTU1NS83ODI3MDYvMTU3Y2Y5NTgtNGFiYi00ZGQxLTk3MjItMWExYmVhYTFjZTk3LnBkZg%3d%3d"
@@ -830,6 +831,15 @@ def build_chiayi_denture():
     編號 id（1..N，跨兩方案連續編號，不沿用個別來源的序號)，並用 program 欄位標記「中低收入」／
     「一般身分別」供前端篩選；一般身分別方案無座標，故該部分列不會出現在地圖上，僅在表格/統計/
     圖表呈現，詳見 chiayi-denture/app.js 的地圖繪製邏輯。
+
+    人工補登（CHIAYI_DENTURE_LOW_INCOME_ADDED_20260601）：依「115年度「中低收入老人」補助裝置
+    假牙計畫」公告文字，115年6月1日起新增杏林牙醫診所、劍橋牙醫診所、大明牙醫診所3家為「中低收入」
+    方案合約診所，但 CHIAYI_DENTURE_LOW_INCOME_URL 的官方開放資料 CSV 截至本次建置時尚未反映此
+    異動（仍僅27筆，不含此3家）。這3家診所本來就已存在於「一般身分別」方案名單中（地址/電話取自
+    該來源），故不重新下載，改為在合併資料時，對這3個名稱各自「複製」一筆一般身分別的列並改標記
+    program 為「中低收入」（無座標，因複製來源本身無座標欄位），原本的「一般身分別」列予以保留、
+    不刪除，如實呈現該診所同時服務兩方案的狀態。未來若官方 CSV 已更新納入這3家，此人工補登邏輯
+    應改為直接依 CSV 判斷是否重複，避免出現兩筆一模一樣的「中低收入」列（屆時需手動移除本段落）。
     """
     print("下載 嘉義市中低收入老人免費裝置假牙合約醫院名單 ...", file=sys.stderr)
     records = []
@@ -863,6 +873,7 @@ def build_chiayi_denture():
 
     pdf_bytes = fetch_bytes(CHIAYI_DENTURE_GENERAL_PDF_URL)
     general_count = 0
+    added_low_income_patch = []  # 115/6/1 起人工補登為「中低收入」方案的複製列，詳見函式 docstring
     with pdfplumber.open(io.BytesIO(pdf_bytes)) as pdf:
         for page in pdf.pages:
             for table in page.extract_tables():
@@ -890,7 +901,25 @@ def build_chiayi_denture():
                         "",                             # 7 lat（此方案來源無座標）
                         "",                             # 8 lng
                     ])
+                    if name in CHIAYI_DENTURE_LOW_INCOME_ADDED_20260601:
+                        added_low_income_patch.append([district, name, addr, phone])
     print(f"  共 {general_count} 筆", file=sys.stderr)
+
+    if added_low_income_patch:
+        print(f"  人工補登 115/6/1 起新增為中低收入方案合約診所 {len(added_low_income_patch)} 筆", file=sys.stderr)
+        for district, name, addr, phone in added_low_income_patch:
+            idx += 1
+            records.append([
+                idx,                          # 0 id
+                "中低收入",                    # 1 program（人工補登，官方 CSV 尚未更新，見 docstring）
+                district,                      # 2 district
+                name,                          # 3 name
+                _chiayi_denture_type(name),    # 4 type
+                addr,                           # 5 address
+                phone,                          # 6 phone
+                "",                             # 7 lat（來源複製自無座標的一般身分別列）
+                "",                             # 8 lng
+            ])
 
     print(f"  合計 {len(records)} 筆", file=sys.stderr)
     fields = ["id", "program", "district", "name", "type", "address", "phone", "lat", "lng"]
