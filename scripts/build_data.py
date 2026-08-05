@@ -1500,6 +1500,9 @@ def _tyc_denture_type(name: str) -> str:
     return "醫院" if "醫院" in (name or "") else "診所"
 
 
+TYC_DENTURE_GOOGLE_RATINGS_FILE = "data/source/tyc-denture-google-ratings.json"
+
+
 def build_tyc_denture():
     """桃園市長者裝置活動假牙合約醫療院所（桃園市政府衛生局，DCAT dataset id 26030）。
 
@@ -1513,13 +1516,34 @@ def build_tyc_denture():
 
     來源網址與同平台的 tyc-elder／tyltc 資料集一致，CORS 僅允許 opendata.tycg.gov.tw 網域，改由
     本腳本於伺服器端下載，另輸出內嵌 JS 版本避免依賴外部網址即時可用性。
+
+    額外欄位 google_rating／google_review_count／google_place_id：使用者需求為呈現各院所的
+    Google 地圖星等與評論數，且明確表示為一次性資料，之後不會重新抓取。資料來源：2026-08-05 用
+    scripts/fetch_google_ratings.py --dataset tyc-denture 一次性呼叫 Google Places API (Legacy)
+    Text Search，155 筆中 154 筆比對成功並人工核對通過，整理成
+    data/source/tyc-denture-google-ratings.json（key 為「特約單位名稱」）。人工核對重點：
+    - 多筆機構（醫院類：天晟醫院、聖保祿醫院、桃園/新屋/樂生等衛福部醫院、長庚醫院、臺北榮總桃園
+      分院；診所類：巧研美學、名家、何逢源、益皓、温、源美、杏美等）Google 地點名稱與原始名稱不同
+      （英文譯名、簡稱、或用字略異如「温」/「溫」），皆已用 Place Details 核對 formatted_address
+      與原始地址完全一致，確認為同一地點。
+    - 「大園牙醫診所」比對到「大園牙科」但 Google 回傳 rating=None（無評分資料），予以排除，此筆
+      三欄留空字串。
+    查無對照資料的院所，此三欄留空字串，前端顯示為「-」。
     """
     print("下載 桃園市長者裝置活動假牙合約醫療院所 ...", file=sys.stderr)
     text = fetch(TYC_DENTURE_URL)
     reader = csv.DictReader(io.StringIO(text))
+
+    try:
+        with open(TYC_DENTURE_GOOGLE_RATINGS_FILE, "r", encoding="utf-8") as f:
+            google_ratings = json.load(f)
+    except FileNotFoundError:
+        google_ratings = {}
+
     records = []
     for row in reader:
         name = (row.get("特約單位名稱", "") or "").strip()
+        g = google_ratings.get(name, {})
         records.append([
             (row.get("編號", "") or "").strip(),   # 0 id
             name,                                     # 1 name
@@ -1527,9 +1551,13 @@ def build_tyc_denture():
             (row.get("區別", "") or "").strip(),    # 3 district
             (row.get("地址", "") or "").strip(),    # 4 address
             (row.get("電話", "") or "").strip(),    # 5 phone
+            g.get("rating", ""),                    # 6 google_rating（一次性資料，查無留空字串）
+            g.get("review_count", ""),              # 7 google_review_count（同上）
+            g.get("place_id", ""),                   # 8 google_place_id（同上，用於評論連結）
         ])
     print(f"  共 {len(records)} 筆", file=sys.stderr)
-    fields = ["id", "name", "type", "district", "address", "phone"]
+    fields = ["id", "name", "type", "district", "address", "phone",
+              "google_rating", "google_review_count", "google_place_id"]
     return {"fields": fields, "rows": records}
 
 
