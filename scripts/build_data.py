@@ -282,6 +282,7 @@ KCG_DENTURE_MANUAL_JSON = "data/source/kcg-denture-manual.json"
 KCG_HOMECARE_URL = "https://data.kcg.gov.tw/File/DirectDownload/59ac925f-10dd-42f7-a540-ab6c4218b93d"
 HSC_LTC_URL = "https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/283/b14a70a1-784c-4586-babf-ade99a7e8277.json"
 HSC_DENTURE_URL = "https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/288/d6586e37-bce0-46eb-ae4e-08c5fa41a568.json"
+CHC_DENTURE_URL = "https://email.chcg.gov.tw/df/36br48cd4g64iragh4y6dwoy668s3q"
 YL_LTC_URL = "https://opendataap2.e-land.gov.tw/./resource/files/2019-12-03/a91e966d8b5b07d1e9bb8c3a767e9d1f.json"
 HCCG_ELDER_URL = "https://odws.hccg.gov.tw/001/Upload/25/opendataback/9059/33/b253c75b-9e30-42d5-81bd-eb1f37e74af2.json"
 TN_HOMECARE_NURSING_URL = "https://data.tainan.gov.tw/File/ResourceCsvDownload/4de27549-893c-4e8e-8644-538a35076607"
@@ -799,6 +800,48 @@ def build_hsc_denture():
         ])
     print(f"  共 {len(records)} 筆", file=sys.stderr)
     fields = ["id", "district", "name", "type", "owner", "address", "phone"]
+    return {"fields": fields, "rows": records}
+
+
+def build_chc_denture():
+    """彰化縣補助65歲以上老人裝置全口假牙契約診所名冊（DCAT dataset id 31787，
+    https://data.gov.tw/dataset/8572，提供機關：彰化縣政府社會處長青福利科，承辦：謝社工
+    04-7532353）。
+
+    來源 CHC_DENTURE_URL 僅提供一種格式（CSV），且該 CSV 為 **BIG5 編碼**（非本專案常見的 UTF-8），
+    需以 fetch(url, encoding="big5") 解碼；來源網址無 CORS 標頭，改由本腳本於伺服器端下載。
+
+    實測欄位：診所名稱／電話／地址縣市／地址，共 **109 筆**，診所名稱無重複。「地址縣市」欄位實測
+    109 筆恆為常數 "10007"（縣市代碼），無篩選意義，本函式不輸出此欄位。
+
+    「地址」欄位格式為「鄉鎮市名稱＋路名門牌」（如「彰化市三民路49號」「鹿港鎮民權路...」），**不含
+    「彰化縣」字首**，且彰化縣轄下26鄉鎮市皆為市/鎮/鄉，無「區」層級，故不使用共用的
+    parse_county_district()（其 fallback 模式需比對 fallback_county 文字本身存在於地址中，但此處
+    地址完全不含「彰化縣」三字，無法比對），改用簡化正規表達式 `^(.{2,3}[市鎮鄉])` 直接從地址開頭
+    抽取鄉鎮市名稱，county 固定為「彰化縣」。實測涵蓋23個鄉鎮市（彰化縣共26鄉鎮市，其餘3個鄉鎮市
+    無契約診所，如實呈現不強行補列）。
+
+    資料本身無機構類型／分類欄位，且109筆診所名稱皆為「XX牙醫診所」「XX牙科診所」型態，未見「醫院」
+    關鍵字案例（與 hsc-denture／chiayi-denture 不同），故本資料集不新增推斷 type 欄位。無經緯度
+    座標，故本頁不含地圖。
+    """
+    print("下載 彰化縣補助65歲以上老人裝置全口假牙契約診所名冊 ...", file=sys.stderr)
+    text = fetch(CHC_DENTURE_URL, encoding="big5")
+    reader = csv.DictReader(io.StringIO(text))
+    records = []
+    for i, row in enumerate(reader, start=1):
+        addr = (row.get("地址", "") or "").strip()
+        m = re.match(r"^(.{2,3}[市鎮鄉])", addr)
+        district = m.group(1) if m else ""
+        records.append([
+            i,                                    # 0 id
+            district,                              # 1 district
+            (row.get("診所名稱", "") or "").strip(),  # 2 name
+            addr,                                   # 3 address
+            (row.get("電話", "") or "").strip(),   # 4 phone
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "district", "name", "address", "phone"]
     return {"fields": fields, "rows": records}
 
 
@@ -2443,6 +2486,15 @@ DATASETS = [
         "meta_key": "hscDenture",
         "title": "新竹縣中低收入老人補助裝置假牙特約醫療院所",
         "source": lambda: HSC_DENTURE_URL,
+    },
+    {
+        "key": "chc-denture",
+        "builder": build_chc_denture,
+        "json": "data/chc-denture.json",
+        "js_var": "CHC_DENTURE_DATA",
+        "meta_key": "chcDenture",
+        "title": "彰化縣補助65歲以上老人裝置全口假牙契約診所名冊",
+        "source": lambda: CHC_DENTURE_URL,
     },
     {
         "key": "chiayi-denture",

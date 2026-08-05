@@ -141,6 +141,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://www.sunkuo.cc/gov-open-data-dashboard/chc-denture/index.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://www.sunkuo.cc/gov-open-data-dashboard/caregiver/index.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
