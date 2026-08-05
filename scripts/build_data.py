@@ -803,6 +803,9 @@ def build_hsc_denture():
     return {"fields": fields, "rows": records}
 
 
+CHC_DENTURE_GOOGLE_RATINGS_FILE = "data/source/chc-denture-google-ratings.json"
+
+
 def build_chc_denture():
     """彰化縣補助65歲以上老人裝置全口假牙契約診所名冊（DCAT dataset id 31787，
     https://data.gov.tw/dataset/8572，提供機關：彰化縣政府社會處長青福利科，承辦：謝社工
@@ -824,24 +827,53 @@ def build_chc_denture():
     資料本身無機構類型／分類欄位，且109筆診所名稱皆為「XX牙醫診所」「XX牙科診所」型態，未見「醫院」
     關鍵字案例（與 hsc-denture／chiayi-denture 不同），故本資料集不新增推斷 type 欄位。無經緯度
     座標，故本頁不含地圖。
+
+    額外欄位 google_rating／google_review_count／google_place_id：使用者需求為呈現各診所的
+    Google 地圖星等與評論數，且明確表示為一次性資料，之後不會重新抓取。資料來源：2026-08-05 用
+    scripts/fetch_google_ratings.py --dataset chc-denture 一次性呼叫 Google Places API (Legacy)
+    Text Search，109 筆全數比對成功（status=OK），整理成
+    data/source/chc-denture-google-ratings.json（key 為「診所名稱」）。人工核對時特別確認以下
+    容易誤判的案例，皆核對地址後確認比對正確：
+    - 「彰化秀傳紀念醫院」「彰化基督教醫院」「鹿港基督教醫院」「彰濱秀傳紀念醫院」「衛生福利部彰化
+      醫院」「二林基督教醫院」「道周醫院」等機構的 Google 地點名稱為英文（如「Show Chwan Memorial
+      Hospital」「Farlin Hospital」），核對 Place Details 回傳地址與原始資料地址完全一致，確認為
+      同一地點，僅顯示名稱不同。
+    - 「秀安牙醫診所(聯合)」與「秀欣牙醫診所(聯合)」地址與電話完全相同（秀水鄉彰水路二段510號，
+      (04)7687207），Google 地圖上為同一地點（顯示為「秀欣聯合牙醫診所」），比照 tyc-elder 案例
+      的處理方式，兩筆皆保留、共用同一組評分資料。
+    查無對照資料的診所，此三欄留空字串，前端顯示為「-」（本次 109 筆全數有對照資料，故實務上不會
+    出現空值，僅為程式穩健性保留）。
     """
     print("下載 彰化縣補助65歲以上老人裝置全口假牙契約診所名冊 ...", file=sys.stderr)
     text = fetch(CHC_DENTURE_URL, encoding="big5")
     reader = csv.DictReader(io.StringIO(text))
+
+    try:
+        with open(CHC_DENTURE_GOOGLE_RATINGS_FILE, "r", encoding="utf-8") as f:
+            google_ratings = json.load(f)
+    except FileNotFoundError:
+        google_ratings = {}
+
     records = []
     for i, row in enumerate(reader, start=1):
         addr = (row.get("地址", "") or "").strip()
         m = re.match(r"^(.{2,3}[市鎮鄉])", addr)
         district = m.group(1) if m else ""
+        name = (row.get("診所名稱", "") or "").strip()
+        g = google_ratings.get(name, {})
         records.append([
             i,                                    # 0 id
             district,                              # 1 district
-            (row.get("診所名稱", "") or "").strip(),  # 2 name
+            name,                                   # 2 name
             addr,                                   # 3 address
             (row.get("電話", "") or "").strip(),   # 4 phone
+            g.get("rating", ""),                    # 5 google_rating（一次性資料，查無留空字串）
+            g.get("review_count", ""),              # 6 google_review_count（同上）
+            g.get("place_id", ""),                   # 7 google_place_id（同上，用於評論連結）
         ])
     print(f"  共 {len(records)} 筆", file=sys.stderr)
-    fields = ["id", "district", "name", "address", "phone"]
+    fields = ["id", "district", "name", "address", "phone",
+              "google_rating", "google_review_count", "google_place_id"]
     return {"fields": fields, "rows": records}
 
 
