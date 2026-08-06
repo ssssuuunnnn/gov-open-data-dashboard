@@ -362,6 +362,8 @@ CAREGIVER_CSV = "scripts/sources/caregiver/caregivers.csv"
 
 DIALYSIS_TRANSPORT_CSV = "scripts/sources/dialysis-transport/dialysis-transport.csv"
 
+TC_DENTURE_CSV = "scripts/sources/tc-denture/tc-denture.csv"
+
 # 台灣22縣市清單（正式「臺」寫法），用於從看護機構「服務地區」自由文字欄位以子字串比對方式
 # 偵測涵蓋縣市，詳見 build_caregivers()。CAREGIVER_REGION_ALIASES 額外收錄常見「台」簡寫寫法，
 # 比對時會先將輸入文字中的「台」正規化為「臺」再比對，故此清單一律使用「臺」。
@@ -805,6 +807,8 @@ def build_hsc_denture():
 
 CHC_DENTURE_GOOGLE_RATINGS_FILE = "data/source/chc-denture-google-ratings.json"
 
+TC_DENTURE_GOOGLE_RATINGS_FILE = "data/source/tc-denture-google-ratings.json"
+
 
 def build_chc_denture():
     """彰化縣補助65歲以上老人裝置全口假牙契約診所名冊（DCAT dataset id 31787，
@@ -870,6 +874,76 @@ def build_chc_denture():
             g.get("rating", ""),                    # 5 google_rating（一次性資料，查無留空字串）
             g.get("review_count", ""),              # 6 google_review_count（同上）
             g.get("place_id", ""),                   # 7 google_place_id（同上，用於評論連結）
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "district", "name", "address", "phone",
+              "google_rating", "google_review_count", "google_place_id"]
+    return {"fields": fields, "rows": records}
+
+
+def build_tc_denture():
+    """臺中市115年度65歲以上銀髮族假牙裝置補助計畫合約院所名單（臺中市政府衛生局公告，
+    「假牙裝置補助管理暨查詢系統」相關計畫）。
+
+    **資料來源特殊性（務必先讀）**：此名單無公開的機器可讀下載網址（非 DCAT CSV/API、亦非可直接
+    fetch 的公告 PDF），使用者係手動於 Google 試算表（原始檔名「65歲以上銀髮族假牙裝置補助計畫合約
+    院所名單-統計至115年07月30日」）匯出為 CSV 後提供，故本函式**讀取本地已清理過的 CSV 檔案**
+    （TC_DENTURE_CSV = scripts/sources/tc-denture/tc-denture.csv，已移除原始檔案第一列的標題文字，
+    保留表頭列＋281筆資料列），比照 build_caregivers()／build_dialysis_transport() 的作法，非向遠端
+    URL 下載。日後如需更新（如次年度116年版），需人工取得新版試算表匯出 CSV 覆蓋此檔案後，重新執行
+    `python3 scripts/build_data.py tc-denture`，**無法自動重新抓取**。
+
+    實測欄位：編號、區域、診所名稱、地址、電話，共 **281 筆**，編號為 1~281 連續整數無缺漏無重複。
+    「區域」欄位本身已是乾淨的「臺中市OO區」去除縣市字首後的行政區名稱（如「中區」「東區」），與地址
+    欄位開頭一致，直接當作 district 使用，不需另外解析；county 固定為「臺中市」（不存於資料欄位，
+    比照 chc-denture／chiayi-denture 僅存 district，前端寫死顯示「臺中市」）。涵蓋臺中市29個行政區
+    （太平區/大甲區/大安區/大里區/大肚區/大雅區/北屯區/北區/南屯區/南區/和平區/后里區/沙鹿區/烏日區/
+    石岡區/神岡區/清水區/潭子區/東勢區/東區/梧棲區/西屯區/西區/豐原區/霧峰區/龍井區/中區 等，實測未見
+    新社區、外埔區資料，如實呈現不強行補列）。無官方「機構類型」分類欄位，且原始資料未要求分類，不比照
+    build_tyc_denture()/build_kcg_denture() 做啟發式推斷。無經緯度座標，故本頁不含地圖。
+
+    額外欄位 google_rating／google_review_count／google_place_id：比照 tyc-denture／chc-denture／
+    tyc-elder 的作法，呈現各診所的 Google 地圖星等與評論數，且為一次性資料、之後不會重新抓取。2026-
+    08-06 用 `scripts/fetch_google_ratings.py --dataset tc-denture` 一次性呼叫 Google Places API
+    (Legacy) Text Search，281 筆全數比對成功（status=OK），整理成
+    data/source/tc-denture-google-ratings.json（key 為「診所名稱」）。人工核對時特別抽查「比對名稱
+    與原始名稱差異較大」的案例（21 筆純英譯名稱如「Cheng Ching Hospital」「Taichung Veterans
+    General Hospital」，以及 3 筆中文名稱不同的案例），逐筆以 Place Details 回傳地址核對門牌號碼：
+    - 21 筆英譯名稱：地址門牌完全一致，確認為同一地點，僅顯示名稱為英文。
+    - 「汎宇牙醫診所」比對到「dentict Hospital 聯強牙醫診所」、「沙鹿張牙醫診所」比對到「張牙醫
+      診所」：地址門牌完全一致，確認為同一地點（可能為診所更名或多醫師掛牌），予以保留。
+    - 「東興陳牙醫診所」比對到「陳尚德牙醫診所」：原始地址「南屯路二段616號」與 Google 回傳地址
+      「南屯路二段663號」門牌不符，判定為**不同地點的誤配對**，予以排除，此筆三欄留空字串。
+    因此最終 280 筆（281 筆扣除上述誤配對 1 筆）有對照資料，1 筆查無/排除資料此三欄留空字串，
+    前端顯示為「-」。
+    """
+    print("讀取 臺中市65歲以上銀髮族假牙裝置補助計畫合約院所 本地 CSV ...", file=sys.stderr)
+    with open(TC_DENTURE_CSV, encoding="utf-8-sig") as f:
+        reader = csv.DictReader(f)
+        rows = list(reader)
+
+    try:
+        with open(TC_DENTURE_GOOGLE_RATINGS_FILE, "r", encoding="utf-8") as f:
+            google_ratings = json.load(f)
+    except FileNotFoundError:
+        google_ratings = {}
+
+    records = []
+    for row in rows:
+        rid = (row.get("編號", "") or "").strip()
+        if not rid.isdigit():
+            continue  # 跳過非資料列（防禦性處理，正式資料應皆為純數字編號）
+        name = (row.get("診所名稱", "") or "").strip()
+        g = google_ratings.get(name, {})
+        records.append([
+            int(rid),                               # 0 id
+            (row.get("區域", "") or "").strip(),    # 1 district
+            name,                                    # 2 name
+            (row.get("地址", "") or "").strip(),    # 3 address
+            (row.get("電話", "") or "").strip(),    # 4 phone
+            g.get("rating", ""),                     # 5 google_rating（一次性資料，查無留空字串）
+            g.get("review_count", ""),               # 6 google_review_count（同上）
+            g.get("place_id", ""),                    # 7 google_place_id（同上，用於評論連結）
         ])
     print(f"  共 {len(records)} 筆", file=sys.stderr)
     fields = ["id", "district", "name", "address", "phone",
@@ -2555,6 +2629,15 @@ DATASETS = [
         "meta_key": "chcDenture",
         "title": "彰化縣補助65歲以上老人裝置全口假牙契約診所名冊",
         "source": lambda: CHC_DENTURE_URL,
+    },
+    {
+        "key": "tc-denture",
+        "builder": build_tc_denture,
+        "json": "data/tc-denture.json",
+        "js_var": "TC_DENTURE_DATA",
+        "meta_key": "tcDenture",
+        "title": "臺中市65歲以上銀髮族假牙裝置補助計畫合約院所",
+        "source": lambda: "使用者手動提供 Google 試算表匯出 CSV（原始資料，非官方開放資料 API）",
     },
     {
         "key": "chiayi-denture",

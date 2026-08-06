@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-05T13:29:53.392161+00:00",
+  "generatedAt": "2026-08-06T13:20:21.829400+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -149,5 +149,10 @@
     "count": 109,
     "source": "https://email.chcg.gov.tw/df/36br48cd4g64iragh4y6dwoy668s3q",
     "title": "彰化縣補助65歲以上老人裝置全口假牙契約診所名冊"
+  },
+  "tcDenture": {
+    "count": 281,
+    "source": "使用者手動提供 Google 試算表匯出 CSV（原始資料，非官方開放資料 API）",
+    "title": "臺中市65歲以上銀髮族假牙裝置補助計畫合約院所"
   }
 }

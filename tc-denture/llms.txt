@@ -1,0 +1,30 @@
+# 臺中市115年度65歲以上銀髮族假牙裝置補助計畫合約院所
+
+> 臺中市政府衛生局公告之115年度65歲以上銀髮族假牙裝置補助計畫合約院所名單，共281筆，收錄編號、行政區、院所名稱、地址與電話，涵蓋27個行政區。頁面另整理補助對象、申請期間、服務項目與給付金額、申請及審查流程（申請/初審/複審/製作假牙與核銷）等 Q&A 說明。提供行政區／關鍵字篩選、統計卡片與圖表，並附 Google Map 星等與評論數（一次性抓取），無經緯度座標。
+
+- 提供機關：臺中市政府衛生局
+- 資料筆數：281 筆
+- 原始資料來源：使用者手動提供之 Google 試算表匯出 CSV（非官方開放資料 API/CSV，無公開下載網址）
+- 建議查看頻率：每1年
+
+## 頁面內容
+
+- 儀表板頁面：https://www.sunkuo.cc/gov-open-data-dashboard/tc-denture/index.html
+- 篩選條件、統計卡片、圖表與分頁表格皆基於上述原始資料運算；表格地址欄可直接連結 Google 地圖搜尋、電話欄可直接撥打，並附 Google Map 星等與評論數（2026-08-06 一次性抓取快照）。
+- 頁面上方另整理65歲以上銀髮族假牙裝置補助的補助對象、申請期間、服務項目及給付金額、申請及審查方式（申請/初審/複審/製作假牙與核銷流程）與其他身分別轉介說明（低收入戶/原住民）等常見問答（Q&A）。
+
+## 資料處理說明
+
+原始 CSV 為使用者手動於 Google 試算表匯出提供（非可程式化下載的官方網址），存放於
+`scripts/sources/tc-denture/tc-denture.csv`，由 `scripts/build_data.py` 的 `build_tc_denture()`
+讀取本地檔案組裝資料，非向遠端網址下載；日後如需更新須人工覆蓋此 CSV 後重新執行建置腳本。
+「行政區」欄位本身已是乾淨的「OO區」格式，直接當作 district 使用；縣市固定為「臺中市」。資料本身無
+機構類型分類欄位，無經緯度座標，不含地圖。表格另附 Google Map 星等／評論數／place_id 三個一次性
+補充欄位，用 `scripts/fetch_google_ratings.py --dataset tc-denture` 查詢後人工核對（281筆中1筆
+因地址門牌不符判定為誤配對而排除）。
+
+## 相關連結
+
+- 網站首頁：https://www.sunkuo.cc/gov-open-data-dashboard/
+- 更新紀錄：https://www.sunkuo.cc/gov-open-data-dashboard/changelog/index.html
+- 專案原始碼：https://github.com/ssssuuunnnn/gov-open-data-dashboard

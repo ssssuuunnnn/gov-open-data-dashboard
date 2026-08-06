@@ -1,0 +1,1402 @@
+{
+  "三和牙醫診所": {
+    "place_id": "ChIJM7c1kaY9aTQRr4EFEZCC3U4",
+    "rating": 4.5,
+    "review_count": 15
+  },
+  "三大牙醫診所": {
+    "place_id": "ChIJ99SO-gQOaTQRJH1bLIRQrZI",
+    "rating": 4.3,
+    "review_count": 25
+  },
+  "三民張牙醫診所": {
+    "place_id": "ChIJT049j3I9aTQRmi0Qfan1MJE",
+    "rating": 4.3,
+    "review_count": 42
+  },
+  "世貿牙醫診所": {
+    "place_id": "ChIJ5cxIKf8VaTQR-UTWLJEpqM0",
+    "rating": 4.7,
+    "review_count": 48
+  },
+  "中友牙醫診所": {
+    "place_id": "ChIJk8X69cM9aTQRjFdMVMiZyLs",
+    "rating": 4.0,
+    "review_count": 31
+  },
+  "中和牙醫診所": {
+    "place_id": "ChIJu7T58CM8aTQRNrlrfn6DCZw",
+    "rating": 4.0,
+    "review_count": 141
+  },
+  "中國醫藥大學附設醫院": {
+    "place_id": "ChIJbQzAfWQ9aTQREgwMfduRhrQ",
+    "rating": 3.0,
+    "review_count": 2103
+  },
+  "中山醫學大學附設醫院": {
+    "place_id": "ChIJNeTzvU48aTQRK0WxcCy1SqQ",
+    "rating": 2.9,
+    "review_count": 1371
+  },
+  "中心牙醫診所(大里區)": {
+    "place_id": "ChIJzQr50N88aTQRgQ7k9Fw9MpI",
+    "rating": 4.7,
+    "review_count": 3
+  },
+  "中悅牙醫診所": {
+    "place_id": "ChIJ9fu3oK0iaTQR_Gg13nk2vXI",
+    "rating": 4.8,
+    "review_count": 1252
+  },
+  "中科美學牙醫診所": {
+    "place_id": "ChIJe1XaLCYVaTQRFUXH239NxPA",
+    "rating": 4.8,
+    "review_count": 1397
+  },
+  "京鼎牙醫診所": {
+    "place_id": "ChIJhXeXsaQXaTQRCBigUdHrJug",
+    "rating": 3.9,
+    "review_count": 37
+  },
+  "仁信牙醫診所": {
+    "place_id": "ChIJyX8o0ugXaTQRws-3tJ_bDjM",
+    "rating": 4.5,
+    "review_count": 299
+  },
+  "仁友牙醫診所": {
+    "place_id": "ChIJ_azja5w9aTQRCSkNWSRMnLc",
+    "rating": 4.0,
+    "review_count": 82
+  },
+  "今日微笑牙醫診所": {
+    "place_id": "ChIJRyVkpX8UaTQRZlXPFbGvFb4",
+    "rating": 2.9,
+    "review_count": 15
+  },
+  "任孚牙醫診所": {
+    "place_id": "ChIJa61B_kM9aTQRkrVKS7cY1Dc",
+    "rating": 4.3,
+    "review_count": 59
+  },
+  "佑康牙醫診所": {
+    "place_id": "ChIJufBvPnQ-aTQRCQcOvUR4zr8",
+    "rating": 3.2,
+    "review_count": 38
+  },
+  "何昌運牙醫診所": {
+    "place_id": "ChIJ-8056d0XaTQRzVhDZs5crNc",
+    "rating": 4.7,
+    "review_count": 42
+  },
+  "佛教慈濟醫療財團法人台中慈濟醫院": {
+    "place_id": "ChIJ0RTdVCwYaTQRd9b__wqbGdk",
+    "rating": 3.1,
+    "review_count": 1708
+  },
+  "佳品牙醫診所": {
+    "place_id": "ChIJMeJscMIXaTQR5itfmpiMDoc",
+    "rating": 4.6,
+    "review_count": 201
+  },
+  "佳威牙醫診所": {
+    "place_id": "ChIJOcLfciAWaTQR-VU8IgErmxI",
+    "rating": 4.7,
+    "review_count": 678
+  },
+  "佳音牙醫診所": {
+    "place_id": "ChIJpTlfrj09aTQR-09c4teJDbI",
+    "rating": 3.8,
+    "review_count": 26
+  },
+  "佳鴻牙醫診所": {
+    "place_id": "ChIJs7K3SB8YaTQRpwVgbBGepSs",
+    "rating": 4.8,
+    "review_count": 1976
+  },
+  "保安牙醫診所": {
+    "place_id": "ChIJTYxnqXM9aTQR0gR9AoN9z18",
+    "rating": 4.4,
+    "review_count": 51
+  },
+  "保復牙醫診所": {
+    "place_id": "ChIJf4FHZ-oXaTQR5WtydF_Dn3A",
+    "rating": 4.7,
+    "review_count": 48
+  },
+  "信榮牙醫診所": {
+    "place_id": "ChIJ9dO8KQ89aTQRAv0L5ljySHc",
+    "rating": 3.6,
+    "review_count": 49
+  },
+  "偉林牙醫診所": {
+    "place_id": "ChIJh5JBDFA8aTQR8dvi0bECYZM",
+    "rating": 3.4,
+    "review_count": 50
+  },
+  "健宏牙醫診所": {
+    "place_id": "ChIJG3D3k4QXaTQRQ5DFLwvvsf0",
+    "rating": 3.8,
+    "review_count": 44
+  },
+  "健康牙醫診所": {
+    "place_id": "ChIJpbmWeAA9aTQRhctpZE9Kq34",
+    "rating": null,
+    "review_count": 0
+  },
+  "傅在榮牙醫診所": {
+    "place_id": "ChIJQVxYOmQXaTQR9ii0TAONM_s",
+    "rating": 4.6,
+    "review_count": 50
+  },
+  "傑聖牙醫診所": {
+    "place_id": "ChIJcbcyh_oUaTQR5Cf47swsEss",
+    "rating": 2.9,
+    "review_count": 48
+  },
+  "優良牙醫診所": {
+    "place_id": "ChIJZ8vbcPA8aTQRe0dY5mt2XPA",
+    "rating": 3.9,
+    "review_count": 139
+  },
+  "優誠牙醫診所": {
+    "place_id": "ChIJfeHh1S0XaTQRy6bW9N36jjI",
+    "rating": 4.9,
+    "review_count": 1026
+  },
+  "光南牙醫診所": {
+    "place_id": "ChIJPyGtMwYaaTQR7b8XJrNat3Y",
+    "rating": 2.7,
+    "review_count": 32
+  },
+  "光田醫療社團法人光田綜合醫院": {
+    "place_id": "ChIJ3ehBatAVaTQR_2kgd0qqqAU",
+    "rating": 2.8,
+    "review_count": 435
+  },
+  "全友牙醫診所": {
+    "place_id": "ChIJpe0OxKsiaTQRGq4KWTDzv0I",
+    "rating": 3.0,
+    "review_count": 36
+  },
+  "全家美學牙醫診所": {
+    "place_id": "ChIJP5P1Dc0XaTQROUZL4MgsGH0",
+    "rating": 4.7,
+    "review_count": 732
+  },
+  "全方位牙醫診所": {
+    "place_id": "ChIJ-ZlqVmY9aTQRduoWXv1PIv8",
+    "rating": 4.8,
+    "review_count": 1682
+  },
+  "全民牙醫診所": {
+    "place_id": "ChIJq7d_4dA8aTQRbLWPhNh3LqQ",
+    "rating": 3.1,
+    "review_count": 11
+  },
+  "冠傑牙醫診所": {
+    "place_id": "ChIJBfCLNXw-aTQRUfoc7aB3Wv8",
+    "rating": 4.8,
+    "review_count": 1673
+  },
+  "凱悅牙醫診所": {
+    "place_id": "ChIJXZUUTuQXaTQR3vHiX9YPb6M",
+    "rating": 4.1,
+    "review_count": 25
+  },
+  "加利美學牙醫診所": {
+    "place_id": "ChIJoWH7H6AXaTQRHbuUXJ6oE0E",
+    "rating": 4.8,
+    "review_count": 391
+  },
+  "勤益牙醫診所": {
+    "place_id": "ChIJXVzb6aIiaTQRzkKnRWiJK0g",
+    "rating": 4.7,
+    "review_count": 652
+  },
+  "勤美牙醫診所": {
+    "place_id": "ChIJjeoyY4sVaTQRGJiu11F9PVg",
+    "rating": 4.9,
+    "review_count": 1895
+  },
+  "北一牙醫診所": {
+    "place_id": "ChIJ_U9btuAXaTQRLjQfGMW1Nh8",
+    "rating": 4.8,
+    "review_count": 83
+  },
+  "十甲牙醫診所": {
+    "place_id": "ChIJfcTJuU09aTQRShPYCf23pws",
+    "rating": 4.5,
+    "review_count": 65
+  },
+  "千大牙醫診所": {
+    "place_id": "ChIJR4EsrjM9aTQRB_n1C1wi1f8",
+    "rating": 4.8,
+    "review_count": 41
+  },
+  "卓越美學牙醫診所": {
+    "place_id": "ChIJF-5QzOIVaTQRxEdotLvidvc",
+    "rating": 4.7,
+    "review_count": 661
+  },
+  "博盛牙醫診所": {
+    "place_id": "ChIJByvPMBU_aTQRbPzcawrASCQ",
+    "rating": 1.7,
+    "review_count": 34
+  },
+  "友仁牙醫診所": {
+    "place_id": "ChIJgcrH3AUaaTQRVcZbpcju32c",
+    "rating": 4.5,
+    "review_count": 25
+  },
+  "台新醫院": {
+    "place_id": "ChIJ96KsWjE9aTQRo--HDItyPiQ",
+    "rating": 3.1,
+    "review_count": 328
+  },
+  "合麗牙醫診所": {
+    "place_id": "ChIJ49cuwF8caTQRzi_4hZAkzzY",
+    "rating": 4.3,
+    "review_count": 92
+  },
+  "吉德牙醫診所": {
+    "place_id": "ChIJs7rYrnMaaTQRSJ5dc4c9Ikg",
+    "rating": 3.2,
+    "review_count": 18
+  },
+  "名人牙醫診所": {
+    "place_id": "ChIJ3UuFXtYXaTQRd3i4eCEJD04",
+    "rating": 2.9,
+    "review_count": 123
+  },
+  "名德牙醫診所": {
+    "place_id": "ChIJL95hrvMUaTQRYi3zzg1jX2Q",
+    "rating": 4.5,
+    "review_count": 33
+  },
+  "后里林牙醫診所": {
+    "place_id": "ChIJ74T86J8aaTQRKSQyiLsK7ew",
+    "rating": 4.6,
+    "review_count": 285
+  },
+  "君悅美學牙醫診所": {
+    "place_id": "ChIJk161XPIWaTQR45I4VUpf594",
+    "rating": 4.9,
+    "review_count": 5651
+  },
+  "吳勵成牙醫診所": {
+    "place_id": "ChIJG-Yyq38UaTQR1WO_ivCbEic",
+    "rating": 4.7,
+    "review_count": 33
+  },
+  "周牙醫診所": {
+    "place_id": "ChIJWSS4RWk9aTQRATfI0FmUg84",
+    "rating": 3.9,
+    "review_count": 69
+  },
+  "和研牙醫診所": {
+    "place_id": "ChIJ12qpvmUjaTQRUquD_Y1P_8A",
+    "rating": 4.9,
+    "review_count": 52
+  },
+  "和群牙醫診所": {
+    "place_id": "ChIJeeowQiIYaTQR4EJNyEnFhOM",
+    "rating": 4.5,
+    "review_count": 405
+  },
+  "品悅牙醫診所": {
+    "place_id": "ChIJwz5fPOQXaTQR3O5rQfoULYE",
+    "rating": 4.0,
+    "review_count": 94
+  },
+  "品誠牙醫診所(霧峰區)": {
+    "place_id": "ChIJn0mUMEU7aTQRU03f2Szn5Ww",
+    "rating": 4.3,
+    "review_count": 100
+  },
+  "嘉康牙醫診所": {
+    "place_id": "ChIJlebn14A9aTQRjiQn3wIFBOM",
+    "rating": 3.0,
+    "review_count": 38
+  },
+  "國佑牙醫診所": {
+    "place_id": "ChIJBRnbOo0yDxQReV4EwTjlI7M",
+    "rating": 4.2,
+    "review_count": 63
+  },
+  "國泰牙醫診所": {
+    "place_id": "ChIJn6hIq1g9aTQReSMYqiQpRXQ",
+    "rating": 3.0,
+    "review_count": 21
+  },
+  "圓周牙醫診所": {
+    "place_id": "ChIJI7-3W7w9aTQRK2mODWOo1tA",
+    "rating": 4.6,
+    "review_count": 204
+  },
+  "圓環牙醫診所": {
+    "place_id": "ChIJ5fLTy-EXaTQR6uk-4fZfPYs",
+    "rating": 3.6,
+    "review_count": 17
+  },
+  "大仁牙醫診所(大里區)": {
+    "place_id": "ChIJt5rtk7M8aTQRsfjGUxONcTA",
+    "rating": 4.0,
+    "review_count": 32
+  },
+  "大來牙醫診所": {
+    "place_id": "ChIJh5x8Q5s9aTQR61JVOEBRvJc",
+    "rating": 3.9,
+    "review_count": 134
+  },
+  "大全張牙醫診所": {
+    "place_id": "ChIJZbiJtg49aTQR6wNEbEswtkI",
+    "rating": 5.0,
+    "review_count": 15
+  },
+  "大新牙醫診所": {
+    "place_id": "ChIJDfvhZ9YXaTQR93miF_fnbLI",
+    "rating": 4.4,
+    "review_count": 49
+  },
+  "大方牙醫診所": {
+    "place_id": "ChIJcUXgLWMXaTQRUGvibJWV40M",
+    "rating": 4.1,
+    "review_count": 31
+  },
+  "大明牙醫診所": {
+    "place_id": "ChIJ6-XeROg8aTQRey3iKkvydeI",
+    "rating": 3.7,
+    "review_count": 74
+  },
+  "大甲媽牙醫診所": {
+    "place_id": "ChIJpV1ucQASaTQR12mo5Rhuuls",
+    "rating": 4.8,
+    "review_count": 474
+  },
+  "大里三合牙醫診所": {
+    "place_id": "ChIJa8Caqe08aTQRBe_Vc7sftA4",
+    "rating": 4.1,
+    "review_count": 56
+  },
+  "天誼牙醫診所": {
+    "place_id": "ChIJNelrVOkWaTQRNbQRiMmy7Qw",
+    "rating": 3.7,
+    "review_count": 32
+  },
+  "太平劉牙醫診所": {
+    "place_id": "ChIJUyIWOM0iaTQRO2Cn-IwTlKM",
+    "rating": 3.0,
+    "review_count": 33
+  },
+  "太平新品牙醫診所": {
+    "place_id": "ChIJo5ghPaYiaTQRVbf8wJqc39Y",
+    "rating": 3.2,
+    "review_count": 88
+  },
+  "安信牙醫診所": {
+    "place_id": "ChIJq19qAR8YaTQRivABsLoYQXw",
+    "rating": 4.9,
+    "review_count": 283
+  },
+  "安正牙醫診所": {
+    "place_id": "ChIJG-hvthM9aTQRQsRofu1zG8Q",
+    "rating": 4.3,
+    "review_count": 44
+  },
+  "宏宜牙醫診所": {
+    "place_id": "ChIJKWWU9W49aTQR4a5kF_Bilrs",
+    "rating": 4.5,
+    "review_count": 11
+  },
+  "宏誠牙醫診所": {
+    "place_id": "ChIJGzq5-fYXaTQRoyYbPQdNIJY",
+    "rating": 5.0,
+    "review_count": 3
+  },
+  "專誠牙醫診所": {
+    "place_id": "ChIJf7UD8R0VaTQR7nSUguqbIFs",
+    "rating": 4.5,
+    "review_count": 454
+  },
+  "小貝齒牙醫診所": {
+    "place_id": "ChIJV9akkjA9aTQRfd6xn7_wdMw",
+    "rating": 4.9,
+    "review_count": 1055
+  },
+  "尚美牙醫診所": {
+    "place_id": "ChIJBQyULQU9aTQROoTp7yG41mo",
+    "rating": 3.7,
+    "review_count": 7
+  },
+  "尚青牙醫診所": {
+    "place_id": "ChIJh4laRAAVaTQRS2R-RqYERVE",
+    "rating": 4.4,
+    "review_count": 68
+  },
+  "岡林牙醫診所": {
+    "place_id": "ChIJha8r9iwRaTQRdxkhh6bw-U0",
+    "rating": 3.4,
+    "review_count": 8
+  },
+  "平安牙醫診所": {
+    "place_id": "ChIJdZdi-f4RaTQRQUEwH_in2Xo",
+    "rating": 3.1,
+    "review_count": 33
+  },
+  "康健牙醫診所": {
+    "place_id": "ChIJMbUjJf88aTQRJbVw9R_0GBA",
+    "rating": 4.4,
+    "review_count": 120
+  },
+  "康橋牙醫診所": {
+    "place_id": "ChIJAXXlG6s9aTQRMKeSQUB4uFA",
+    "rating": 4.9,
+    "review_count": 2165
+  },
+  "康泰牙醫診所": {
+    "place_id": "ChIJQxQel_EWaTQRK_wzJsUNpdg",
+    "rating": 4.7,
+    "review_count": 46
+  },
+  "廖叔平牙醫診所": {
+    "place_id": "ChIJLS_Sg2I9aTQR5U3C9PIFRgk",
+    "rating": 2.7,
+    "review_count": 28
+  },
+  "弘康牙醫診所": {
+    "place_id": "ChIJ7ZnC8CEWaTQR0K-MZuOgXy8",
+    "rating": 3.6,
+    "review_count": 17
+  },
+  "張家禎牙醫診所": {
+    "place_id": "ChIJ6yTmdW49aTQR1WXOVASg5FU",
+    "rating": 3.8,
+    "review_count": 16
+  },
+  "張林牙醫診所": {
+    "place_id": "ChIJLcnzxggaaTQRv0h5V50zwaE",
+    "rating": 5.0,
+    "review_count": 1
+  },
+  "張溫鷹牙醫診所": {
+    "place_id": "ChIJy_vYIno9aTQRk3l8Sqqk88g",
+    "rating": 3.4,
+    "review_count": 89
+  },
+  "彭光偉牙醫診所": {
+    "place_id": "ChIJJeQfcMI9aTQRI1Z40jjWpGA",
+    "rating": 4.9,
+    "review_count": 716
+  },
+  "彰仁牙醫診所": {
+    "place_id": "ChIJr13jdOMUaTQR5XejwUUP6Jg",
+    "rating": 3.9,
+    "review_count": 130
+  },
+  "徐牙醫診所": {
+    "place_id": "ChIJJzfrioccaTQRSDVHdxjgtas",
+    "rating": 4.9,
+    "review_count": 8
+  },
+  "得恩牙醫診所": {
+    "place_id": "ChIJZz2dLJc9aTQRHfA5suKeIFE",
+    "rating": 4.6,
+    "review_count": 47
+  },
+  "德全牙醫診所": {
+    "place_id": "ChIJIcz4Ex4YaTQR_RVd7-ycQWc",
+    "rating": 3.6,
+    "review_count": 52
+  },
+  "德明牙醫診所": {
+    "place_id": "ChIJO728LPIWaTQRUVXwGCVfSj8",
+    "rating": 3.9,
+    "review_count": 122
+  },
+  "德義牙醫診所": {
+    "place_id": "ChIJY-tFx-EXaTQRvRfIKCXex3Q",
+    "rating": 4.6,
+    "review_count": 17
+  },
+  "志升牙醫診所": {
+    "place_id": "ChIJ8zEywLA9aTQRQxicuDcsZxc",
+    "rating": 3.8,
+    "review_count": 94
+  },
+  "忠信牙醫診所": {
+    "place_id": "ChIJNVZsC6IiaTQRylQGJKlkGAU",
+    "rating": 4.0,
+    "review_count": 37
+  },
+  "快樂牙醫診所": {
+    "place_id": "ChIJDcUOnV8caTQR4eNc6ir6IIk",
+    "rating": 3.1,
+    "review_count": 89
+  },
+  "怡人牙醫診所": {
+    "place_id": "ChIJb7GX2ao9aTQR7ith0e7KU-g",
+    "rating": 3.5,
+    "review_count": 87
+  },
+  "悠緹美學牙醫診所": {
+    "place_id": "ChIJxx0o3s8VaTQRk7gN_0h40A0",
+    "rating": 4.9,
+    "review_count": 3503
+  },
+  "愛鄰牙醫診所": {
+    "place_id": "ChIJs0gbgoY9aTQRpzc_HH_Z8PE",
+    "rating": 4.0,
+    "review_count": 91
+  },
+  "愛麗兒牙醫診所": {
+    "place_id": "ChIJdarSK5I9aTQRtfqXLtpl04s",
+    "rating": 3.0,
+    "review_count": 104
+  },
+  "懷恩牙醫診所": {
+    "place_id": "ChIJ19U7fl4caTQRaVzCyPKhbQ8",
+    "rating": 3.8,
+    "review_count": 17
+  },
+  "承群牙醫診所": {
+    "place_id": "ChIJkeDaHqk9aTQRPgwWo79WyQI",
+    "rating": 4.5,
+    "review_count": 56
+  },
+  "振傑牙醫診所": {
+    "place_id": "ChIJy5X6Z5s9aTQRUOzea31cAEc",
+    "rating": 4.1,
+    "review_count": 41
+  },
+  "文正牙醫診所": {
+    "place_id": "ChIJLf9LzQYVaTQRdbZEb-AK3OI",
+    "rating": 4.1,
+    "review_count": 69
+  },
+  "新仁愛牙醫診所": {
+    "place_id": "ChIJQSkjphw9aTQRBqPVw58nTMw",
+    "rating": 4.8,
+    "review_count": 250
+  },
+  "新光牙醫診所": {
+    "place_id": "ChIJQVBScwA9aTQRxCjqL1mAtn8",
+    "rating": 3.8,
+    "review_count": 14
+  },
+  "新力牙醫診所": {
+    "place_id": "ChIJ16KR8SEWaTQRuplKxf4XWlE",
+    "rating": 4.9,
+    "review_count": 34
+  },
+  "新勝全牙醫診所": {
+    "place_id": "ChIJQZcbH_4NaTQRvTCM3H75paM",
+    "rating": 4.7,
+    "review_count": 310
+  },
+  "新宏仁牙醫診所": {
+    "place_id": "ChIJxRkhizQXaTQR7y-7vdHCYvQ",
+    "rating": 4.4,
+    "review_count": 10
+  },
+  "新欣牙醫診所": {
+    "place_id": "ChIJef37Z7k8aTQR7bAo_m2WQS4",
+    "rating": 4.6,
+    "review_count": 1482
+  },
+  "新陳牙醫診所": {
+    "place_id": "ChIJa1OfNF4caTQRYPYccPMw1Vo",
+    "rating": 4.5,
+    "review_count": 12
+  },
+  "日信牙醫診所": {
+    "place_id": "ChIJnVI-5xU8aTQRS_ifow64-j4",
+    "rating": 4.2,
+    "review_count": 115
+  },
+  "日安牙醫診所(北區)": {
+    "place_id": "ChIJ4byT9no9aTQR2J4dqcaIX_I",
+    "rating": 4.8,
+    "review_count": 50
+  },
+  "日安牙醫診所(烏日區)": {
+    "place_id": "ChIJa-36VI07aTQRqHqlTRQs0wE",
+    "rating": 3.5,
+    "review_count": 46
+  },
+  "昇弘牙醫診所": {
+    "place_id": "ChIJh64mvnk9aTQRcKv-MaEejhQ",
+    "rating": 4.7,
+    "review_count": 29
+  },
+  "明怡牙醫診所": {
+    "place_id": "ChIJA9JId8I9aTQRiNJWifJpAtI",
+    "rating": 4.2,
+    "review_count": 28
+  },
+  "明泰牙醫診所": {
+    "place_id": "ChIJpb6AnrsXaTQRnKPXA5Y9Dck",
+    "rating": 3.9,
+    "review_count": 19
+  },
+  "明通牙醫診所": {
+    "place_id": "ChIJP1Qv34Q9aTQRz9WOnTq8R8g",
+    "rating": 4.3,
+    "review_count": 6
+  },
+  "明道牙醫診所": {
+    "place_id": "ChIJJwtKbh48aTQRFn8_WXqovQ8",
+    "rating": 4.6,
+    "review_count": 37
+  },
+  "明鑫牙醫診所": {
+    "place_id": "ChIJj8HOmVo7aTQRYDpShOrEvK4",
+    "rating": 4.2,
+    "review_count": 6
+  },
+  "星宇牙醫診所": {
+    "place_id": "ChIJ7RSyiaMaaTQR_6nQGJVfh6Y",
+    "rating": 4.6,
+    "review_count": 871
+  },
+  "時代牙醫診所": {
+    "place_id": "ChIJr9Ywd-Y8aTQRIE73DT4S59A",
+    "rating": 3.7,
+    "review_count": 24
+  },
+  "晨光牙醫診所": {
+    "place_id": "ChIJuy4U7wYaaTQRKzwIR7mGYVE",
+    "rating": 4.2,
+    "review_count": 33
+  },
+  "普全牙醫診所": {
+    "place_id": "ChIJzaZz6wAOaTQRliYWfmTJGAI",
+    "rating": 4.8,
+    "review_count": 329
+  },
+  "景安牙醫診所": {
+    "place_id": "ChIJZWL3v1o7aTQRTMJY3XJof88",
+    "rating": 4.4,
+    "review_count": 27
+  },
+  "景美牙醫診所": {
+    "place_id": "ChIJz7rSBh4YaTQRqUB0-Ow_Yr4",
+    "rating": 3.9,
+    "review_count": 15
+  },
+  "晴天牙醫診所": {
+    "place_id": "ChIJcQsXsqkQaTQRfgy9s3lyTEs",
+    "rating": 3.7,
+    "review_count": 56
+  },
+  "晶品牙醫診所": {
+    "place_id": "ChIJu9NY2ecXaTQRn1tFVliSDNg",
+    "rating": 4.1,
+    "review_count": 38
+  },
+  "晶帷牙醫診所": {
+    "place_id": "ChIJkUdYJeU9aTQRAqmRgH8ATMI",
+    "rating": 4.5,
+    "review_count": 267
+  },
+  "晶耀牙醫診所": {
+    "place_id": "ChIJX6RjNwA7aTQRu5Of0_Mi2fY",
+    "rating": 4.5,
+    "review_count": 19
+  },
+  "暉鴻牙醫診所": {
+    "place_id": "ChIJDbunKi0WaTQRbAK0nxTPQEM",
+    "rating": 3.9,
+    "review_count": 39
+  },
+  "朝美牙醫診所": {
+    "place_id": "ChIJTSXOKOYWaTQR-4Ci9WkOTx4",
+    "rating": 4.5,
+    "review_count": 35
+  },
+  "木成牙醫診所": {
+    "place_id": "ChIJeUt2xygXaTQR7b2W-7zc1-M",
+    "rating": 4.9,
+    "review_count": 199
+  },
+  "朱裕華牙醫診所": {
+    "place_id": "ChIJDaqTa5w9aTQR1aLjgQyDPYo",
+    "rating": 3.4,
+    "review_count": 120
+  },
+  "杏明牙醫診所": {
+    "place_id": "ChIJyU7n3SsRaTQRvkb9hFl2axI",
+    "rating": 3.2,
+    "review_count": 24
+  },
+  "杏林牙醫診所": {
+    "place_id": "ChIJo1E6IWM9aTQR7Y16VNOHIYA",
+    "rating": 4.1,
+    "review_count": 26
+  },
+  "東傑牙醫診所": {
+    "place_id": "ChIJjfvM2qs9aTQRYLYdrG3O7FQ",
+    "rating": 4.7,
+    "review_count": 1327
+  },
+  "東怡牙醫診所": {
+    "place_id": "ChIJ4w6FclgXaTQRDQgouW2VXbY",
+    "rating": 4.8,
+    "review_count": 26
+  },
+  "東生牙醫診所": {
+    "place_id": "ChIJVUWAB54_aTQRkSzd5_w2gRY",
+    "rating": 4.6,
+    "review_count": 38
+  },
+  "東群牙醫診所": {
+    "place_id": "ChIJl6k8C5c9aTQRGWZWBYI8Zqk",
+    "rating": 4.5,
+    "review_count": 61
+  },
+  "松美牙醫診所": {
+    "place_id": "ChIJRcNygzE-aTQRIaPFd1sY_tE",
+    "rating": 2.9,
+    "review_count": 27
+  },
+  "林明勳牙醫診所": {
+    "place_id": "ChIJozVd7iM8aTQRFj7SWe0GO38",
+    "rating": 4.6,
+    "review_count": 38
+  },
+  "柏瑞牙醫診所": {
+    "place_id": "ChIJ-2dB98M9aTQRfPyQfz6xqZA",
+    "rating": 4.6,
+    "review_count": 75
+  },
+  "柯雅芳牙醫診所": {
+    "place_id": "ChIJ09-VYdEXaTQRaoax8ncpz5I",
+    "rating": 3.2,
+    "review_count": 51
+  },
+  "根彥牙醫診所": {
+    "place_id": "ChIJZ5dBLG49aTQRG0iQTARZY4U",
+    "rating": 3.4,
+    "review_count": 48
+  },
+  "梧悠美學牙醫診所": {
+    "place_id": "ChIJccZBPWIVaTQR3qKG2g8Q9KI",
+    "rating": 4.9,
+    "review_count": 547
+  },
+  "植得植牙美學牙醫診所": {
+    "place_id": "ChIJ197pVO49aTQRyU7TyvcNu7s",
+    "rating": 5.0,
+    "review_count": 634
+  },
+  "榮春牙醫診所": {
+    "place_id": "ChIJS5MuaVgOaTQR_-jYvN9AmAU",
+    "rating": 3.2,
+    "review_count": 11
+  },
+  "樂業牙醫診所": {
+    "place_id": "ChIJJUokpKU9aTQRJRXiYnWbYhM",
+    "rating": 4.9,
+    "review_count": 497
+  },
+  "權泓牙醫診所": {
+    "place_id": "ChIJL08m81A8aTQRSdEcR546YvE",
+    "rating": 4.8,
+    "review_count": 260
+  },
+  "欣悅牙醫診所": {
+    "place_id": "ChIJe7EB9lo7aTQRNA8ZOIOgj5k",
+    "rating": 4.7,
+    "review_count": 1334
+  },
+  "欽泰牙醫診所": {
+    "place_id": "ChIJva_CYaMaaTQR5T0Sf0N4NLo",
+    "rating": 3.8,
+    "review_count": 15
+  },
+  "正大牙醫診所": {
+    "place_id": "ChIJoy1Z2v0RaTQRfuifqhV2or4",
+    "rating": 2.2,
+    "review_count": 35
+  },
+  "正天牙醫診所": {
+    "place_id": "ChIJU-2d3OAPaTQRhT0SWZBJG2A",
+    "rating": 4.5,
+    "review_count": 109
+  },
+  "民康牙醫診所": {
+    "place_id": "ChIJHa-yuRgWaTQRcaIeokb0Y4s",
+    "rating": 4.2,
+    "review_count": 139
+  },
+  "永信牙醫診所": {
+    "place_id": "ChIJO07Zi8QXaTQRM2K1kYcEJsI",
+    "rating": 4.7,
+    "review_count": 284
+  },
+  "永大牙醫診所": {
+    "place_id": "ChIJNbadd8IXaTQRQbuzhLlSZTA",
+    "rating": 3.7,
+    "review_count": 29
+  },
+  "永新牙醫診所": {
+    "place_id": "ChIJE2seZsE9aTQRJBSoh4KABDg",
+    "rating": 4.2,
+    "review_count": 63
+  },
+  "永美牙醫診所": {
+    "place_id": "ChIJMyHCIzkQaTQRiCe9m5-PsQo",
+    "rating": 3.2,
+    "review_count": 30
+  },
+  "永華牙醫診所": {
+    "place_id": "ChIJSYHWNjw9aTQRZJV_GgFtIaM",
+    "rating": 3.7,
+    "review_count": 3
+  },
+  "永達牙醫診所": {
+    "place_id": "ChIJkf-2vp49aTQRTsyYWQQcapY",
+    "rating": 3.8,
+    "review_count": 41
+  },
+  "汎宇牙醫診所": {
+    "place_id": "ChIJz6-yG1E8aTQRcXUQ4fuHFN8",
+    "rating": 4.8,
+    "review_count": 3143
+  },
+  "沈牙醫診所": {
+    "place_id": "ChIJzXGQV3Q9aTQRX_Upg4RKekA",
+    "rating": 4.0,
+    "review_count": 43
+  },
+  "沙鹿張牙醫診所": {
+    "place_id": "ChIJPRZsYeMUaTQRSFjJdz_x6AI",
+    "rating": 4.5,
+    "review_count": 57
+  },
+  "法務部矯正署臺中監獄附設培德醫院": {
+    "place_id": "ChIJkWvPlGA-aTQRWDxTkrOC_zo",
+    "rating": null,
+    "review_count": 0
+  },
+  "泛美牙醫診所": {
+    "place_id": "ChIJpaqiHIY9aTQRXJegYyB2s7w",
+    "rating": 4.4,
+    "review_count": 275
+  },
+  "洪清苑牙醫診所": {
+    "place_id": "ChIJC2reb2QXaTQRVf9ZItbRVM4",
+    "rating": 2.1,
+    "review_count": 27
+  },
+  "清水張牙醫診所": {
+    "place_id": "ChIJpeTxgX8UaTQRJ7wGP19Vcp8",
+    "rating": 3.0,
+    "review_count": 31
+  },
+  "清水牙醫診所": {
+    "place_id": "ChIJP1KE2YcUaTQRJFPx56kTvmY",
+    "rating": 3.2,
+    "review_count": 107
+  },
+  "游牙醫診所(豐原區)": {
+    "place_id": "ChIJK19-Xw8aaTQRX7MDy4yutK0",
+    "rating": 2.6,
+    "review_count": 27
+  },
+  "源德牙醫診所": {
+    "place_id": "ChIJ5ZRCQMI9aTQRc4jZIaaMi64",
+    "rating": 4.1,
+    "review_count": 38
+  },
+  "潔宇牙醫診所": {
+    "place_id": "ChIJmw2TYNsXaTQRWVYeatyGa_U",
+    "rating": 4.6,
+    "review_count": 521
+  },
+  "潔安牙醫診所(太平區)": {
+    "place_id": "ChIJy0zhcsoiaTQRnvHnmQWi2jg",
+    "rating": 3.8,
+    "review_count": 41
+  },
+  "潘牙醫診所": {
+    "place_id": "ChIJmfwAj-0WaTQRl29s-r5DyMM",
+    "rating": 4.5,
+    "review_count": 4
+  },
+  "潭子聯合牙醫診所": {
+    "place_id": "ChIJVXn9a4UXaTQR0WygIfJa0Ag",
+    "rating": 3.7,
+    "review_count": 16
+  },
+  "澄清綜合醫院": {
+    "place_id": "ChIJvTFkwGw9aTQRsgCBymg7uWs",
+    "rating": 3.0,
+    "review_count": 712
+  },
+  "澄清綜合醫院中港分院": {
+    "place_id": "ChIJVwBKGfwVaTQRXn-ec2jnNws",
+    "rating": 3.0,
+    "review_count": 1309
+  },
+  "濟仁牙醫診所": {
+    "place_id": "ChIJyzmGHBoVaTQR0oVYeJhqmaE",
+    "rating": 4.8,
+    "review_count": 441
+  },
+  "理想牙醫診所": {
+    "place_id": "ChIJE-sLoYwVaTQRmqeGq_-kBtw",
+    "rating": 4.2,
+    "review_count": 44
+  },
+  "瑞聯牙醫診所": {
+    "place_id": "ChIJ_4GpkP4VaTQRGtUHKFD4_gg",
+    "rating": 3.9,
+    "review_count": 63
+  },
+  "璽瑞美學牙醫診所": {
+    "place_id": "ChIJOX4TX4I9aTQRyURsEe40n5s",
+    "rating": 4.9,
+    "review_count": 775
+  },
+  "登峯牙醫診所": {
+    "place_id": "ChIJu8woH4Y9aTQRhykcNe1EGHs",
+    "rating": 4.5,
+    "review_count": 27
+  },
+  "白光牙醫診所": {
+    "place_id": "ChIJryL44QYaaTQROxJ2Kl3Mr8U",
+    "rating": 4.5,
+    "review_count": 21
+  },
+  "白居正牙醫診所": {
+    "place_id": "ChIJo5MYC5k9aTQRn-M1njRPkC8",
+    "rating": 4.1,
+    "review_count": 14
+  },
+  "百齡牙醫診所": {
+    "place_id": "ChIJQ9pu_CY-aTQRsEU28Y7iIRs",
+    "rating": 4.1,
+    "review_count": 99
+  },
+  "皇家牙醫診所": {
+    "place_id": "ChIJxdkMxqI9aTQRSXSJ50RWdIw",
+    "rating": 4.9,
+    "review_count": 566
+  },
+  "皓皓牙醫診所": {
+    "place_id": "ChIJszy3vAg9aTQRupnRkF1h1oQ",
+    "rating": 4.3,
+    "review_count": 91
+  },
+  "益德牙醫診所": {
+    "place_id": "ChIJ7X9H-cE9aTQRjJZ_np7dCoY",
+    "rating": 5.0,
+    "review_count": 54
+  },
+  "益詮牙醫診所": {
+    "place_id": "ChIJg5KXPgA9aTQRxNfobTA8psA",
+    "rating": 4.9,
+    "review_count": 18
+  },
+  "真愛美學牙醫診所": {
+    "place_id": "ChIJ697a0uA9aTQR6P-GGHBYZUA",
+    "rating": 4.8,
+    "review_count": 843
+  },
+  "真生牙醫診所": {
+    "place_id": "ChIJR8tXGPIWaTQRZ4ZaDKX0KO0",
+    "rating": 3.2,
+    "review_count": 63
+  },
+  "矽品牙醫診所": {
+    "place_id": "ChIJRZcrrGsXaTQRrdyFffhQFpo",
+    "rating": 3.9,
+    "review_count": 29
+  },
+  "祐德牙醫診所(大里區)": {
+    "place_id": "ChIJ-d4j0bA8aTQROUHXQ8Fw-Ug",
+    "rating": 3.9,
+    "review_count": 32
+  },
+  "祥恩牙醫診所": {
+    "place_id": "ChIJSYALIuQ8aTQRkZLSHdu7jZk",
+    "rating": 4.6,
+    "review_count": 19
+  },
+  "福康牙醫診所": {
+    "place_id": "ChIJe2HxB3k9aTQReQ3eu_7RZoA",
+    "rating": 4.4,
+    "review_count": 27
+  },
+  "福星牙醫診所": {
+    "place_id": "ChIJmw7TPiEWaTQRkD8K9CD5TLw",
+    "rating": 4.3,
+    "review_count": 125
+  },
+  "福茂聯合門診福茂牙醫診所": {
+    "place_id": "ChIJnUK8xiEWaTQRirMx7sVu-TE",
+    "rating": 4.1,
+    "review_count": 68
+  },
+  "福音牙醫診所": {
+    "place_id": "ChIJJeHevBgYaTQRfulzIIp9mg8",
+    "rating": 4.1,
+    "review_count": 35
+  },
+  "禾安牙醫診所": {
+    "place_id": "ChIJwyQBBEI9aTQRyCgAX84s_Fs",
+    "rating": 3.7,
+    "review_count": 37
+  },
+  "禾諺牙醫診所": {
+    "place_id": "ChIJOQQGK-AXaTQR6N-hmlySwlU",
+    "rating": 4.4,
+    "review_count": 63
+  },
+  "科隆白金牙醫診所": {
+    "place_id": "ChIJMRpREG89aTQR8wpKNynfrh4",
+    "rating": 4.7,
+    "review_count": 766
+  },
+  "立仁牙醫診所": {
+    "place_id": "ChIJub-hAtE8aTQRc2Up6qDAgqg",
+    "rating": 4.3,
+    "review_count": 69
+  },
+  "立德牙醫診所": {
+    "place_id": "ChIJU4MXJ3sXaTQRFPUCBY49IK4",
+    "rating": 4.7,
+    "review_count": 879
+  },
+  "立祥牙醫診所": {
+    "place_id": "ChIJV0CxtOoXaTQRQqln-k9PmTA",
+    "rating": 3.5,
+    "review_count": 66
+  },
+  "童綜合醫療社團法人童綜合醫院": {
+    "place_id": "ChIJYa1Y08QUaTQRuZNj0D9Mek8",
+    "rating": 3.2,
+    "review_count": 1302
+  },
+  "童齡牙醫診所": {
+    "place_id": "ChIJyQ-AVck9aTQRTAyOhoyiqgU",
+    "rating": 3.5,
+    "review_count": 102
+  },
+  "筌琳牙醫診所": {
+    "place_id": "ChIJlZ079Fk9aTQRj0ZqT_vosck",
+    "rating": 3.7,
+    "review_count": 27
+  },
+  "精英牙醫診所": {
+    "place_id": "ChIJpVcQlR8WaTQRrXnOtQm8DkQ",
+    "rating": 4.3,
+    "review_count": 107
+  },
+  "精銳牙醫診所": {
+    "place_id": "ChIJXfPpzr09aTQRuNk_x9HqeNk",
+    "rating": 4.4,
+    "review_count": 209
+  },
+  "紀令儀牙醫診所": {
+    "place_id": "ChIJ08ZRp9gXaTQRd4YcaLyuUXI",
+    "rating": 3.8,
+    "review_count": 46
+  },
+  "維康牙醫診所": {
+    "place_id": "ChIJc2FwFx8YaTQRlEhExifoWbU",
+    "rating": 4.3,
+    "review_count": 16
+  },
+  "維德美學牙醫診所": {
+    "place_id": "ChIJhQY6kbYXaTQR0fXq84lULIw",
+    "rating": 4.7,
+    "review_count": 438
+  },
+  "維欣牙醫診所": {
+    "place_id": "ChIJVeVWCz09aTQR3zlwR7yw4lo",
+    "rating": 4.5,
+    "review_count": 930
+  },
+  "羅光志牙醫診所": {
+    "place_id": "ChIJWWBmVnUQaTQRN1gbLfivRzU",
+    "rating": 3.8,
+    "review_count": 29
+  },
+  "美好牙醫診所": {
+    "place_id": "ChIJ_Xn6A2c9aTQRAgQYtzh8aZg",
+    "rating": 4.0,
+    "review_count": 55
+  },
+  "美立牙醫診所": {
+    "place_id": "ChIJDwzOce4XaTQReZMnRJMPgjU",
+    "rating": 3.6,
+    "review_count": 29
+  },
+  "群恩牙醫診所": {
+    "place_id": "ChIJcV4X7hs9aTQRSgj668WcCjo",
+    "rating": 4.4,
+    "review_count": 68
+  },
+  "群洲牙醫診所": {
+    "place_id": "ChIJLS64ROUUaTQR53VbL0YVVwA",
+    "rating": 3.9,
+    "review_count": 218
+  },
+  "群益牙醫診所": {
+    "place_id": "ChIJE5Mpzuk9aTQR2l4IKwpFRNA",
+    "rating": 3.7,
+    "review_count": 66
+  },
+  "翁子牙醫診所": {
+    "place_id": "ChIJX-0JshYaaTQRr0wxVs1ObMI",
+    "rating": 3.0,
+    "review_count": 20
+  },
+  "耀仁牙醫診所": {
+    "place_id": "ChIJ3181he8XaTQR4HusLRSVsq8",
+    "rating": 2.3,
+    "review_count": 27
+  },
+  "肇洲牙醫診所": {
+    "place_id": "ChIJd7I5pAYaaTQRwG4O5vtj2Zw",
+    "rating": 4.8,
+    "review_count": 18
+  },
+  "臺中市和平區衛生所": {
+    "place_id": "ChIJd5MhQSQeaTQRqTLAdiV54DI",
+    "rating": 4.4,
+    "review_count": 20
+  },
+  "臺中市立老人復健綜合醫院": {
+    "place_id": "ChIJYRdcagAZaTQRWg5aya_5Pe8",
+    "rating": 3.9,
+    "review_count": 282
+  },
+  "臺中榮民總醫院": {
+    "place_id": "ChIJzYhy9PQ9aTQRlISGc2YyE18",
+    "rating": 3.5,
+    "review_count": 2764
+  },
+  "興達牙醫診所": {
+    "place_id": "ChIJV9unPnASaTQRKONhHNqJa_g",
+    "rating": 4.0,
+    "review_count": 31
+  },
+  "芯好牙醫診所": {
+    "place_id": "ChIJQ4LkTp4_aTQRlzwU-5r4G_M",
+    "rating": 4.4,
+    "review_count": 113
+  },
+  "茂昌牙醫診所": {
+    "place_id": "ChIJkcGEnN09aTQRTWHd-ZElRA8",
+    "rating": 4.7,
+    "review_count": 26
+  },
+  "菁品牙醫診所": {
+    "place_id": "ChIJgV2I3d88aTQR79knxQEh5m8",
+    "rating": 3.8,
+    "review_count": 26
+  },
+  "華信牙醫診所": {
+    "place_id": "ChIJsZVlwFk7aTQRjM0P0_Y-2vk",
+    "rating": 4.0,
+    "review_count": 75
+  },
+  "華興牙醫診所": {
+    "place_id": "ChIJxeEDH1o7aTQRlhcQcURRfBA",
+    "rating": 2.8,
+    "review_count": 21
+  },
+  "萬和牙醫診所": {
+    "place_id": "ChIJx0l1UzMWaTQRt7x-RExrt4Y",
+    "rating": 4.3,
+    "review_count": 34
+  },
+  "藍牙醫診所": {
+    "place_id": "ChIJvQBVZWMXaTQRS20NuCgcAFE",
+    "rating": 3.6,
+    "review_count": 32
+  },
+  "衛生福利部臺中醫院": {
+    "place_id": "ChIJ19yOgg09aTQR8QRdu5A-Q6k",
+    "rating": 2.8,
+    "review_count": 1324
+  },
+  "衛生福利部豐原醫院": {
+    "place_id": "ChIJByZJjRwaaTQRT9uULdhMzTI",
+    "rating": 3.9,
+    "review_count": 2365
+  },
+  "裕峰牙醫診所": {
+    "place_id": "ChIJq8hxOeQXaTQRG0g32EFAs_k",
+    "rating": 3.2,
+    "review_count": 45
+  },
+  "西華牙醫診所": {
+    "place_id": "ChIJlZdDraAQaTQRMRyTHlm9weY",
+    "rating": 4.1,
+    "review_count": 28
+  },
+  "調元牙醫診所": {
+    "place_id": "ChIJG343geQUaTQRtsrwzVFOkWQ",
+    "rating": 3.8,
+    "review_count": 47
+  },
+  "豐南牙醫診所": {
+    "place_id": "ChIJBQr9clUXaTQRX0UHHjmezZY",
+    "rating": 3.8,
+    "review_count": 14
+  },
+  "豐原仁愛牙醫診所": {
+    "place_id": "ChIJgVtnyQgaaTQR2V9B1Qwqyxo",
+    "rating": 3.6,
+    "review_count": 25
+  },
+  "豐原名揚牙醫診所": {
+    "place_id": "ChIJy8sp0BAaaTQRRkegUQyVxXU",
+    "rating": 4.1,
+    "review_count": 137
+  },
+  "豐豪牙醫診所": {
+    "place_id": "ChIJ84KlzfMWaTQRsB40d5Rs-Gc",
+    "rating": 4.0,
+    "review_count": 40
+  },
+  "辰達牙醫診所": {
+    "place_id": "ChIJNcpZpBgYaTQRkIpwo2Tl3Eo",
+    "rating": 4.4,
+    "review_count": 29
+  },
+  "進安牙醫診所": {
+    "place_id": "ChIJcVlawqo9aTQRh3UR3xVCrPY",
+    "rating": 3.7,
+    "review_count": 111
+  },
+  "邱牙醫診所(西區)": {
+    "place_id": "ChIJpVPbuwg9aTQRJewTZl6J8T0",
+    "rating": 4.5,
+    "review_count": 13
+  },
+  "醫世紀牙醫診所": {
+    "place_id": "ChIJwQ62FAA9aTQR7vowkJnd4JU",
+    "rating": null,
+    "review_count": 0
+  },
+  "重慶牙醫診所": {
+    "place_id": "ChIJve7WOioWaTQRSMU4rxq3HOc",
+    "rating": 4.3,
+    "review_count": 41
+  },
+  "金來牙醫診所": {
+    "place_id": "ChIJg6xtlD88aTQRLKWSE-Lq3C0",
+    "rating": 3.6,
+    "review_count": 14
+  },
+  "金山牙醫診所": {
+    "place_id": "ChIJHRHTU908aTQRxiN5AX3W9-s",
+    "rating": 4.7,
+    "review_count": 58
+  },
+  "鉅豐牙醫診所": {
+    "place_id": "ChIJrUKdAw8aaTQRwwmnwwKQlIM",
+    "rating": 4.1,
+    "review_count": 286
+  },
+  "銓臻美學牙醫診所": {
+    "place_id": "ChIJqeAaiLI9aTQRBilFcx3MJT8",
+    "rating": 5.0,
+    "review_count": 1622
+  },
+  "銘家牙醫診所": {
+    "place_id": "ChIJAQAAAI09aTQR7u-b_x-Dzd0",
+    "rating": 4.1,
+    "review_count": 53
+  },
+  "錦和牙醫診所": {
+    "place_id": "ChIJ8_69GWs9aTQRnWKYL40vIB4",
+    "rating": 3.2,
+    "review_count": 20
+  },
+  "長庚牙醫診所(南區)": {
+    "place_id": "ChIJCySOZxc9aTQRl8808a2v6zw",
+    "rating": 4.7,
+    "review_count": 247
+  },
+  "長庚牙醫診所(大里區)": {
+    "place_id": "ChIJ_XuRs5I8aTQRzgNMXNwVWqk",
+    "rating": 2.5,
+    "review_count": 35
+  },
+  "長生牙醫診所": {
+    "place_id": "ChIJBdmTVQAVaTQRsNYTtoqORLc",
+    "rating": 4.1,
+    "review_count": 63
+  },
+  "長青牙醫診所(西屯區)": {
+    "place_id": "ChIJzWGVAYk9aTQRjVeW76_-SmU",
+    "rating": 4.6,
+    "review_count": 42
+  },
+  "長青牙醫診所(豐原區)": {
+    "place_id": "ChIJ-Smt6AYaaTQRleQnkvOzmcM",
+    "rating": 2.9,
+    "review_count": 59
+  },
+  "開心美學牙醫診所": {
+    "place_id": "ChIJGX7YKRsXaTQRM4h17ANyDgQ",
+    "rating": 4.3,
+    "review_count": 134
+  },
+  "陳志勲牙醫診所": {
+    "place_id": "ChIJF_-9oFo8aTQRd3G3Lar5ng8",
+    "rating": 4.8,
+    "review_count": 1595
+  },
+  "陳洲林牙醫診所": {
+    "place_id": "ChIJjWLe3OQUaTQR2xe9Ilgyv8g",
+    "rating": 4.0,
+    "review_count": 18
+  },
+  "陳炯安牙醫診所": {
+    "place_id": "ChIJt7J8oxgWaTQR5_2waNICEt8",
+    "rating": 3.9,
+    "review_count": 178
+  },
+  "陽光牙醫診所(豐原區)": {
+    "place_id": "ChIJLZoiOREaaTQR3lZXCPIjNyE",
+    "rating": 3.6,
+    "review_count": 14
+  },
+  "青熙牙醫診所": {
+    "place_id": "ChIJXSHpPmQXaTQRcbx-KQXYGpg",
+    "rating": 4.6,
+    "review_count": 38
+  },
+  "非凡牙醫診所": {
+    "place_id": "ChIJrydqwCEWaTQR7Bz7CzDlP34",
+    "rating": 4.0,
+    "review_count": 101
+  },
+  "馨田牙醫診所": {
+    "place_id": "ChIJwwkxUsE8aTQRTmBX5TckdLE",
+    "rating": 3.9,
+    "review_count": 59
+  },
+  "鴻德牙醫診所": {
+    "place_id": "ChIJ2S1FoAs9aTQRT8Cm1X7i2UI",
+    "rating": 4.4,
+    "review_count": 55
+  },
+  "黃牙醫診所": {
+    "place_id": "ChIJz6Pd8KMaaTQRj56L3-7YC5Q",
+    "rating": 4.6,
+    "review_count": 39
+  },
+  "鼎好牙醫診所": {
+    "place_id": "ChIJMT_K1L08aTQR3Lx3PH533Sk",
+    "rating": 4.1,
+    "review_count": 36
+  }
+}
