@@ -912,15 +912,29 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
 // 首頁分類頁籤（長照/老人福利、老人假牙補助、身心障礙鑑定）＋ 縣市多選篩選：
 // 頁籤決定資料集大分類（data-category），縣市篩選在該分類內進一步縮小範圍；
 // 全國性資料集（data-county="all"，如長照ABC據點）因涵蓋所有縣市，縣市篩選時一律顯示。
+// 篩選狀態同步進網址查詢字串（?category=xxx&counties=a,b），重新整理頁面時會從網址還原篩選，
+// 分享網址給他人也會保留同一組篩選條件；用 replaceState（非 pushState）避免每次點擊都塞進瀏覽器
+// 上一頁歷史紀錄。
 (function () {
   const tabs = Array.from(document.querySelectorAll("#category-tabs .category-tab"));
   const checkboxes = Array.from(document.querySelectorAll("#county-filter input[type=checkbox]"));
   const cards = Array.from(document.querySelectorAll("#home-grid .home-card"));
   const noMatch = document.getElementById("county-no-match");
   const resetBtn = document.getElementById("county-reset");
+  const validCategories = new Set(tabs.map((t) => t.dataset.category));
   let activeCategory = "all";
 
-  function applyFilters() {
+  function syncUrl() {
+    const params = new URLSearchParams();
+    if (activeCategory !== "all") params.set("category", activeCategory);
+    const selected = checkboxes.filter((cb) => cb.checked).map((cb) => cb.value);
+    if (selected.length > 0) params.set("counties", selected.join(","));
+    const query = params.toString();
+    const newUrl = query ? `${location.pathname}?${query}` : location.pathname;
+    history.replaceState(null, "", newUrl);
+  }
+
+  function applyFilters(shouldSyncUrl = true) {
     const selected = checkboxes.filter((cb) => cb.checked).map((cb) => cb.value);
     let visibleCount = 0;
     cards.forEach((card) => {
@@ -933,24 +947,50 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
       if (visible) visibleCount++;
     });
     noMatch.style.display = visibleCount === 0 ? "" : "none";
+    if (shouldSyncUrl) syncUrl();
+  }
+
+  function setActiveTab(category) {
+    activeCategory = category;
+    tabs.forEach((t) => {
+      t.classList.toggle("active", t.dataset.category === category);
+      t.setAttribute("aria-selected", t.dataset.category === category ? "true" : "false");
+    });
+  }
+
+  // 頁面載入時從網址查詢字串還原上次篩選狀態（?category=xxx&counties=a,b），
+  // 未帶參數或參數值不合法時維持預設（全部資料集、不篩縣市）。
+  function restoreFromUrl() {
+    const params = new URLSearchParams(location.search);
+    const category = params.get("category");
+    if (category && validCategories.has(category)) {
+      setActiveTab(category);
+    }
+    const counties = params.get("counties");
+    if (counties) {
+      const selected = new Set(counties.split(",").filter(Boolean));
+      checkboxes.forEach((cb) => {
+        if (selected.has(cb.value)) cb.checked = true;
+      });
+    }
   }
 
   tabs.forEach((tab) => {
     tab.addEventListener("click", () => {
-      activeCategory = tab.dataset.category;
-      tabs.forEach((t) => {
-        t.classList.toggle("active", t === tab);
-        t.setAttribute("aria-selected", t === tab ? "true" : "false");
-      });
+      setActiveTab(tab.dataset.category);
       applyFilters();
     });
   });
 
-  checkboxes.forEach((cb) => cb.addEventListener("change", applyFilters));
+  checkboxes.forEach((cb) => cb.addEventListener("change", () => applyFilters()));
   resetBtn.addEventListener("click", () => {
     checkboxes.forEach((cb) => (cb.checked = false));
     applyFilters();
   });
+
+  restoreFromUrl();
+  applyFilters(false);
+  syncUrl();
 })();
 </script>
 </body>
