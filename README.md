@@ -457,7 +457,7 @@ git config core.hooksPath .githooks
   結構化資料，供搜尋引擎判斷網站的更新頻率與內容新鮮度；**每次新增資料集或重大功能變更時，請同步在此頁
   新增一筆條目**，並更新 `dateModified`。
 
-## 技術說明
+## 技術說明. 
 
 - 純靜態網站，無需後端，前端使用原生 JavaScript + [Leaflet](https://leafletjs.com/)（含 MarkerCluster 群聚顯示 3 萬筆座標點）+ [Chart.js](https://www.chartjs.org/)。
 - 「長照ABC據點」資料實際筆數約 3.1 萬筆（開放資料平台詮釋資料標示的 1000 筆為估計值，非實際資料量）。
