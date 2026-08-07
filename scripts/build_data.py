@@ -284,6 +284,15 @@ HSC_LTC_URL = "https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/283/b14a70a1
 HSC_DENTURE_URL = "https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/288/d6586e37-bce0-46eb-ae4e-08c5fa41a568.json"
 CHC_DENTURE_URL = "https://email.chcg.gov.tw/df/36br48cd4g64iragh4y6dwoy668s3q"
 YL_LTC_URL = "https://opendataap2.e-land.gov.tw/./resource/files/2019-12-03/a91e966d8b5b07d1e9bb8c3a767e9d1f.json"
+# 115年度宜蘭縣中低收入戶老人假牙裝置補助實施計畫－特約牙醫醫療院所名單（宜蘭縣政府社會處公告 PDF，
+# 非 DCAT 開放資料 CSV/API，來源網址本身即為可直接下載的檔案，比照 build_tn_denture() 由本腳本
+# 於伺服器端自動下載解析，不需人工存檔）。
+YL_DENTURE_PDF_URL = (
+    "https://www-ws.e-land.gov.tw/Download.ashx?"
+    "u=LzAwMS9VcGxvYWQvNDQ1L3JlbGZpbGUvMTI4MzQvMTMzNDU3LzcyNDJiMDlkLWY2MzYtNDY3Mi04ZjIwLTBkMjlkZTlmN2MwMi5wZGY%3d"
+    "&n=MTE15bm05bqm54m557SE6Yar55mC6Zmi5omA5ZCN5ZauKOWQq%2beUs%2biri%2ba1geeoiykgMTE0MTIxOS5wZGY%3d"
+)
+YL_DENTURE_GOOGLE_RATINGS_FILE = "data/source/yl-denture-google-ratings.json"
 HCCG_ELDER_URL = "https://odws.hccg.gov.tw/001/Upload/25/opendataback/9059/33/b253c75b-9e30-42d5-81bd-eb1f37e74af2.json"
 TN_HOMECARE_NURSING_URL = "https://data.tainan.gov.tw/File/ResourceCsvDownload/4de27549-893c-4e8e-8644-538a35076607"
 TC_NURSING_URL = "https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=af086949-239b-41ef-8316-5c12dd26a672"
@@ -1110,6 +1119,108 @@ def build_yl_ltc():
         ])
     print(f"  共 {len(records)} 筆", file=sys.stderr)
     fields = ["id", "name", "type", "owner", "district", "address", "phone", "fax"]
+    return {"fields": fields, "rows": records}
+
+
+def _yl_denture_type(name: str) -> str:
+    """依「診所名稱」關鍵字啟發式推斷機構類型（醫院／衛生所／牙醫診所），非官方分類欄位，
+    僅供前端篩選/圖表參考。比照 build_hsc_denture() / build_kcg_denture() 的 _xxx_denture_type()
+    判斷邏輯。"""
+    name = name or ""
+    if "醫院" in name:
+        return "醫院"
+    if "衛生所" in name:
+        return "衛生所"
+    return "牙醫診所"
+
+
+def build_yl_denture():
+    """115年度宜蘭縣中低收入戶老人假牙裝置補助實施計畫－特約牙醫醫療院所名單（宜蘭縣政府社會處公告
+    PDF，非 DCAT 開放資料 CSV/API）。
+
+    來源網址 YL_DENTURE_PDF_URL 本身即為可直接下載的檔案（非公告網頁轉址），故與 build_specialty()
+    不同，比照 build_tn_denture()，本函式直接於伺服器端自動下載並解析，不需人工存成 data/source/*.pdf；
+    若未來此網址改版失效，需重新確認來源網址並視需要改回人工下載模式。
+
+    用 pdfplumber 解析 PDF（共2頁：第1頁為表格，第2頁為申請流程圖，本函式僅解析第1頁表格），
+    表頭為「編號、鄉鎮市、診所名稱、診所地址、聯絡電話」，共 29 筆，跳過表頭列（編號欄非數字）。
+
+    實測 29 筆中有 3 筆（編號27~29）為跨縣市特約醫院，地址開頭為「花蓮縣花蓮市」/「花蓮縣玉里鎮」
+    （分別為衛生福利部花蓮醫院、財團法人花蓮慈濟醫院、衛生福利部玉里醫院），並非宜蘭縣境內機構；
+    故 county 欄位一律用 parse_county_district() 由地址解析而來（不寫死「宜蘭縣」），district 欄位
+    則直接採用 PDF 本身的「鄉鎮市」欄位（與地址解析結果一致）。
+
+    「機構名稱」欄位有2筆（編號16、17）因原始表格跨行斷字含換行符號（如「醫療財團法人羅許基金會羅東
+    博愛\n醫院」），本函式會移除換行符號還原成完整名稱。
+
+    「聯絡電話」欄位宜蘭縣境內26筆為不含區碼的7位數字（如「9771387」），花蓮縣3筆已含「03-」區碼；
+    本函式為宜蘭縣境內號碼統一補上「03-」前碼，花蓮縣號碼保留原樣。
+
+    「機構類型」由 _yl_denture_type() 依名稱是否含「醫院」「衛生所」關鍵字啟發式判斷，其餘歸類
+    「牙醫診所」，非官方分類欄位。無經緯度座標，故本頁不含地圖。
+
+    PDF 第2頁申請流程圖已另存為 yl-denture/flowchart.jpg（比照 chiayi-denture 的做法），供前端
+    頁面內嵌顯示，本函式不處理該圖片。
+
+    額外欄位 google_rating／google_review_count／google_place_id：使用者需求為呈現各院所的
+    Google 地圖星等與評論數，且明確表示為一次性資料，之後不會重新抓取。資料來源：2026-08-07 用
+    scripts/fetch_google_ratings.py --dataset yl-denture 一次性呼叫 Google Places API (Legacy)
+    Text Search，29 筆全數比對成功（status=OK），整理成
+    data/source/yl-denture-google-ratings.json（key 為「診所名稱」）。人工核對時特別確認以下
+    容易誤判的案例，皆用 Place Details 核對地址後確認比對正確：
+    - 「天主教靈醫會醫療財團法人羅東聖母醫院」Google 地點名稱僅顯示「天主教靈醫會」（非「羅東聖母
+      醫院」），核對地址「宜蘭縣羅東鎮中正南路160號」與原始資料完全一致，確認為同一地點。
+    - 「美佳牙醫診所」比對到「美佳牙醫」、「統一牙醫診所」比對到「統一牙科診所」，皆核對地址與原始
+      資料一致，確認僅顯示名稱略有出入，非誤配對。
+    - 跨縣市3筆花蓮縣特約醫院（衛生福利部花蓮醫院／財團法人花蓮慈濟醫院／衛生福利部玉里醫院）
+      Google 地點名稱為英文（如「Hualien Hospital, Ministry of Health and Welfare」），核對地址
+      確認為同一機構。
+    查無對照資料的院所，此三欄留空字串，前端顯示為「-」（本次 29 筆全數有對照資料，故實務上不會
+    出現空值，僅為程式穩健性保留）。
+    """
+    print("下載 115年度宜蘭縣中低收入戶老人假牙裝置補助特約牙醫醫療院所名單 PDF ...", file=sys.stderr)
+    import pdfplumber  # 延遲載入：僅此資料集需要，避免其他資料集重跑時強制安裝
+
+    data = fetch_bytes(YL_DENTURE_PDF_URL)
+
+    try:
+        with open(YL_DENTURE_GOOGLE_RATINGS_FILE, "r", encoding="utf-8") as f:
+            google_ratings = json.load(f)
+    except FileNotFoundError:
+        google_ratings = {}
+
+    records = []
+    with pdfplumber.open(io.BytesIO(data)) as pdf:
+        for page in pdf.pages:
+            for table in page.extract_tables():
+                for row in table:
+                    row = row + [""] * (5 - len(row))
+                    rid = (row[0] or "").replace("\n", "").strip()
+                    if not rid.isdigit():
+                        continue  # 跳過表頭列（編號欄為「編號」文字）與標題列
+                    district_col = (row[1] or "").replace("\n", "").strip()
+                    name = (row[2] or "").replace("\n", "").strip()
+                    addr = (row[3] or "").replace("\n", "").strip()
+                    phone = (row[4] or "").replace("\n", "").strip()
+                    if phone and re.match(r"^\d{7}$", phone):
+                        phone = "03-" + phone
+                    county, district = parse_county_district(addr, fallback_county="宜蘭縣")
+                    g = google_ratings.get(name, {})
+                    records.append([
+                        int(rid),                     # 0 id
+                        county or "",                    # 1 county
+                        district or district_col,          # 2 district
+                        name,                                 # 3 name
+                        _yl_denture_type(name),                 # 4 type
+                        addr,                                     # 5 address
+                        phone,                                      # 6 phone
+                        g.get("rating", ""),                          # 7 google_rating（一次性資料，查無留空字串）
+                        g.get("review_count", ""),                      # 8 google_review_count（同上）
+                        g.get("place_id", ""),                            # 9 google_place_id（同上，用於評論連結）
+                    ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "county", "district", "name", "type", "address", "phone",
+              "google_rating", "google_review_count", "google_place_id"]
     return {"fields": fields, "rows": records}
 
 
@@ -2430,6 +2541,15 @@ DATASETS = [
         "meta_key": "ylLtc",
         "title": "宜蘭縣立案老人長期照顧及安養機構名冊",
         "source": lambda: YL_LTC_URL,
+    },
+    {
+        "key": "yl-denture",
+        "builder": build_yl_denture,
+        "json": "data/yl-denture.json",
+        "js_var": "YL_DENTURE_DATA",
+        "meta_key": "ylDenture",
+        "title": "115年度宜蘭縣中低收入戶老人假牙裝置補助特約牙醫醫療院所",
+        "source": lambda: YL_DENTURE_PDF_URL,
     },
     {
         "key": "hccg-elder",

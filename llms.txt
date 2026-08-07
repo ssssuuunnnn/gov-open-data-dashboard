@@ -13,6 +13,7 @@
 - [銀髮族服務-居家長照機構](https://www.sunkuo.cc/gov-open-data-dashboard/kcg-homecare/index.html): 高雄市居家式服務類長期照顧服務機構清單，含經緯度座標，於地圖上呈現，並提供行政區／服務時段／關鍵字篩選與統計圖表。 (https://www.sunkuo.cc/gov-open-data-dashboard/kcg-homecare/llms.txt)
 - [新竹縣長照機構名冊](https://www.sunkuo.cc/gov-open-data-dashboard/hsc-ltc/index.html): 新竹縣居家服務、日間照顧、小規模多機能、家庭托顧、團體家屋等長照機構清單，提供鄉鎮市區／服務類型／關鍵字篩選與統計圖表。 (https://www.sunkuo.cc/gov-open-data-dashboard/hsc-ltc/llms.txt)
 - [宜蘭縣立案老人長期照顧及安養機構名冊](https://www.sunkuo.cc/gov-open-data-dashboard/yl-ltc/index.html): 宜蘭縣養護型、長期照護型等立案老人長期照顧及安養機構清單，提供鄉鎮市區／機構類型／關鍵字篩選與統計圖表。 (https://www.sunkuo.cc/gov-open-data-dashboard/yl-ltc/llms.txt)
+- [115年度宜蘭縣中低收入戶老人假牙裝置補助特約牙醫醫療院所](https://www.sunkuo.cc/gov-open-data-dashboard/yl-denture/index.html): 宜蘭縣政府社會處公告之中低收入戶老人假牙裝置補助特約牙醫醫療院所名單（29筆，含3筆跨縣市花蓮縣特約醫院），並整理申請資格、補助金額對照表與申請流程，提供縣市／鄉鎮市／機構類型／關鍵字篩選與統計圖表。 (https://www.sunkuo.cc/gov-open-data-dashboard/yl-denture/llms.txt)
 - [新竹市老人福利機構一覽表](https://www.sunkuo.cc/gov-open-data-dashboard/hccg-elder/index.html): 新竹市立案老人福利機構清單，含經緯度座標，於地圖上呈現，並提供行政區／收容對象／關鍵字篩選與統計圖表。 (https://www.sunkuo.cc/gov-open-data-dashboard/hccg-elder/llms.txt)
 - [臺南市居家護理機構](https://www.sunkuo.cc/gov-open-data-dashboard/tn-homecare-nursing/index.html): 臺南市各行政區居家護理所清單（114年度），提供行政區／關鍵字篩選與統計圖表。 (https://www.sunkuo.cc/gov-open-data-dashboard/tn-homecare-nursing/llms.txt)
 - [臺中市一般護理之家清冊](https://www.sunkuo.cc/gov-open-data-dashboard/tc-nursing/index.html): 臺中市各行政區一般護理之家清單，含一般床／呼吸器依賴床許可與開放床數、評鑑結果、督考結果，提供行政區／關鍵字篩選與統計圖表。 (https://www.sunkuo.cc/gov-open-data-dashboard/tc-nursing/llms.txt)

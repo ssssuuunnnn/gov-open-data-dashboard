@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-06T13:20:21.829400+00:00",
+  "generatedAt": "2026-08-07T15:17:05.540650+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -154,5 +154,10 @@
     "count": 281,
     "source": "使用者手動提供 Google 試算表匯出 CSV（原始資料，非官方開放資料 API）",
     "title": "臺中市65歲以上銀髮族假牙裝置補助計畫合約院所"
+  },
+  "ylDenture": {
+    "count": 29,
+    "source": "https://www-ws.e-land.gov.tw/Download.ashx?u=LzAwMS9VcGxvYWQvNDQ1L3JlbGZpbGUvMTI4MzQvMTMzNDU3LzcyNDJiMDlkLWY2MzYtNDY3Mi04ZjIwLTBkMjlkZTlmN2MwMi5wZGY%3d&n=MTE15bm05bqm54m557SE6Yar55mC6Zmi5omA5ZCN5ZauKOWQq%2beUs%2biri%2ba1geeoiykgMTE0MTIxOS5wZGY%3d",
+    "title": "115年度宜蘭縣中低收入戶老人假牙裝置補助特約牙醫醫療院所"
   }
 }

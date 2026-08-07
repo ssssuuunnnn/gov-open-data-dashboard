@@ -13,6 +13,7 @@
 | `kcg-homecare/` | 銀髮族服務-居家長照機構 | 高雄市政府社會局 | 高雄市居家式服務類長期照顧服務機構清單，含經緯度座標，於地圖上呈現，並提供行政區／服務時段／關鍵字篩選與統計圖表 |
 | `hsc-ltc/` | 新竹縣長照機構名冊 | 新竹縣政府社會處 | 新竹縣居家服務、日間照顧、小規模多機能、家庭托顧、團體家屋等長照機構清單，提供鄉鎮市區／服務類型／關鍵字篩選與統計圖表 |
 | `yl-ltc/` | 宜蘭縣立案老人長期照顧及安養機構名冊 | 宜蘭縣政府 | 宜蘭縣養護型、長期照護型等立案老人長期照顧及安養機構清單，提供鄉鎮市區／機構類型／關鍵字篩選與統計圖表 |
+| `yl-denture/` | 115年度宜蘭縣中低收入戶老人假牙裝置補助特約牙醫醫療院所 | 宜蘭縣政府社會處 | 宜蘭縣中低收入戶老人假牙裝置補助實施計畫特約牙醫醫療院所名單，共29筆，收錄編號、縣市、鄉鎮市、機構名稱、地址、電話與 Google Map 星等、評論數，並整理申請資格、補助態樣與最高補助金額對照表（含流程圖）、申請流程、應備文件、洽詢單位等說明；「機構類型」（醫院／衛生所／牙醫診所）由名稱關鍵字啟發式推斷（非官方分類），其中3筆為跨縣市花蓮縣特約醫院，提供縣市／鄉鎮市／機構類型／關鍵字篩選與統計圖表，無經緯度座標。來源為社會處公告 PDF（非開放資料 CSV/API），由 `build_yl_denture()` 自動下載解析，Google 星等/評論數為一次性快照（2026-08-07） |
 | `hccg-elder/` | 新竹市老人福利機構一覽表 | 新竹市政府社會處 | 新竹市立案老人福利機構清單，含經緯度座標，於地圖上呈現，並提供行政區／收容對象／關鍵字篩選與統計圖表 |
 | `tn-homecare-nursing/` | 臺南市居家護理機構 | 臺南市政府衛生局 | 臺南市各行政區居家護理所清單（114年度），提供行政區／關鍵字篩選與統計圖表 |
 | `tc-nursing/` | 臺中市一般護理之家清冊 | 臺中市政府衛生局 | 臺中市各行政區一般護理之家清單，含一般床／呼吸器依賴床許可與開放床數、評鑑結果、督考結果，提供行政區／關鍵字篩選與統計圖表 |
@@ -85,6 +86,10 @@ hsc-ltc/index.html   新竹縣長照機構名冊儀表板（Chart.js 圖表 + �
 hsc-ltc/app.js
 yl-ltc/index.html    宜蘭縣立案老人長期照顧及安養機構名冊儀表板（Chart.js 圖表 + 篩選表格，無地圖）
 yl-ltc/app.js
+yl-denture/index.html 115年度宜蘭縣中低收入戶老人假牙裝置補助特約牙醫醫療院所儀表板（Chart.js 圖表 +
+                       篩選表格，無地圖）
+yl-denture/app.js
+yl-denture/flowchart.jpg 申請流程圖（取自來源 PDF 第2頁）
 hccg-elder/index.html 新竹市老人福利機構一覽表地圖儀表板（Leaflet 地圖 + Chart.js 圖表 + 篩選表格）
 hccg-elder/app.js
 tn-homecare-nursing/index.html 臺南市居家護理機構儀表板（Chart.js 圖表 + 篩選表格，無地圖）
@@ -169,6 +174,10 @@ data/hsc-ltc.js       同上資料的內嵌 JS 版本（window.HSC_LTC_DATA）�
 data/yl-ltc.json      宜蘭縣立案老人長期照顧及安養機構名冊資料（由 scripts/build_data.py 產生）
 data/yl-ltc.js        同上資料的內嵌 JS 版本（window.YL_LTC_DATA），供 yl-ltc 頁面以
                        <script> 標籤直接載入，因來源網址無 CORS 標頭，不透過 fetch()
+data/yl-denture.json  115年度宜蘭縣中低收入戶老人假牙裝置補助特約牙醫醫療院所資料（由
+                       scripts/build_data.py 產生）
+data/yl-denture.js    同上資料的內嵌 JS 版本（window.YL_DENTURE_DATA），供 yl-denture 頁面以
+                       <script> 標籤直接載入，因來源為 PDF 附件、不透過 fetch()
 data/hccg-elder.json  新竹市老人福利機構一覽表資料（由 scripts/build_data.py 產生）
 data/hccg-elder.js    同上資料的內嵌 JS 版本（window.HCCG_ELDER_DATA），供 hccg-elder 頁面以
                        <script> 標籤直接載入，因來源網址無 CORS 標頭，不透過 fetch()
@@ -320,6 +329,7 @@ python3 scripts/build_data.py tyc-respite         # 只重新產生桃園市喘�
 python3 scripts/build_data.py tn-denture          # 只重新產生臺南市長者免費裝置全口活動假牙計畫合約醫療院所
 python3 scripts/build_data.py kcg-denture         # 只重新產生115年高雄市免費裝假牙特約牙醫醫療院所
 python3 scripts/build_data.py hsc-denture         # 只重新產生新竹縣中低收入老人補助裝置假牙特約醫療院所
+python3 scripts/build_data.py yl-denture          # 只重新產生115年度宜蘭縣中低收入戶老人假牙裝置補助特約牙醫醫療院所
 python3 scripts/build_data.py chiayi-denture      # 只重新產生嘉義市假牙補助合約醫療院所（中低收入／一般身分別）
 python3 scripts/build_data.py chc-denture         # 只重新產生彰化縣補助65歲以上老人裝置全口假牙契約診所名冊
 python3 scripts/build_data.py tc-denture          # 只重新產生臺中市115年度65歲以上銀髮族假牙裝置補助計畫合約院所
