@@ -373,6 +373,9 @@ DIALYSIS_TRANSPORT_CSV = "scripts/sources/dialysis-transport/dialysis-transport.
 
 TC_DENTURE_CSV = "scripts/sources/tc-denture/tc-denture.csv"
 
+HL_DENTURE_PDF = "scripts/sources/hl-denture/institution-list.pdf"
+HL_DENTURE_GOOGLE_RATINGS_FILE = "data/source/hl-denture-google-ratings.json"
+
 # 台灣22縣市清單（正式「臺」寫法），用於從看護機構「服務地區」自由文字欄位以子字串比對方式
 # 偵測涵蓋縣市，詳見 build_caregivers()。CAREGIVER_REGION_ALIASES 額外收錄常見「台」簡寫寫法，
 # 比對時會先將輸入文字中的「台」正規化為「臺」再比對，故此清單一律使用「臺」。
@@ -956,6 +959,100 @@ def build_tc_denture():
         ])
     print(f"  共 {len(records)} 筆", file=sys.stderr)
     fields = ["id", "district", "name", "address", "phone",
+              "google_rating", "google_review_count", "google_place_id"]
+    return {"fields": fields, "rows": records}
+
+
+def _hl_denture_type(name: str) -> str:
+    if "醫院" in name:
+        return "醫院"
+    if "衛生所" in name:
+        return "衛生所"
+    return "牙醫診所"
+
+
+def build_hl_denture():
+    """花蓮縣115年度65歲以上長者假牙補助實施計畫－合約醫療院所公開名單（花蓮縣政府社會處公告）。
+
+    **資料來源特殊性（務必先讀）**：使用者手動提供三份本機 PDF（皆非公開可下載之開放資料 CSV/API，
+    亦非有效可直接 fetch 的公告網址），已複製存放於 scripts/sources/hl-denture/：
+    - institution-list.pdf：機構名單（原檔名「202606051032215377261.pdf」），本函式解析對象
+    - flowchart.pdf：附件四申請流程圖，已另用 pdftoppm 轉存為 hl-denture/flowchart.jpg（比照
+      yl-denture／chiayi-denture 的做法），供前端頁面內嵌顯示，本函式不處理該圖片
+    - qa.pdf：醫療院所申請假牙補助常見問答（Q&A），內容為純文字說明（5大類約20題），已人工整理
+      寫入 hl-denture/index.html 的 FAQ 區塊，本函式不解析此檔案
+    日後如需更新名單，需人工取得新版 PDF 覆蓋 institution-list.pdf 後重新執行
+    `python3 scripts/build_data.py hl-denture`，**無法自動重新下載**。
+
+    表格表頭為「區域、編號、醫事機構名稱、電話、地址」，共 37 筆，編號 1~37 連續無缺漏。原始表格
+    「區域」欄位為合併儲存格樣式（僅該區域第一列有值，同區域後續列為空/None），本函式做「向下延續」
+    （forward-fill）處理，取每列實際所屬區域文字。「醫事機構名稱」欄位多筆因原始表格跨行斷字含換行
+    符號（如「佛教慈濟醫療財團法人花\n蓮慈濟醫院」），本函式移除換行符號後還原成完整名稱。
+
+    county／district 一律用 parse_county_district() 由「地址」欄位解析而來，不直接採用/寫死表格的
+    「區域」欄位文字，因為：(1) 第37筆「合諧牙醫診所」地址為「臺東縣池上鄉忠孝路365號」，是跨縣市
+    特約診所（區域欄位本身也直接寫「臺東縣」而非鄉鎮市名稱），如比照 yl-denture 對跨縣市案例的處理
+    原則，忠實呈現實際地址對應的縣市／鄉鎮市，不強行歸類為花蓮縣；(2) 其餘36筆地址皆已含完整
+    「花蓮縣OO市/鄉/鎮」字首，可直接解析，兩者結果一致，僅第37筆會不同。
+
+    「機構類型」由 _hl_denture_type() 依名稱是否含「醫院」「衛生所」關鍵字啟發式判斷，其餘歸類
+    「牙醫診所」，非官方分類欄位。無經緯度座標，故本頁不含地圖。
+
+    額外欄位 google_rating／google_review_count／google_place_id：使用者需求為呈現各院所的 Google
+    地圖星等與評論數，且明確表示為一次性資料，之後不會重新抓取。資料來源：2026-08-08 用
+    scripts/fetch_google_ratings.py --dataset hl-denture 一次性呼叫 Google Places API (Legacy)
+    Text Search，37 筆全數比對成功（status=OK），整理成
+    data/source/hl-denture-google-ratings.json（key 為「醫事機構名稱」）。人工核對時特別確認以下
+    容易誤判的案例，皆用 Place Details 核對地址後確認比對正確：
+    - 醫院類機構多筆顯示英文地點名稱（如「衛生福利部花蓮醫院」比對到「Hualien Hospital, Ministry
+      of Health and Welfare」、「衛生福利部玉里醫院」比對到「Yuli Hospital, Ministry of Health and
+      Welfare」等），核對 Place Details 回傳地址與原始地址一致，確認為同一機構。
+    - 「天祥牙醫診所」比對到「天祥牙科」、「政安牙醫診所」比對到「Jengan's Dental Clinic」、
+      「微笑牙醫診所」比對到「Smiles-Dental」：皆核對地址門牌一致，確認僅顯示名稱不同，非誤配對。
+    查無對照資料的院所，此三欄留空字串，前端顯示為「-」（本次 37 筆全數有對照資料，故實務上不會
+    出現空值，僅為程式穩健性保留）。
+    """
+    print("讀取 花蓮縣65歲以上長者假牙補助合約醫療院所名單 本地 PDF ...", file=sys.stderr)
+    import pdfplumber  # 延遲載入：僅此資料集需要，避免其他資料集重跑時強制安裝
+
+    try:
+        with open(HL_DENTURE_GOOGLE_RATINGS_FILE, "r", encoding="utf-8") as f:
+            google_ratings = json.load(f)
+    except FileNotFoundError:
+        google_ratings = {}
+
+    records = []
+    with pdfplumber.open(HL_DENTURE_PDF) as pdf:
+        for page in pdf.pages:
+            for table in page.extract_tables():
+                current_region = ""
+                for row in table:
+                    row = row + [""] * (5 - len(row))
+                    region_col, rid, name, phone, addr = row[:5]
+                    rid = (rid or "").strip()
+                    if not rid.isdigit():
+                        continue  # 跳過表頭列（編號欄為「編號」文字）
+                    if region_col and region_col.strip():
+                        current_region = region_col.strip()
+                    name = (name or "").replace("\n", "").strip()
+                    phone = (phone or "").replace("\n", "").strip()
+                    addr = (addr or "").replace("\n", "").strip()
+                    county, district = parse_county_district(addr, fallback_county="花蓮縣")
+                    g = google_ratings.get(name, {})
+                    records.append([
+                        int(rid),                     # 0 id
+                        county or "",                  # 1 county
+                        district or current_region,    # 2 district
+                        name,                          # 3 name
+                        _hl_denture_type(name),        # 4 type
+                        addr,                           # 5 address
+                        phone,                          # 6 phone
+                        g.get("rating", ""),                # 7 google_rating（一次性資料，查無留空字串）
+                        g.get("review_count", ""),          # 8 google_review_count（同上）
+                        g.get("place_id", ""),               # 9 google_place_id（同上，用於評論連結）
+                    ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "county", "district", "name", "type", "address", "phone",
               "google_rating", "google_review_count", "google_place_id"]
     return {"fields": fields, "rows": records}
 
@@ -2749,6 +2846,15 @@ DATASETS = [
         "meta_key": "chcDenture",
         "title": "彰化縣補助65歲以上老人裝置全口假牙契約診所名冊",
         "source": lambda: CHC_DENTURE_URL,
+    },
+    {
+        "key": "hl-denture",
+        "builder": build_hl_denture,
+        "json": "data/hl-denture.json",
+        "js_var": "HL_DENTURE_DATA",
+        "meta_key": "hlDenture",
+        "title": "花蓮縣115年度65歲以上長者假牙補助合約醫療院所",
+        "source": lambda: HL_DENTURE_PDF,
     },
     {
         "key": "tc-denture",

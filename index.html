@@ -690,6 +690,12 @@
       <div class="desc">臺中市政府衛生局公告，115年度65歲以上銀髮族假牙裝置補助計畫合約院所名單，共281筆，涵蓋27個行政區，並整理補助對象、申請期間、給付金額與申請/初審/複審/核銷流程等說明，可依行政區與關鍵字篩選並瀏覽統計圖表，另附 Google Map 星等與評論數。</div>
       <div class="footline" id="tc-denture-count">資料筆數載入中…</div>
     </a>
+    <a class="home-card" href="hl-denture/index.html" data-county="花蓮縣" data-category="denture">
+      <span class="tag">花蓮縣</span>
+      <h2>花蓮縣65歲以上長者假牙補助合約醫療院所</h2>
+      <div class="desc">花蓮縣政府社會處公告，115年度65歲以上長者假牙補助合約醫療院所公開名單，共37筆（含1筆跨縣市臺東縣特約診所），並整理一般長者／中低收入戶等福利身分長者的申請資格、應備文件、申請流程與條件限制，可依縣市、鄉鎮市、機構類型篩選並瀏覽統計圖表，另附 Google Map 星等與評論數。</div>
+      <div class="footline" id="hl-denture-count">資料筆數載入中…</div>
+    </a>
     <a class="home-card private" href="caregiver/index.html" data-county="all" data-category="private">
       <span class="tag">全國 · 非官方資料</span>
       <h2>看護／照服機構名錄</h2>
@@ -920,6 +926,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.tcDenture) {
     document.getElementById("tc-denture-count").textContent = `共 ${meta.tcDenture.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.hlDenture) {
+    document.getElementById("hl-denture-count").textContent = `共 ${meta.hlDenture.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
   if (meta.caregiver) {
     document.getElementById("caregiver-count").textContent = `共 ${meta.caregiver.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
