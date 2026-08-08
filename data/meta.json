@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-08T15:45:25.013055+00:00",
+  "generatedAt": "2026-08-08T16:03:15.631344+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -164,5 +164,10 @@
     "count": 37,
     "source": "scripts/sources/hl-denture/institution-list.pdf",
     "title": "花蓮縣115年度65歲以上長者假牙補助合約醫療院所"
+  },
+  "pingtungDenture": {
+    "count": 66,
+    "source": "scripts/sources/pingtung-denture/institution-list.pdf",
+    "title": "屏東縣115年長者假牙裝置補助合作醫療院所"
   }
 }

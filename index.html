@@ -697,6 +697,12 @@
       <div class="desc">花蓮縣政府社會處公告，115年度65歲以上長者假牙補助合約醫療院所公開名單，共37筆（含1筆跨縣市臺東縣特約診所），並整理一般長者／中低收入戶等福利身分長者的申請資格、應備文件、申請流程與條件限制，可依縣市、鄉鎮市、機構類型篩選並瀏覽統計圖表，另附 Google Map 星等與評論數。</div>
       <div class="footline" id="hl-denture-count">資料筆數載入中…</div>
     </a>
+    <a class="home-card" href="pingtung-denture/index.html" data-county="屏東縣" data-category="denture">
+      <span class="tag">屏東縣</span>
+      <h2>屏東縣長者假牙裝置補助合作醫療院所</h2>
+      <div class="desc">屏東縣政府衛生局公告，115年長者假牙裝置補助合作醫療院所名冊，共66筆（59家特約醫療院所＋7個醫療站），並整理申請資格、活動假牙／固定式假牙／假牙維修補助金額明細、申請流程五步驟，可依鄉鎮市、機構類型、分類篩選並瀏覽統計圖表，另附 Google Map 星等與評論數。</div>
+      <div class="footline" id="pingtung-denture-count">資料筆數載入中…</div>
+    </a>
     <a class="home-card private" href="caregiver/index.html" data-county="all" data-category="private">
       <span class="tag">全國 · 非官方資料</span>
       <h2>看護／照服機構名錄</h2>
@@ -930,6 +936,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.hlDenture) {
     document.getElementById("hl-denture-count").textContent = `共 ${meta.hlDenture.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.pingtungDenture) {
+    document.getElementById("pingtung-denture-count").textContent = `共 ${meta.pingtungDenture.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
   if (meta.caregiver) {
     document.getElementById("caregiver-count").textContent = `共 ${meta.caregiver.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;

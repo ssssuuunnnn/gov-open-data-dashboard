@@ -377,6 +377,21 @@ TC_DENTURE_CSV = "scripts/sources/tc-denture/tc-denture.csv"
 HL_DENTURE_PDF = "scripts/sources/hl-denture/institution-list.pdf"
 HL_DENTURE_GOOGLE_RATINGS_FILE = "data/source/hl-denture-google-ratings.json"
 
+PINGTUNG_DENTURE_PDF = "scripts/sources/pingtung-denture/institution-list.pdf"
+PINGTUNG_DENTURE_GOOGLE_RATINGS_FILE = "data/source/pingtung-denture-google-ratings.json"
+
+# 屏東縣轄1市3鎮28鄉固定清單，供 build_pingtung_denture() 解析地址行政區使用。與 TYC_DISTRICTS
+# 用途相同：地址欄位中「屏東市」本身不會再加「屏東縣」字首（如「屏東市自由路270號」），若沿用
+# parse_county_district(fallback_county="屏東縣") 會因地址不含字面「屏東縣」三字而解析失敗，
+# 故改用固定清單比對（先去除可能存在的「屏東縣」字首，再從清單比對開頭）。
+PINGTUNG_DISTRICTS = [
+    "屏東市", "潮州鎮", "東港鎮", "恆春鎮",
+    "三地門鄉", "霧台鄉", "瑪家鄉", "九如鄉", "里港鄉", "高樹鄉", "鹽埔鄉",
+    "長治鄉", "麟洛鄉", "竹田鄉", "內埔鄉", "萬丹鄉", "崁頂鄉", "新埤鄉",
+    "南州鄉", "林邊鄉", "琉球鄉", "佳冬鄉", "新園鄉", "枋寮鄉",
+    "枋山鄉", "獅子鄉", "車城鄉", "牡丹鄉", "滿州鄉", "來義鄉", "春日鄉", "泰武鄉",
+]
+
 # 台灣22縣市清單（正式「臺」寫法），用於從看護機構「服務地區」自由文字欄位以子字串比對方式
 # 偵測涵蓋縣市，詳見 build_caregivers()。CAREGIVER_REGION_ALIASES 額外收錄常見「台」簡寫寫法，
 # 比對時會先將輸入文字中的「台」正規化為「臺」再比對，故此清單一律使用「臺」。
@@ -1054,6 +1069,121 @@ def build_hl_denture():
                     ])
     print(f"  共 {len(records)} 筆", file=sys.stderr)
     fields = ["id", "county", "district", "name", "type", "address", "phone",
+              "google_rating", "google_review_count", "google_place_id"]
+    return {"fields": fields, "rows": records}
+
+
+def _pingtung_denture_district(address: str) -> str:
+    """從屏東縣假牙補助地址解析行政區，見 PINGTUNG_DISTRICTS 常數說明。"""
+    rest = address[3:] if address.startswith("屏東縣") else address
+    for d in sorted(PINGTUNG_DISTRICTS, key=len, reverse=True):
+        if rest.startswith(d):
+            return d
+    return ""
+
+
+def _pingtung_denture_type(name: str) -> str:
+    if "醫院" in name:
+        return "醫院"
+    if "衛生所" in name:
+        return "衛生所"
+    if "醫療站" in name or "服務中心" in name or "活動中心" in name:
+        return "醫療站"
+    return "牙醫診所"
+
+
+def build_pingtung_denture():
+    """115年屏東縣補助長者假牙裝置合作醫療院所名冊（屏東縣政府衛生局醫政科公告，115.3.18更新）。
+
+    **資料來源特殊性（務必先讀）**：使用者手動提供本機 PDF（非公開可下載之開放資料 CSV/API，亦非
+    有效可直接 fetch 的公告網址），已複製存放於 PINGTUNG_DENTURE_PDF
+    （scripts/sources/pingtung-denture/institution-list.pdf）。此 PDF 文字為可選取的一般文字
+    （非向量繪製曲線圖形），pdfplumber 可直接用 extract_tables() 取得乾淨表格，不需比照
+    build_kcg_denture() 的「渲染成圖片 + AI 視覺閱讀」流程。日後如需更新名冊，需人工取得新版 PDF
+    覆蓋 institution-list.pdf 後重新執行 `python3 scripts/build_data.py pingtung-denture`，
+    **無法自動重新下載**。
+
+    PDF 共2頁，內含**3個表格**（pdfplumber 因跨頁與版面切斷偵測為3個 table 物件，但邏輯上是連續的
+    2大段落）：
+    - 第1段「醫療院所」：序號1~59，欄位「序號、醫療院所、地址、電話」，含4家醫院
+      （衛生福利部屏東醫院、屏東榮民總醫院、國軍高雄總醫院屏東分院附設民眾診療服務處、
+      屏基醫療財團法人屏東基督教醫院、恆基醫療財團法人恆春基督教醫院、衛生福利部恆春旅遊醫院）
+      與大量牙醫診所。
+    - 第2段「醫療站」：序號1~7（PDF 內獨立重新從1編號），欄位同上，涵蓋牙科醫療站、鄉衛生所、
+      活動中心、公共服務中心等非典型診所據點（如「禮納里公共服務中心」「滿州鄉活動中心」）。
+    本函式將兩段合併，新增 `category` 欄位（`特約醫療院所`／`醫療站`）忠實保留 PDF 原始分類，並
+    依出現順序重新連續編號 1~66（不保留 PDF 內兩段各自從1開始的原始序號，避免前端誤以為是同一組
+    序號體系）。「醫療院所」欄位偶有跨行斷字換行符號（如「國軍高雄總醫院屏東分院附設民眾\n診療
+    服務處」），移除換行符號還原成完整名稱；「電話」欄位少數含分機（如「08-7557885#84457」），
+    原文照登。
+
+    county／district：地址欄位格式不一致——多數「屏東縣OO鄉/鎮」已含完整縣名字首，但「屏東市」
+    本身（縣治所在，作為屏東縣的一個市轄區）在原始地址中**不會**再加「屏東縣」字首（如「屏東市
+    自由路270號」），若沿用既有 parse_county_district(fallback_county="屏東縣") 會因地址不含
+    字面「屏東縣」三字而解析失敗，故改用固定行政區清單 PINGTUNG_DISTRICTS（比照 build_tyc_elder()
+    的 TYC_DISTRICTS 做法）：county 固定輸出「屏東縣」，district 由 _pingtung_denture_district()
+    比對取得，實測 66 筆全數成功解析（無空值）。
+
+    「機構類型」（type）由 _pingtung_denture_type() 依名稱關鍵字（醫院／衛生所／醫療站相關字樣）
+    啟發式判斷，其餘歸類「牙醫診所」，非官方分類欄位；與 category 為兩個獨立維度（category 是
+    PDF 原始段落分類，type 是名稱關鍵字啟發式推斷的機構性質，兩者不必然一致，例如「醫療站」段落
+    內的「獅子鄉衛生所」category=醫療站 但 type=衛生所）。無經緯度座標，故本頁不含地圖。
+
+    額外欄位 google_rating／google_review_count／google_place_id：使用者需求為呈現各院所的
+    Google 地圖星等與評論數，且明確表示為一次性資料，之後不會重新抓取。資料來源：2026-08-08 用
+    scripts/fetch_google_ratings.py --dataset pingtung-denture --name-field name
+    --address-field address 一次性呼叫 Google Places API (Legacy) Text Search，整理成
+    data/source/pingtung-denture-google-ratings.json（key 為「醫療院所」名稱）。查無對照資料或
+    人工核對排除誤配對的院所，此三欄留空字串，前端顯示為「-」。
+    """
+    print("讀取 屏東縣115年長者假牙裝置補助合作醫療院所名冊 本地 PDF ...", file=sys.stderr)
+    import pdfplumber  # 延遲載入：僅此資料集需要，避免其他資料集重跑時強制安裝
+
+    try:
+        with open(PINGTUNG_DENTURE_GOOGLE_RATINGS_FILE, "r", encoding="utf-8") as f:
+            google_ratings = json.load(f)
+    except FileNotFoundError:
+        google_ratings = {}
+
+    tables = []
+    with pdfplumber.open(PINGTUNG_DENTURE_PDF) as pdf:
+        for page in pdf.pages:
+            tables.extend(page.extract_tables())
+
+    records = []
+    seq = 0
+    for table_idx, table in enumerate(tables):
+        # 3個 table 物件依序對應：第1、2個屬於「醫療院所」段落（PDF 跨頁被切成兩個 table），
+        # 第3個是「醫療站」段落（各自從序號1開始，故用「序號重新從1出現」偵測段落邊界較不穩健，
+        # 改直接用 table_idx 判斷，與實測結果一致）。
+        category = "醫療站" if table_idx == len(tables) - 1 else "特約醫療院所"
+        for row in table:
+            row = row + [""] * (4 - len(row))
+            rid, name, addr, phone = row[:4]
+            rid = (rid or "").strip()
+            if not rid.isdigit():
+                continue  # 跳過表頭列（序號欄為「序號」文字）
+            name = (name or "").replace("\n", "").strip()
+            addr = (addr or "").replace("\n", "").strip()
+            phone = (phone or "").replace("\n", "").strip()
+            district = _pingtung_denture_district(addr)
+            seq += 1
+            g = google_ratings.get(name, {})
+            records.append([
+                seq,                             # 0 id（合併兩段後重新連續編號）
+                category,                         # 1 category（特約醫療院所／醫療站）
+                "屏東縣",                          # 2 county
+                district,                           # 3 district
+                name,                                # 4 name
+                _pingtung_denture_type(name),         # 5 type（啟發式）
+                addr,                                  # 6 address
+                phone,                                  # 7 phone
+                g.get("rating", ""),                     # 8 google_rating（一次性資料，查無留空字串）
+                g.get("review_count", ""),                # 9 google_review_count（同上）
+                g.get("place_id", ""),                     # 10 google_place_id（同上，用於評論連結）
+            ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "category", "county", "district", "name", "type", "address", "phone",
               "google_rating", "google_review_count", "google_place_id"]
     return {"fields": fields, "rows": records}
 
@@ -2888,6 +3018,15 @@ DATASETS = [
         "meta_key": "hlDenture",
         "title": "花蓮縣115年度65歲以上長者假牙補助合約醫療院所",
         "source": lambda: HL_DENTURE_PDF,
+    },
+    {
+        "key": "pingtung-denture",
+        "builder": build_pingtung_denture,
+        "json": "data/pingtung-denture.json",
+        "js_var": "PINGTUNG_DENTURE_DATA",
+        "meta_key": "pingtungDenture",
+        "title": "屏東縣115年長者假牙裝置補助合作醫療院所",
+        "source": lambda: PINGTUNG_DENTURE_PDF,
     },
     {
         "key": "tc-denture",
