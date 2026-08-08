@@ -368,6 +368,7 @@ CHIAYI_DENTURE_GENERAL_PDF_URL = (
     "&n=MTE15bm05bqm5LiA6Iis6ICB5Lq65YGH54mZ5ZCI57SE6Zmi5omA5ZCN5YaKLnBkZg%3d%3d"
 )
 CAREGIVER_CSV = "scripts/sources/caregiver/caregivers.csv"
+CAREGIVER_GOOGLE_RATINGS_FILE = "data/source/caregiver-google-ratings.json"
 
 DIALYSIS_TRANSPORT_CSV = "scripts/sources/dialysis-transport/dialysis-transport.csv"
 
@@ -2328,14 +2329,42 @@ def build_caregivers():
     欄位偶有多餘換行/空白，逐一 strip 處理；僅3筆有填「統一編號」，其餘留空字串。
     未來如需更新資料，需人工以最新 CSV 覆蓋 scripts/sources/caregiver/caregivers.csv 後
     重新執行本腳本（`python3 scripts/build_data.py caregiver`）。
+
+    額外欄位 google_rating／google_review_count／google_place_id：使用者需求為呈現各機構的
+    Google 地圖星等與評論數，且明確表示「一次性資料，之後不會重新抓取」。本資料集與其他已套用
+    此功能的資料集（如 tyc-elder）不同之處在於**沒有地址欄位**——這 27 筆是服務跨縣市的看護／
+    照服仲介機構，並非單一實體地址的機構，故無法用「名稱＋地址」查詢，比對風險較高。
+
+    資料來源：2026-08-08 用 scripts/fetch_google_ratings.py --dataset caregiver --name-field name
+    --phone-field phone（僅用機構名稱查詢，並以 Place Details 的 international_phone_number
+    交叉核對聯絡電話）一次性呼叫 Google Places API (Legacy) Text Search，取得比對結果後人工核對，
+    整理成 data/source/caregiver-google-ratings.json（key 為「機構名稱」）。人工核對時除電話比對外，
+    另外用 Place Details 的 website 欄位比對是否與 CSV「網址」欄位同網域，作為第二層交叉核對依據
+    （電話與網域任一相符即視為可信），排除以下情況：
+    - 多筆機構（照顧好居家照護／福家樂看護中心／仁安看護／善禾看護／全照護臨時看護／
+      好照顧居家看護中心／瑞恩看護／亞力看護／照護家／安捷看護／平安家看護／安馨看護／優善看護）
+      經電話與網域交叉核對後確認為誤配對（Google Text Search 因名稱過於通用，配對到完全不相關
+      的地點，例如「照護家」「好照顧居家看護中心」皆被誤配對到「德宥居家長照」的 Google 地點）；
+    - Home心、安康人力看護：Text Search 查無結果（ZERO_RESULTS）；
+    - 仁安看護／惠順看護／兆福看護／天醫看護：雖電話或名稱部分相符，但 Google 回傳 rating 為
+      None（無評分資料），比照「查無資料」處理予以排除；
+    - 看護心：無電話/網域交叉核對證據支持，予以排除。
+    保留的 15 筆機構（含長奕看護、德宥居家長照等）皆通過電話或官網網域至少一項交叉核對確認。
+    查無對照資料的機構，此三欄留空字串，前端顯示為「-」。
     """
     print("讀取 看護／照服機構名錄 ...", file=sys.stderr)
     records = []
+    try:
+        with open(CAREGIVER_GOOGLE_RATINGS_FILE, "r", encoding="utf-8") as f:
+            google_ratings = json.load(f)
+    except FileNotFoundError:
+        google_ratings = {}
     with open(CAREGIVER_CSV, encoding="utf-8-sig") as f:
         for row in csv.DictReader(f):
             name = (row.get("名稱") or "").strip()
             if not name:
                 continue
+            g = google_ratings.get(name, {})
             records.append([
                 name,                                          # 0 name
                 (row.get("網址") or "").strip(),              # 1 url
@@ -2343,9 +2372,13 @@ def build_caregivers():
                 " / ".join(p.strip() for p in (row.get("聯絡電話") or "").split("\n") if p.strip()),  # 3 phone
                 _caregiver_regions(row.get("服務地區")),        # 4 regions
                 (row.get("統一編號") or "").strip(),          # 5 uid
+                g.get("rating", ""),                            # 6 google_rating（一次性資料，查無留空字串）
+                g.get("review_count", ""),                      # 7 google_review_count（同上）
+                g.get("place_id", ""),                          # 8 google_place_id（同上，用於評論連結）
             ])
     print(f"  共 {len(records)} 筆", file=sys.stderr)
-    fields = ["name", "url", "payUrl", "phone", "regions", "uid"]
+    fields = ["name", "url", "payUrl", "phone", "regions", "uid",
+              "google_rating", "google_review_count", "google_place_id"]
     return {"fields": fields, "rows": records}
 
 
