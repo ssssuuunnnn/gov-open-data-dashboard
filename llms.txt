@@ -35,6 +35,7 @@
 - [嘉義市假牙補助合約醫療院所（中低收入／一般身分別）](https://www.sunkuo.cc/gov-open-data-dashboard/chiayi-denture/index.html): 嘉義市政府社會處長青及社會行政科提供，整合「中低收入老人免費裝置假牙合約醫院名單」（DCAT機器可讀CSV，27筆，含經緯度座標，另依公告人工補登115年6月1日起新增之3家合約診所）與「115年度一般身分別老人補助裝置假牙合約院所」（公告PDF自動解析，29筆，無座標）兩個各自獨立的方案合約診所名單共59筆，兩份名單有重疊但不完全相同，各筆保留原始來源「方案」欄位如實呈現，並整理兩方案的申請資格、應備文件、補助項目優先次序、通知單發放/補發流程與申請流程圖等 Q&A 說明；「機構類型」（醫院／牙醫診所）由名稱是否含「醫院」關鍵字啟發式推斷（非官方分類），提供方案／行政區／機構類型／關鍵字篩選、地圖（僅中低收入方案含座標）與統計圖表。 (https://www.sunkuo.cc/gov-open-data-dashboard/chiayi-denture/llms.txt)
 - [彰化縣補助65歲以上老人裝置全口假牙契約診所名冊](https://www.sunkuo.cc/gov-open-data-dashboard/chc-denture/index.html): 彰化縣政府社會處公告之補助65歲以上老人裝置全口活動假牙契約診所名冊，共109筆，收錄診所名稱、地址與電話，涵蓋23個鄉鎮市，並整理申請資格、受理期間（每年3/1-9/30）、裝置態樣與承辦單位聯絡資訊等說明；提供鄉鎮市／關鍵字篩選與統計圖表，無經緯度座標、無機構類型分類欄位。 (https://www.sunkuo.cc/gov-open-data-dashboard/chc-denture/llms.txt)
 - [臺中市115年度65歲以上銀髮族假牙裝置補助計畫合約院所](https://www.sunkuo.cc/gov-open-data-dashboard/tc-denture/index.html): 臺中市政府衛生局公告之115年度65歲以上銀髮族假牙裝置補助計畫合約院所名單，共281筆，收錄院所名稱、地址與電話，涵蓋27個行政區，並整理補助對象、申請期間、給付金額與申請/初審/複審/核銷流程等說明；提供行政區／關鍵字篩選與統計圖表，另附 Google Map 星等／評論數，無經緯度座標、無機構類型分類欄位。 (https://www.sunkuo.cc/gov-open-data-dashboard/tc-denture/llms.txt)
+- [桃園市提供失智症診療服務醫院一覽表](https://www.sunkuo.cc/gov-open-data-dashboard/tyc-dementia-hospitals/index.html): 桃園市政府衛生局公告之提供失智症診療服務醫院名冊，共18筆，收錄醫院名稱、電話、地址，行政區由地址欄位解析，提供行政區／關鍵字篩選與統計圖表，無經緯度座標。頁面上方收錄「認識失智症」十大警訊、常見症狀重點摘要與就醫建議（整理自社團法人台灣失智症協會，非逐字轉貼）。 (https://www.sunkuo.cc/gov-open-data-dashboard/tyc-dementia-hospitals/llms.txt)
 
 ## 非政府開放資料（人工蒐集，僅供參考）
 

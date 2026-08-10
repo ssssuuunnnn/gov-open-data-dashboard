@@ -345,6 +345,10 @@ TYC_RESPITE_HOME_URL = (
     "https://opendata.tycg.gov.tw/api/dataset/7ae18138-74f9-4ebb-8b7d-f03d9ddb1ef5/"
     "resource/0b949cb1-bfc3-4d02-8474-35e42a932643/download"
 )
+TYC_DEMENTIA_HOSPITALS_URL = (
+    "https://opendata.tycg.gov.tw/api/dataset/9c47f483-3f6d-4b1a-9a7e-7398d609d646/"
+    "resource/e04e10b7-d27a-4480-9489-ab109f928d7f/download"
+)
 TYC_RESPITE_INST_URL = (
     "https://opendata.tycg.gov.tw/api/dataset/7ae18138-74f9-4ebb-8b7d-f03d9ddb1ef5/"
     "resource/b7c16660-f7ac-4bb6-b639-9c795581f160/download"
@@ -2730,6 +2734,38 @@ def build_kcg_denture():
     return {"fields": fields, "rows": records}
 
 
+def build_tyc_dementia_hospitals():
+    """桃園市提供失智症診療服務醫院一覽表（DCAT dataset id 147710，桃園市政府衛生局）。
+
+    來源：TYC_DEMENTIA_HOSPITALS_URL，CSV，BIG5 編碼；原始欄位：序號、醫院名稱、電話、地址。
+    2026-08-10 試抓確認共 18 筆（不含表頭），無跳號、無空值。
+
+    地址欄位格式為「郵遞區號＋縣市＋鄉鎮市區＋路名門牌」（如「330桃園市桃園區中山路1492號」），
+    與 build_tyc_elder() 相同，比照該作法用固定 TYC_DISTRICTS 清單比對地址開頭取得行政區
+    （不用共用 ADDR_RE 正規式，避免「平鎮區」等名稱中途含「鎮」字被誤判)。
+
+    無經緯度座標，資料量小（18 筆），故本頁不含地圖，且比照 tyc-elder 用內嵌 js 版本輸出
+    （js_var=TYC_DEMENTIA_HOSPITALS_DATA），前端不透過 fetch() 讀取 json。
+    """
+    print("下載 桃園市提供失智症診療服務醫院一覽表 ...", file=sys.stderr)
+    text = fetch(TYC_DEMENTIA_HOSPITALS_URL, encoding="cp950")
+    reader = csv.DictReader(io.StringIO(text))
+    records = []
+    for row in reader:
+        addr = (row.get("地址", "") or "").strip()
+        district = next((d for d in TYC_DISTRICTS if d in addr[:10]), "")
+        records.append([
+            row.get("序號", "").strip(),   # 0 id
+            row.get("醫院名稱", "").strip(),  # 1 name
+            row.get("電話", "").strip(),   # 2 phone
+            addr,                            # 3 address
+            district,                        # 4 district
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "name", "phone", "address", "district"]
+    return {"fields": fields, "rows": records}
+
+
 def _to_int(v):
     try:
         return int(float(v))
@@ -3045,6 +3081,15 @@ DATASETS = [
         "meta_key": "chiayiDenture",
         "title": "嘉義市假牙補助合約醫療院所（中低收入／一般身分別）",
         "source": lambda: f"{CHIAYI_DENTURE_LOW_INCOME_URL} ; {CHIAYI_DENTURE_GENERAL_PDF_URL}",
+    },
+    {
+        "key": "tyc-dementia-hospitals",
+        "builder": build_tyc_dementia_hospitals,
+        "json": "data/tyc-dementia-hospitals.json",
+        "js_var": "TYC_DEMENTIA_HOSPITALS_DATA",
+        "meta_key": "tycDementiaHospitals",
+        "title": "桃園市提供失智症診療服務醫院一覽表",
+        "source": lambda: TYC_DEMENTIA_HOSPITALS_URL,
     },
 ]
 

@@ -1,0 +1,22 @@
+# 桃園市提供失智症診療服務醫院一覽表
+
+> 桃園市可提供失智症確診之醫療院所清單，提供行政區／關鍵字篩選與統計圖表，並附「認識失智症」十大警訊摘要。
+
+- 提供機關：桃園市政府衛生局
+- 資料筆數：18 筆（隨資料來源更新而變動，實際筆數以頁面即時載入為準）
+- 原始資料來源：https://opendata.tycg.gov.tw/api/dataset/9c47f483-3f6d-4b1a-9a7e-7398d609d646/resource/e04e10b7-d27a-4480-9489-ab109f928d7f/download
+- 授權方式：政府資料開放授權條款-第1版
+- 建議查看頻率：每年
+
+## 頁面內容
+
+- 儀表板頁面：https://www.sunkuo.cc/gov-open-data-dashboard/tyc-dementia-hospitals/index.html
+- 篩選條件、統計卡片、圖表與分頁表格皆基於上述原始資料即時運算，行政區欄位由本站依地址解析產生（非官方欄位）。
+- 頁面上方另收錄「認識失智症」知識摘要（十大警訊、常見症狀、就醫建議），內容整理自社團法人台灣失智症協會
+  （https://www.cfad.org.tw/knowledge/37），非醫療診斷依據。
+
+## 相關連結
+
+- 網站首頁：https://www.sunkuo.cc/gov-open-data-dashboard/
+- 更新紀錄：https://www.sunkuo.cc/gov-open-data-dashboard/changelog/index.html
+- 專案原始碼：https://github.com/ssssuuunnnn/gov-open-data-dashboard

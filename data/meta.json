@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-08T16:03:15.631344+00:00",
+  "generatedAt": "2026-08-10T13:20:22.357271+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -169,5 +169,10 @@
     "count": 66,
     "source": "scripts/sources/pingtung-denture/institution-list.pdf",
     "title": "屏東縣115年長者假牙裝置補助合作醫療院所"
+  },
+  "tycDementiaHospitals": {
+    "count": 18,
+    "source": "https://opendata.tycg.gov.tw/api/dataset/9c47f483-3f6d-4b1a-9a7e-7398d609d646/resource/e04e10b7-d27a-4480-9489-ab109f928d7f/download",
+    "title": "桃園市提供失智症診療服務醫院一覽表"
   }
 }
