@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DNHVGQP5W8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DNHVGQP5W8');
+</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>臺中市失智症服務與據點查詢地圖｜失智共照中心地圖儀表板</title>
+<meta name="description" content="提供臺中市失智共同照護中心與失智社區服務據點地圖查詢。可依行政區快速篩選鄰近醫療診斷、照顧諮詢、認知促進課程等照護資源，掌握最新服務據點資訊。" />
+<meta name="keywords" content="臺中市失智症,失智共同照護中心,失智社區服務據點,臺中長照資源,失智照護,臺中市政府衛生局開放資料" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://www.sunkuo.cc/gov-open-data-dashboard/tc-dementia/index.html" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="政府開放資料儀表板" />
+<meta property="og:locale" content="zh_TW" />
+<meta property="og:title" content="臺中市失智症服務與據點查詢地圖｜失智共照中心地圖儀表板" />
+<meta property="og:description" content="提供臺中市失智共同照護中心與失智社區服務據點地圖查詢。可依行政區快速篩選鄰近醫療診斷、照顧諮詢、認知促進課程等照護資源，掌握最新服務據點資訊。" />
+<meta property="og:url" content="https://www.sunkuo.cc/gov-open-data-dashboard/tc-dementia/index.html" />
+<meta property="og:image" content="https://www.sunkuo.cc/gov-open-data-dashboard/assets/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="臺中市失智症服務與據點查詢地圖｜失智共照中心地圖儀表板" />
+<meta name="twitter:description" content="提供臺中市失智共同照護中心與失智社區服務據點地圖查詢。可依行政區快速篩選鄰近醫療診斷、照顧諮詢、認知促進課程等照護資源，掌握最新服務據點資訊。" />
+<meta name="twitter:image" content="https://www.sunkuo.cc/gov-open-data-dashboard/assets/og-image.png" />
+
+<link rel="icon" type="image/png" href="../assets/favicon.png" />
+<link rel="preconnect" href="https://unpkg.com" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+<link rel="stylesheet" href="../assets/style.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "臺中市失智症服務及資源提供單位",
+  "description": "臺中市政府衛生局提供之失智照護服務計畫服務單位清冊，收錄失智共同照護中心與失智社區服務據點之辦理單位名稱、連絡電話、電子郵件、地址，含經緯度座標，供地圖呈現與篩選查詢。",
+  "url": "https://www.sunkuo.cc/gov-open-data-dashboard/tc-dementia/index.html",
+  "license": "http://data.gov.tw/license",
+  "isAccessibleForFree": true,
+  "inLanguage": "zh-Hant-TW",
+  "keywords": ["失智症", "失智共同照護中心", "失智社區服務據點", "長照", "臺中市"],
+  "spatialCoverage": {
+    "@type": "Place",
+    "name": "臺中市"
+  },
+  "creator": {
+    "@type": "Organization",
+    "name": "臺中市政府衛生局"
+  },
+  "distribution": {
+    "@type": "DataDownload",
+    "encodingFormat": "CSV",
+    "contentUrl": "https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=a753a1f2-25d6-469c-9580-83e5e17405cf"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://www.sunkuo.cc/gov-open-data-dashboard/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "臺中市失智症服務及資源提供單位地圖儀表板",
+      "item": "https://www.sunkuo.cc/gov-open-data-dashboard/tc-dementia/index.html"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <h1>臺中市失智症服務及資源提供單位地圖儀表板</h1>
+    <div class="meta"><a href="../index.html" style="color:#fff">← 回首頁</a></div>
+  </div>
+  <div class="header-inner">
+    <nav>
+      提供機關：臺中市政府衛生局　|　更新頻率：不定期　|　
+      <a href="https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=a753a1f2-25d6-469c-9580-83e5e17405cf" target="_blank" rel="noopener">原始資料下載</a>
+    </nav>
+    <div class="meta" id="meta-updated"></div>
+  </div>
+</header>
+<noscript>
+  <p style="max-width:1280px;margin:16px auto;padding:0 24px;color:#b91c1c;">
+    本頁需要啟用 JavaScript 才能載入地圖、資料與圖表，請於瀏覽器設定中開啟 JavaScript 後重新整理頁面。
+  </p>
+</noscript>
+<main>
+  <p style="max-width:1280px;margin:0 auto 16px;padding:0 24px;color:var(--color-muted);">
+    臺中市失智照護服務計畫提供失智共同照護中心（協助疑似失智個案就醫診斷與醫療評估、確診個案照顧諮詢
+    轉介）與失智社區服務據點（提供認知促進、緩和失智課程、安全看視及家屬照顧者支持團體）兩類服務單位，
+    可依行政區、服務類型篩選查詢鄰近資源。若需長照服務申請，請洽 1966 長照服務專線。
+  </p>
+
+  <section class="card faq-section">
+    <h2 style="margin-top:0;">臺中市失智症照護資源</h2>
+    <p class="faq-intro">
+      民眾若有相關照護需求，請參考以下資源分類及申請管道。
+    </p>
+
+    <h3 class="faq-category">一、長照服務申請</h3>
+    <details class="faq-item">
+      <summary>居家服務、日間照顧、交通接送或輔具補助等長照需求，如何申請？</summary>
+      <div class="faq-answer">
+        <p>
+          若您有居家服務、日間照顧、交通接送或輔具補助等長照需求，請優先申請長照等級評估，將由專人協助
+          擬定照顧計畫。
+        </p>
+        <p>◆ 申請專線：請直撥 <a href="tel:1966">1966</a> 長照服務專線</p>
+        <p style="margin-bottom:0;">
+          ◆ 線上資訊：長照服務申請流程與說明，請洽 1966 長照服務專線或臺中市政府衛生局長期照顧科詢問
+          最新申請管道。
+        </p>
+      </div>
+    </details>
+
+    <h3 class="faq-category">二、分級醫療與照護資源</h3>
+    <details class="faq-item">
+      <summary>請依據病程階段與失能程度，尋找對應的專業服務單位</summary>
+      <div class="faq-answer">
+        <p><strong>1. 失智共同照護中心</strong></p>
+        <ul>
+          <li>服務功能：提供單一窗口服務，協助疑似失智個案完成就醫診斷與醫療評估；並針對確診個案提供
+            照顧諮詢、協調及轉介長照資源。</li>
+          <li>服務對象：疑似失智症者（未確診）或已確診需個案管理服務者。</li>
+          <li>相關名單：詳見本頁下方「失智共同照護中心」篩選結果與地圖標示。</li>
+        </ul>
+        <p><strong>2. 失智社區服務據點</strong></p>
+        <ul>
+          <li>服務功能：於社區中提供認知促進、緩和失智課程、安全看視及家屬照顧者支持團體，延緩個案退化
+            並減輕家屬負荷。</li>
+          <li>服務對象：經診斷為失智症（CDR 0.5-1分），且長照需要等級 CMS 3級（含）以下。</li>
+          <li>相關名單：詳見本頁下方「失智社區服務據點」篩選結果與地圖標示。</li>
+        </ul>
+        <p><strong>3. 失智團體家屋</strong></p>
+        <ul>
+          <li>服務功能：提供社區化、家庭式的小規模共居環境。由專業工作人員提供24小時照顧，強調個別化
+            生活支持，維持長者既有生活能力。</li>
+          <li>服務對象：具行動能力之中重度失智症者（CDR 2分以上）。</li>
+          <li>相關名單：臺中市失智團體家屋名單，請洽臺中市政府衛生局或 1966 長照服務專線查詢最新名冊。</li>
+        </ul>
+        <p style="margin-bottom:0;"><strong>4. 專業機構住宿照護：住宿式長照機構／護理之家</strong></p>
+        <ul style="margin-bottom:0;">
+          <li>服務功能：提供全日型（24小時）之住宿、生活照顧及專業護理服務。</li>
+          <li>服務對象：中重度失能/失智、長期臥床或需技術性護理服務之長者。</li>
+          <li>資源查詢：一般護理之家可參考本站
+            <a href="../tc-nursing/index.html">臺中市合法護理之家查詢</a>；住宿式長照機構請洽臺中市政府
+            衛生局或 1966 長照服務專線查詢最新名冊。</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="faq-category">三、其他相關資源查詢</h3>
+    <details class="faq-item">
+      <summary>如何查詢住家鄰近之長照資源或跨領域健康資源？</summary>
+      <div class="faq-answer">
+        <p>
+          如需查詢住家鄰近之長照資源（如C級巷弄長照站、社區照顧關懷據點）或跨領域健康資源，請利用以下
+          整合平台：
+        </p>
+        <p>◆ 臺中市長照服務資源查詢：請洽臺中市政府衛生局或 1966 長照服務專線查詢最新平台網址。</p>
+        <p style="margin-bottom:0;">
+          ◆ 衛生福利部長者社區資源整合運用平台：請洽衛生福利部或 1966 長照服務專線查詢最新平台網址。
+        </p>
+      </div>
+    </details>
+    <p style="margin:16px 0 0;color:var(--color-muted);font-size:0.9em;">
+      以上資源分類與服務說明整理自臺中市政府衛生局公告之失智照護服務計畫內容，僅供一般民眾查詢參考，
+      實際服務內容、申請資格與最新聯絡方式，請以原始公告或 1966 長照服務專線提供之資訊為準。
+    </p>
+  </section>
+
+  <div class="stat-grid" id="stat-grid">
+    <div class="stat-card"><div class="num" id="stat-total">-</div><div class="label">篩選後單位數</div></div>
+    <div class="stat-card"><div class="num" id="stat-districts">-</div><div class="label">涵蓋行政區數</div></div>
+    <div class="stat-card"><div class="num" id="stat-coop">-</div><div class="label">失智共同照護中心數</div></div>
+    <div class="stat-card"><div class="num" id="stat-community">-</div><div class="label">失智社區服務據點數</div></div>
+  </div>
+
+  <div class="card">
+    <div class="filters">
+      <div class="field">
+        <label>行政區</label>
+        <select id="f-district"><option value="">全部</option></select>
+      </div>
+      <div class="field">
+        <label>服務類型</label>
+        <select id="f-type"><option value="">全部</option></select>
+      </div>
+      <div class="field" style="flex:1;">
+        <label>關鍵字（辦理單位 / 地址）</label>
+        <input type="text" id="f-keyword" placeholder="例如：機構名稱、路名…" />
+      </div>
+      <button class="ghost" id="f-reset">重設篩選</button>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div id="map"></div>
+    </div>
+    <div class="card">
+      <div class="chart-box"><h3>各行政區單位分布</h3><div class="chart-canvas-wrap"><canvas id="chart-district"></canvas></div></div>
+      <div class="chart-box"><h3>服務類型分布</h3><div class="chart-canvas-wrap"><canvas id="chart-type"></canvas></div></div>
+    </div>
+  </div>
+
+  <h2 class="section-title">資料明細</h2>
+  <div class="card">
+    <div id="table-container"></div>
+  </div>
+</main>
+<div class="back-home-cta">
+  <div class="related-pages">
+    <strong>相關資料集：</strong>
+    <a href="../tc-nursing/index.html">臺中市合法護理之家查詢</a>
+    <a href="../tc-transport/index.html">臺中市失能者交通接送服務查詢</a>
+  </div>
+  <a href="../index.html" class="home-cta-btn"><span class="arrow" aria-hidden="true">←</span>更多長照相關資訊</a>
+</div>
+<footer class="site-footer">
+  資料來源：<a href="https://data.gov.tw/dataset/8572" target="_blank" rel="noopener">臺中市政府衛生局 臺中市失智症服務及資源提供單位</a>（原始資料 CSV）。
+  依「政府資料開放授權條款-第1版」釋出。地址對應之經緯度座標，部分為原始 TWD97 TM2 平面座標經本站換算
+  為 WGS84 經緯度產生，僅供參考，實際請以原始資料為準。
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="../assets/table.js"></script>
+<script src="../data/tc-dementia.js"></script>
+<script src="../assets/analytics.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
