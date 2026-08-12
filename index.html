@@ -393,6 +393,17 @@
         "@type": "Organization",
         "name": "桃園市政府衛生局"
       }
+    },
+    {
+      "@type": "Dataset",
+      "name": "臺北市失智症診療機構名冊",
+      "description": "臺北市政府衛生局公告之失智症診療機構名冊，收錄35筆醫院名稱、失智症看診科別、健保特約類別、地址、電話等資訊。",
+      "url": "https://www.sunkuo.cc/gov-open-data-dashboard/tpe-dementia-hospitals/index.html",
+      "license": "https://data.gov.tw/license",
+      "creator": {
+        "@type": "Organization",
+        "name": "臺北市政府衛生局"
+      }
     }
   ]
 }
@@ -630,7 +641,7 @@
       <div class="desc">臺中市政府衛生局提供，協助中重度失能者滿足以就醫及使用長期照顧服務為主要目的之交通服務需求，列出辦理單位名稱、連絡電話、地址與經緯度，可依服務區域（多選）、所在行政區篩選並於地圖上瀏覽分布。</div>
       <div class="footline" id="tc-transport-count">資料筆數載入中…</div>
     </a>
-    <a class="home-card" href="tc-dementia/index.html" data-county="臺中市" data-category="ltc">
+    <a class="home-card dementia" href="tc-dementia/index.html" data-county="臺中市" data-category="dementia">
       <span class="tag">臺中市 · 含地圖座標</span>
       <h2>臺中市失智症服務與據點查詢地圖</h2>
       <div class="desc">提供臺中市失智共同照護中心與失智社區服務據點地圖查詢，可依行政區快速篩選鄰近醫療診斷、照顧諮詢、認知促進課程等照護資源，掌握最新服務據點資訊。</div>
@@ -737,6 +748,12 @@
       <h2>桃園市提供失智症診療服務醫院一覽表</h2>
       <div class="desc">桃園市政府衛生局提供，列出可確診失智症之醫院名稱、電話、地址，共18筆，並整理「認識失智症」十大警訊、常見症狀摘要與就醫建議，可依行政區與關鍵字篩選並瀏覽統計圖表。</div>
       <div class="footline" id="tyc-dementia-hospitals-count">資料筆數載入中…</div>
+    </a>
+    <a class="home-card dementia" href="tpe-dementia-hospitals/index.html" data-county="臺北市" data-category="dementia">
+      <span class="tag">臺北市</span>
+      <h2>臺北市失智症診療機構名冊</h2>
+      <div class="desc">臺北市政府衛生局公告，列出失智症診療機構之醫院名稱、看診科別、健保特約類別、地址、電話，共35筆，並整理「認識失智症」完整衛教內容（定義、AD-8篩檢量表、預防方法、三大類型），可依行政區、健保特約類別與關鍵字篩選並瀏覽統計圖表。</div>
+      <div class="footline" id="tpe-dementia-hospitals-count">資料筆數載入中…</div>
     </a>
     <a class="home-card private" href="caregiver/index.html" data-county="all" data-category="private">
       <span class="tag">全國 · 非官方資料</span>
@@ -980,6 +997,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.tycDementiaHospitals) {
     document.getElementById("tyc-dementia-hospitals-count").textContent = `共 ${meta.tycDementiaHospitals.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.tpeDementiaHospitals) {
+    document.getElementById("tpe-dementia-hospitals-count").textContent = `共 ${meta.tpeDementiaHospitals.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
   if (meta.caregiver) {
     document.getElementById("caregiver-count").textContent = `共 ${meta.caregiver.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;

@@ -395,6 +395,8 @@ HL_DENTURE_GOOGLE_RATINGS_FILE = "data/source/hl-denture-google-ratings.json"
 PINGTUNG_DENTURE_PDF = "scripts/sources/pingtung-denture/institution-list.pdf"
 PINGTUNG_DENTURE_GOOGLE_RATINGS_FILE = "data/source/pingtung-denture-google-ratings.json"
 
+TPE_DEMENTIA_HOSPITALS_PDF = "scripts/sources/tpe-dementia-hospitals/institution-list.pdf"
+
 # 屏東縣轄1市3鎮28鄉固定清單，供 build_pingtung_denture() 解析地址行政區使用。與 TYC_DISTRICTS
 # 用途相同：地址欄位中「屏東市」本身不會再加「屏東縣」字首（如「屏東市自由路270號」），若沿用
 # parse_county_district(fallback_county="屏東縣") 會因地址不含字面「屏東縣」三字而解析失敗，
@@ -2837,6 +2839,66 @@ def build_tyc_dementia_hospitals():
     return {"fields": fields, "rows": records}
 
 
+def build_tpe_dementia_hospitals():
+    """臺北市失智症診療機構名冊（臺北市政府衛生局公告）。
+
+    **資料來源特殊性（務必先讀）**：使用者最初提供的本機 CSV「失智症篩檢合約醫院 (1).csv」經試抓
+    確認實為「12區健康服務中心篩檢轉介窗口」名冊（12區僅11區填有合約醫院、北投區該欄位空白，
+    與「失智症診療機構」標題不符），故**未採用該 CSV**，僅記錄於此供留存追蹤。改用使用者提供的
+    臺北市政府衛生局公告網頁 PDF 附件下載連結
+    （`https://www-ws.gov.taipei/Download.ashx?u=...&n=5aSx5pm655eH6Ki655mC5qmf5qeLMDYxNS5wZGY%3d`，
+    解碼檔名為「失智症診療機構0615.pdf」），內容為 34 家「失智症診療機構」，含醫院名稱、失智症看診
+    科別、健保特約類別（醫學中心/區域醫院/地區醫院）、地址、電話，才是完整對應標題的名冊。此下載
+    連結非開放資料平台（data.taipei）的標準 API/資源網址，而是衛生局公告網頁的動態下載連結，查無
+    穩定的 DCAT dataset 頁面。PDF 已另存於 TPE_DEMENTIA_HOSPITALS_PDF
+    （scripts/sources/tpe-dementia-hospitals/institution-list.pdf）。**日後如需更新此名冊**，需人工
+    至臺北市政府衛生局公告頁面確認是否有新版 PDF，下載後覆蓋該檔案，再重新執行
+    `python3 scripts/build_data.py tpe-dementia-hospitals`，無法自動重新下載。
+
+    PDF 文字為可選取的一般文字（非向量繪製曲線圖形），`pdfplumber` 的 `extract_tables()` 可直接
+    取得乾淨表格（單頁1個table，含表頭列「醫院名稱/失智症看診科別/健保特約類別/地址/電話」），不需
+    比照 build_kcg_denture() 的「渲染成圖片+AI視覺閱讀」流程。
+
+    2026-08-12 試抓確認共 34 筆（不含表頭），無跳號、無空值，各欄位皆完整。地址欄位皆為
+    「臺北市＋行政區＋路名門牌」完整格式（如「臺北市士林區文昌路95號」），故沿用既有共用函式
+    `parse_county_district(fallback_county="臺北市")` 即可解析出行政區，不需額外行政區清單或
+    typo 修正。
+
+    無經緯度座標，資料量小（34 筆），故本頁不含地圖，比照 tyc-dementia-hospitals／tyc-elder 慣例
+    輸出內嵌 js 版本（js_var=TPE_DEMENTIA_HOSPITALS_DATA），前端不透過 fetch() 讀取 json。
+    """
+    print("讀取 臺北市失智症診療機構名冊 本地 PDF ...", file=sys.stderr)
+    import pdfplumber  # 延遲載入：僅此資料集需要，避免其他資料集重跑時強制安裝
+
+    records = []
+    with pdfplumber.open(TPE_DEMENTIA_HOSPITALS_PDF) as pdf:
+        for page in pdf.pages:
+            for table in page.extract_tables():
+                for row in table:
+                    row = row + [""] * (5 - len(row))
+                    name, department, level, addr, phone = row[:5]
+                    name = (name or "").replace("\n", "").strip()
+                    if not name or name in ("醫院名稱", "失智症診療機構"):
+                        continue  # 跳過表頭列與頁首標題列
+                    department = (department or "").replace("\n", "").strip()
+                    level = (level or "").replace("\n", "").strip()
+                    addr = (addr or "").replace("\n", "").strip()
+                    phone = (phone or "").replace("\n", "").strip()
+                    _, district = parse_county_district(addr, fallback_county="臺北市")
+                    records.append([
+                        len(records) + 1,  # 0 id
+                        name,               # 1 name
+                        department,         # 2 department
+                        level,              # 3 level
+                        addr,               # 4 address
+                        phone,              # 5 phone
+                        district,           # 6 district
+                    ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "name", "department", "level", "address", "phone", "district"]
+    return {"fields": fields, "rows": records}
+
+
 def _to_int(v):
     try:
         return int(float(v))
@@ -3170,6 +3232,15 @@ DATASETS = [
         "meta_key": "tycDementiaHospitals",
         "title": "桃園市提供失智症診療服務醫院一覽表",
         "source": lambda: TYC_DEMENTIA_HOSPITALS_URL,
+    },
+    {
+        "key": "tpe-dementia-hospitals",
+        "builder": build_tpe_dementia_hospitals,
+        "json": "data/tpe-dementia-hospitals.json",
+        "js_var": "TPE_DEMENTIA_HOSPITALS_DATA",
+        "meta_key": "tpeDementiaHospitals",
+        "title": "臺北市失智症診療機構名冊",
+        "source": lambda: "臺北市政府衛生局公告（PDF附件，非開放資料平台標準API）",
     },
 ]
 

@@ -1,0 +1,21 @@
+# 臺中市失智症服務及資源提供單位
+
+> 臺中市政府衛生局失智照護服務計畫服務單位開放資料，收錄失智共同照護中心與失智社區服務據點之辦理單位名稱、連絡電話、電子郵件、地址，含經緯度座標（部分由原始 TWD97 TM2 平面座標換算），於地圖上呈現，並提供行政區／服務類型／關鍵字篩選與統計圖表。
+
+- 提供機關：臺中市政府衛生局
+- 資料筆數：約 49 筆（隨資料來源更新而變動，實際筆數以頁面即時載入為準）
+- 原始資料來源：https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=a753a1f2-25d6-469c-9580-83e5e17405cf
+- 授權方式：政府資料開放授權條款-第1版
+- 建議查看頻率：每年
+
+## 頁面內容
+
+- 儀表板頁面：https://www.sunkuo.cc/gov-open-data-dashboard/tc-dementia/index.html
+- 篩選條件、統計卡片、圖表與分頁表格皆基於上述原始資料即時運算；「服務類型」欄位由原始「服務項目」
+  文字對應轉換為「失智共同照護中心」／「失智社區服務據點」兩類，非額外人工詮釋。
+
+## 相關連結
+
+- 網站首頁：https://www.sunkuo.cc/gov-open-data-dashboard/
+- 更新紀錄：https://www.sunkuo.cc/gov-open-data-dashboard/changelog/index.html
+- 專案原始碼：https://github.com/ssssuuunnnn/gov-open-data-dashboard
