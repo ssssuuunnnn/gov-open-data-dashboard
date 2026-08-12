@@ -86,6 +86,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://www.sunkuo.cc/gov-open-data-dashboard/tc-dementia/index.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://www.sunkuo.cc/gov-open-data-dashboard/tyltc/index.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.8</priority>

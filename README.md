@@ -1,6 +1,6 @@
 # 政府開放資料儀表板
 
-以政府開放資料建置的靜態網站，整理三十五個長照/老人福利/身心障礙相關資料集為互動式儀表板，可直接部署於 GitHub Pages。
+以政府開放資料建置的靜態網站，整理三十六個長照/老人福利/身心障礙相關資料集為互動式儀表板，可直接部署於 GitHub Pages。
 
 ## 資料集
 
@@ -22,6 +22,7 @@
 | `chiayi-ltc/` | 嘉義縣立案長照及護理之家機構一覽 | 嘉義縣政府長期照護管理中心 | 合併嘉義縣立案住宿長照機構名單與護理之家名單，收錄機構類型、機構名稱、鄉鎮市、地址、電話、負責人、許可／開業床數，提供機構類型／鄉鎮市／關鍵字篩選與統計圖表。**資料來源為使用者提供之本機 CSV、無公開下載網址**，需人工更新，詳見下方「更新資料」說明 |
 | `pingtung-ltc/` | 屏東縣老人長期照顧機構 | 屏東縣政府社會處 | 屏東縣老人長期照顧機構清單，收錄機構名稱、地址、電話，機構類型（養護型／失智型／未標示）由機構名稱解析而來，鄉鎮市由地址欄位解析，提供鄉鎮市／機構類型／關鍵字篩選與統計圖表，無經緯度座標 |
 | `tc-transport/` | 臺中市失能者交通接送服務 | 臺中市政府衛生局 | 協助中重度失能者滿足以就醫及使用長期照顧服務為主要目的之交通服務需求，收錄辦理單位名稱、連絡電話、地址、服務區域，含經緯度座標（由原始 TWD97 TM2 平面座標換算），於地圖上呈現，並提供服務區域（多選）／辦理單位所在行政區／關鍵字篩選與統計圖表 |
+| `tc-dementia/` | 臺中市失智症服務及資源提供單位 | 臺中市政府衛生局 | 臺中市失智照護服務計畫服務單位清單，共49筆，收錄失智共同照護中心、失智社區服務據點辦理單位名稱、連絡電話、電子郵件、地址，含經緯度座標（部分由原始 TWD97 TM2 平面座標換算，部分原始資料已為經緯度，本站依數值大小自動判斷格式），於地圖上呈現，並提供行政區／服務類型／關鍵字篩選與統計圖表 |
 | `tyltc/` | 桃園市長期照護專業服務特約單位 | 桃園市政府衛生局 | 桃園市居家護理所、物理／職能治療所等長期照護專業服務特約單位清單，收錄機構名稱、負責人、電話、傳真、電子郵件、地址與最後更新時間；「服務類型」由機構名稱關鍵字啟發式推斷（非官方分類），部分機構地址位於新北市、臺北市等鄰近縣市，提供縣市／鄉鎮市區／服務類型／關鍵字篩選與統計圖表，無經緯度座標 |
 | `tyc-denture/` | 桃園市長者裝置活動假牙合約醫療院所 | 桃園市政府衛生局 | 桃園市長者裝置活動假牙補助合約醫療院所（牙醫診所/醫院）清單，收錄特約單位名稱、區別、地址、電話，並整理補助對象、補助基準（部分/半口/全口活動假牙、假牙維修）與申請流程說明；「機構類型」由名稱關鍵字啟發式推斷（非官方分類），提供行政區／機構類型／關鍵字篩選與統計圖表，無經緯度座標 |
 | `tyc-disability-hospitals/` | 桃園市身心障礙類別、向度之鑑定醫院名冊 | 桃園市政府衛生局 | 桃園市身心障礙「鑑定類別（第一類～第八類）×鑑定向度×17家醫院」勾選矩陣，本站展開為長格式（約623筆），收錄鑑定類別、向度、相關疾病類別、可鑑定醫院與備註條件（如年齡/疾病限制），提供鑑定類別／向度／醫院／關鍵字篩選與統計圖表，無地址、電話、經緯度座標 |
@@ -109,6 +110,8 @@ pingtung-ltc/index.html 屏東縣老人長期照顧機構儀表板（Chart.js �
 pingtung-ltc/app.js
 tc-transport/index.html 臺中市失能者交通接送服務地圖儀表板（Leaflet 地圖 + Chart.js 圖表 + 篩選表格）
 tc-transport/app.js
+tc-dementia/index.html 臺中市失智症服務及資源提供單位地圖儀表板（Leaflet 地圖 + Chart.js 圖表 + 篩選表格）
+tc-dementia/app.js
 tyltc/index.html     桃園市長期照護專業服務特約單位儀表板（Chart.js 圖表 + 篩選表格，無地圖）
 tyltc/app.js
 tyc-denture/index.html 桃園市長者裝置活動假牙合約醫療院所儀表板（Chart.js 圖表 + 篩選表格，無地圖；
@@ -213,6 +216,9 @@ data/pingtung-ltc.js   同上資料的內嵌 JS 版本（window.PINGTUNG_LTC_DAT
                        <script> 標籤直接載入，因來源網址無 CORS 標頭，不透過 fetch()
 data/tc-transport.json 臺中市失能者交通接送服務資料（由 scripts/build_data.py 產生，含座標換算）
 data/tc-transport.js   同上資料的內嵌 JS 版本（window.TC_TRANSPORT_DATA），供 tc-transport 頁面以
+                       <script> 標籤直接載入，避免依賴外部網址即時可用性
+data/tc-dementia.json 臺中市失智症服務及資源提供單位資料（由 scripts/build_data.py 產生，含座標換算）
+data/tc-dementia.js   同上資料的內嵌 JS 版本（window.TC_DEMENTIA_DATA），供 tc-dementia 頁面以
                        <script> 標籤直接載入，避免依賴外部網址即時可用性
 data/tyltc.json       桃園市長期照護專業服務特約單位資料（由 scripts/build_data.py 產生，BIG5(cp950) 解碼）
 data/tyltc.js         同上資料的內嵌 JS 版本（window.TYLTC_DATA），供 tyltc 頁面以
@@ -342,6 +348,7 @@ python3 scripts/build_data.py
 python3 scripts/build_data.py chiayi-ltc          # 只重新產生嘉義縣立案長照及護理之家機構一覽
 python3 scripts/build_data.py pingtung-ltc        # 只重新產生屏東縣老人長期照顧機構
 python3 scripts/build_data.py tc-transport        # 只重新產生臺中市失能者交通接送服務
+python3 scripts/build_data.py tc-dementia         # 只重新產生臺中市失智症服務及資源提供單位
 python3 scripts/build_data.py tyc-placement       # 只重新產生桃園市失能老人長照暨老人保護安置機構名冊
 python3 scripts/build_data.py tpe-denture         # 只重新產生臺北市假牙補助醫療院所名單
 python3 scripts/build_data.py tyc-transport       # 只重新產生桃園市長照交通接送服務單位

@@ -208,6 +208,14 @@
     來源為長期照顧司 1966 長照專區公告頁 https://1966.gov.tw/LTC/cp-6452-69937-207.html
     （建檔日期 111-06-10、更新時間 114-10-23），該頁僅為公告內容非可下載資料，不進入本腳本
     下載流程，僅供頁面引用來源連結）
+24. 臺中市失智症服務及資源提供單位（DCAT dataset https://data.gov.tw/dataset/8572 ，dataset id
+    108261，提供機關：臺中市政府衛生局）
+    https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=a753a1f2-25d6-469c-9580-83e5e17405cf
+    （CSV，共49筆；地址已含完整「臺中市OO區」字首可直接解析行政區；X/Y坐標欄位混雜 WGS84 經緯度
+    （41筆）與 TWD97 TM2 平面座標（8筆，數值>1000），本腳本依數值大小判斷格式並用既有
+    twd97_to_wgs84() 換算為統一的 WGS84 經緯度；「服務項目」欄位固定僅兩種文字值，對應「失智共同
+    照護中心」與「失智社區服務據點」兩類服務單位，轉換為較短的 type 欄位供篩選/圖表使用；來源網址
+    無 CORS 標頭，改由本腳本於伺服器端下載，另輸出內嵌 JS 版本，詳見 build_tc_dementia())
 
 用法：
     python3 scripts/build_data.py
@@ -255,6 +263,8 @@
     data/caregiver.js      (window.CAREGIVER_DATA，同上，供前端以 <script> 直接載入)
     data/dialysis-transport.json
     data/dialysis-transport.js  (window.DIALYSIS_TRANSPORT_DATA，同上，供前端以 <script> 直接載入)
+    data/tc-dementia.json
+    data/tc-dementia.js    (window.TC_DEMENTIA_DATA，同上，供前端以 <script> 直接載入)
     data/meta.json  (資料更新時間等資訊)
 
 額外相依套件：
@@ -313,6 +323,7 @@ PINGTUNG_LTC_URL = (
     "886f59e6-23b6-4de3-a04a-4de087bdf9b8.csv"
 )
 TC_TRANSPORT_URL = "https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=96251524-861c-4b92-9401-590444adcb8f"
+TC_DEMENTIA_URL = "https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=a753a1f2-25d6-469c-9580-83e5e17405cf"
 TYLTC_URL = (
     "https://opendata.tycg.gov.tw/api/dataset/2e087011-3a3d-4ae1-9038-19b2f3f43a9a/"
     "resource/cc33a2eb-c1cf-47f1-b6f7-d4b37ba4c797/download"
@@ -1848,6 +1859,66 @@ def build_tc_transport():
     return {"fields": fields, "rows": records}
 
 
+# 「服務項目」欄位固定僅有這兩種文字值，對應臺中市失智照護服務計畫的兩類服務單位，
+# 見 build_tc_dementia() docstring 說明。
+TC_DEMENTIA_TYPE_MAP = {
+    "個案管理服務、人才培訓課程": "失智共同照護中心",
+    "提供認知促進、緩和失智，安全看視，家屬支持團體及家屬照顧課程": "失智社區服務據點",
+}
+
+
+def build_tc_dementia():
+    """臺中市失智症服務及資源提供單位（臺中市政府衛生局，DCAT dataset https://data.gov.tw/dataset/8572，
+    dataset id 108261）。
+
+    來源為 CSV（TC_DEMENTIA_URL），與 build_tc_transport()／build_tc_nursing() 同網域，共49筆，
+    原始欄位：序號、辦理單位、連絡電話、電子郵件、縣市別代碼、地址、X坐標、Y坐標、服務項目、行政區，
+    與 DCAT description 一致。地址已含完整「臺中市OO區」字首，用 parse_county_district() 搭配
+    fallback_county="臺中市" 解析行政區（「行政區」原始欄位可直接使用，本腳本仍以地址解析為準，
+    與其他臺中市資料集處理方式一致）。「縣市別代碼」固定為66000（臺中市代碼），無篩選意義不輸出。
+
+    X/Y 坐標欄位**混雜兩種格式**：實測41筆是 WGS84 經緯度（數值約在24/120上下），8筆是 TWD97 TM2
+    平面座標（EPSG:3826，數值 > 1000，如209833.481, 2675490.683），研判為原始資料建置時部分筆數
+    誤用地圖框選座標而非地理編碼結果所致。本腳本依數值是否大於1000判斷格式：屬 TWD97 者用既有
+    twd97_to_wgs84() 換算為 WGS84 經緯度，其餘直接視為經緯度使用，統一轉換後不再區分來源格式。
+
+    「服務項目」欄位固定只有兩種文字值（見 TC_DEMENTIA_TYPE_MAP），分別對應「失智共同照護中心」
+    （提供個案管理服務、人才培訓課程）與「失智社區服務據點」（提供認知促進、緩和失智課程、安全看視
+    及家屬照顧者支持團體），本腳本轉換為較短的 type 欄位供前端篩選/圖表分類使用，原始服務項目文字
+    保留於 README／頁面文案中說明，不逐筆輸出完整長文字。
+    """
+    print("下載 臺中市失智症服務及資源提供單位 ...", file=sys.stderr)
+    text = fetch(TC_DEMENTIA_URL)
+    reader = csv.DictReader(io.StringIO(text))
+    records = []
+    for row in reader:
+        addr = (row.get("地址", "") or "").strip()
+        _county, district = parse_county_district(addr, fallback_county="臺中市")
+        try:
+            x = float(row.get("X坐標") or 0)
+            y = float(row.get("Y坐標") or 0)
+        except (TypeError, ValueError):
+            x, y = 0.0, 0.0
+        if x > 1000 or y > 1000:
+            lat, lng = twd97_to_wgs84(x, y)
+        else:
+            lat, lng = x, y
+        service_item = (row.get("服務項目", "") or "").strip()
+        records.append([
+            row.get("辦理單位", "").strip(),                  # 0 name
+            (row.get("連絡電話", "") or "").strip(),          # 1 phone
+            (row.get("電子郵件", "") or "").strip(),          # 2 email
+            addr,                                              # 3 address
+            district,                                          # 4 district
+            round(lng, 6),                                     # 5 lng
+            round(lat, 6),                                     # 6 lat
+            TC_DEMENTIA_TYPE_MAP.get(service_item, "其他"),   # 7 type
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["name", "phone", "email", "address", "district", "lng", "lat", "type"]
+    return {"fields": fields, "rows": records}
+
+
 def _tyltc_service_type(name: str) -> str:
     """依「辦理單位」名稱關鍵字啟發式推斷服務類型，見 TYLTC_TYPE_RULES 說明。"""
     for keyword, label in TYLTC_TYPE_RULES:
@@ -2918,6 +2989,15 @@ DATASETS = [
         "meta_key": "tcTransport",
         "title": "臺中市失能者交通接送服務",
         "source": lambda: TC_TRANSPORT_URL,
+    },
+    {
+        "key": "tc-dementia",
+        "builder": build_tc_dementia,
+        "json": "data/tc-dementia.json",
+        "js_var": "TC_DEMENTIA_DATA",
+        "meta_key": "tcDementia",
+        "title": "臺中市失智症服務及資源提供單位",
+        "source": lambda: TC_DEMENTIA_URL,
     },
     {
         "key": "tyltc",
