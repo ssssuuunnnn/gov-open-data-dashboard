@@ -1,0 +1,21 @@
+# 臺北市身心障礙鑑定指定醫院聯絡方式一覽表
+
+> 臺北市政府衛生局公告之身心障礙鑑定指定醫院聯絡方式一覽表，共34筆（含臺北市立聯合醫院各院區），提供行政區／關鍵字篩選、統計卡片與各行政區醫院數圖表，並整理初次鑑定、重新鑑定與到宅鑑定應備文件及洽辦窗口，無經緯度座標。
+
+- 提供機關：臺北市政府衛生局
+- 資料筆數：34 筆（隨資料來源更新而變動，實際筆數以頁面即時載入為準）
+- 原始資料來源：https://data.taipei/api/dataset/d8fc1b3d-b607-42b2-bd76-73bc59a41c91/resource/62dca902-1845-4a75-ad2c-f9135b00da7c/download
+- 授權方式：政府資料開放授權條款-第1版
+- 建議查看頻率：不定期
+
+## 頁面內容
+
+- 儀表板頁面：https://www.sunkuo.cc/gov-open-data-dashboard/tpe-disability-hospitals/index.html
+- 頁面上方為身心障礙鑑定申請說明 Q&A（初次鑑定／重新鑑定／到宅鑑定應備文件、洽辦資訊），屬固定公告文字；
+  下方為篩選條件、統計卡片、圖表與分頁表格，皆基於上述原始資料即時運算。
+
+## 相關連結
+
+- 網站首頁：https://www.sunkuo.cc/gov-open-data-dashboard/
+- 更新紀錄：https://www.sunkuo.cc/gov-open-data-dashboard/changelog/index.html
+- 專案原始碼：https://github.com/ssssuuunnnn/gov-open-data-dashboard

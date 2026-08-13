@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-12T13:03:26.297386+00:00",
+  "generatedAt": "2026-08-13T12:53:08.573061+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -184,5 +184,10 @@
     "count": 35,
     "source": "臺北市政府衛生局公告（PDF附件，非開放資料平台標準API）",
     "title": "臺北市失智症診療機構名冊"
+  },
+  "tpeDisabilityHospitals": {
+    "count": 34,
+    "source": "https://data.taipei/api/dataset/d8fc1b3d-b607-42b2-bd76-73bc59a41c91/resource/62dca902-1845-4a75-ad2c-f9135b00da7c/download",
+    "title": "115年臺北市身心障礙鑑定指定醫院及申請說明"
   }
 }

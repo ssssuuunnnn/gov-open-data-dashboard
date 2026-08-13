@@ -404,6 +404,17 @@
         "@type": "Organization",
         "name": "臺北市政府衛生局"
       }
+    },
+    {
+      "@type": "Dataset",
+      "name": "臺北市身心障礙鑑定指定醫院聯絡方式一覽表",
+      "description": "臺北市政府衛生局公告之身心障礙鑑定指定醫院聯絡方式一覽表，收錄34筆醫院名稱、電話、地址等資訊。",
+      "url": "https://www.sunkuo.cc/gov-open-data-dashboard/tpe-disability-hospitals/index.html",
+      "license": "https://data.gov.tw/license",
+      "creator": {
+        "@type": "Organization",
+        "name": "臺北市政府衛生局"
+      }
     }
   ]
 }
@@ -755,6 +766,12 @@
       <div class="desc">臺北市政府衛生局公告，列出失智症診療機構之醫院名稱、看診科別、健保特約類別、地址、電話，共35筆，並整理「認識失智症」完整衛教內容（定義、AD-8篩檢量表、預防方法、三大類型），可依行政區、健保特約類別與關鍵字篩選並瀏覽統計圖表。</div>
       <div class="footline" id="tpe-dementia-hospitals-count">資料筆數載入中…</div>
     </a>
+    <a class="home-card disability" href="tpe-disability-hospitals/index.html" data-county="臺北市" data-category="disability">
+      <span class="tag">臺北市</span>
+      <h2>115年臺北市身心障礙鑑定指定醫院及申請說明</h2>
+      <div class="desc">臺北市政府衛生局公告，列出身心障礙鑑定指定醫院之名稱、電話、地址，共34筆（含聯合醫院各院區），並整理初次鑑定、重新鑑定與到宅鑑定應備文件及洽辦窗口資訊，可依行政區與關鍵字篩選並瀏覽統計圖表。</div>
+      <div class="footline" id="tpe-disability-hospitals-count">資料筆數載入中…</div>
+    </a>
     <a class="home-card private" href="caregiver/index.html" data-county="all" data-category="private">
       <span class="tag">全國 · 非官方資料</span>
       <h2>看護／照服機構名錄</h2>
@@ -1000,6 +1017,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.tpeDementiaHospitals) {
     document.getElementById("tpe-dementia-hospitals-count").textContent = `共 ${meta.tpeDementiaHospitals.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.tpeDisabilityHospitals) {
+    document.getElementById("tpe-disability-hospitals-count").textContent = `共 ${meta.tpeDisabilityHospitals.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
   if (meta.caregiver) {
     document.getElementById("caregiver-count").textContent = `共 ${meta.caregiver.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;

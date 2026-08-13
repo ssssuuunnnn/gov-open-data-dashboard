@@ -216,6 +216,24 @@
     twd97_to_wgs84() 換算為統一的 WGS84 經緯度；「服務項目」欄位固定僅兩種文字值，對應「失智共同
     照護中心」與「失智社區服務據點」兩類服務單位，轉換為較短的 type 欄位供篩選/圖表使用；來源網址
     無 CORS 標頭，改由本腳本於伺服器端下載，另輸出內嵌 JS 版本，詳見 build_tc_dementia())
+25. 臺北市身心障礙鑑定指定醫院聯絡方式一覽表（DCAT dataset https://data.gov.tw/dataset/8572 ，
+    dataset id 132448，提供機關：臺北市政府衛生局）
+    https://data.taipei/api/dataset/d8fc1b3d-b607-42b2-bd76-73bc59a41c91/resource/62dca902-1845-4a75-ad2c-f9135b00da7c/download
+    （CSV，一般 utf-8-sig 解碼即可（非 tyltc/tyc-placement/tpe-denture 那類 cp950 例外）；原始欄位：
+    編號/醫院名稱/行政區域代碼/電話號碼/地址，與 DCAT description 一致。原始 CSV 共28個「編號」列，
+    但編號7「臺北市立聯合醫院」本身只是母機構分類標題（電話號碼、地址欄位皆空白），其下緊接7列
+    編號留空但醫院名稱/電話/地址皆完整的分院列（中興院區、仁愛院區、和平婦幼院區、陽明院區、
+    忠孝院區、松德院區、林森(中醫)昆明院區），本腳本偵測「電話號碼」與「地址」皆空白的列視為母機構
+    標題列而略過（不輸出為資料列），保留其下方編號為空但資料完整的分院列作為正式資料，並依輸出順序
+    重新編號（不沿用原始跳號/空白的編號欄）；檔案最後一列亦為全空白尾列，一併略過。實測共 34 筆
+    有效資料列。「行政區域代碼」為8碼行政區代碼（如63000120）非中文名稱，本腳本不使用，地址已含
+    完整「臺北市OO區」字首，改用既有 parse_county_district(fallback_county="臺北市") 解析行政區
+    （臺北市12區名稱無子字串歧義，比照 build_tpe_dementia_hospitals() 做法）；無經緯度座標，故不含
+    地圖；因資料量小（34筆）且來源網址（data.taipei）無 CORS 標頭，比照 build_tpe_dementia_hospitals()
+    輸出內嵌 JS 版本供前端 <script> 直接載入；頁面另外呈現使用者提供的「應備文件」（初次鑑定／
+    重新鑑定／申請到宅鑑定三類清單）與「洽辦資訊」（聯絡窗口、電話、傳真、洽辦單位）等公告說明文字，
+    屬固定文字內容非本資料集動態欄位，寫死於頁面 HTML 的 FAQ 區塊，未來衛生局異動需人工更新，
+    詳見 build_tpe_disability_hospitals())
 
 用法：
     python3 scripts/build_data.py
@@ -265,6 +283,10 @@
     data/dialysis-transport.js  (window.DIALYSIS_TRANSPORT_DATA，同上，供前端以 <script> 直接載入)
     data/tc-dementia.json
     data/tc-dementia.js    (window.TC_DEMENTIA_DATA，同上，供前端以 <script> 直接載入)
+    data/tpe-dementia-hospitals.json
+    data/tpe-dementia-hospitals.js  (window.TPE_DEMENTIA_HOSPITALS_DATA，同上，供前端以 <script> 直接載入)
+    data/tpe-disability-hospitals.json
+    data/tpe-disability-hospitals.js  (window.TPE_DISABILITY_HOSPITALS_DATA，同上，供前端以 <script> 直接載入)
     data/meta.json  (資料更新時間等資訊)
 
 額外相依套件：
@@ -343,6 +365,10 @@ TYC_PLACEMENT_URL = (
 TPE_DENTURE_URL = (
     "https://data.taipei/api/dataset/76b8b514-e793-4cca-8dcf-065d5af4b760/"
     "resource/d6522c9f-2026-4ab0-9642-65df9218a9bc/download"
+)
+TPE_DISABILITY_HOSPITALS_URL = (
+    "https://data.taipei/api/dataset/d8fc1b3d-b607-42b2-bd76-73bc59a41c91/"
+    "resource/62dca902-1845-4a75-ad2c-f9135b00da7c/download"
 )
 TYC_TRANSPORT_URL = (
     "https://opendata.tycg.gov.tw/api/dataset/ad10c5d0-b128-4daf-866e-4cfc9a78dadb/"
@@ -2899,6 +2925,59 @@ def build_tpe_dementia_hospitals():
     return {"fields": fields, "rows": records}
 
 
+def build_tpe_disability_hospitals():
+    """臺北市身心障礙鑑定指定醫院聯絡方式一覽表（DCAT dataset id 132448，提供機關：臺北市政府衛生局，
+    https://cms.data.gov.tw/dataset/132448）。
+
+    來源為 CSV（TPE_DISABILITY_HOSPITALS_URL），一般 utf-8-sig 解碼即可（非 tyltc/tyc-placement/
+    tpe-denture 那類 cp950 例外）。原始欄位：編號/醫院名稱/行政區域代碼/電話號碼/地址，與 DCAT
+    description 一致。
+
+    原始 CSV 共 28 個「編號」列，但編號7「臺北市立聯合醫院」本身只是母機構分類標題（電話號碼、
+    地址欄位皆空白），其下緊接7列編號留空但醫院名稱/電話/地址皆完整的分院列（中興院區、仁愛院區、
+    和平婦幼院區、陽明院區、忠孝院區、松德院區、林森(中醫)昆明院區）。本腳本判斷規則：電話與地址
+    皆為空白的列，視為母機構分類標題列而略過（不輸出為資料列）；其餘只要醫院名稱非空即視為正式
+    資料列（不論原始編號欄是否為空），依輸出順序重新編號（不沿用原始跳號/空白的編號欄，比照
+    build_tpe_dementia_hospitals() 的做法）。檔案最後一列為全空白尾列（無編號、名稱、電話、地址），
+    一併略過。實測共 34 筆有效資料列。
+
+    「行政區域代碼」欄位為8碼行政區代碼（如63000120）非中文名稱，本腳本不使用；地址已含完整
+    「臺北市OO區」字首，改用既有 parse_county_district(fallback_county="臺北市") 解析行政區
+    （臺北市12區名稱無子字串歧義，不需額外固定清單）。
+
+    無經緯度座標，故本頁不含地圖。資料量小（34筆）且來源網址（data.taipei）無 CORS 標頭，比照
+    build_tpe_dementia_hospitals() 輸出內嵌 JS 版本（js_var=TPE_DISABILITY_HOSPITALS_DATA），
+    前端不透過 fetch() 讀取 json。
+
+    頁面另外呈現使用者提供的「應備文件」（初次鑑定／重新鑑定／申請到宅鑑定三類清單）與「洽辦資訊」
+    （聯絡窗口、電話、傳真、洽辦單位：區公所社會課）等公告說明文字，屬固定文字內容非本資料集動態
+    欄位，寫死於頁面 HTML 的 FAQ 區塊，未來衛生局異動需人工更新。
+    """
+    print("下載 臺北市身心障礙鑑定指定醫院聯絡方式一覽表 ...", file=sys.stderr)
+    text = fetch(TPE_DISABILITY_HOSPITALS_URL)
+    reader = csv.DictReader(io.StringIO(text))
+    records = []
+    for row in reader:
+        name = (row.get("醫院名稱") or "").strip()
+        phone = (row.get("電話號碼") or "").strip()
+        addr = (row.get("地址") or "").strip()
+        if not name:
+            continue  # 尾端全空白列
+        if not phone and not addr:
+            continue  # 母機構分類標題列（如「臺北市立聯合醫院」），非正式資料列
+        _, district = parse_county_district(addr, fallback_county="臺北市")
+        records.append([
+            len(records) + 1,  # 0 id
+            name,               # 1 name
+            phone,              # 2 phone
+            addr,               # 3 address
+            district,           # 4 district
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "name", "phone", "address", "district"]
+    return {"fields": fields, "rows": records}
+
+
 def _to_int(v):
     try:
         return int(float(v))
@@ -3241,6 +3320,15 @@ DATASETS = [
         "meta_key": "tpeDementiaHospitals",
         "title": "臺北市失智症診療機構名冊",
         "source": lambda: "臺北市政府衛生局公告（PDF附件，非開放資料平台標準API）",
+    },
+    {
+        "key": "tpe-disability-hospitals",
+        "builder": build_tpe_disability_hospitals,
+        "json": "data/tpe-disability-hospitals.json",
+        "js_var": "TPE_DISABILITY_HOSPITALS_DATA",
+        "meta_key": "tpeDisabilityHospitals",
+        "title": "115年臺北市身心障礙鑑定指定醫院及申請說明",
+        "source": lambda: TPE_DISABILITY_HOSPITALS_URL,
     },
 ]
 

@@ -37,6 +37,7 @@
 - [臺中市115年度65歲以上銀髮族假牙裝置補助計畫合約院所](https://www.sunkuo.cc/gov-open-data-dashboard/tc-denture/index.html): 臺中市政府衛生局公告之115年度65歲以上銀髮族假牙裝置補助計畫合約院所名單，共281筆，收錄院所名稱、地址與電話，涵蓋27個行政區，並整理補助對象、申請期間、給付金額與申請/初審/複審/核銷流程等說明；提供行政區／關鍵字篩選與統計圖表，另附 Google Map 星等／評論數，無經緯度座標、無機構類型分類欄位。 (https://www.sunkuo.cc/gov-open-data-dashboard/tc-denture/llms.txt)
 - [桃園市提供失智症診療服務醫院一覽表](https://www.sunkuo.cc/gov-open-data-dashboard/tyc-dementia-hospitals/index.html): 桃園市政府衛生局公告之提供失智症診療服務醫院名冊，共18筆，收錄醫院名稱、電話、地址，行政區由地址欄位解析，提供行政區／關鍵字篩選與統計圖表，無經緯度座標。頁面上方收錄「認識失智症」十大警訊、常見症狀重點摘要與就醫建議（整理自社團法人台灣失智症協會，非逐字轉貼）。 (https://www.sunkuo.cc/gov-open-data-dashboard/tyc-dementia-hospitals/llms.txt)
 - [臺北市失智症診療機構名冊](https://www.sunkuo.cc/gov-open-data-dashboard/tpe-dementia-hospitals/index.html): 臺北市政府衛生局公告之失智症診療機構名冊，共35筆，收錄醫院名稱、失智症看診科別、健保特約類別（醫學中心／區域醫院／地區醫院）、地址、電話，行政區由地址欄位解析，提供行政區／健保特約類別／關鍵字篩選與統計圖表，無經緯度座標。頁面上方收錄完整版「認識失智症」Q&A：定義、AD-8極早期篩檢量表、正常老化區別、預防方法、三大類型與年輕型失智症說明。資料來源為衛生局公告 PDF 附件，非開放資料平台標準 API。 (https://www.sunkuo.cc/gov-open-data-dashboard/tpe-dementia-hospitals/llms.txt)
+- [115年臺北市身心障礙鑑定指定醫院及申請說明](https://www.sunkuo.cc/gov-open-data-dashboard/tpe-disability-hospitals/index.html): 臺北市政府衛生局公告之身心障礙鑑定指定醫院聯絡方式一覽表，共34筆（含臺北市立聯合醫院各院區），收錄醫院名稱、電話、地址，行政區由地址欄位解析，提供行政區／關鍵字篩選與統計圖表，無經緯度座標。頁面上方收錄初次鑑定、重新鑑定、到宅鑑定應備文件與洽辦資訊 Q&A（整理自衛生局公告內容）。 (https://www.sunkuo.cc/gov-open-data-dashboard/tpe-disability-hospitals/llms.txt)
 
 ## 非政府開放資料（人工蒐集，僅供參考）
 

@@ -41,6 +41,7 @@
 | `pingtung-denture/` | 屏東縣115年長者假牙裝置補助合作醫療院所 | 屏東縣政府衛生局醫政科 | 屏東縣115年長者假牙裝置補助合作醫療院所名冊（115.3.18更新），共66筆（59筆「特約醫療院所」＋7筆「醫療站」，以 `category` 欄位保留原始分類並重新連續編號1~66），收錄編號、分類、縣市、鄉鎮市、機構名稱、地址、電話與 Google Map 星等、評論數，並整理服務對象資格、活動假牙／固定式假牙／假牙維修補助金額明細、申請流程五步驟、服務窗口等說明；「機構類型」（醫院／衛生所／醫療站／牙醫診所）由名稱關鍵字啟發式推斷（非官方分類），提供縣市／鄉鎮市／機構類型／分類／關鍵字篩選與統計圖表，無經緯度座標。**資料來源為使用者手動提供之衛生局公告 PDF 名冊（非公開可下載之開放資料 CSV/API），且屏東市地址不含「屏東縣」字首，改用固定行政區清單 `PINGTUNG_DISTRICTS` 解析鄉鎮市**，`build_pingtung_denture()` 讀取本地已存放的 `scripts/sources/pingtung-denture/institution-list.pdf` 解析，無法自動重新下載更新，Google 星等/評論數為一次性快照（2026-08-08，已人工核對地址/電話排除2筆誤配對） |
 | `tyc-dementia-hospitals/` | 桃園市提供失智症診療服務醫院一覽表 | 桃園市政府衛生局 | 桃園市可提供失智症確診服務之醫院名冊，共18筆，收錄序號、醫院名稱、電話、地址，行政區由地址欄位解析（比照 `build_tyc_elder()` 用固定 `TYC_DISTRICTS` 清單比對），提供行政區／關鍵字篩選與統計圖表，無經緯度座標。頁面上方另收錄「認識失智症」十大警訊、常見症狀重點摘要與就醫建議（自撰摘要＋來源連結，整理自社團法人台灣失智症協會 https://www.cfad.org.tw/knowledge/37 ，非逐字轉貼），比照 tyc-elder 用內嵌 js 版本輸出 |
 | `tpe-dementia-hospitals/` | 臺北市失智症診療機構名冊 | 臺北市政府衛生局 | 臺北市失智症診療機構名冊，共35筆，收錄醫院名稱、失智症看診科別、健保特約類別（醫學中心／區域醫院／地區醫院）、地址、電話，行政區由地址欄位解析（`parse_county_district(fallback_county="臺北市")`），提供行政區／健保特約類別／關鍵字篩選與統計圖表，無經緯度座標。頁面上方另收錄完整版「認識失智症」Q&A（定義、AD-8極早期篩檢量表、正常老化區別、預防方法【趨吉避凶】、三大類型【退化性—阿茲海默症/額顳葉型/路易氏體、血管性、其他原因引起之可逆性失智症】、年輕型失智症），內容整理自使用者提供之衛教資料。**資料來源為臺北市政府衛生局公告網頁 PDF 附件（非開放資料平台標準API），使用者原提供之 CSV 經試抓確認為不同性質的「篩檢轉介窗口」名冊而未採用**，比照 tyc-dementia-hospitals 用內嵌 js 版本輸出，無法自動重新下載，詳見下方「更新資料」說明 |
+| `tpe-disability-hospitals/` | 115年臺北市身心障礙鑑定指定醫院及申請說明 | 臺北市政府衛生局 | 臺北市身心障礙鑑定指定醫院聯絡方式一覽表（DCAT dataset id 132448），共34筆，原始CSV共28個編號但編號7「臺北市立聯合醫院」本身僅為母機構分類標題（電話/地址空白，本腳本略過），其下7家分院（中興、仁愛、和平婦幼、陽明、忠孝、松德、林森(中醫)昆明院區）為正式資料列並依輸出順序重新編號，收錄醫院名稱、電話、地址，行政區由地址欄位解析（`parse_county_district(fallback_county="臺北市")`），提供行政區／關鍵字篩選與統計圖表，無經緯度座標。頁面上方收錄使用者提供之初次鑑定／重新鑑定／申請到宅鑑定應備文件清單與洽辦資訊（聯絡窗口、電話、傳真、洽辦單位：區公所社會課）Q&A，屬固定公告文字，比照 tpe-dementia-hospitals 用內嵌 js 版本輸出 |
 | `caregiver/` | 看護／照服機構名錄 | **無（使用者人工蒐集）** | 使用者手動整理目前網路上找得到的私人看護／居家照護機構名單（共35筆），收錄機構名稱、官網、收費頁面、聯絡電話、服務地區、統一編號，提供服務地區／是否有公開收費頁面／關鍵字篩選；**非政府開放資料，無提供機關、無官方驗證**，頁面明確標示免責聲明，資料來源為使用者提供之本機 CSV、無公開下載網址，需人工更新，詳見下方「更新資料」說明 |
 | `dialysis-transport/` | 洗腎（透析）交通接送服務查詢 | 部分為衛生福利部長期照顧司（制度說明）／**無（民間清單為使用者人工蒐集）** | 頁面上方整理長照司「交通接送服務」BD03（社區式服務交通接送）／DA01（交通接送）給付碼別官方制度說明（資料來源：1966長照專區公告頁），下方為使用者手動整理之全台洗腎（透析）就醫民間接送/租賃服務名單（共16筆），收錄名稱、官網、聯絡電話、服務地區，因資料量小且服務地區欄位稀疏僅提供關鍵字篩選；**民間接送清單非政府開放資料，無官方驗證**，頁面明確標示免責聲明，資料來源為使用者提供之本機 CSV、無公開下載網址，需人工更新，詳見下方「更新資料」說明 |
 
@@ -289,6 +290,10 @@ data/tpe-dementia-hospitals.json  臺北市失智症診療機構名冊（由 scr
                        非向遠端網址下載，因原始資料無公開開放資料 API/CSV，僅有衛生局公告頁面 PDF）
 data/tpe-dementia-hospitals.js  同上資料的內嵌 JS 版本（window.TPE_DEMENTIA_HOSPITALS_DATA），供
                        tpe-dementia-hospitals 頁面以 <script> 標籤直接載入
+data/tpe-disability-hospitals.json  臺北市身心障礙鑑定指定醫院聯絡方式一覽表（由 scripts/build_data.py
+                       下載 data.taipei CSV 產生，資料量小且來源網址無 CORS 標頭）
+data/tpe-disability-hospitals.js  同上資料的內嵌 JS 版本（window.TPE_DISABILITY_HOSPITALS_DATA），供
+                       tpe-disability-hospitals 頁面以 <script> 標籤直接載入
 data/caregiver.json   看護／照服機構名錄資料（由 scripts/build_data.py 讀取本機 CSV 產生）
 data/caregiver.js     同上資料的內嵌 JS 版本（window.CAREGIVER_DATA），供 caregiver 頁面以
                        <script> 標籤直接載入，因無公開下載網址，不透過 fetch()
@@ -373,6 +378,7 @@ python3 scripts/build_data.py tc-denture          # 只重新產生臺中市115�
 python3 scripts/build_data.py hl-denture          # 只重新產生花蓮縣115年度65歲以上長者假牙補助合約醫療院所
 python3 scripts/build_data.py pingtung-denture    # 只重新產生屏東縣115年長者假牙裝置補助合作醫療院所
 python3 scripts/build_data.py tpe-dementia-hospitals  # 只重新產生臺北市失智症診療機構名冊
+python3 scripts/build_data.py tpe-disability-hospitals  # 只重新產生臺北市身心障礙鑑定指定醫院聯絡方式一覽表
 python3 scripts/build_data.py caregiver           # 只重新產生看護／照服機構名錄
 python3 scripts/build_data.py dialysis-transport  # 只重新產生洗腎（透析）接送資源清單
 python3 scripts/build_data.py tc-nursing ntpc-nursing   # 可同時指定多個，以空白分隔
