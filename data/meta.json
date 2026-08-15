@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-13T12:53:08.573061+00:00",
+  "generatedAt": "2026-08-15T03:53:26.868359+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -189,5 +189,10 @@
     "count": 34,
     "source": "https://data.taipei/api/dataset/d8fc1b3d-b607-42b2-bd76-73bc59a41c91/resource/62dca902-1845-4a75-ad2c-f9135b00da7c/download",
     "title": "115年臺北市身心障礙鑑定指定醫院及申請說明"
+  },
+  "tnDisabilityHospitals": {
+    "count": 16,
+    "source": "https://data.tainan.gov.tw/File/ResourceCsvDownload/bace10f4-386b-42ec-a1ca-25db737d81a8",
+    "title": "115年臺南市身心障礙鑑定醫院及申請說明"
   }
 }

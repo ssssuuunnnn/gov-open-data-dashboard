@@ -234,6 +234,17 @@
     重新鑑定／申請到宅鑑定三類清單）與「洽辦資訊」（聯絡窗口、電話、傳真、洽辦單位）等公告說明文字，
     屬固定文字內容非本資料集動態欄位，寫死於頁面 HTML 的 FAQ 區塊，未來衛生局異動需人工更新，
     詳見 build_tpe_disability_hospitals())
+26. 115年臺南市身心障礙鑑定醫院（DCAT dataset https://data.gov.tw/dataset/8572 ，
+    dataset id 147147，提供機關：臺南市政府衛生局）
+    https://data.tainan.gov.tw/File/ResourceCsvDownload/bace10f4-386b-42ec-a1ca-25db737d81a8
+    （CSV，一般 utf-8-sig 解碼即可；原始欄位：醫院名稱/鑑定類別/醫院電話/地址，與 DCAT description
+    一致。另有一組 CountyCode/AreaCode/Village/StreetDoorPlate 分欄格式的等價 distribution，因需
+    自行組回地址而捨棄。實測共 16 筆，無經緯度座標，故不含地圖。地址開頭多數帶 3~5 碼郵遞區號，
+    本腳本先剝除再解析；地址中縣市字樣為簡體「台南市」而非正式全形「臺南市」，county 欄位固定輸出
+    「臺南市」，僅以「台南市」比對抓district。「鑑定類別」欄位額外近似解析出可辦理類別數字（1~8）
+    清單供篩選/圖表使用，惟不解析括號除外備註細節，僅供粗略篩選參考。來源網址無 CORS 標頭，比照
+    build_tpe_disability_hospitals() 輸出內嵌 JS 版本；頁面另呈現使用者提供的「申請流程」「應備
+    文件」「洽辦窗口」等公告說明文字，詳見 build_tn_disability_hospitals())
 
 用法：
     python3 scripts/build_data.py
@@ -369,6 +380,10 @@ TPE_DENTURE_URL = (
 TPE_DISABILITY_HOSPITALS_URL = (
     "https://data.taipei/api/dataset/d8fc1b3d-b607-42b2-bd76-73bc59a41c91/"
     "resource/62dca902-1845-4a75-ad2c-f9135b00da7c/download"
+)
+TN_DISABILITY_HOSPITALS_URL = (
+    "https://data.tainan.gov.tw/File/ResourceCsvDownload/"
+    "bace10f4-386b-42ec-a1ca-25db737d81a8"
 )
 TYC_TRANSPORT_URL = (
     "https://opendata.tycg.gov.tw/api/dataset/ad10c5d0-b128-4daf-866e-4cfc9a78dadb/"
@@ -2978,6 +2993,85 @@ def build_tpe_disability_hospitals():
     return {"fields": fields, "rows": records}
 
 
+TN_DISABILITY_CATEGORY_RANGE_RE = re.compile(r"第(\d)類(?:\([^)]*\))?[~～]第(\d)類")
+TN_DISABILITY_CATEGORY_SINGLE_RE = re.compile(r"第(\d)類")
+
+
+def _parse_tn_disability_categories(text: str) -> list[str]:
+    """從「鑑定類別」原文近似解析出可辦理的類別數字（1~8）清單。
+
+    僅偵測「第X類~第Y類」（展開為 X..Y 全部數字）與單獨出現的「第X類」，並集合去重排序。
+    這是**近似值**：原文常見「第4類-血管功能除外」「第2類(視覺)」這類括號/除外備註，代表該類別
+    僅部分功能項目可鑑定或有限制，本函式不解析括號內容，一律視為該類別「可辦理」，僅供粗略篩選/
+    圖表使用，實際除外範圍仍需查看表格中「鑑定類別」原文全文。
+    """
+    nums = set()
+    for m in TN_DISABILITY_CATEGORY_RANGE_RE.finditer(text):
+        for n in range(int(m.group(1)), int(m.group(2)) + 1):
+            nums.add(n)
+    for m in TN_DISABILITY_CATEGORY_SINGLE_RE.finditer(text):
+        nums.add(int(m.group(1)))
+    return [str(n) for n in sorted(nums)]
+
+
+def build_tn_disability_hospitals():
+    """115年臺南市身心障礙鑑定醫院（臺南市政府衛生局，DCAT dataset id 147147，
+    https://cms.data.gov.tw/dataset/147147）。
+
+    來源共有兩組等價 CSV distribution（各自另有 soa.tainan.gov.tw API 版本，內容相同）：
+    一組欄位為「醫院名稱、鑑定類別、醫院電話、地址」，地址已是完整「(郵遞區號)台南市OO區OO路OO號」
+    字串；另一組欄位為「醫院名稱、CountyCode、AreaCode、Village、StreetDoorPlate、鑑定類別、
+    醫院電話」，縣市/行政區為代碼而非中文名稱，需另組回地址才能使用。本腳本選用前者
+    （TN_DISABILITY_HOSPITALS_URL），因地址已完整、無需額外組字串，且資訊量相同。
+
+    一般 utf-8-sig 解碼即可。實測共 16 筆醫院資料，**無經緯度座標**，故本頁不含地圖。
+
+    地址開頭多數帶 3~5 碼郵遞區號（如「704台南市北區...」），少數無郵遞區號（如「台南市佳里區...」），
+    本腳本先以 `re.sub(r"^\\d{3,6}", "", addr)` 去除郵遞區號字首再解析。地址中的縣市字樣一律為
+    「台南市」（簡體「台」而非正式全形「臺」），比照站內其他臺南市資料集慣例，county 欄位固定
+    輸出正式全形「臺南市」，僅以「台南市」比對抓出後續行政區文字（`parse_county_district` 的
+    `fallback_county` 參數需與原文字樣一致，因此傳入「台南市」再手動覆寫顯示用 county）。
+
+    「鑑定類別」欄位為每家醫院可辦理之身心障礙鑑定類別說明，內容含範圍（如「第1類~第8類」）與
+    括號除外備註（如「第4類-血管功能、血液系統功能除外」），部分儲存格因原始 CSV 內含換行
+    （如「第1類~第8類\\n(第6類-泌尿系統構造除外)」）已由 csv 模組正確讀入為單一欄位值，本腳本
+    統一去除欄位內換行後再處理。額外以 `_parse_tn_disability_categories()` 近似解析出「可辦理
+    類別數字（1~8）」清單供篩選/圖表使用，惟不解析括號除外細節，僅供粗略篩選參考，頁面需加註
+    提醒使用者查看原文確認實際除外範圍。
+
+    無 CORS 標頭（data.tainan.gov.tw 未回傳 Access-Control-Allow-Origin），比照
+    build_tpe_disability_hospitals() 輸出內嵌 JS 版本（js_var=TN_DISABILITY_HOSPITALS_DATA），
+    前端不透過 fetch() 讀取 json。
+    """
+    print("下載 115年臺南市身心障礙鑑定醫院 ...", file=sys.stderr)
+    text = fetch(TN_DISABILITY_HOSPITALS_URL)
+    reader = csv.DictReader(io.StringIO(text))
+    records = []
+    for row in reader:
+        name = (row.get("醫院名稱") or "").strip()
+        if not name:
+            continue
+        category_text = (row.get("鑑定類別") or "").replace("\n", "").strip()
+        phone = (row.get("醫院電話") or "").strip()
+        addr = (row.get("地址") or "").strip()
+        addr_no_zip = re.sub(r"^\d{3,6}", "", addr)
+        _, district = parse_county_district(addr_no_zip, fallback_county="台南市")
+        categories = _parse_tn_disability_categories(category_text)
+        records.append([
+            len(records) + 1,       # 0 id
+            name,                     # 1 name
+            phone,                    # 2 phone
+            addr,                     # 3 address
+            "臺南市",                # 4 county（固定值，正式全形）
+            district,                 # 5 district
+            category_text,            # 6 categoryText（原文，含除外備註）
+            ";".join(categories),     # 7 categories（近似解析，';' 分隔供篩選比對）
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "name", "phone", "address", "county", "district", "categoryText", "categories"]
+    return {"fields": fields, "rows": records}
+
+
 def _to_int(v):
     try:
         return int(float(v))
@@ -3329,6 +3423,15 @@ DATASETS = [
         "meta_key": "tpeDisabilityHospitals",
         "title": "115年臺北市身心障礙鑑定指定醫院及申請說明",
         "source": lambda: TPE_DISABILITY_HOSPITALS_URL,
+    },
+    {
+        "key": "tn-disability-hospitals",
+        "builder": build_tn_disability_hospitals,
+        "json": "data/tn-disability-hospitals.json",
+        "js_var": "TN_DISABILITY_HOSPITALS_DATA",
+        "meta_key": "tnDisabilityHospitals",
+        "title": "115年臺南市身心障礙鑑定醫院及申請說明",
+        "source": lambda: TN_DISABILITY_HOSPITALS_URL,
     },
 ]
 

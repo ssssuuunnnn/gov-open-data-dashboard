@@ -415,6 +415,17 @@
         "@type": "Organization",
         "name": "臺北市政府衛生局"
       }
+    },
+    {
+      "@type": "Dataset",
+      "name": "115年臺南市身心障礙鑑定醫院",
+      "description": "臺南市政府衛生局公告之身心障礙鑑定醫院名冊，收錄16筆醫院名稱、鑑定類別、電話、地址等資訊。",
+      "url": "https://www.sunkuo.cc/gov-open-data-dashboard/tn-disability-hospitals/index.html",
+      "license": "https://data.gov.tw/license",
+      "creator": {
+        "@type": "Organization",
+        "name": "臺南市政府衛生局"
+      }
     }
   ]
 }
@@ -772,6 +783,12 @@
       <div class="desc">臺北市政府衛生局公告，列出身心障礙鑑定指定醫院之名稱、電話、地址，共34筆（含聯合醫院各院區），並整理初次鑑定、重新鑑定與到宅鑑定應備文件及洽辦窗口資訊，可依行政區與關鍵字篩選並瀏覽統計圖表。</div>
       <div class="footline" id="tpe-disability-hospitals-count">資料筆數載入中…</div>
     </a>
+    <a class="home-card disability" href="tn-disability-hospitals/index.html" data-county="臺南市" data-category="disability">
+      <span class="tag">臺南市</span>
+      <h2>115年臺南市身心障礙鑑定醫院及申請說明</h2>
+      <div class="desc">臺南市政府衛生局公告，列出身心障礙鑑定醫院之名稱、電話、地址與可辦理鑑定類別，共16筆，並整理申請流程、到宅鑑定條件、應備文件及業務窗口資訊，可依行政區、鑑定類別（第1~8類）與關鍵字篩選並瀏覽統計圖表。</div>
+      <div class="footline" id="tn-disability-hospitals-count">資料筆數載入中…</div>
+    </a>
     <a class="home-card private" href="caregiver/index.html" data-county="all" data-category="private">
       <span class="tag">全國 · 非官方資料</span>
       <h2>看護／照服機構名錄</h2>
@@ -1020,6 +1037,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.tpeDisabilityHospitals) {
     document.getElementById("tpe-disability-hospitals-count").textContent = `共 ${meta.tpeDisabilityHospitals.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.tnDisabilityHospitals) {
+    document.getElementById("tn-disability-hospitals-count").textContent = `共 ${meta.tnDisabilityHospitals.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
   if (meta.caregiver) {
     document.getElementById("caregiver-count").textContent = `共 ${meta.caregiver.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;

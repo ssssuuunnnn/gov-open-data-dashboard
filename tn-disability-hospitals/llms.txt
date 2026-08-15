@@ -1,0 +1,22 @@
+# 115年臺南市身心障礙鑑定醫院
+
+> 臺南市政府衛生局公告之身心障礙鑑定醫院名冊，共16筆，提供行政區／鑑定類別（第1~8類）／關鍵字篩選、統計卡片與各行政區／各鑑定類別圖表，並整理申請流程、到宅鑑定條件、應備文件及業務窗口聯絡電話，無經緯度座標。
+
+- 提供機關：臺南市政府衛生局
+- 資料筆數：16 筆（隨資料來源更新而變動，實際筆數以頁面即時載入為準）
+- 原始資料來源：https://data.tainan.gov.tw/File/ResourceCsvDownload/bace10f4-386b-42ec-a1ca-25db737d81a8
+- 授權方式：政府資料開放授權條款-第1版
+- 建議查看頻率：每年
+
+## 頁面內容
+
+- 儀表板頁面：https://www.sunkuo.cc/gov-open-data-dashboard/tn-disability-hospitals/index.html
+- 頁面上方為身心障礙鑑定申請說明 Q&A（申請流程、到宅鑑定條件、應備文件、業務窗口與洽辦資訊），屬固定公告文字；
+  下方為篩選條件（行政區、鑑定類別、關鍵字）、統計卡片、圖表與分頁表格，皆基於上述原始資料即時運算。
+- 「鑑定類別」篩選為本站依原始欄位文字近似解析，僅供粗略篩選參考，實際除外範圍請以表格原文為準。
+
+## 相關連結
+
+- 網站首頁：https://www.sunkuo.cc/gov-open-data-dashboard/
+- 更新紀錄：https://www.sunkuo.cc/gov-open-data-dashboard/changelog/index.html
+- 專案原始碼：https://github.com/ssssuuunnnn/gov-open-data-dashboard
