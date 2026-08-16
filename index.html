@@ -426,6 +426,17 @@
         "@type": "Organization",
         "name": "臺南市政府衛生局"
       }
+    },
+    {
+      "@type": "Dataset",
+      "name": "臺中市身心障礙鑑定醫院及鑑定類別窗口",
+      "description": "臺中市政府衛生局公告之身心障礙鑑定醫院清冊，收錄33筆醫院層級、名稱、一般/居家鑑定窗口、電話與可辦理鑑定類別等資訊。",
+      "url": "https://www.sunkuo.cc/gov-open-data-dashboard/tc-disability-hospitals/index.html",
+      "license": "https://www.health.taichung.gov.tw",
+      "creator": {
+        "@type": "Organization",
+        "name": "臺中市政府衛生局"
+      }
     }
   ]
 }
@@ -789,6 +800,12 @@
       <div class="desc">臺南市政府衛生局公告，列出身心障礙鑑定醫院之名稱、電話、地址與可辦理鑑定類別，共16筆，並整理申請流程、到宅鑑定條件、應備文件及業務窗口資訊，可依行政區、鑑定類別（第1~8類）與關鍵字篩選並瀏覽統計圖表。</div>
       <div class="footline" id="tn-disability-hospitals-count">資料筆數載入中…</div>
     </a>
+    <a class="home-card disability" href="tc-disability-hospitals/index.html" data-county="臺中市" data-category="disability">
+      <span class="tag">臺中市</span>
+      <h2>臺中市身心障礙鑑定醫院及鑑定類別窗口</h2>
+      <div class="desc">臺中市政府衛生局公告PDF整理，列出33家身心障礙鑑定醫院之層級、一般/居家鑑定窗口、電話與可辦理鑑定類別（第1~8類），並整理申辦流程、應備物品及聯絡窗口資訊，可依醫院層級、鑑定類別與關鍵字篩選並瀏覽統計圖表。</div>
+      <div class="footline" id="tc-disability-hospitals-count">資料筆數載入中…</div>
+    </a>
     <a class="home-card private" href="caregiver/index.html" data-county="all" data-category="private">
       <span class="tag">全國 · 非官方資料</span>
       <h2>看護／照服機構名錄</h2>
@@ -1040,6 +1057,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.tnDisabilityHospitals) {
     document.getElementById("tn-disability-hospitals-count").textContent = `共 ${meta.tnDisabilityHospitals.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.tcDisabilityHospitals) {
+    document.getElementById("tc-disability-hospitals-count").textContent = `共 ${meta.tcDisabilityHospitals.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
   if (meta.caregiver) {
     document.getElementById("caregiver-count").textContent = `共 ${meta.caregiver.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;

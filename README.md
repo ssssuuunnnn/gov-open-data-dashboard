@@ -1,6 +1,6 @@
 # 政府開放資料儀表板
 
-以政府開放資料建置的靜態網站，整理三十七個長照/老人福利/身心障礙相關資料集為互動式儀表板，可直接部署於 GitHub Pages。
+以政府開放資料建置的靜態網站，整理三十八個長照/老人福利/身心障礙相關資料集為互動式儀表板，可直接部署於 GitHub Pages。
 
 ## 資料集
 
@@ -43,6 +43,7 @@
 | `tpe-dementia-hospitals/` | 臺北市失智症診療機構名冊 | 臺北市政府衛生局 | 臺北市失智症診療機構名冊，共35筆，收錄醫院名稱、失智症看診科別、健保特約類別（醫學中心／區域醫院／地區醫院）、地址、電話，行政區由地址欄位解析（`parse_county_district(fallback_county="臺北市")`），提供行政區／健保特約類別／關鍵字篩選與統計圖表，無經緯度座標。頁面上方另收錄完整版「認識失智症」Q&A（定義、AD-8極早期篩檢量表、正常老化區別、預防方法【趨吉避凶】、三大類型【退化性—阿茲海默症/額顳葉型/路易氏體、血管性、其他原因引起之可逆性失智症】、年輕型失智症），內容整理自使用者提供之衛教資料。**資料來源為臺北市政府衛生局公告網頁 PDF 附件（非開放資料平台標準API），使用者原提供之 CSV 經試抓確認為不同性質的「篩檢轉介窗口」名冊而未採用**，比照 tyc-dementia-hospitals 用內嵌 js 版本輸出，無法自動重新下載，詳見下方「更新資料」說明 |
 | `tpe-disability-hospitals/` | 115年臺北市身心障礙鑑定指定醫院及申請說明 | 臺北市政府衛生局 | 臺北市身心障礙鑑定指定醫院聯絡方式一覽表（DCAT dataset id 132448），共34筆，原始CSV共28個編號但編號7「臺北市立聯合醫院」本身僅為母機構分類標題（電話/地址空白，本腳本略過），其下7家分院（中興、仁愛、和平婦幼、陽明、忠孝、松德、林森(中醫)昆明院區）為正式資料列並依輸出順序重新編號，收錄醫院名稱、電話、地址，行政區由地址欄位解析（`parse_county_district(fallback_county="臺北市")`），提供行政區／關鍵字篩選與統計圖表，無經緯度座標。頁面上方收錄使用者提供之初次鑑定／重新鑑定／申請到宅鑑定應備文件清單與洽辦資訊（聯絡窗口、電話、傳真、洽辦單位：區公所社會課）Q&A，屬固定公告文字，比照 tpe-dementia-hospitals 用內嵌 js 版本輸出 |
 | `tn-disability-hospitals/` | 115年臺南市身心障礙鑑定醫院及申請說明 | 臺南市政府衛生局 | 115年臺南市身心障礙鑑定醫院名冊（DCAT dataset id 147147），共16筆，來源CSV欄位為醫院名稱／鑑定類別／醫院電話／地址（另有一組CountyCode/AreaCode分欄格式等價distribution因需自行組回地址而捨棄），地址已含完整「(郵遞區號)台南市OO區OO路OO號」字串，county固定輸出正式全形「臺南市」（原文為簡體「台南市」），district由剝除郵遞區號後的地址解析；「鑑定類別」欄位額外近似解析出可辦理類別數字（1~8）清單供篩選/圖表使用（不解析括號除外備註細節，僅供粗略參考），提供行政區／鑑定類別／關鍵字篩選與統計圖表（各行政區醫院數、各鑑定類別可辦理醫院數），無經緯度座標。頁面上方收錄使用者提供之申請流程、到宅鑑定條件、應備文件與業務窗口/洽辦單位資訊Q&A，屬固定公告文字，來源網址無CORS標頭，比照 tpe-disability-hospitals 用內嵌 js 版本輸出 |
+| `tc-disability-hospitals/` | 臺中市身心障礙鑑定醫院及鑑定類別窗口 | 臺中市政府衛生局 | 臺中市33家新制身心障礙鑑定醫院清冊，來源為衛生局網站公告之兩份獨立PDF（**非DCAT開放資料CSV/API**）：一份為乾淨的窗口清冊（醫院層級／編號／名稱／一般鑑定窗口／居家鑑定窗口／電話），另一份為約46項「向度」子項（分屬第1~8類）的能力矩陣（每格v/無提供），本站僅將矩陣彙總至第1~8類層級（該類別下任一向度為v即視為可辦理，不保留46項向度細節）；兩份PDF醫院命名（全銜/簡稱、「臺」/「台」用字）與順序皆不同，改用人工核對之別名對照表配對，其中一份PDF「澄清復建醫院」對照另一份「澄清復健醫院」應為原始PDF錯字，忠實保留原文並於對照表修正供比對，提供醫院層級／鑑定類別／關鍵字篩選與統計圖表，無地址、無經緯度座標。頁面上方收錄使用者提供之申辦流程、應備物品、聯絡窗口資訊Q&A，屬固定公告文字，PDF需人工存放於`data/source/tc-disability-hospitals-*.pdf`後才能解析，無法自動重新下載更新，詳見下方「更新資料」說明 |
 | `caregiver/` | 看護／照服機構名錄 | **無（使用者人工蒐集）** | 使用者手動整理目前網路上找得到的私人看護／居家照護機構名單（共35筆），收錄機構名稱、官網、收費頁面、聯絡電話、服務地區、統一編號，提供服務地區／是否有公開收費頁面／關鍵字篩選；**非政府開放資料，無提供機關、無官方驗證**，頁面明確標示免責聲明，資料來源為使用者提供之本機 CSV、無公開下載網址，需人工更新，詳見下方「更新資料」說明 |
 | `dialysis-transport/` | 洗腎（透析）交通接送服務查詢 | 部分為衛生福利部長期照顧司（制度說明）／**無（民間清單為使用者人工蒐集）** | 頁面上方整理長照司「交通接送服務」BD03（社區式服務交通接送）／DA01（交通接送）給付碼別官方制度說明（資料來源：1966長照專區公告頁），下方為使用者手動整理之全台洗腎（透析）就醫民間接送/租賃服務名單（共16筆），收錄名稱、官網、聯絡電話、服務地區，因資料量小且服務地區欄位稀疏僅提供關鍵字篩選；**民間接送清單非政府開放資料，無官方驗證**，頁面明確標示免責聲明，資料來源為使用者提供之本機 CSV、無公開下載網址，需人工更新，詳見下方「更新資料」說明 |
 
@@ -299,6 +300,14 @@ data/tn-disability-hospitals.json  115年臺南市身心障礙鑑定醫院（由
                        data.tainan.gov.tw CSV 產生，資料量小且來源網址無 CORS 標頭）
 data/tn-disability-hospitals.js  同上資料的內嵌 JS 版本（window.TN_DISABILITY_HOSPITALS_DATA），供
                        tn-disability-hospitals 頁面以 <script> 標籤直接載入
+data/source/tc-disability-hospitals-categories-11412.pdf  臺中市33家新制身心障礙鑑定醫院及鑑定
+                       類別及向度一覽表（衛生局公告 PDF，需人工存放，無法自動下載）
+data/source/tc-disability-hospitals-contacts-11412.pdf  臺中市請領身心障礙證明之鑑定醫院及窗口
+                       （衛生局公告 PDF，需人工存放，無法自動下載）
+data/tc-disability-hospitals.json  臺中市身心障礙鑑定醫院及鑑定類別窗口（由 scripts/build_data.py
+                       用 pdfplumber 解析上述兩份本機 PDF 產生，共33筆）
+data/tc-disability-hospitals.js  同上資料的內嵌 JS 版本（window.TC_DISABILITY_HOSPITALS_DATA），供
+                       tc-disability-hospitals 頁面以 <script> 標籤直接載入
 data/caregiver.json   看護／照服機構名錄資料（由 scripts/build_data.py 讀取本機 CSV 產生）
 data/caregiver.js     同上資料的內嵌 JS 版本（window.CAREGIVER_DATA），供 caregiver 頁面以
                        <script> 標籤直接載入，因無公開下載網址，不透過 fetch()
@@ -385,6 +394,8 @@ python3 scripts/build_data.py pingtung-denture    # 只重新產生屏東縣115�
 python3 scripts/build_data.py tpe-dementia-hospitals  # 只重新產生臺北市失智症診療機構名冊
 python3 scripts/build_data.py tpe-disability-hospitals  # 只重新產生臺北市身心障礙鑑定指定醫院聯絡方式一覽表
 python3 scripts/build_data.py tn-disability-hospitals  # 只重新產生115年臺南市身心障礙鑑定醫院
+python3 scripts/build_data.py tc-disability-hospitals  # 只重新產生臺中市身心障礙鑑定醫院及鑑定類別窗口
+                                                        # （需先將兩份來源PDF存至 data/source/，見下方說明）
 python3 scripts/build_data.py caregiver           # 只重新產生看護／照服機構名錄
 python3 scripts/build_data.py dialysis-transport  # 只重新產生洗腎（透析）接送資源清單
 python3 scripts/build_data.py tc-nursing ntpc-nursing   # 可同時指定多個，以空白分隔
@@ -427,6 +438,25 @@ python3 -m pip install pdfplumber
 3. 執行 `python3 scripts/build_data.py specialty` 只重新產生 `data/specialty.json`／`data/specialty.js`。
 4. 建議抽樣核對幾筆機構名稱、地址與服務能力是否正確解析（PDF 表格跨頁與換行清理邏輯詳見
    `scripts/build_data.py` 的 `build_specialty()`）。
+
+### 更新「臺中市身心障礙鑑定醫院及鑑定類別窗口」
+
+此資料集**沒有開放資料 CSV/API**，臺中市政府衛生局僅於網站公告兩份獨立 PDF（醫院及窗口清冊、
+鑑定類別及向度一覽表），因此無法由腳本自動下載，需手動維護：
+
+1. 到臺中市政府衛生局網站下載最新版兩份 PDF：
+   - [臺中市請領身心障礙證明之鑑定醫院及窗口](https://www.health.taichung.gov.tw/media/1364235/)
+   - [臺中市33家新制身心障礙鑑定醫院及鑑定類別及向度一覽表](https://www.health.taichung.gov.tw/media/1364236/)
+2. 分別覆蓋 `data/source/tc-disability-hospitals-contacts-11412.pdf`（窗口清冊）與
+   `data/source/tc-disability-hospitals-categories-11412.pdf`（類別矩陣）。
+3. 執行 `python3 scripts/build_data.py tc-disability-hospitals` 只重新產生
+   `data/tc-disability-hospitals.json`／`data/tc-disability-hospitals.js`。
+4. **重要**：兩份 PDF 的醫院命名方式（全銜/簡稱）、「臺」/「台」用字與清單順序皆不同，
+   `scripts/build_data.py` 用人工核對的 `TC_DISABILITY_HOSPITAL_ALIASES` 對照表配對兩邊資料，
+   若醫院清冊改版（增減院所、更名），須重新核對並更新此對照表；腳本執行時若有醫院名稱配對失敗
+   會印出警告（不會中斷），請務必留意並修正對照表後再重新產生資料。
+5. 建議抽樣核對幾筆醫院層級、窗口姓名、電話與可辦理鑑定類別（第1~8類）是否正確解析（矩陣彙總
+   邏輯詳見 `scripts/build_data.py` 的 `build_tc_disability_hospitals()`）。
 
 ### 更新「嘉義縣立案長照及護理之家機構一覽」
 

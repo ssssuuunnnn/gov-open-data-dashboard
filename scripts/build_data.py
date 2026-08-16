@@ -320,6 +320,71 @@ LANE_URL = "https://email.chcg.gov.tw/df/pufnpn5i5741iy9efkn2rrz5ga6uhb"
 TYC_ELDER_URL = "https://opendata.tycg.gov.tw/api/dataset/536bb44b-b9f1-4336-ad26-34b9e25b3a68/resource/3d7e3b4c-8bc5-47c4-85a9-eec70415b189/download"
 SPECIALTY_SOURCE_PAGE = "https://health.gov.taipei/News_Content.aspx?n=F0D7A5A451D2493C&sms=549F98C9E5942A2B&s=9138F86B8A3CBF69"
 SPECIALTY_PDF_GLOB = "data/source/tp-ltc-specialty-*.pdf"
+# 臺中市33家新制身心障礙鑑定醫院（臺中市政府衛生局公告，兩份獨立 PDF，非 DCAT 開放資料）。
+TC_DISABILITY_CATEGORIES_PDF_URL = (
+    "https://www.health.taichung.gov.tw/media/1364236/"
+    "臺中市33家新制身心障礙鑑定醫院及鑑定類別及向度一覽表11412.pdf"
+)
+TC_DISABILITY_CONTACTS_PDF_URL = (
+    "https://www.health.taichung.gov.tw/media/1364235/"
+    "臺中市請領身心障礙證明之鑑定醫院及窗口-11412.pdf"
+)
+TC_DISABILITY_CATEGORIES_PDF_GLOB = "data/source/tc-disability-hospitals-categories-*.pdf"
+TC_DISABILITY_CONTACTS_PDF_GLOB = "data/source/tc-disability-hospitals-contacts-*.pdf"
+# 窗口清冊 PDF 的醫院名稱（簡稱） -> 鑑定類別矩陣 PDF 的醫院名稱（多為正式全銜）人工核對對照表。
+# 兩份 PDF 命名不一致（全銜/簡稱、「臺」/「台」用字）且欄位順序不同，無法以原文或順序直接比對，
+# 於 2026-08 由本腳本作者依兩份 PDF 內容逐一人工核對；未來若院所名冊改版（增減/更名），
+# 需重新核對此表，比對不到的院所 cat1~cat8 會輸出 0 並於 stderr 印出警告，不中斷產生流程。
+TC_DISABILITY_HOSPITAL_ALIASES = {
+    "中國醫藥大學附設醫院": "中國醫藥大學附設醫院",
+    "臺中榮民總醫院": "臺中榮民總醫院",
+    "中山醫學大學附設醫院": "中山醫學大學附設醫院",
+    "衛生福利部臺中醫院": "衛生福利部台中醫院",
+    "衛生福利部豐原醫院": "衛生福利部豐原醫院",
+    "國軍臺中總醫院": "國軍台中總醫院",
+    "澄清綜合醫院(中港分院)": "澄清綜合醫院中港分院",
+    "澄清綜合醫院": "澄清綜合醫院",
+    "林新醫院": "林新醫療社團法人林新醫院",
+    "慈濟綜合醫院(台中分院)": "財團法人佛教慈濟綜合醫院台中分院",
+    "光田綜合醫院(向上院區)": "光田醫療社團法人光田綜合醫院(向上院區)",
+    "童綜合醫院": "童綜合醫療社團法人童綜合醫院",
+    "大甲李綜合醫院": "李綜合醫療社團法人大甲李綜合醫院",
+    "大里仁愛醫院": "仁愛醫療財團法人大里仁愛醫院",
+    "亞洲大學附屬醫院": "亞洲大學附屬醫院",
+    "台中仁愛醫院": "仁愛醫療財團法人台中仁愛醫院",
+    "清濱醫院": "清濱醫院",
+    "清海醫院": "清海醫院",
+    "維新醫院": "維新醫療社團法人台中維新醫院",
+    "靜和醫院": "財團法人台灣省私立台中仁愛之家附設靜和醫院",
+    "陽光精神科醫院": "陽光精神科醫院",
+    "宏恩醫院(龍安分院)": "宏恩醫院龍安分院",
+    # 窗口清冊 PDF 原文為「澄清復建醫院」，矩陣 PDF 原文為「澄清復健醫院」，兩者顯然指同一家醫院，
+    # 應為來源 PDF 之一有錯字（正確應為復健醫院），比照專案慣例忠實保留原文顯示、僅在此對照表修正
+    # 用於比對矩陣資料。
+    "澄清復建醫院": "澄清復健醫院",
+    "中山附醫中興分院": "中山附醫中興分院",
+    "賢德醫院": "賢德醫院",
+    "清泉醫院": "清泉醫院",
+    "美德醫院": "美德醫院",
+    "長安醫院": "長安醫院",
+    "烏日林新醫院": "烏日林新醫院",
+    "國軍臺中總醫院中清分院": "國軍台中總醫院附設民眾診療服務處中清分院",
+    "霧峰澄清醫院": "霧峰澄清醫院",
+    "臺安醫院雙十醫院": "臺安醫院雙十醫院",
+    "臺中市立老人復健綜合醫院(委託財團法人中國醫藥大學興建經營)":
+        "臺中市立老人復健綜合醫院(委託財團法人中國醫藥大學興建經營)",
+}
+# 鑑定類別矩陣彙總後的第1~8類中文全名（cat1~cat8 欄位對應說明，供頁面顯示用）
+TC_DISABILITY_CATEGORY_LABELS = {
+    "cat1": "第1類 神經系統構造及精神、心智功能",
+    "cat2": "第2類 眼、耳及相關構造與感官功能、疼痛",
+    "cat3": "第3類 涉及聲音與言語構造及其功能",
+    "cat4": "第4類 循環、造血、免疫與呼吸系統構造及功能",
+    "cat5": "第5類 消化、新陳代謝與內分泌系統相關構造及功能",
+    "cat6": "第6類 泌尿與生殖系統相關構造及功能",
+    "cat7": "第7類 神經、肌肉、骨骼之移動相關構造及功能",
+    "cat8": "第8類 皮膚與相關構造及功能",
+}
 KCG_DENTURE_PDF_URL = "https://orgws.kcg.gov.tw/001/KcgOrgUploadFiles/463/RelFile/0/85588/23687658-8121-4268-8bf3-8def3a1e1bf8.pdf"
 KCG_DENTURE_MANUAL_JSON = "data/source/kcg-denture-manual.json"
 KCG_HOMECARE_URL = "https://data.kcg.gov.tw/File/DirectDownload/59ac925f-10dd-42f7-a540-ab6c4218b93d"
@@ -3072,6 +3137,106 @@ def build_tn_disability_hospitals():
     return {"fields": fields, "rows": records}
 
 
+def build_tc_disability_hospitals():
+    """臺中市33家新制身心障礙鑑定醫院及鑑定類別窗口（臺中市政府衛生局公告，非 DCAT 開放資料
+    CSV/API，僅以兩份獨立 PDF 附件釋出，需將最新 PDF 存於 data/source/tc-disability-hospitals-
+    categories-*.pdf 與 data/source/tc-disability-hospitals-contacts-*.pdf 後才能解析）。
+
+    來源兩份 PDF（皆為單頁、114年12月版本）：
+    1. TC_DISABILITY_CATEGORIES_PDF_URL：「鑑定類別及向度一覽表」，是一份能力矩陣：33家醫院 x
+       約46項「向度」子項（分屬第1~8類與「其他」），每格為 v（可辦理）或「無提供」。本函式僅
+       彙總到「第1~8類」層級（該類別下任一向度為 v 即視為該類別可辦理），不保留46項向度細節
+       （已與需求方確認範圍，比照 tn/tpe-disability-hospitals 既有的鑑定類別篩選慣例）。
+    2. TC_DISABILITY_CONTACTS_PDF_URL：「請領身心障礙證明之鑑定醫院及窗口」，是乾淨的33家醫院
+       清單：醫院層級（醫學中心/區域醫院/地區醫院，依合併儲存格回填）、編號、醫院名稱、
+       一般鑑定窗口、居家鑑定窗口、聯絡電話。本函式以此表為主要輸出（層級/名稱/窗口/電話），
+       並將上述矩陣彙總出的 cat1~cat8 併入每筆紀錄。
+
+    **兩份 PDF 的醫院命名不一致且順序不同**（矩陣表多用正式全銜如「衛生福利部台中醫院」
+    「林新醫療社團法人林新醫院」，窗口表用簡稱如「衛生福利部臺中醫院」「林新醫院」；「臺」/「台」
+    用字也不一致），無法以原文字串或欄位順序直接比對，改用人工核對之
+    TC_DISABILITY_HOSPITAL_ALIASES（窗口表名稱 -> 矩陣表名稱）對照表配對。未來若院所名冊改版
+    （新增/減少/更名院所），需重新核對此對照表；比對不到的院所 cat1~cat8 會輸出 0 並於 stderr
+    印出警告，不會中斷產生流程。
+
+    無地址、無經緯度座標，故頁面不含地圖，僅篩選/統計卡/圖表/分頁表格呈現。
+    """
+    cat_matches = sorted(glob.glob(TC_DISABILITY_CATEGORIES_PDF_GLOB))
+    contact_matches = sorted(glob.glob(TC_DISABILITY_CONTACTS_PDF_GLOB))
+    if not cat_matches or not contact_matches:
+        print(
+            f"  找不到來源 PDF（{TC_DISABILITY_CATEGORIES_PDF_GLOB} / "
+            f"{TC_DISABILITY_CONTACTS_PDF_GLOB}），略過此資料集",
+            file=sys.stderr,
+        )
+        return None
+    cat_pdf_path = cat_matches[-1]
+    contact_pdf_path = contact_matches[-1]
+    print(f"解析 臺中市身心障礙鑑定醫院 PDF：{contact_pdf_path} / {cat_pdf_path} ...", file=sys.stderr)
+    import pdfplumber  # 延遲載入：僅此資料集需要，避免其他資料集重跑時強制安裝
+
+    # 1) 解析窗口清冊 PDF：醫院層級（依合併儲存格回填）、編號、名稱、一般/居家鑑定窗口、電話
+    with pdfplumber.open(contact_pdf_path) as pdf:
+        contact_table = pdf.pages[0].extract_tables()[0]
+    contacts = []
+    level = ""
+    for row in contact_table[1:]:
+        if len(row) < 6:
+            continue
+        level_cell, idx_cell, name_cell, general_cell, home_cell, phone_cell = row[:6]
+        if level_cell and level_cell.strip():
+            level = level_cell.replace("\n", "").strip()
+        idx_text = (idx_cell or "").strip()
+        if not idx_text.isdigit():
+            continue
+        name = (name_cell or "").replace("\n", "").strip()
+        general = (general_cell or "").replace("\n", "、").strip()
+        home = (home_cell or "").replace("\n", "、").strip()
+        phone = (phone_cell or "").replace("\n", "、").strip()
+        contacts.append([int(idx_text), level, name, general, home, phone])
+
+    # 2) 解析鑑定類別矩陣 PDF，彙總每家醫院第1~8類是否至少一項向度為 v
+    with pdfplumber.open(cat_pdf_path) as pdf:
+        cat_table = pdf.pages[0].extract_tables()[0]
+    header_row = cat_table[1]
+    matrix_hospitals = [(h or "").replace("\n", "").strip() for h in header_row[4:]]
+    cat_label_map = {
+        "第\n一\n類": 1, "第\n二\n類": 2, "第\n三\n類": 3, "第\n四\n類": 4,
+        "第\n五\n類": 5, "第\n六\n類": 6, "第\n七\n類": 7, "第\n八\n類": 8,
+    }
+    support = [set() for _ in matrix_hospitals]
+    current_cat = None
+    for row in cat_table[2:]:
+        cat_cell = row[0]
+        if cat_cell:
+            # 出現新類別合併儲存格時更新目前類別；「其他」等未列於 cat_label_map 者視為 None
+            # （不計入任何第1~8類，即跳過該列彙總，符合僅統計第1~8類的範圍）。
+            current_cat = cat_label_map.get(cat_cell)
+        if current_cat is None:
+            continue
+        for i, v in enumerate(row[4:4 + len(matrix_hospitals)]):
+            if v and v.strip() == "v":
+                support[i].add(current_cat)
+    matrix_support_by_name = dict(zip(matrix_hospitals, support))
+
+    records = []
+    for idx, level, name, general, home, phone in contacts:
+        matrix_name = TC_DISABILITY_HOSPITAL_ALIASES.get(name)
+        cats = matrix_support_by_name.get(matrix_name, set()) if matrix_name else set()
+        if matrix_name not in matrix_support_by_name:
+            print(f"  警告：找不到「{name}」對應的鑑定類別矩陣資料，cat1~cat8 將輸出為0", file=sys.stderr)
+        records.append(
+            [idx, level, name, general, home, phone]
+            + [1 if c in cats else 0 for c in range(1, 9)]
+        )
+
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "level", "name", "generalContact", "homeContact", "phone"] + [
+        f"cat{i}" for i in range(1, 9)
+    ]
+    return {"fields": fields, "categoryLabels": TC_DISABILITY_CATEGORY_LABELS, "rows": records}
+
+
 def _to_int(v):
     try:
         return int(float(v))
@@ -3432,6 +3597,16 @@ DATASETS = [
         "meta_key": "tnDisabilityHospitals",
         "title": "115年臺南市身心障礙鑑定醫院及申請說明",
         "source": lambda: TN_DISABILITY_HOSPITALS_URL,
+    },
+    {
+        "key": "tc-disability-hospitals",
+        "builder": build_tc_disability_hospitals,
+        "json": "data/tc-disability-hospitals.json",
+        "js_var": "TC_DISABILITY_HOSPITALS_DATA",
+        "meta_key": "tcDisabilityHospitals",
+        "title": "臺中市身心障礙鑑定醫院及鑑定類別窗口",
+        "source": lambda: TC_DISABILITY_CONTACTS_PDF_URL,
+        "optional": True,
     },
 ]
 
