@@ -429,6 +429,17 @@
     },
     {
       "@type": "Dataset",
+      "name": "嘉義市身心障礙鑑定醫院",
+      "description": "嘉義市政府公告之身心障礙鑑定醫院名冊，收錄5家醫院名稱、電話、地址與可辦理之鑑定類別及向度。",
+      "url": "https://www.sunkuo.cc/gov-open-data-dashboard/chiayi-disability-hospitals/index.html",
+      "license": "http://data.gov.tw/license",
+      "creator": {
+        "@type": "Organization",
+        "name": "嘉義市政府"
+      }
+    },
+    {
+      "@type": "Dataset",
       "name": "臺中市身心障礙鑑定醫院及鑑定類別窗口",
       "description": "臺中市政府衛生局公告之身心障礙鑑定醫院清冊，收錄33筆醫院層級、名稱、一般/居家鑑定窗口、電話與可辦理鑑定類別等資訊。",
       "url": "https://www.sunkuo.cc/gov-open-data-dashboard/tc-disability-hospitals/index.html",
@@ -800,6 +811,12 @@
       <div class="desc">臺南市政府衛生局公告，列出身心障礙鑑定醫院之名稱、電話、地址與可辦理鑑定類別，共16筆，並整理申請流程、到宅鑑定條件、應備文件及業務窗口資訊，可依行政區、鑑定類別（第1~8類）與關鍵字篩選並瀏覽統計圖表。</div>
       <div class="footline" id="tn-disability-hospitals-count">資料筆數載入中…</div>
     </a>
+    <a class="home-card disability" href="chiayi-disability-hospitals/index.html" data-county="嘉義市" data-category="disability">
+      <span class="tag">嘉義市</span>
+      <h2>嘉義市身心障礙鑑定醫院及申請說明</h2>
+      <div class="desc">嘉義市政府公告，列出5家身心障礙鑑定醫院之名稱、電話、地址與可辦理鑑定類別、向度明細（共228項向度），並整理「身心障礙者鑑定流程報您知」完整申請流程、到宅鑑定條件、應備文件、異議複檢與鑑定費用說明，可依鑑定類別、醫院與關鍵字篩選並瀏覽統計圖表。</div>
+      <div class="footline" id="chiayi-disability-hospitals-count">資料筆數載入中…</div>
+    </a>
     <a class="home-card disability" href="tc-disability-hospitals/index.html" data-county="臺中市" data-category="disability">
       <span class="tag">臺中市</span>
       <h2>臺中市身心障礙鑑定醫院及鑑定類別窗口</h2>
@@ -1057,6 +1074,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.tnDisabilityHospitals) {
     document.getElementById("tn-disability-hospitals-count").textContent = `共 ${meta.tnDisabilityHospitals.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.chiayiDisabilityHospitals) {
+    document.getElementById("chiayi-disability-hospitals-count").textContent = `共 ${meta.chiayiDisabilityHospitals.count.toLocaleString()} 家醫院 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
   if (meta.tcDisabilityHospitals) {
     document.getElementById("tc-disability-hospitals-count").textContent = `共 ${meta.tcDisabilityHospitals.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-16T13:04:46.754087+00:00",
+  "generatedAt": "2026-08-17T12:50:48.782497+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -199,5 +199,10 @@
     "count": 33,
     "source": "https://www.health.taichung.gov.tw/media/1364235/臺中市請領身心障礙證明之鑑定醫院及窗口-11412.pdf",
     "title": "臺中市身心障礙鑑定醫院及鑑定類別窗口"
+  },
+  "chiayiDisabilityHospitals": {
+    "count": 5,
+    "source": "https://data.chiayi.gov.tw/opendata/api/getResource?oid=e8cf9961-c966-445e-990b-d312b51721c6&rid=dd8ffc86-adab-406d-b6cd-c920774f9dbe",
+    "title": "嘉義市身心障礙鑑定醫院及申請說明"
   }
 }

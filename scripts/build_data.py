@@ -245,6 +245,22 @@
     清單供篩選/圖表使用，惟不解析括號除外備註細節，僅供粗略篩選參考。來源網址無 CORS 標頭，比照
     build_tpe_disability_hospitals() 輸出內嵌 JS 版本；頁面另呈現使用者提供的「申請流程」「應備
     文件」「洽辦窗口」等公告說明文字，詳見 build_tn_disability_hospitals())
+27. 嘉義市身心障礙鑑定醫院（DCAT dataset https://data.gov.tw/dataset/8572 ，
+    dataset id 95714，提供機關：嘉義市政府，聯絡窗口：醫政科 黃雅琇 05-2338066#313）
+    https://data.chiayi.gov.tw/opendata/api/getResource?oid=e8cf9961-c966-445e-990b-d312b51721c6&rid=dd8ffc86-adab-406d-b6cd-c920774f9dbe
+    （CSV，一般 utf-8-sig 解碼即可；原始欄位：醫院名稱/連絡電話/地址/新制鑑定類別及向度，實測共228
+    列——**逐「向度」子項一列**，而非逐醫院一列，共涵蓋5家醫院（戴德森醫療財團法人嘉義基督教醫院、
+    財團法人天主教聖馬爾定醫院、衛生福利部嘉義醫院、臺中榮民總醫院嘉義分院、陽明醫院）；「新制鑑定
+    類別及向度」欄位文字為「第X類」中文數字+類別全名+向度子項全名黏在一起（如「第一類神經系統構造
+    及精神、心智功能意識功能」），本腳本用正則解析出類別數字(1~8)、類別全名、向度子項全名三段；
+    另有1種特例「整體心理功能：發展遲緩」不屬於第1~8類，以特殊類別鍵 "dev" 標記。地址已含完整
+    「嘉義市OO區」字首可直接解析行政區（僅東區/西區兩區），無經緯度座標，故不含地圖。本腳本將228筆
+    明細**依醫院彙整**為5筆記錄（欄位含 categories 分號分隔類別清單、itemsByCategory 為
+    JSON字串記錄各類別向度子項清單、itemCount 為該醫院向度總筆數），供頁面以「醫院為單位」呈現並用
+    <details> 展開向度明細，避免228筆重複醫院資訊列表可讀性低的問題。來源網址無 CORS 標頭，比照
+    build_tn_disability_hospitals() 輸出內嵌 JS 版本；頁面另呈現使用者提供的「身心障礙者鑑定流程
+    報您知」完整公告文字（申請鑑定表/鑑定/到宅機構鑑定/審查製證/領證/異議複檢/鑑定費用/8大類別說明），
+    詳見 build_chiayi_disability_hospitals())
 
 用法：
     python3 scripts/build_data.py
@@ -298,6 +314,10 @@
     data/tpe-dementia-hospitals.js  (window.TPE_DEMENTIA_HOSPITALS_DATA，同上，供前端以 <script> 直接載入)
     data/tpe-disability-hospitals.json
     data/tpe-disability-hospitals.js  (window.TPE_DISABILITY_HOSPITALS_DATA，同上，供前端以 <script> 直接載入)
+    data/tn-disability-hospitals.json
+    data/tn-disability-hospitals.js  (window.TN_DISABILITY_HOSPITALS_DATA，同上，供前端以 <script> 直接載入)
+    data/chiayi-disability-hospitals.json
+    data/chiayi-disability-hospitals.js  (window.CHIAYI_DISABILITY_HOSPITALS_DATA，同上，供前端以 <script> 直接載入)
     data/meta.json  (資料更新時間等資訊)
 
 額外相依套件：
@@ -449,6 +469,10 @@ TPE_DISABILITY_HOSPITALS_URL = (
 TN_DISABILITY_HOSPITALS_URL = (
     "https://data.tainan.gov.tw/File/ResourceCsvDownload/"
     "bace10f4-386b-42ec-a1ca-25db737d81a8"
+)
+CHIAYI_DISABILITY_HOSPITALS_URL = (
+    "https://data.chiayi.gov.tw/opendata/api/getResource"
+    "?oid=e8cf9961-c966-445e-990b-d312b51721c6&rid=dd8ffc86-adab-406d-b6cd-c920774f9dbe"
 )
 TYC_TRANSPORT_URL = (
     "https://opendata.tycg.gov.tw/api/dataset/ad10c5d0-b128-4daf-866e-4cfc9a78dadb/"
@@ -3137,6 +3161,125 @@ def build_tn_disability_hospitals():
     return {"fields": fields, "rows": records}
 
 
+CHIAYI_DISABILITY_CATEGORY_LABELS = {
+    "1": "第一類神經系統構造及精神、心智功能",
+    "2": "第二類眼、耳及相關構造與感官功能及疼痛",
+    "3": "第三類涉及聲音與言語構造及其功能",
+    "4": "第四類循環、造血、免疫與呼吸系統構造及其功能",
+    "5": "第五類消化、新陳代謝與內分泌系統相關構造及其功能",
+    "6": "第六類泌尿與生殖系統相關構造及其功能",
+    "7": "第七類神經、肌肉、骨骼之移動相關構造及其功能",
+    "8": "第八類皮膚與相關構造及其功能",
+    "dev": "整體心理功能：發展遲緩",
+}
+
+# 中文數字 -> 阿拉伯數字，僅需 1~8（本資料集鑑定類別上限為第八類）
+_CHIAYI_DISABILITY_NUMERALS = {"一": 1, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6, "七": 7, "八": 8}
+
+
+def _parse_chiayi_disability_item(raw_text: str) -> tuple[str, str, str]:
+    """解析「新制鑑定類別及向度」欄位原文（類別全名與向度子項無分隔黏在一起），回傳
+    (category_key, category_label, item)。category_key 為 "1"~"8" 或特例 "dev"（整體心理功能：
+    發展遲緩，不屬於第1~8類）；比對不到任何已知類別全名時 category_key 回傳 "other"，item 回傳原文，
+    避免資料被靜默丟棄。"""
+    text = raw_text.strip()
+    if text == "整體心理功能：發展遲緩":
+        return "dev", CHIAYI_DISABILITY_CATEGORY_LABELS["dev"], "發展遲緩"
+    m = re.match(r"^第([一二三四五六七八九十])類(.*)$", text)
+    if m:
+        numeral, rest = m.groups()
+        num = _CHIAYI_DISABILITY_NUMERALS.get(numeral)
+        if num is not None:
+            key = str(num)
+            label = CHIAYI_DISABILITY_CATEGORY_LABELS.get(key, f"第{numeral}類")
+            prefix = label[len(f"第{numeral}類"):] if label.startswith(f"第{numeral}類") else ""
+            item = rest[len(prefix):] if prefix and rest.startswith(prefix) else rest
+            return key, label, item
+    return "other", text, text
+
+
+def _chiayi_disability_category_sort_key(key: str):
+    if key.isdigit():
+        return (0, int(key))
+    if key == "dev":
+        return (1, 0)
+    return (2, 0)
+
+
+def build_chiayi_disability_hospitals():
+    """嘉義市身心障礙鑑定醫院（DCAT dataset https://data.gov.tw/dataset/8572 ，dataset id 95714，
+    提供機關：嘉義市政府，聯絡窗口：醫政科 黃雅琇 05-2338066#313）。
+
+    來源 CSV（無 Access-Control-Allow-Origin 標頭，改由本腳本於伺服器端下載，輸出內嵌 JS 版本
+    `window.CHIAYI_DISABILITY_HOSPITALS_DATA`，比照 build_tn_disability_hospitals()）：
+    欄位為「醫院名稱,連絡電話,地址,新制鑑定類別及向度」，實測共228列——**逐「向度」子項一列**而非
+    逐醫院一列，涵蓋5家醫院。「新制鑑定類別及向度」欄位文字為「第X類」中文數字 + 類別全名 + 向度
+    子項全名三段黏在一起（如「第一類神經系統構造及精神、心智功能意識功能」），本函式以
+    `_parse_chiayi_disability_item()` 用已知的8大類別全名字串（取自使用者提供之政府公告文字，與
+    實測CSV原文逐字核對一致）比對切分出類別數字(1~8)、類別全名、向度子項全名三段；另有1種特例列
+    「整體心理功能：發展遲緩」不屬於第1~8類，以特殊類別鍵 "dev" 標記。
+
+    地址已含完整「嘉義市OO區」字首可直接用 parse_county_district() 解析行政區（實測僅東區/西區
+    兩區），**無經緯度座標**，故頁面不含地圖。
+
+    本函式將228筆明細**依醫院彙整**為5筆記錄（而非保留228筆逐向度扁平列表），因僅5家醫院時後者會
+    使同一醫院地址/電話重複40~48次、可讀性低；彙整後欄位含 `categories`（分號分隔的類別鍵清單，
+    如 "1;2;3;...;8;dev"）、`itemsByCategory`（JSON字串，鍵為類別鍵，值為
+    `{"label": 類別全名, "items": [向度子項, ...]}`，供頁面以 `<details>` 展開向度明細且不遺漏
+    原始資料粒度）、`itemCount`（該醫院向度總筆數，如48/46/39）。
+    """
+    print("下載 嘉義市身心障礙鑑定醫院 ...", file=sys.stderr)
+    text = fetch(CHIAYI_DISABILITY_HOSPITALS_URL)
+    reader = csv.DictReader(io.StringIO(text))
+    hospitals: dict[str, dict] = {}
+    order: list[str] = []
+    for row in reader:
+        name = (row.get("醫院名稱") or "").strip()
+        raw_item = (row.get("新制鑑定類別及向度") or "").strip()
+        if not name or not raw_item:
+            continue
+        if name not in hospitals:
+            order.append(name)
+            addr = (row.get("地址") or "").strip()
+            county, district = parse_county_district(addr, fallback_county="嘉義市")
+            hospitals[name] = {
+                "phone": (row.get("連絡電話") or "").strip(),
+                "address": addr,
+                "county": county or "嘉義市",
+                "district": district,
+                "items_by_category": {},
+                "item_count": 0,
+            }
+        h = hospitals[name]
+        h["item_count"] += 1
+        cat_key, cat_label, item = _parse_chiayi_disability_item(raw_item)
+        bucket = h["items_by_category"].setdefault(cat_key, {"label": cat_label, "items": []})
+        if item and item not in bucket["items"]:
+            bucket["items"].append(item)
+
+    records = []
+    for idx, name in enumerate(order, start=1):
+        h = hospitals[name]
+        categories = sorted(h["items_by_category"].keys(), key=_chiayi_disability_category_sort_key)
+        records.append([
+            idx,                                                    # 0 id
+            name,                                                    # 1 name
+            h["phone"],                                              # 2 phone
+            h["address"],                                            # 3 address
+            h["county"],                                             # 4 county
+            h["district"],                                           # 5 district
+            ";".join(categories),                                    # 6 categories
+            json.dumps(h["items_by_category"], ensure_ascii=False),  # 7 itemsByCategory
+            h["item_count"],                                         # 8 itemCount
+        ])
+    print(f"  共 {len(records)} 家醫院（原始明細 {sum(h['item_count'] for h in hospitals.values())} 筆）", file=sys.stderr)
+    fields = [
+        "id", "name", "phone", "address", "county", "district",
+        "categories", "itemsByCategory", "itemCount",
+    ]
+    return {"fields": fields, "categoryLabels": CHIAYI_DISABILITY_CATEGORY_LABELS, "rows": records}
+
+
 def build_tc_disability_hospitals():
     """臺中市33家新制身心障礙鑑定醫院及鑑定類別窗口（臺中市政府衛生局公告，非 DCAT 開放資料
     CSV/API，僅以兩份獨立 PDF 附件釋出，需將最新 PDF 存於 data/source/tc-disability-hospitals-
@@ -3597,6 +3740,15 @@ DATASETS = [
         "meta_key": "tnDisabilityHospitals",
         "title": "115年臺南市身心障礙鑑定醫院及申請說明",
         "source": lambda: TN_DISABILITY_HOSPITALS_URL,
+    },
+    {
+        "key": "chiayi-disability-hospitals",
+        "builder": build_chiayi_disability_hospitals,
+        "json": "data/chiayi-disability-hospitals.json",
+        "js_var": "CHIAYI_DISABILITY_HOSPITALS_DATA",
+        "meta_key": "chiayiDisabilityHospitals",
+        "title": "嘉義市身心障礙鑑定醫院及申請說明",
+        "source": lambda: CHIAYI_DISABILITY_HOSPITALS_URL,
     },
     {
         "key": "tc-disability-hospitals",
