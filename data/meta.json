@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-17T12:50:48.782497+00:00",
+  "generatedAt": "2026-08-18T13:28:04.397030+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -204,5 +204,10 @@
     "count": 5,
     "source": "https://data.chiayi.gov.tw/opendata/api/getResource?oid=e8cf9961-c966-445e-990b-d312b51721c6&rid=dd8ffc86-adab-406d-b6cd-c920774f9dbe",
     "title": "嘉義市身心障礙鑑定醫院及申請說明"
+  },
+  "ntpcDementia": {
+    "count": 17,
+    "source": "https://data.ntpc.gov.tw/api/datasets/ca171d91-b049-48e9-b60e-d5ebb82613c5/csv/file",
+    "title": "新北市失智症門診資訊"
   }
 }

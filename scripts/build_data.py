@@ -261,6 +261,15 @@
     build_tn_disability_hospitals() 輸出內嵌 JS 版本；頁面另呈現使用者提供的「身心障礙者鑑定流程
     報您知」完整公告文字（申請鑑定表/鑑定/到宅機構鑑定/審查製證/領證/異議複檢/鑑定費用/8大類別說明），
     詳見 build_chiayi_disability_hospitals())
+28. 新北市失智症門診資訊（DCAT dataset https://data.gov.tw/dataset/8572 ，dataset id 124848，
+    提供機關：新北市政府衛生局）
+    https://data.ntpc.gov.tw/api/datasets/ca171d91-b049-48e9-b60e-d5ebb82613c5/csv/file
+    （CSV，共17筆，原始欄位：name/tel/add/twd97x_longitude/twd97y_latitude/wgs84ax_longitude/
+    wgs84ay_latitude，與 DCAT description 一致。座標四欄實測全數為0或空值，非有效經緯度，本腳本
+    不採用不輸出，故不含地圖。地址已含完整「新北市OO區」字首可直接解析行政區，惟1筆誤用異體字
+    「新北巿」（巿非市），本腳本自動修正為「新北市」後再解析；「機構名稱」欄位有1筆含前後多餘
+    空白，本腳本 strip() 處理。來源網址無 CORS 標頭，改由本腳本於伺服器端下載，另輸出內嵌 JS
+    版本，詳見 build_ntpc_dementia())
 
 用法：
     python3 scripts/build_data.py
@@ -318,6 +327,8 @@
     data/tn-disability-hospitals.js  (window.TN_DISABILITY_HOSPITALS_DATA，同上，供前端以 <script> 直接載入)
     data/chiayi-disability-hospitals.json
     data/chiayi-disability-hospitals.js  (window.CHIAYI_DISABILITY_HOSPITALS_DATA，同上，供前端以 <script> 直接載入)
+    data/ntpc-dementia.json
+    data/ntpc-dementia.js  (window.NTPC_DEMENTIA_DATA，同上，供前端以 <script> 直接載入)
     data/meta.json  (資料更新時間等資訊)
 
 額外相依套件：
@@ -432,6 +443,9 @@ NTPC_NURSING_URL_TEMPLATE = (
 )
 NTPC_SILVER_HAIR_CLUB_URL = (
     "https://data.ntpc.gov.tw/api/datasets/f531a808-4aab-4e5e-93f0-c34f9ff97a78/csv/file"
+)
+NTPC_DEMENTIA_URL = (
+    "https://data.ntpc.gov.tw/api/datasets/ca171d91-b049-48e9-b60e-d5ebb82613c5/csv/file"
 )
 CHIAYI_LTC_SOURCE_PAGE = "https://ltccenter.cyhg.gov.tw/cp.aspx?n=F7AEF7883C88532B"
 CHIAYI_LTC_INSTITUTIONS_CSV = "scripts/sources/chiayi-ltc/institutions.csv"
@@ -1818,6 +1832,43 @@ def build_ntpc_silver_hair_club():
         ])
     print(f"  共 {len(records)} 筆", file=sys.stderr)
     fields = ["id", "name", "district", "address", "localPhone", "mobilePhone"]
+    return {"fields": fields, "rows": records}
+
+
+def build_ntpc_dementia():
+    """新北市失智症門診資訊（新北市政府衛生局，DCAT dataset https://data.gov.tw/dataset/8572，
+    dataset id 124848，授權：政府資料開放授權條款-第1版，更新頻率：每1年）。
+
+    downloadURL：NTPC_DEMENTIA_URL（單一 CSV 檔案，非分頁 API），共 17 筆。來源網址無
+    `Access-Control-Allow-Origin` 標頭（實測 curl 確認），前端無法直接 fetch，本腳本於伺服器端
+    下載，另輸出內嵌 JS 版本供前端以 `<script>` 直接載入。
+
+    來源欄位：name(機構名稱)/tel(電話)/add(地址)/twd97x_longitude/twd97y_latitude/
+    wgs84ax_longitude/wgs84ay_latitude。**座標四欄實測全數為 0 或空值**（非有效經緯度），
+    本腳本不採用、不輸出，前端不呈現地圖，僅篩選＋統計卡＋圖表＋表格。
+
+    地址欄位固定為「新北市」＋行政區字首（如「新北市新莊區中環路1段28號」），用
+    parse_county_district() 搭配 fallback_county="新北市" 解析行政區；實測有 1 筆地址誤用異體字
+    「新北巿」（巿非市）導致無法比對縣市字首（新北縣僅有正式全形「市」字），本腳本先將「新北巿」
+    修正為「新北市」後再解析，與 build_hccg_elder() 的「新鋪鎮」→「新埔鎮」錯字修正處理方式一致。
+    「機構名稱」欄位實測有 1 筆含前後多餘空白
+    （"行天宮醫療志業醫療財團法人恩主公醫院 "），本腳本 strip() 後輸出。
+    """
+    print("下載 新北市失智症門診資訊 ...", file=sys.stderr)
+    text = fetch(NTPC_DEMENTIA_URL)
+    reader = csv.DictReader(io.StringIO(text))
+    records = []
+    for row in reader:
+        addr = (row.get("add", "") or "").strip().replace("新北巿", "新北市")
+        _county, district = parse_county_district(addr, fallback_county="新北市")
+        records.append([
+            (row.get("name", "") or "").strip(),   # 0 name
+            (row.get("tel", "") or "").strip(),    # 1 phone
+            district,                                # 2 district
+            addr,                                    # 3 address
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["name", "phone", "district", "address"]
     return {"fields": fields, "rows": records}
 
 
@@ -3505,6 +3556,15 @@ DATASETS = [
         "meta_key": "ntpcSilverHairClub",
         "title": "新北市銀髮俱樂部",
         "source": lambda: NTPC_SILVER_HAIR_CLUB_URL,
+    },
+    {
+        "key": "ntpc-dementia",
+        "builder": build_ntpc_dementia,
+        "json": "data/ntpc-dementia.json",
+        "js_var": "NTPC_DEMENTIA_DATA",
+        "meta_key": "ntpcDementia",
+        "title": "新北市失智症門診資訊",
+        "source": lambda: NTPC_DEMENTIA_URL,
     },
     {
         "key": "chiayi-ltc",
