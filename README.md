@@ -46,6 +46,7 @@
 | `tn-disability-hospitals/` | 115年臺南市身心障礙鑑定醫院及申請說明 | 臺南市政府衛生局 | 115年臺南市身心障礙鑑定醫院名冊（DCAT dataset id 147147），共16筆，來源CSV欄位為醫院名稱／鑑定類別／醫院電話／地址（另有一組CountyCode/AreaCode分欄格式等價distribution因需自行組回地址而捨棄），地址已含完整「(郵遞區號)台南市OO區OO路OO號」字串，county固定輸出正式全形「臺南市」（原文為簡體「台南市」），district由剝除郵遞區號後的地址解析；「鑑定類別」欄位額外近似解析出可辦理類別數字（1~8）清單供篩選/圖表使用（不解析括號除外備註細節，僅供粗略參考），提供行政區／鑑定類別／關鍵字篩選與統計圖表（各行政區醫院數、各鑑定類別可辦理醫院數），無經緯度座標。頁面上方收錄使用者提供之申請流程、到宅鑑定條件、應備文件與業務窗口/洽辦單位資訊Q&A，屬固定公告文字，來源網址無CORS標頭，比照 tpe-disability-hospitals 用內嵌 js 版本輸出 |
 | `chiayi-disability-hospitals/` | 嘉義市身心障礙鑑定醫院及申請說明 | 嘉義市政府（醫政科） | 嘉義市身心障礙鑑定醫院（DCAT dataset id 95714），來源CSV欄位為醫院名稱／連絡電話／地址／新制鑑定類別及向度，實測共228列——逐「向度」子項一列（非逐醫院一列），涵蓋5家醫院；本腳本解析出類別數字(1~8)/類別全名/向度子項全名三段（另有「整體心理功能：發展遲緩」特例以"dev"標記），並依醫院彙整為5筆記錄（categories分號分隔類別清單、itemsByCategory為JSON字串記錄各類別向度子項清單、itemCount為向度總筆數），地址已含完整「嘉義市OO區」字首可直接解析行政區（僅東區/西區），無經緯度座標。提供鑑定類別／醫院／關鍵字篩選與統計圖表（各類別可辦理醫院數、各醫院可鑑定向度數量），表格以`<details>`展開完整向度明細。頁面上方收錄使用者提供之「身心障礙者鑑定流程報您知」完整公告文字（申請鑑定表/鑑定/到宅機構鑑定/審查製證/領證/異議複檢/鑑定費用/8大類別說明），來源網址無CORS標頭，比照 tn-disability-hospitals 用內嵌 js 版本輸出 |
 | `tc-disability-hospitals/` | 臺中市身心障礙鑑定醫院及鑑定類別窗口 | 臺中市政府衛生局 | 臺中市33家新制身心障礙鑑定醫院清冊，來源為衛生局網站公告之兩份獨立PDF（**非DCAT開放資料CSV/API**）：一份為乾淨的窗口清冊（醫院層級／編號／名稱／一般鑑定窗口／居家鑑定窗口／電話），另一份為約46項「向度」子項（分屬第1~8類）的能力矩陣（每格v/無提供），本站僅將矩陣彙總至第1~8類層級（該類別下任一向度為v即視為可辦理，不保留46項向度細節）；兩份PDF醫院命名（全銜/簡稱、「臺」/「台」用字）與順序皆不同，改用人工核對之別名對照表配對，其中一份PDF「澄清復建醫院」對照另一份「澄清復健醫院」應為原始PDF錯字，忠實保留原文並於對照表修正供比對，提供醫院層級／鑑定類別／關鍵字篩選與統計圖表，無地址、無經緯度座標。頁面上方收錄使用者提供之申辦流程、應備物品、聯絡窗口資訊Q&A，屬固定公告文字，PDF需人工存放於`data/source/tc-disability-hospitals-*.pdf`後才能解析，無法自動重新下載更新，詳見下方「更新資料」說明 |
+| `chc-disability-hospitals/` | 彰化縣身心障礙鑑定醫院及申請說明 | 彰化縣政府社會處 | 彰化縣身心障礙鑑定醫院名冊（DCAT dataset id 95224），共14筆，來源CSV欄位為項目／名稱／電話／地址縣市／地址鄉鎮市區／地址，DCAT標示編碼為**BIG5**（本腳本 fetch() 需另傳 `encoding="big5"`，預設 utf-8-sig 會整批解析失敗得到0筆）；「地址縣市」「地址鄉鎮市區」為行政區代碼非中文名稱，改用「地址」欄位以 `parse_county_district(fallback_county="彰化縣")` 解析，地址已含完整「彰化縣OO鄉鎮市」字首，無經緯度座標。提供鄉鎮市／關鍵字篩選與統計圖表（各鄉鎮市鑑定醫院數），頁面上方收錄使用者提供之「身心障礙證明申請（初次申請、屆期重鑑）」完整公告文字Q&A（申請對象／申請方式／郵寄申請／縣內跨鄉鎮市申請／進度查詢／效期延長／承辦單位聯絡資訊），屬固定公告文字，來源網址無CORS標頭，比照 tn-disability-hospitals 用內嵌 js 版本輸出 |
 | `caregiver/` | 看護／照服機構名錄 | **無（使用者人工蒐集）** | 使用者手動整理目前網路上找得到的私人看護／居家照護機構名單（共35筆），收錄機構名稱、官網、收費頁面、聯絡電話、服務地區、統一編號，提供服務地區／是否有公開收費頁面／關鍵字篩選；**非政府開放資料，無提供機關、無官方驗證**，頁面明確標示免責聲明，資料來源為使用者提供之本機 CSV、無公開下載網址，需人工更新，詳見下方「更新資料」說明 |
 | `dialysis-transport/` | 洗腎（透析）交通接送服務查詢 | 部分為衛生福利部長期照顧司（制度說明）／**無（民間清單為使用者人工蒐集）** | 頁面上方整理長照司「交通接送服務」BD03（社區式服務交通接送）／DA01（交通接送）給付碼別官方制度說明（資料來源：1966長照專區公告頁），下方為使用者手動整理之全台洗腎（透析）就醫民間接送/租賃服務名單（共16筆），收錄名稱、官網、聯絡電話、服務地區，因資料量小且服務地區欄位稀疏僅提供關鍵字篩選；**民間接送清單非政府開放資料，無官方驗證**，頁面明確標示免責聲明，資料來源為使用者提供之本機 CSV、無公開下載網址，需人工更新，詳見下方「更新資料」說明 |
 
@@ -317,6 +318,10 @@ data/source/tc-disability-hospitals-contacts-11412.pdf  臺中市請領身心障
                        （衛生局公告 PDF，需人工存放，無法自動下載）
 data/tc-disability-hospitals.json  臺中市身心障礙鑑定醫院及鑑定類別窗口（由 scripts/build_data.py
                        用 pdfplumber 解析上述兩份本機 PDF 產生，共33筆）
+data/chc-disability-hospitals.json  彰化縣身心障礙鑑定醫院（由 scripts/build_data.py 下載
+                       email.chcg.gov.tw BIG5 編碼 CSV 產生，資料量小且來源網址無 CORS 標頭）
+data/chc-disability-hospitals.js  同上資料的內嵌 JS 版本（window.CHC_DISABILITY_HOSPITALS_DATA），供
+                       chc-disability-hospitals 頁面以 <script> 標籤直接載入
 data/tc-disability-hospitals.js  同上資料的內嵌 JS 版本（window.TC_DISABILITY_HOSPITALS_DATA），供
                        tc-disability-hospitals 頁面以 <script> 標籤直接載入
 data/caregiver.json   看護／照服機構名錄資料（由 scripts/build_data.py 讀取本機 CSV 產生）
@@ -408,6 +413,7 @@ python3 scripts/build_data.py tn-disability-hospitals  # 只重新產生115年�
 python3 scripts/build_data.py chiayi-disability-hospitals  # 只重新產生嘉義市身心障礙鑑定醫院
 python3 scripts/build_data.py tc-disability-hospitals  # 只重新產生臺中市身心障礙鑑定醫院及鑑定類別窗口
                                                         # （需先將兩份來源PDF存至 data/source/，見下方說明）
+python3 scripts/build_data.py chc-disability-hospitals  # 只重新產生彰化縣身心障礙鑑定醫院
 python3 scripts/build_data.py caregiver           # 只重新產生看護／照服機構名錄
 python3 scripts/build_data.py dialysis-transport  # 只重新產生洗腎（透析）接送資源清單
 python3 scripts/build_data.py ntpc-dementia       # 只重新產生新北市失智症門診資訊

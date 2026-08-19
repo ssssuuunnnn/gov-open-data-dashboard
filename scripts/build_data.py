@@ -488,6 +488,9 @@ CHIAYI_DISABILITY_HOSPITALS_URL = (
     "https://data.chiayi.gov.tw/opendata/api/getResource"
     "?oid=e8cf9961-c966-445e-990b-d312b51721c6&rid=dd8ffc86-adab-406d-b6cd-c920774f9dbe"
 )
+CHC_DISABILITY_HOSPITALS_URL = (
+    "https://email.chcg.gov.tw/df/8a1m8xm7a7v6885fg3rp4pwe1ewdx1"
+)
 TYC_TRANSPORT_URL = (
     "https://opendata.tycg.gov.tw/api/dataset/ad10c5d0-b128-4daf-866e-4cfc9a78dadb/"
     "resource/e21c957c-1ff5-4c7e-9fcc-7132b96b0033/download"
@@ -3431,6 +3434,43 @@ def build_tc_disability_hospitals():
     return {"fields": fields, "categoryLabels": TC_DISABILITY_CATEGORY_LABELS, "rows": records}
 
 
+def build_chc_disability_hospitals():
+    """彰化縣身心障礙鑑定醫院（彰化縣政府社會處，DCAT dataset id 95224，
+    https://data.gov.tw/dataset/95224）。
+
+    來源 CSV（無 Access-Control-Allow-Origin 標頭，改由本腳本於伺服器端下載，輸出內嵌 JS 版本
+    `window.CHC_DISABILITY_HOSPITALS_DATA`，比照 build_tn_disability_hospitals() /
+    build_chiayi_disability_hospitals()）：欄位為「項目、名稱、電話、地址縣市、地址鄉鎮市區、地址」，
+    實測共 14 筆醫院資料。DCAT 標示編碼為 **BIG5**（非本腳本 fetch() 預設的 utf-8-sig，需另傳
+    `encoding="big5"`，否則會整批解析失敗得到 0 筆）。「地址縣市」「地址鄉鎮市區」為行政區代碼
+    （如 10007/10007150）而非中文名稱，比照專案慣例改用「地址」欄位解析中文縣市/鄉鎮市——地址已含
+    完整「彰化縣OO鄉鎮市」字首可直接用 parse_county_district() 解析。「項目」欄位固定為「身心障礙鑑定
+    醫院」常數值，無篩選意義，本腳本不輸出。**無經緯度座標**，故頁面不含地圖。
+    """
+    print("下載 彰化縣身心障礙鑑定醫院 ...", file=sys.stderr)
+    text = fetch(CHC_DISABILITY_HOSPITALS_URL, encoding="big5")
+    reader = csv.DictReader(io.StringIO(text))
+    records = []
+    for row in reader:
+        name = (row.get("名稱") or "").strip()
+        if not name:
+            continue
+        phone = (row.get("電話") or "").strip()
+        addr = (row.get("地址") or "").strip()
+        county, district = parse_county_district(addr, fallback_county="彰化縣")
+        records.append([
+            len(records) + 1,   # 0 id
+            name,                # 1 name
+            phone,               # 2 phone
+            addr,                # 3 address
+            county or "彰化縣", # 4 county
+            district,            # 5 district
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "name", "phone", "address", "county", "district"]
+    return {"fields": fields, "rows": records}
+
+
 def _to_int(v):
     try:
         return int(float(v))
@@ -3819,6 +3859,15 @@ DATASETS = [
         "title": "臺中市身心障礙鑑定醫院及鑑定類別窗口",
         "source": lambda: TC_DISABILITY_CONTACTS_PDF_URL,
         "optional": True,
+    },
+    {
+        "key": "chc-disability-hospitals",
+        "builder": build_chc_disability_hospitals,
+        "json": "data/chc-disability-hospitals.json",
+        "js_var": "CHC_DISABILITY_HOSPITALS_DATA",
+        "meta_key": "chcDisabilityHospitals",
+        "title": "彰化縣身心障礙鑑定醫院及申請說明",
+        "source": lambda: CHC_DISABILITY_HOSPITALS_URL,
     },
 ]
 
