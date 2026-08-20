@@ -491,6 +491,9 @@ CHIAYI_DISABILITY_HOSPITALS_URL = (
 CHC_DISABILITY_HOSPITALS_URL = (
     "https://email.chcg.gov.tw/df/8a1m8xm7a7v6885fg3rp4pwe1ewdx1"
 )
+TT_DISABILITY_HOSPITALS_URL = (
+    "https://ttone.taitung.gov.tw/download?id=FJrjPU3O6XO4j4ViyTlgRQ%3D%3D"
+)
 TYC_TRANSPORT_URL = (
     "https://opendata.tycg.gov.tw/api/dataset/ad10c5d0-b128-4daf-866e-4cfc9a78dadb/"
     "resource/e21c957c-1ff5-4c7e-9fcc-7132b96b0033/download"
@@ -3471,6 +3474,116 @@ def build_chc_disability_hospitals():
     return {"fields": fields, "rows": records}
 
 
+# 中文數字 -> 阿拉伯數字，僅需 1~8（本資料集鑑定類別上限為第八類）
+_TT_DISABILITY_NUMERALS = {"一": 1, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6, "七": 7, "八": 8}
+
+
+def _parse_tt_disability_categories(raw_text: str) -> list[str]:
+    """解析臺東縣「新制鑑定類別及向度」欄位原文，回傳類別鍵清單（"1"~"8"、特例 "dev"）。
+
+    實測欄位格式有三種：(1) 分號分隔的「第X類」中文數字，如「第一類;第二類;...」；
+    (2) 附加特例文字「整體心理功能：發展遲緩」（不屬於第1~8類，標記為 "dev"）；
+    (3) 特例整段文字「八大類別皆可鑑定」，代表全部第1~8類皆可辦理（不含 "dev"，因原文未提及
+    發展遲緩鑑定）。比對不到任何已知樣式的片段會被忽略（不會使整筆資料被丟棄）。
+    """
+    text = (raw_text or "").strip()
+    if not text:
+        return []
+    if "八大類別皆可鑑定" in text:
+        return [str(n) for n in range(1, 9)]
+    keys: list[str] = []
+    for part in text.split(";"):
+        part = part.strip()
+        if not part:
+            continue
+        if part == "整體心理功能：發展遲緩":
+            if "dev" not in keys:
+                keys.append("dev")
+            continue
+        m = re.match(r"^第([一二三四五六七八])類$", part)
+        if m:
+            key = str(_TT_DISABILITY_NUMERALS[m.group(1)])
+            if key not in keys:
+                keys.append(key)
+    return keys
+
+
+def build_tt_disability_hospitals():
+    """115年臺東縣身心障礙鑑定醫院（臺東縣政府社會處，DCAT dataset id 165555，
+    https://data.gov.tw/dataset/8572 ，聯絡窗口：侯小姐 089-350731）。
+
+    來源 CSV：`TT_DISABILITY_HOSPITALS_URL`（`ttone.taitung.gov.tw` 下載連結，無
+    Access-Control-Allow-Origin 標頭，故比照 build_tn_disability_hospitals() 輸出內嵌 JS 版本
+    `window.TT_DISABILITY_HOSPITALS_DATA`，前端不透過 fetch() 讀取 json）。DCAT 標示編碼為 **BIG5**
+    （需傳 `encoding="big5"`，否則整批解析失敗得到 0 筆）。
+
+    欄位：資源彙整機關、醫院名稱、連絡電話、傳真、電子郵件、地址、新制鑑定類別及向度、相關網址、
+    X坐標、Y坐標、備註、最後更新時間。實測共 **5 筆**醫院資料（臺北榮民總醫院台東分院、馬偕紀念醫院
+    台東分院、衛生福利部臺東醫院、台東基督教醫院、關山慈濟醫院）。地址已含完整「臺東縣OO市/鎮」字首，
+    可直接用 parse_county_district() 解析（fallback_county="臺東縣" 備用）。
+
+    X/Y 坐標為 **TWD97 TM2 平面座標**（EPSG:3826，數值量級如 263598.459 / 2519080.812，非經緯度），
+    用既有 twd97_to_wgs84() 換算為 WGS84 經緯度。5 筆皆有座標，依專案地圖決策表「有座標＋資料量
+    ≤1000 筆」，前端加地圖呈現（Leaflet + MarkerCluster + circleMarker），資料量極小故不需抽樣上限。
+
+    「新制鑑定類別及向度」欄位文字格式不一致：多數為分號分隔的中文數字「第X類」清單，可能附加特例
+    文字「整體心理功能：發展遲緩」；1 筆為特例整句「八大類別皆可鑑定」。以
+    `_parse_tt_disability_categories()` 解析為類別鍵清單（"1"~"8"、"dev"），保留原文 `categoryText`
+    供表格顯示與免責提醒（原文可能另有除外細節，實際範圍以原文為準）。
+
+    「備註」欄位為除外功能項目說明文字（僅 1 筆有值），「相關網址」為醫院官網（無則空字串），
+    「最後更新時間」為建置方最後更新日期字串（格式 YYYYMMDD，如實輸出、不加工，實測資料日期僅到
+    2020年，非最新資料，頁面需如實呈現不宣稱為最新）。「資源彙整機關」欄位固定為「臺東縣政府」，
+    無篩選意義，本函式不輸出。
+    """
+    print("下載 115年臺東縣身心障礙鑑定醫院 ...", file=sys.stderr)
+    text = fetch(TT_DISABILITY_HOSPITALS_URL, encoding="big5")
+    reader = csv.DictReader(io.StringIO(text))
+    records = []
+    for row in reader:
+        name = (row.get("醫院名稱") or "").strip()
+        if not name:
+            continue
+        phone = (row.get("連絡電話") or "").strip()
+        addr = (row.get("地址") or "").strip()
+        county, district = parse_county_district(addr, fallback_county="臺東縣")
+        category_text = (row.get("新制鑑定類別及向度") or "").strip()
+        categories = _parse_tt_disability_categories(category_text)
+        try:
+            x = float(row.get("X坐標") or 0)
+            y = float(row.get("Y坐標") or 0)
+        except ValueError:
+            x, y = 0.0, 0.0
+        if x and y:
+            lat, lng = twd97_to_wgs84(x, y)
+        else:
+            lat, lng = 0.0, 0.0
+        website = (row.get("相關網址") or "").strip()
+        remark = (row.get("備註") or "").strip()
+        last_updated = (row.get("最後更新時間") or "").strip()
+        records.append([
+            len(records) + 1,        # 0 id
+            name,                     # 1 name
+            phone,                    # 2 phone
+            addr,                     # 3 address
+            county or "臺東縣",       # 4 county
+            district,                 # 5 district
+            lat,                      # 6 lat
+            lng,                      # 7 lng
+            category_text,            # 8 categoryText（原文）
+            ";".join(categories),     # 9 categories（解析後類別鍵，';' 分隔）
+            website,                  # 10 website
+            remark,                   # 11 remark
+            last_updated,             # 12 lastUpdated
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = [
+        "id", "name", "phone", "address", "county", "district", "lat", "lng",
+        "categoryText", "categories", "website", "remark", "lastUpdated",
+    ]
+    return {"fields": fields, "rows": records}
+
+
 def _to_int(v):
     try:
         return int(float(v))
@@ -3868,6 +3981,15 @@ DATASETS = [
         "meta_key": "chcDisabilityHospitals",
         "title": "彰化縣身心障礙鑑定醫院及申請說明",
         "source": lambda: CHC_DISABILITY_HOSPITALS_URL,
+    },
+    {
+        "key": "tt-disability-hospitals",
+        "builder": build_tt_disability_hospitals,
+        "json": "data/tt-disability-hospitals.json",
+        "js_var": "TT_DISABILITY_HOSPITALS_DATA",
+        "meta_key": "ttDisabilityHospitals",
+        "title": "115年臺東縣身心障礙鑑定醫院及申請說明",
+        "source": lambda: TT_DISABILITY_HOSPITALS_URL,
     },
 ]
 
