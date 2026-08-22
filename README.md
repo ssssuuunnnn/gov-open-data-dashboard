@@ -48,6 +48,7 @@
 | `tc-disability-hospitals/` | 臺中市身心障礙鑑定醫院及鑑定類別窗口 | 臺中市政府衛生局 | 臺中市33家新制身心障礙鑑定醫院清冊，來源為衛生局網站公告之兩份獨立PDF（**非DCAT開放資料CSV/API**）：一份為乾淨的窗口清冊（醫院層級／編號／名稱／一般鑑定窗口／居家鑑定窗口／電話），另一份為約46項「向度」子項（分屬第1~8類）的能力矩陣（每格v/無提供），本站僅將矩陣彙總至第1~8類層級（該類別下任一向度為v即視為可辦理，不保留46項向度細節）；兩份PDF醫院命名（全銜/簡稱、「臺」/「台」用字）與順序皆不同，改用人工核對之別名對照表配對，其中一份PDF「澄清復建醫院」對照另一份「澄清復健醫院」應為原始PDF錯字，忠實保留原文並於對照表修正供比對，提供醫院層級／鑑定類別／關鍵字篩選與統計圖表，無地址、無經緯度座標。頁面上方收錄使用者提供之申辦流程、應備物品、聯絡窗口資訊Q&A，屬固定公告文字，PDF需人工存放於`data/source/tc-disability-hospitals-*.pdf`後才能解析，無法自動重新下載更新，詳見下方「更新資料」說明 |
 | `chc-disability-hospitals/` | 彰化縣身心障礙鑑定醫院及申請說明 | 彰化縣政府社會處 | 彰化縣身心障礙鑑定醫院名冊（DCAT dataset id 95224），共14筆，來源CSV欄位為項目／名稱／電話／地址縣市／地址鄉鎮市區／地址，DCAT標示編碼為**BIG5**（本腳本 fetch() 需另傳 `encoding="big5"`，預設 utf-8-sig 會整批解析失敗得到0筆）；「地址縣市」「地址鄉鎮市區」為行政區代碼非中文名稱，改用「地址」欄位以 `parse_county_district(fallback_county="彰化縣")` 解析，地址已含完整「彰化縣OO鄉鎮市」字首，無經緯度座標。提供鄉鎮市／關鍵字篩選與統計圖表（各鄉鎮市鑑定醫院數），頁面上方收錄使用者提供之「身心障礙證明申請（初次申請、屆期重鑑）」完整公告文字Q&A（申請對象／申請方式／郵寄申請／縣內跨鄉鎮市申請／進度查詢／效期延長／承辦單位聯絡資訊），屬固定公告文字，來源網址無CORS標頭，比照 tn-disability-hospitals 用內嵌 js 版本輸出 |
 | `tt-disability-hospitals/` | 115年臺東縣身心障礙鑑定醫院及申請說明 | 臺東縣政府社會處 | 115年臺東縣身心障礙鑑定醫院名冊（DCAT dataset id 165555），共5筆，來源CSV欄位為資源彙整機關／醫院名稱／連絡電話／傳真／電子郵件／地址／新制鑑定類別及向度／相關網址／X坐標／Y坐標／備註／最後更新時間，DCAT標示編碼為**BIG5**（本腳本 fetch() 需另傳 `encoding="big5"`）；地址已含完整「臺東縣OO市/鎮」字首可直接解析行政區。**X/Y坐標為TWD97 TM2平面座標（EPSG:3826）**，用既有 `twd97_to_wgs84()` 換算為WGS84經緯度，資料量小（5筆）故加地圖呈現（Leaflet+MarkerCluster+circleMarker，不需抽樣上限）。「新制鑑定類別及向度」欄位格式不一致（多數為分號分隔中文數字「第X類」清單、1筆特例文字「八大類別皆可鑑定」代表全部8類皆可辦理），以 `_parse_tt_disability_categories()` 解析為類別鍵清單（含「整體心理功能：發展遲緩」特例"dev"標記）。提供行政區／鑑定類別／關鍵字篩選、地圖與統計圖表，頁面上方收錄使用者提供之申請流程（5步驟）與鑑定費用（單項1000元／多項1600元／到宅2000元含交通膳雜費，蘭嶼鄉、綠島鄉交通費另計）Q&A，屬固定公告文字，來源網址無CORS標頭，比照 tn-disability-hospitals 用內嵌 js 版本輸出 |
+| `hccg-disability-hospitals/` | 新竹市身心障礙鑑定評估機構及到宅鑑定流程說明 | 新竹市衛生局 | 身心障礙鑑定評估機構（DCAT dataset id 136459，https://data.gov.tw/dataset/8572），共6筆，來源JSON欄位為序號／縣市別代碼／醫院中文名稱／醫院電話號碼區域碼／醫院電話號碼／醫院地址（區域碼欄位固定為3，屬冗餘欄位不輸出），地址已含完整「新竹市OO區」字首可直接用 `parse_county_district(fallback_county="新竹市")` 解析行政區（實測分布：北區2、東區4，無香山區），無經緯度座標。提供行政區／關鍵字篩選與統計圖表，無鑑定類別欄位/篩選（原始資料本身不含此欄位）。頁面上方收錄使用者提供之「新竹市身心障礙到宅(機構)鑑定流程」完整公告文字（109.10.05審修，含到宅鑑定申請3項條件、8步驟流程、新竹市東/北/香山區公所領表窗口與衛生局醫政科／社會處身心障礙福利科聯絡資訊表格），屬固定公告文字，來源網址無CORS標頭，比照 hccg-elder 用內嵌 js 版本輸出 |
 | `caregiver/` | 看護／照服機構名錄 | **無（使用者人工蒐集）** | 使用者手動整理目前網路上找得到的私人看護／居家照護機構名單（共35筆），收錄機構名稱、官網、收費頁面、聯絡電話、服務地區、統一編號，提供服務地區／是否有公開收費頁面／關鍵字篩選；**非政府開放資料，無提供機關、無官方驗證**，頁面明確標示免責聲明，資料來源為使用者提供之本機 CSV、無公開下載網址，需人工更新，詳見下方「更新資料」說明 |
 | `dialysis-transport/` | 洗腎（透析）交通接送服務查詢 | 部分為衛生福利部長期照顧司（制度說明）／**無（民間清單為使用者人工蒐集）** | 頁面上方整理長照司「交通接送服務」BD03（社區式服務交通接送）／DA01（交通接送）給付碼別官方制度說明（資料來源：1966長照專區公告頁），下方為使用者手動整理之全台洗腎（透析）就醫民間接送/租賃服務名單（共16筆），收錄名稱、官網、聯絡電話、服務地區，因資料量小且服務地區欄位稀疏僅提供關鍵字篩選；**民間接送清單非政府開放資料，無官方驗證**，頁面明確標示免責聲明，資料來源為使用者提供之本機 CSV、無公開下載網址，需人工更新，詳見下方「更新資料」說明 |
 
@@ -327,6 +328,10 @@ data/tt-disability-hospitals.json  115年臺東縣身心障礙鑑定醫院（由
                        ttone.taitung.gov.tw BIG5 編碼 CSV 產生，共5筆，含 TWD97→WGS84 換算後座標）
 data/tt-disability-hospitals.js  同上資料的內嵌 JS 版本（window.TT_DISABILITY_HOSPITALS_DATA），供
                        tt-disability-hospitals 頁面以 <script> 標籤直接載入
+data/hccg-disability-hospitals.json  新竹市身心障礙鑑定評估機構（由 scripts/build_data.py 下載
+                       odws.hccg.gov.tw JSON 產生，共6筆，無經緯度座標）
+data/hccg-disability-hospitals.js  同上資料的內嵌 JS 版本（window.HCCG_DISABILITY_HOSPITALS_DATA），
+                       供 hccg-disability-hospitals 頁面以 <script> 標籤直接載入
 data/tc-disability-hospitals.js  同上資料的內嵌 JS 版本（window.TC_DISABILITY_HOSPITALS_DATA），供
                        tc-disability-hospitals 頁面以 <script> 標籤直接載入
 data/caregiver.json   看護／照服機構名錄資料（由 scripts/build_data.py 讀取本機 CSV 產生）
@@ -420,6 +425,7 @@ python3 scripts/build_data.py tc-disability-hospitals  # 只重新產生臺中�
                                                         # （需先將兩份來源PDF存至 data/source/，見下方說明）
 python3 scripts/build_data.py chc-disability-hospitals  # 只重新產生彰化縣身心障礙鑑定醫院
 python3 scripts/build_data.py tt-disability-hospitals  # 只重新產生115年臺東縣身心障礙鑑定醫院
+python3 scripts/build_data.py hccg-disability-hospitals  # 只重新產生新竹市身心障礙鑑定評估機構
 python3 scripts/build_data.py caregiver           # 只重新產生看護／照服機構名錄
 python3 scripts/build_data.py dialysis-transport  # 只重新產生洗腎（透析）接送資源清單
 python3 scripts/build_data.py ntpc-dementia       # 只重新產生新北市失智症門診資訊

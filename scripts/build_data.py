@@ -494,6 +494,10 @@ CHC_DISABILITY_HOSPITALS_URL = (
 TT_DISABILITY_HOSPITALS_URL = (
     "https://ttone.taitung.gov.tw/download?id=FJrjPU3O6XO4j4ViyTlgRQ%3D%3D"
 )
+HCCG_DISABILITY_HOSPITALS_URL = (
+    "https://odws.hccg.gov.tw/001/Upload/25/opendataback/9059/315/"
+    "e1cdf934-b234-48cf-a4fa-cf4014166b16.json"
+)
 TYC_TRANSPORT_URL = (
     "https://opendata.tycg.gov.tw/api/dataset/ad10c5d0-b128-4daf-866e-4cfc9a78dadb/"
     "resource/e21c957c-1ff5-4c7e-9fcc-7132b96b0033/download"
@@ -3584,6 +3588,53 @@ def build_tt_disability_hospitals():
     return {"fields": fields, "rows": records}
 
 
+def build_hccg_disability_hospitals():
+    """新竹市身心障礙鑑定評估機構（新竹市衛生局，DCAT dataset https://data.gov.tw/dataset/8572，
+    dataset id 136459，聯絡窗口 陳珮馨 03-5355191#233）。
+
+    來源：xlsx/csv/xml/json 四種同內容格式，本腳本選用 json
+    （HCCG_DISABILITY_HOSPITALS_URL，downloadURL 見 odws.hccg.gov.tw），內容為物件陣列，
+    中文欄位鍵值：序號、縣市別代碼、醫院中文名稱、醫院電話號碼區域碼、醫院電話號碼、醫院地址。
+    「醫院電話號碼」欄位本身已含區碼括號（如 `(03)5326151`），「醫院電話號碼區域碼」為冗餘欄位
+    （固定為3），本函式不輸出。
+
+    實測共 **6 筆**機構資料，皆為「新竹市身心障礙到宅(機構)鑑定流程」中「申請診斷證明書」步驟
+    可辦理之醫院（原診療醫院），地址已含完整「新竹市OO區」字首可直接用
+    parse_county_district(fallback_county="新竹市") 解析行政區（實測分布：北區2、東區4，
+    無香山區機構），**無經緯度座標**，故本頁不含地圖。
+
+    來源網址無 Access-Control-Allow-Origin 標頭，前端不可直接 fetch，比照
+    build_hccg_elder() 由本腳本於伺服器端下載，另輸出內嵌 JS 版本
+    （window.HCCG_DISABILITY_HOSPITALS_DATA）供前端以 <script> 標籤直接載入。
+
+    頁面上方另收錄使用者提供之「新竹市身心障礙到宅(機構)鑑定流程」完整公告文字（109.10.05審修，
+    含到宅鑑定申請條件、8步驟流程、東/北/香山區公所領表窗口、衛生局醫政科、社會處身心障礙福利科
+    聯絡資訊），屬固定公告文字直接寫死於 index.html，非本函式輸出資料的一部分。
+    """
+    print("下載 新竹市身心障礙鑑定評估機構 ...", file=sys.stderr)
+    text = fetch(HCCG_DISABILITY_HOSPITALS_URL)
+    rows_in = json.loads(text)
+    records = []
+    for row in rows_in:
+        name = (row.get("醫院中文名稱", "") or "").strip()
+        if not name:
+            continue
+        phone = (row.get("醫院電話號碼", "") or "").strip()
+        addr = (row.get("醫院地址", "") or "").strip()
+        county, district = parse_county_district(addr, fallback_county="新竹市")
+        records.append([
+            len(records) + 1,       # 0 id
+            name,                    # 1 name
+            phone,                   # 2 phone
+            addr,                    # 3 address
+            county or "新竹市",      # 4 county
+            district,                # 5 district
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "name", "phone", "address", "county", "district"]
+    return {"fields": fields, "rows": records}
+
+
 def _to_int(v):
     try:
         return int(float(v))
@@ -3990,6 +4041,15 @@ DATASETS = [
         "meta_key": "ttDisabilityHospitals",
         "title": "115年臺東縣身心障礙鑑定醫院及申請說明",
         "source": lambda: TT_DISABILITY_HOSPITALS_URL,
+    },
+    {
+        "key": "hccg-disability-hospitals",
+        "builder": build_hccg_disability_hospitals,
+        "json": "data/hccg-disability-hospitals.json",
+        "js_var": "HCCG_DISABILITY_HOSPITALS_DATA",
+        "meta_key": "hccgDisabilityHospitals",
+        "title": "新竹市身心障礙鑑定評估機構及到宅鑑定流程說明",
+        "source": lambda: HCCG_DISABILITY_HOSPITALS_URL,
     },
 ]
 

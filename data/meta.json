@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-20T14:06:46.282467+00:00",
+  "generatedAt": "2026-08-22T02:23:09.132180+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -219,5 +219,10 @@
     "count": 5,
     "source": "https://ttone.taitung.gov.tw/download?id=FJrjPU3O6XO4j4ViyTlgRQ%3D%3D",
     "title": "115年臺東縣身心障礙鑑定醫院及申請說明"
+  },
+  "hccgDisabilityHospitals": {
+    "count": 6,
+    "source": "https://odws.hccg.gov.tw/001/Upload/25/opendataback/9059/315/e1cdf934-b234-48cf-a4fa-cf4014166b16.json",
+    "title": "新竹市身心障礙鑑定評估機構及到宅鑑定流程說明"
   }
 }

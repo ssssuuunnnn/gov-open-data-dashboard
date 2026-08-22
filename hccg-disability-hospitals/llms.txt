@@ -1,0 +1,25 @@
+# 新竹市身心障礙鑑定評估機構
+
+> 新竹市衛生局公告之身心障礙鑑定評估機構名冊（6家醫院，即到宅(機構)鑑定流程中「申請診斷證明書」步驟
+> 可辦理之原診療醫院），並整理「新竹市身心障礙到宅(機構)鑑定流程」（109.10.05審修）完整公告文字，
+> 提供行政區／關鍵字篩選與統計圖表。
+
+- 提供機關：新竹市衛生局
+- 資料筆數：6 筆（隨資料來源更新而變動，實際筆數以頁面即時載入為準）
+- 原始資料來源：https://odws.hccg.gov.tw/001/Upload/25/opendataback/9059/315/e1cdf934-b234-48cf-a4fa-cf4014166b16.json
+  （DCAT dataset https://data.gov.tw/dataset/8572 ，dataset id 136459）
+- 授權方式：政府資料開放授權條款-第1版
+- 建議查看頻率：每年
+
+## 頁面內容
+
+- 儀表板頁面：https://www.sunkuo.cc/gov-open-data-dashboard/hccg-disability-hospitals/index.html
+- 篩選條件、統計卡片、圖表與分頁表格皆基於上述原始資料即時運算，無經緯度座標、無鑑定類別欄位。
+- 頁面上方另收錄使用者提供之申請流程說明（非開放資料，屬固定公告文字），包含到宅鑑定申請3項條件、
+  8步驟申請流程，以及新竹市東/北/香山區區公所領表窗口、衛生局醫政科與社會處身心障礙福利科聯絡資訊。
+
+## 相關連結
+
+- 網站首頁：https://www.sunkuo.cc/gov-open-data-dashboard/
+- 更新紀錄：https://www.sunkuo.cc/gov-open-data-dashboard/changelog/index.html
+- 專案原始碼：https://github.com/ssssuuunnnn/gov-open-data-dashboard
