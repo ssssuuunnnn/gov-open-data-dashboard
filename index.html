@@ -440,6 +440,17 @@
     },
     {
       "@type": "Dataset",
+      "name": "臺南巿身心障礙牙醫診所名單",
+      "description": "臺南市政府衛生局公告之身心障礙牙醫診所名單，收錄107筆診所／醫院名稱、電話、地址與經緯度座標。",
+      "url": "https://www.sunkuo.cc/gov-open-data-dashboard/tn-disability-dentist/index.html",
+      "license": "https://data.gov.tw/license",
+      "creator": {
+        "@type": "Organization",
+        "name": "臺南市政府衛生局"
+      }
+    },
+    {
+      "@type": "Dataset",
       "name": "嘉義市身心障礙鑑定醫院",
       "description": "嘉義市政府公告之身心障礙鑑定醫院名冊，收錄5家醫院名稱、電話、地址與可辦理之鑑定類別及向度。",
       "url": "https://www.sunkuo.cc/gov-open-data-dashboard/chiayi-disability-hospitals/index.html",
@@ -862,6 +873,12 @@
       <div class="desc">臺南市政府衛生局公告，列出身心障礙鑑定醫院之名稱、電話、地址與可辦理鑑定類別，共16筆，並整理申請流程、到宅鑑定條件、應備文件及業務窗口資訊，可依行政區、鑑定類別（第1~8類）與關鍵字篩選並瀏覽統計圖表。</div>
       <div class="footline" id="tn-disability-hospitals-count">資料筆數載入中…</div>
     </a>
+    <a class="home-card disability" href="tn-disability-dentist/index.html" data-county="臺南市" data-category="disability">
+      <span class="tag">臺南市</span>
+      <h2>臺南巿身心障礙牙醫診所名單</h2>
+      <div class="desc">臺南市政府衛生局公告，列出提供身心障礙者牙科服務之診所／醫院名稱、電話、地址與經緯度座標，共107筆，可依行政區與關鍵字篩選，並提供地圖標示與統計圖表。</div>
+      <div class="footline" id="tn-disability-dentist-count">資料筆數載入中…</div>
+    </a>
     <a class="home-card disability" href="chiayi-disability-hospitals/index.html" data-county="嘉義市" data-category="disability">
       <span class="tag">嘉義市</span>
       <h2>嘉義市身心障礙鑑定醫院及申請說明</h2>
@@ -1146,6 +1163,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.tnDisabilityHospitals) {
     document.getElementById("tn-disability-hospitals-count").textContent = `共 ${meta.tnDisabilityHospitals.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.tnDisabilityDentist) {
+    document.getElementById("tn-disability-dentist-count").textContent = `共 ${meta.tnDisabilityDentist.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
   if (meta.chiayiDisabilityHospitals) {
     document.getElementById("chiayi-disability-hospitals-count").textContent = `共 ${meta.chiayiDisabilityHospitals.count.toLocaleString()} 家醫院 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;

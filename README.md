@@ -1,6 +1,6 @@
 # 政府開放資料儀表板
 
-以政府開放資料建置的靜態網站，整理四十四個長照/老人福利/身心障礙相關資料集為互動式儀表板，可直接部署於 GitHub Pages。
+以政府開放資料建置的靜態網站，整理四十六個長照/老人福利/身心障礙相關資料集為互動式儀表板，可直接部署於 GitHub Pages。
 
 ## 資料集
 
@@ -44,6 +44,7 @@
 | `tpe-dementia-hospitals/` | 臺北市失智症診療機構名冊 | 臺北市政府衛生局 | 臺北市失智症診療機構名冊，共35筆，收錄醫院名稱、失智症看診科別、健保特約類別（醫學中心／區域醫院／地區醫院）、地址、電話，行政區由地址欄位解析（`parse_county_district(fallback_county="臺北市")`），提供行政區／健保特約類別／關鍵字篩選與統計圖表，無經緯度座標。頁面上方另收錄完整版「認識失智症」Q&A（定義、AD-8極早期篩檢量表、正常老化區別、預防方法【趨吉避凶】、三大類型【退化性—阿茲海默症/額顳葉型/路易氏體、血管性、其他原因引起之可逆性失智症】、年輕型失智症），內容整理自使用者提供之衛教資料。**資料來源為臺北市政府衛生局公告網頁 PDF 附件（非開放資料平台標準API），使用者原提供之 CSV 經試抓確認為不同性質的「篩檢轉介窗口」名冊而未採用**，比照 tyc-dementia-hospitals 用內嵌 js 版本輸出，無法自動重新下載，詳見下方「更新資料」說明 |
 | `tpe-disability-hospitals/` | 115年臺北市身心障礙鑑定指定醫院及申請說明 | 臺北市政府衛生局 | 臺北市身心障礙鑑定指定醫院聯絡方式一覽表（DCAT dataset id 132448），共34筆，原始CSV共28個編號但編號7「臺北市立聯合醫院」本身僅為母機構分類標題（電話/地址空白，本腳本略過），其下7家分院（中興、仁愛、和平婦幼、陽明、忠孝、松德、林森(中醫)昆明院區）為正式資料列並依輸出順序重新編號，收錄醫院名稱、電話、地址，行政區由地址欄位解析（`parse_county_district(fallback_county="臺北市")`），提供行政區／關鍵字篩選與統計圖表，無經緯度座標。頁面上方收錄使用者提供之初次鑑定／重新鑑定／申請到宅鑑定應備文件清單與洽辦資訊（聯絡窗口、電話、傳真、洽辦單位：區公所社會課）Q&A，屬固定公告文字，比照 tpe-dementia-hospitals 用內嵌 js 版本輸出 |
 | `tn-disability-hospitals/` | 115年臺南市身心障礙鑑定醫院及申請說明 | 臺南市政府衛生局 | 115年臺南市身心障礙鑑定醫院名冊（DCAT dataset id 147147），共16筆，來源CSV欄位為醫院名稱／鑑定類別／醫院電話／地址（另有一組CountyCode/AreaCode分欄格式等價distribution因需自行組回地址而捨棄），地址已含完整「(郵遞區號)台南市OO區OO路OO號」字串，county固定輸出正式全形「臺南市」（原文為簡體「台南市」），district由剝除郵遞區號後的地址解析；「鑑定類別」欄位額外近似解析出可辦理類別數字（1~8）清單供篩選/圖表使用（不解析括號除外備註細節，僅供粗略參考），提供行政區／鑑定類別／關鍵字篩選與統計圖表（各行政區醫院數、各鑑定類別可辦理醫院數），無經緯度座標。頁面上方收錄使用者提供之申請流程、到宅鑑定條件、應備文件與業務窗口/洽辦單位資訊Q&A，屬固定公告文字，來源網址無CORS標頭，比照 tpe-disability-hospitals 用內嵌 js 版本輸出 |
+| `tn-disability-dentist/` | 臺南巿身心障礙牙醫診所名單 | 臺南市政府衛生局 | 臺南市身心障礙牙醫診所名單（DCAT dataset id 53482），共107筆，來源CSV欄位為Seq／行政區／機構名稱／電話／縣市別代碼／地址-行政區域代碼／地址-村里／地址-街路門牌／緯度／經度，「行政區」欄位本身已是乾淨中文區名，不需從地址反解析，county固定輸出「臺南市」；「地址-村里」多筆為空值（原始資料如此，如實呈現）。**原始資料已直接提供WGS84經緯度**，107筆皆有值，依地圖決策表加地圖呈現（Leaflet+MarkerCluster+circleMarker，不需抽樣上限），提供行政區／關鍵字篩選、地圖與統計圖表，表格地址欄位加 Google Maps 連結（組合縣市＋行政區＋街路門牌供查詢，顯示文字維持原始街路門牌）、電話欄位加 tel: 連結。來源網址無CORS標頭，比照 tn-disability-hospitals 用內嵌 js 版本輸出 |
 | `chiayi-disability-hospitals/` | 嘉義市身心障礙鑑定醫院及申請說明 | 嘉義市政府（醫政科） | 嘉義市身心障礙鑑定醫院（DCAT dataset id 95714），來源CSV欄位為醫院名稱／連絡電話／地址／新制鑑定類別及向度，實測共228列——逐「向度」子項一列（非逐醫院一列），涵蓋5家醫院；本腳本解析出類別數字(1~8)/類別全名/向度子項全名三段（另有「整體心理功能：發展遲緩」特例以"dev"標記），並依醫院彙整為5筆記錄（categories分號分隔類別清單、itemsByCategory為JSON字串記錄各類別向度子項清單、itemCount為向度總筆數），地址已含完整「嘉義市OO區」字首可直接解析行政區（僅東區/西區），無經緯度座標。提供鑑定類別／醫院／關鍵字篩選與統計圖表（各類別可辦理醫院數、各醫院可鑑定向度數量），表格以`<details>`展開完整向度明細。頁面上方收錄使用者提供之「身心障礙者鑑定流程報您知」完整公告文字（申請鑑定表/鑑定/到宅機構鑑定/審查製證/領證/異議複檢/鑑定費用/8大類別說明），來源網址無CORS標頭，比照 tn-disability-hospitals 用內嵌 js 版本輸出 |
 | `tc-disability-hospitals/` | 臺中市身心障礙鑑定醫院及鑑定類別窗口 | 臺中市政府衛生局 | 臺中市33家新制身心障礙鑑定醫院清冊，來源為衛生局網站公告之兩份獨立PDF（**非DCAT開放資料CSV/API**）：一份為乾淨的窗口清冊（醫院層級／編號／名稱／一般鑑定窗口／居家鑑定窗口／電話），另一份為約46項「向度」子項（分屬第1~8類）的能力矩陣（每格v/無提供），本站僅將矩陣彙總至第1~8類層級（該類別下任一向度為v即視為可辦理，不保留46項向度細節）；兩份PDF醫院命名（全銜/簡稱、「臺」/「台」用字）與順序皆不同，改用人工核對之別名對照表配對，其中一份PDF「澄清復建醫院」對照另一份「澄清復健醫院」應為原始PDF錯字，忠實保留原文並於對照表修正供比對，提供醫院層級／鑑定類別／關鍵字篩選與統計圖表，無地址、無經緯度座標。頁面上方收錄使用者提供之申辦流程、應備物品、聯絡窗口資訊Q&A，屬固定公告文字，PDF需人工存放於`data/source/tc-disability-hospitals-*.pdf`後才能解析，無法自動重新下載更新，詳見下方「更新資料」說明 |
 | `chc-disability-hospitals/` | 彰化縣身心障礙鑑定醫院及申請說明 | 彰化縣政府社會處 | 彰化縣身心障礙鑑定醫院名冊（DCAT dataset id 95224），共14筆，來源CSV欄位為項目／名稱／電話／地址縣市／地址鄉鎮市區／地址，DCAT標示編碼為**BIG5**（本腳本 fetch() 需另傳 `encoding="big5"`，預設 utf-8-sig 會整批解析失敗得到0筆）；「地址縣市」「地址鄉鎮市區」為行政區代碼非中文名稱，改用「地址」欄位以 `parse_county_district(fallback_county="彰化縣")` 解析，地址已含完整「彰化縣OO鄉鎮市」字首，無經緯度座標。提供鄉鎮市／關鍵字篩選與統計圖表（各鄉鎮市鑑定醫院數），頁面上方收錄使用者提供之「身心障礙證明申請（初次申請、屆期重鑑）」完整公告文字Q&A（申請對象／申請方式／郵寄申請／縣內跨鄉鎮市申請／進度查詢／效期延長／承辦單位聯絡資訊），屬固定公告文字，來源網址無CORS標頭，比照 tn-disability-hospitals 用內嵌 js 版本輸出 |
@@ -310,6 +311,11 @@ data/tn-disability-hospitals.json  115年臺南市身心障礙鑑定醫院（由
                        data.tainan.gov.tw CSV 產生，資料量小且來源網址無 CORS 標頭）
 data/tn-disability-hospitals.js  同上資料的內嵌 JS 版本（window.TN_DISABILITY_HOSPITALS_DATA），供
                        tn-disability-hospitals 頁面以 <script> 標籤直接載入
+data/tn-disability-dentist.json  臺南巿身心障礙牙醫診所名單（由 scripts/build_data.py 下載
+                       data.tainan.gov.tw CSV 產生，資料量小且來源網址無 CORS 標頭，原始資料已含
+                       WGS84 經緯度座標，不需地理編碼）
+data/tn-disability-dentist.js  同上資料的內嵌 JS 版本（window.TN_DISABILITY_DENTIST_DATA），供
+                       tn-disability-dentist 頁面以 <script> 標籤直接載入
 data/chiayi-disability-hospitals.json  嘉義市身心障礙鑑定醫院（由 scripts/build_data.py 下載
                        data.chiayi.gov.tw CSV 產生，資料量小且來源網址無 CORS 標頭）
 data/chiayi-disability-hospitals.js  同上資料的內嵌 JS 版本（window.CHIAYI_DISABILITY_HOSPITALS_DATA），
@@ -420,6 +426,7 @@ python3 scripts/build_data.py pingtung-denture    # 只重新產生屏東縣115�
 python3 scripts/build_data.py tpe-dementia-hospitals  # 只重新產生臺北市失智症診療機構名冊
 python3 scripts/build_data.py tpe-disability-hospitals  # 只重新產生臺北市身心障礙鑑定指定醫院聯絡方式一覽表
 python3 scripts/build_data.py tn-disability-hospitals  # 只重新產生115年臺南市身心障礙鑑定醫院
+python3 scripts/build_data.py tn-disability-dentist  # 只重新產生臺南巿身心障礙牙醫診所名單
 python3 scripts/build_data.py chiayi-disability-hospitals  # 只重新產生嘉義市身心障礙鑑定醫院
 python3 scripts/build_data.py tc-disability-hospitals  # 只重新產生臺中市身心障礙鑑定醫院及鑑定類別窗口
                                                         # （需先將兩份來源PDF存至 data/source/，見下方說明）

@@ -522,6 +522,10 @@ TN_DENTURE_PDF_URL = (
     "https://health.tainan.gov.tw/warehouse/F8BCB915-C08B-47F3-A731-1C30A3EE61EE/"
     "F_1780645430477e.pdf"
 )
+TN_DISABILITY_DENTIST_URL = (
+    "https://data.tainan.gov.tw/File/ResourceCsvDownload/"
+    "9f0b19fb-4d35-471e-9f9c-2af7254a6d14"
+)
 # 嘉義市中低收入老人免費裝置假牙合約醫院名單（DCAT dataset https://data.gov.tw/dataset/8572
 # https://cms.data.gov.tw/dataset/130486，提供機關：嘉義市政府社會處）。
 CHIAYI_DENTURE_LOW_INCOME_URL = (
@@ -3222,6 +3226,60 @@ def build_tn_disability_hospitals():
     return {"fields": fields, "rows": records}
 
 
+def build_tn_disability_dentist():
+    """臺南巿身心障礙牙醫診所名單（臺南市政府衛生局，DCAT dataset id 53482，
+    https://data.gov.tw/dataset/8572 ，聯絡窗口：劉子豪 (06)2991111）。
+
+    來源共有兩組等價 CSV distribution（`soa.tainan.gov.tw` API 版本與
+    `data.tainan.gov.tw` 下載版本，內容相同），本腳本選用後者
+    （TN_DISABILITY_DENTIST_URL）。已實測確認**無** `Access-Control-Allow-Origin` 標頭，故比照
+    build_tn_disability_hospitals() 輸出內嵌 JS 版本（window.TN_DISABILITY_DENTIST_DATA），
+    前端不透過 fetch() 讀取 json。一般 utf-8-sig 解碼即可，實測共 107 筆（DCAT 標示的
+    `dcat:byteSize "106"` 實為誤植筆數而非真實檔案大小，實際檔案約 12.5KB）。
+
+    原始欄位：Seq、行政區、機構名稱、電話、縣市別代碼、地址-行政區域代碼、地址-村里、
+    地址-街路門牌、緯度、經度。與同單位的 build_tn_disability_hospitals()／build_tn_denture()
+    不同，本資料集的「行政區」欄位本身已是乾淨中文區名（如「七股區」「中西區」），**不需**從地址
+    反解析縣市／行政區；「縣市別代碼」與「地址-行政區域代碼」為數字代碼（皆為67000系列），本腳本
+    不使用，county 一律固定輸出「臺南市」。「地址-村里」欄位在多筆資料中為空值（原始資料如此，非
+    解析遺漏，如實呈現不補值）。地址欄位供 Google Maps 連結使用時，需組合「臺南市」＋行政區＋
+    地址-街路門牌成完整地址字串，但表格顯示仍用原始「地址-街路門牌」文字，不竄改可見內容。
+
+    **緯度／經度為原始資料直接提供的 WGS84 座標**，107 筆皆有值，不需地理編碼或座標系統轉換。
+    依專案地圖決策表「有座標＋資料量≤1000筆」，前端加地圖呈現（Leaflet + MarkerCluster +
+    circleMarker），資料量小故不需抽樣上限。
+    """
+    print("下載 臺南巿身心障礙牙醫診所名單 ...", file=sys.stderr)
+    text = fetch(TN_DISABILITY_DENTIST_URL)
+    reader = csv.DictReader(io.StringIO(text))
+    records = []
+    for row in reader:
+        name = (row.get("機構名稱") or "").strip()
+        if not name:
+            continue
+        district = (row.get("行政區") or "").strip()
+        phone = (row.get("電話") or "").strip()
+        street = (row.get("地址-街路門牌") or "").strip()
+        try:
+            lat = float(row.get("緯度") or 0)
+            lng = float(row.get("經度") or 0)
+        except ValueError:
+            lat, lng = 0.0, 0.0
+        records.append([
+            len(records) + 1,   # 0 id
+            name,                 # 1 name
+            phone,                # 2 phone
+            street,               # 3 address（原始街路門牌，不含縣市/行政區字首）
+            "臺南市",            # 4 county（固定值）
+            district,             # 5 district
+            lat,                  # 6 lat
+            lng,                  # 7 lng
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "name", "phone", "address", "county", "district", "lat", "lng"]
+    return {"fields": fields, "rows": records}
+
+
 CHIAYI_DISABILITY_CATEGORY_LABELS = {
     "1": "第一類神經系統構造及精神、心智功能",
     "2": "第二類眼、耳及相關構造與感官功能及疼痛",
@@ -4050,6 +4108,15 @@ DATASETS = [
         "meta_key": "hccgDisabilityHospitals",
         "title": "新竹市身心障礙鑑定評估機構及到宅鑑定流程說明",
         "source": lambda: HCCG_DISABILITY_HOSPITALS_URL,
+    },
+    {
+        "key": "tn-disability-dentist",
+        "builder": build_tn_disability_dentist,
+        "json": "data/tn-disability-dentist.json",
+        "js_var": "TN_DISABILITY_DENTIST_DATA",
+        "meta_key": "tnDisabilityDentist",
+        "title": "臺南巿身心障礙牙醫診所名單",
+        "source": lambda: TN_DISABILITY_DENTIST_URL,
     },
 ]
 

@@ -1,0 +1,22 @@
+# 臺南巿身心障礙牙醫診所名單
+
+> 臺南市政府衛生局公告之身心障礙牙醫診所名單，共107筆，提供行政區／關鍵字篩選、統計卡片與地圖，並顯示各行政區診所數量圖表，原始資料已含經緯度座標。
+
+- 提供機關：臺南市政府衛生局
+- 資料筆數：107 筆（隨資料來源更新而變動，實際筆數以頁面即時載入為準）
+- 原始資料來源：https://data.tainan.gov.tw/File/ResourceCsvDownload/9f0b19fb-4d35-471e-9f9c-2af7254a6d14
+- 授權方式：政府資料開放授權條款-第1版
+- 建議查看頻率：不定期更新
+
+## 頁面內容
+
+- 儀表板頁面：https://www.sunkuo.cc/gov-open-data-dashboard/tn-disability-dentist/index.html
+- 篩選條件（行政區、關鍵字）、統計卡片、地圖（Leaflet + MarkerCluster，含全部107筆座標）、各行政區診所數
+  長條圖與分頁表格，皆基於上述原始資料即時運算。
+- 表格地址欄位連結至 Google Maps 搜尋（組合縣市＋行政區＋街路門牌），電話欄位連結至 tel:。
+
+## 相關連結
+
+- 網站首頁：https://www.sunkuo.cc/gov-open-data-dashboard/
+- 更新紀錄：https://www.sunkuo.cc/gov-open-data-dashboard/changelog/index.html
+- 專案原始碼：https://github.com/ssssuuunnnn/gov-open-data-dashboard
