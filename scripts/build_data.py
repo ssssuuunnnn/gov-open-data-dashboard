@@ -494,6 +494,10 @@ CHC_DISABILITY_HOSPITALS_URL = (
 TT_DISABILITY_HOSPITALS_URL = (
     "https://ttone.taitung.gov.tw/download?id=FJrjPU3O6XO4j4ViyTlgRQ%3D%3D"
 )
+NT_DISABILITY_HOSPITALS_URL = (
+    "https://data.nantou.gov.tw/dataset/2a3d984c-dcd4-4db9-87ae-d776a3f80265/"
+    "resource/063d242e-d29b-4c04-a6ca-50ab82a423de/download/1110119.csv"
+)
 HCCG_DISABILITY_HOSPITALS_URL = (
     "https://odws.hccg.gov.tw/001/Upload/25/opendataback/9059/315/"
     "e1cdf934-b234-48cf-a4fa-cf4014166b16.json"
@@ -3646,6 +3650,68 @@ def build_tt_disability_hospitals():
     return {"fields": fields, "rows": records}
 
 
+def build_nt_disability_hospitals():
+    """南投縣身心障礙鑑定醫院（南投縣政府，DCAT dataset id 94924，
+    https://data.gov.tw/dataset/8572 ，聯絡窗口：張家淳 049-2222473分機253）。
+
+    來源 CSV：`NT_DISABILITY_HOSPITALS_URL`（`data.nantou.gov.tw` 下載連結）。實測該網址**有**
+    `Access-Control-Allow-Origin: *`，但比照 build_tc_nursing() 等前例，仍依專案慣例由本腳本於
+    伺服器端下載並額外輸出內嵌 JS 版本（window.NT_DISABILITY_HOSPITALS_DATA），避免依賴外部網址
+    即時可用性。DCAT 標示編碼為 **BIG5**，實測確認一致（需傳 `encoding="big5"`，否則整批解析失敗
+    得到 0 筆）。
+
+    欄位：資源彙整機關、醫院名稱、連絡電話、傳真、電子郵件、地址、新制鑑定類別及向度、相關網址、
+    備註，與 DCAT description 一致。實測共 **10 筆**醫院資料。「資源彙整機關」欄位固定為
+    「南投縣政府」，無篩選意義，本函式不輸出。地址已含完整「南投縣OO市/鎮/鄉」字首，可直接用
+    parse_county_district() 解析（fallback_county="南投縣" 備用）。**無經緯度座標**，故頁面不含
+    地圖。
+
+    「新制鑑定類別及向度」欄位格式與臺東縣資料集完全相同（分號分隔的中文數字「第X類」清單，部分
+    筆數額外附加特例文字「整體心理功能：發展遲緩」），故直接複用
+    `_parse_tt_disability_categories()` 解析為類別鍵清單（"1"~"8"、特例 "dev"），保留原文
+    `categoryText` 供表格顯示。「電子郵件」欄位少數筆為空值或含前後多餘空白，本函式 strip()
+    處理；「傳真」「相關網址」「備註」欄位皆如實輸出，「備註」實測全數為空值（原始資料狀態，非
+    解析遺漏）。
+    """
+    print("下載 南投縣身心障礙鑑定醫院 ...", file=sys.stderr)
+    text = fetch(NT_DISABILITY_HOSPITALS_URL, encoding="big5")
+    reader = csv.DictReader(io.StringIO(text))
+    records = []
+    for row in reader:
+        name = (row.get("醫院名稱") or "").strip()
+        if not name:
+            continue
+        phone = (row.get("連絡電話") or "").strip()
+        fax = (row.get("傳真") or "").strip()
+        email = (row.get("電子郵件") or "").strip()
+        addr = (row.get("地址") or "").strip()
+        county, district = parse_county_district(addr, fallback_county="南投縣")
+        category_text = (row.get("新制鑑定類別及向度") or "").strip()
+        categories = _parse_tt_disability_categories(category_text)
+        website = (row.get("相關網址") or "").strip()
+        remark = (row.get("備註") or "").strip()
+        records.append([
+            len(records) + 1,        # 0 id
+            name,                     # 1 name
+            phone,                    # 2 phone
+            fax,                      # 3 fax
+            email,                    # 4 email
+            addr,                     # 5 address
+            county or "南投縣",       # 6 county
+            district,                 # 7 district
+            category_text,            # 8 categoryText（原文）
+            ";".join(categories),     # 9 categories（解析後類別鍵，';' 分隔）
+            website,                  # 10 website
+            remark,                   # 11 remark
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = [
+        "id", "name", "phone", "fax", "email", "address", "county", "district",
+        "categoryText", "categories", "website", "remark",
+    ]
+    return {"fields": fields, "rows": records}
+
+
 def build_hccg_disability_hospitals():
     """新竹市身心障礙鑑定評估機構（新竹市衛生局，DCAT dataset https://data.gov.tw/dataset/8572，
     dataset id 136459，聯絡窗口 陳珮馨 03-5355191#233）。
@@ -4099,6 +4165,15 @@ DATASETS = [
         "meta_key": "ttDisabilityHospitals",
         "title": "115年臺東縣身心障礙鑑定醫院及申請說明",
         "source": lambda: TT_DISABILITY_HOSPITALS_URL,
+    },
+    {
+        "key": "nt-disability-hospitals",
+        "builder": build_nt_disability_hospitals,
+        "json": "data/nt-disability-hospitals.json",
+        "js_var": "NT_DISABILITY_HOSPITALS_DATA",
+        "meta_key": "ntDisabilityHospitals",
+        "title": "南投縣身心障礙鑑定醫院及申請說明",
+        "source": lambda: NT_DISABILITY_HOSPITALS_URL,
     },
     {
         "key": "hccg-disability-hospitals",
