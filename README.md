@@ -50,6 +50,7 @@
 | `chc-disability-hospitals/` | 彰化縣身心障礙鑑定醫院及申請說明 | 彰化縣政府社會處 | 彰化縣身心障礙鑑定醫院名冊（DCAT dataset id 95224），共14筆，來源CSV欄位為項目／名稱／電話／地址縣市／地址鄉鎮市區／地址，DCAT標示編碼為**BIG5**（本腳本 fetch() 需另傳 `encoding="big5"`，預設 utf-8-sig 會整批解析失敗得到0筆）；「地址縣市」「地址鄉鎮市區」為行政區代碼非中文名稱，改用「地址」欄位以 `parse_county_district(fallback_county="彰化縣")` 解析，地址已含完整「彰化縣OO鄉鎮市」字首，無經緯度座標。提供鄉鎮市／關鍵字篩選與統計圖表（各鄉鎮市鑑定醫院數），頁面上方收錄使用者提供之「身心障礙證明申請（初次申請、屆期重鑑）」完整公告文字Q&A（申請對象／申請方式／郵寄申請／縣內跨鄉鎮市申請／進度查詢／效期延長／承辦單位聯絡資訊），屬固定公告文字，來源網址無CORS標頭，比照 tn-disability-hospitals 用內嵌 js 版本輸出 |
 | `tt-disability-hospitals/` | 115年臺東縣身心障礙鑑定醫院及申請說明 | 臺東縣政府社會處 | 115年臺東縣身心障礙鑑定醫院名冊（DCAT dataset id 165555），共5筆，來源CSV欄位為資源彙整機關／醫院名稱／連絡電話／傳真／電子郵件／地址／新制鑑定類別及向度／相關網址／X坐標／Y坐標／備註／最後更新時間，DCAT標示編碼為**BIG5**（本腳本 fetch() 需另傳 `encoding="big5"`）；地址已含完整「臺東縣OO市/鎮」字首可直接解析行政區。**X/Y坐標為TWD97 TM2平面座標（EPSG:3826）**，用既有 `twd97_to_wgs84()` 換算為WGS84經緯度，資料量小（5筆）故加地圖呈現（Leaflet+MarkerCluster+circleMarker，不需抽樣上限）。「新制鑑定類別及向度」欄位格式不一致（多數為分號分隔中文數字「第X類」清單、1筆特例文字「八大類別皆可鑑定」代表全部8類皆可辦理），以 `_parse_tt_disability_categories()` 解析為類別鍵清單（含「整體心理功能：發展遲緩」特例"dev"標記）。提供行政區／鑑定類別／關鍵字篩選、地圖與統計圖表，頁面上方收錄使用者提供之申請流程（5步驟）與鑑定費用（單項1000元／多項1600元／到宅2000元含交通膳雜費，蘭嶼鄉、綠島鄉交通費另計）Q&A，屬固定公告文字，來源網址無CORS標頭，比照 tn-disability-hospitals 用內嵌 js 版本輸出 |
 | `nt-disability-hospitals/` | 南投縣身心障礙鑑定醫院及申請說明 | 南投縣政府 | 南投縣身心障礙鑑定醫院（DCAT dataset id 94924，https://data.gov.tw/dataset/8572），共10筆，來源CSV欄位為資源彙整機關／醫院名稱／連絡電話／傳真／電子郵件／地址／新制鑑定類別及向度／相關網址／備註，與DCAT description一致；DCAT標示編碼為**BIG5**，實測確認一致（本腳本 fetch() 需另傳 `encoding="big5"`）。該來源網址實測**有** `Access-Control-Allow-Origin: *`，但仍依專案慣例由本腳本於伺服器端下載並輸出內嵌JS版本，避免依賴外部網址即時可用性。地址已含完整「南投縣OO市/鎮/鄉」字首可直接用 `parse_county_district(fallback_county="南投縣")` 解析行政區，無經緯度座標，故不含地圖。「新制鑑定類別及向度」欄位格式與臺東縣資料集完全相同（分號分隔中文數字「第X類」清單，部分附加特例「整體心理功能：發展遲緩」），故直接複用既有 `_parse_tt_disability_categories()` 解析為類別鍵清單（含"dev"特例標記），不重複撰寫解析函式。提供鄉鎮市／鑑定類別（八大向度）／關鍵字篩選與統計圖表（各鄉鎮市醫院數、各鑑定類別可辦理醫院數），表格另呈現傳真、電子郵件（mailto:連結）、相關網址（超連結）、備註欄位。頁面上方收錄通用「第1~8類（八大向度）」分類說明Q&A（未捏造南投縣特定申請流程細節，因DCAT與使用者提供內容未包含），來源網址無CORS標頭限制但比照 tn-disability-hospitals 用內嵌 js 版本輸出 |
+| `hl-disability-hospitals/` | 115年花蓮縣身心障礙鑑定醫院及申請說明 | 花蓮縣政府 | 花蓮縣身心障礙鑑定醫院（DCAT dataset id 159501，https://data.gov.tw/dataset/8572），共7筆，來源CSV欄位為資源彙整機關／醫院名稱／連絡電話／傳真／電子郵件／地址／新制鑑定類別及向度／相關網址／X坐標／Y坐標／備註／最後更新時間，與DCAT description一致；編碼為UTF-8（含BOM），不需另傳encoding。該來源網址實測**有** `Access-Control-Allow-Origin: *`，但仍依專案慣例由本腳本於伺服器端下載並輸出內嵌JS版本。地址已含完整「花蓮縣OO市/鄉/鎮」字首可直接用 `parse_county_district(fallback_county="花蓮縣")` 解析行政區（分布：花蓮市、新城鄉、鳳林鎮、玉里鎮）；門諾醫院1筆地址誤用異體字「花蓮巿」（巿非市），比照 `build_ntpc_dementia()` 前例先修正為「花蓮市」後再解析，否則該筆行政區會解析為空字串。**「新制鑑定類別及向度」欄位全數為空值**（與臺東縣、南投縣資料集不同），故本頁不提供鑑定類別篩選或統計，屬原始資料狀態非解析遺漏；「傳真」「備註」「電子郵件」欄位亦全數為空值，如實輸出。**X/Y坐標為TWD97 TM2平面座標（EPSG:3826）**，用既有 `twd97_to_wgs84()` 換算為WGS84經緯度，資料量小（7筆）故加地圖呈現（Leaflet+MarkerCluster+circleMarker，不需抽樣上限）。提供行政區／關鍵字篩選、地圖與統計圖表（各行政區醫院數），頁面上方收錄使用者提供之「115年花蓮縣身心障礙鑑定醫院」完整申請說明文字Q&A（服務對象、申請文件、申請窗口、申請流程5步驟、線上申請適用/不適用情形、跨縣市郵寄申請等備註），屬固定公告文字，比照 nt-disability-hospitals 用內嵌 js 版本輸出 |
 | `hccg-disability-hospitals/` | 新竹市身心障礙鑑定評估機構及到宅鑑定流程說明 | 新竹市衛生局 | 身心障礙鑑定評估機構（DCAT dataset id 136459，https://data.gov.tw/dataset/8572），共6筆，來源JSON欄位為序號／縣市別代碼／醫院中文名稱／醫院電話號碼區域碼／醫院電話號碼／醫院地址（區域碼欄位固定為3，屬冗餘欄位不輸出），地址已含完整「新竹市OO區」字首可直接用 `parse_county_district(fallback_county="新竹市")` 解析行政區（實測分布：北區2、東區4，無香山區），無經緯度座標。提供行政區／關鍵字篩選與統計圖表，無鑑定類別欄位/篩選（原始資料本身不含此欄位）。頁面上方收錄使用者提供之「新竹市身心障礙到宅(機構)鑑定流程」完整公告文字（109.10.05審修，含到宅鑑定申請3項條件、8步驟流程、新竹市東/北/香山區公所領表窗口與衛生局醫政科／社會處身心障礙福利科聯絡資訊表格），屬固定公告文字，來源網址無CORS標頭，比照 hccg-elder 用內嵌 js 版本輸出 |
 | `caregiver/` | 看護／照服機構名錄 | **無（使用者人工蒐集）** | 使用者手動整理目前網路上找得到的私人看護／居家照護機構名單（共35筆），收錄機構名稱、官網、收費頁面、聯絡電話、服務地區、統一編號，提供服務地區／是否有公開收費頁面／關鍵字篩選；**非政府開放資料，無提供機關、無官方驗證**，頁面明確標示免責聲明，資料來源為使用者提供之本機 CSV、無公開下載網址，需人工更新，詳見下方「更新資料」說明 |
 | `dialysis-transport/` | 洗腎（透析）交通接送服務查詢 | 部分為衛生福利部長期照顧司（制度說明）／**無（民間清單為使用者人工蒐集）** | 頁面上方整理長照司「交通接送服務」BD03（社區式服務交通接送）／DA01（交通接送）給付碼別官方制度說明（資料來源：1966長照專區公告頁），下方為使用者手動整理之全台洗腎（透析）就醫民間接送/租賃服務名單（共16筆），收錄名稱、官網、聯絡電話、服務地區，因資料量小且服務地區欄位稀疏僅提供關鍵字篩選；**民間接送清單非政府開放資料，無官方驗證**，頁面明確標示免責聲明，資料來源為使用者提供之本機 CSV、無公開下載網址，需人工更新，詳見下方「更新資料」說明 |
@@ -339,6 +340,10 @@ data/nt-disability-hospitals.json  南投縣身心障礙鑑定醫院（由 scrip
                        data.nantou.gov.tw BIG5 編碼 CSV 產生，共10筆，無經緯度座標）
 data/nt-disability-hospitals.js  同上資料的內嵌 JS 版本（window.NT_DISABILITY_HOSPITALS_DATA），供
                        nt-disability-hospitals 頁面以 <script> 標籤直接載入
+data/hl-disability-hospitals.json  115年花蓮縣身心障礙鑑定醫院（由 scripts/build_data.py 下載
+                       ws.hl.gov.tw UTF-8 編碼 CSV 產生，共7筆，含 TWD97→WGS84 換算後座標）
+data/hl-disability-hospitals.js  同上資料的內嵌 JS 版本（window.HL_DISABILITY_HOSPITALS_DATA），供
+                       hl-disability-hospitals 頁面以 <script> 標籤直接載入
 data/hccg-disability-hospitals.json  新竹市身心障礙鑑定評估機構（由 scripts/build_data.py 下載
                        odws.hccg.gov.tw JSON 產生，共6筆，無經緯度座標）
 data/hccg-disability-hospitals.js  同上資料的內嵌 JS 版本（window.HCCG_DISABILITY_HOSPITALS_DATA），
@@ -438,6 +443,7 @@ python3 scripts/build_data.py tc-disability-hospitals  # 只重新產生臺中�
 python3 scripts/build_data.py chc-disability-hospitals  # 只重新產生彰化縣身心障礙鑑定醫院
 python3 scripts/build_data.py tt-disability-hospitals  # 只重新產生115年臺東縣身心障礙鑑定醫院
 python3 scripts/build_data.py nt-disability-hospitals  # 只重新產生南投縣身心障礙鑑定醫院
+python3 scripts/build_data.py hl-disability-hospitals  # 只重新產生115年花蓮縣身心障礙鑑定醫院
 python3 scripts/build_data.py hccg-disability-hospitals  # 只重新產生新竹市身心障礙鑑定評估機構
 python3 scripts/build_data.py caregiver           # 只重新產生看護／照服機構名錄
 python3 scripts/build_data.py dialysis-transport  # 只重新產生洗腎（透析）接送資源清單

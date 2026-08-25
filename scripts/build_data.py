@@ -498,6 +498,10 @@ NT_DISABILITY_HOSPITALS_URL = (
     "https://data.nantou.gov.tw/dataset/2a3d984c-dcd4-4db9-87ae-d776a3f80265/"
     "resource/063d242e-d29b-4c04-a6ca-50ab82a423de/download/1110119.csv"
 )
+HL_DISABILITY_HOSPITALS_URL = (
+    "https://ws.hl.gov.tw/001/Upload/518/relfile/23071/104507/"
+    "9d82c77f-3a4c-45d0-b699-1da358e577de.csv"
+)
 HCCG_DISABILITY_HOSPITALS_URL = (
     "https://odws.hccg.gov.tw/001/Upload/25/opendataback/9059/315/"
     "e1cdf934-b234-48cf-a4fa-cf4014166b16.json"
@@ -3759,6 +3763,88 @@ def build_hccg_disability_hospitals():
     return {"fields": fields, "rows": records}
 
 
+def build_hl_disability_hospitals():
+    """115年花蓮縣身心障礙鑑定醫院（花蓮縣政府，DCAT dataset id 159501，
+    https://data.gov.tw/dataset/8572 ，聯絡窗口：楊晶晶 03-822-7171）。
+
+    來源 CSV：`HL_DISABILITY_HOSPITALS_URL`（`ws.hl.gov.tw` 下載連結）。DCAT 標示編碼為 UTF-8，
+    實測確認一致（含 BOM，`fetch()` 預設 UTF-8 即可，不需另傳 encoding）。實測該網址已回傳
+    `Access-Control-Allow-Origin: *`，但比照 build_nt_disability_hospitals() 等前例，仍依專案慣例
+    由本腳本於伺服器端下載並額外輸出內嵌 JS 版本（window.HL_DISABILITY_HOSPITALS_DATA），避免依賴
+    外部網址即時可用性。
+
+    欄位：資源彙整機關、醫院名稱、連絡電話、傳真、電子郵件、地址、新制鑑定類別及向度、相關網址、
+    X坐標、Y坐標、備註、最後更新時間，與 DCAT description 一致。實測共 **7 筆**醫院資料（花蓮慈濟
+    醫院、門諾醫院、國軍花蓮總醫院、衛福部花蓮醫院、臺北榮總鳳林分院、臺北榮總玉里分院、衛福部玉里
+    醫院），分布於花蓮市、新城鄉、鳳林鎮、玉里鎮。地址已含完整「花蓮縣OO市/鄉/鎮」字首，可直接用
+    parse_county_district() 解析（fallback_county="花蓮縣" 備用）。
+
+    **「新制鑑定類別及向度」欄位全數為空值**（與 tt/nt 等縣市資料集不同），故本頁不提供鑑定類別
+    篩選或統計圖表，屬原始資料狀態、非解析遺漏。「傳真」「備註」欄位實測亦全數為空值；「電子郵件」
+    欄位同樣全空；「相關網址」為各醫院官網（皆有值）；「最後更新時間」為建置方最後更新日期字串
+    （格式 YYYYMMDD，皆為 20201001，如實輸出、不加工，非最新資料）。「資源彙整機關」欄位固定為
+    「花蓮縣政府」，無篩選意義，本函式不輸出。
+
+    X/Y 坐標為 **TWD97 TM2 平面座標**（EPSG:3826，數值量級如 310262.398 / 2654676.935，非經緯度），
+    用既有 twd97_to_wgs84() 換算為 WGS84 經緯度。7 筆皆有座標，依專案地圖決策表「有座標＋資料量
+    ≤1000 筆」，前端加地圖呈現（Leaflet + MarkerCluster + circleMarker），資料量極小故不需抽樣上限。
+
+    頁面上方另收錄使用者提供之「115年花蓮縣身心障礙鑑定醫院」申請說明完整公告文字（服務對象、申請
+    文件、申請窗口、申請流程、線上申請、備註），屬固定公告文字直接寫死於 index.html，非本函式輸出
+    資料的一部分。
+
+    「門諾醫院」1 筆地址原文為「花蓮縣花蓮巿民權路44號」，「巿」為「市」之常見異體字錯字（比照
+    build_ntpc_dementia() 修正「新北巿」的前例），會導致 parse_county_district() 無法比對「花蓮市」
+    字首、district 解析為空字串，本函式先將地址中的「花蓮巿」修正為「花蓮市」後再解析。
+    """
+    print("下載 115年花蓮縣身心障礙鑑定醫院 ...", file=sys.stderr)
+    text = fetch(HL_DISABILITY_HOSPITALS_URL)
+    reader = csv.DictReader(io.StringIO(text))
+    records = []
+    for row in reader:
+        name = (row.get("醫院名稱") or "").strip()
+        if not name:
+            continue
+        phone = (row.get("連絡電話") or "").strip()
+        fax = (row.get("傳真") or "").strip()
+        email = (row.get("電子郵件") or "").strip()
+        addr = (row.get("地址") or "").strip().replace("花蓮巿", "花蓮市")
+        county, district = parse_county_district(addr, fallback_county="花蓮縣")
+        try:
+            x = float(row.get("X坐標") or 0)
+            y = float(row.get("Y坐標") or 0)
+        except ValueError:
+            x, y = 0.0, 0.0
+        if x and y:
+            lat, lng = twd97_to_wgs84(x, y)
+        else:
+            lat, lng = 0.0, 0.0
+        website = (row.get("相關網址") or "").strip()
+        remark = (row.get("備註") or "").strip()
+        last_updated = (row.get("最後更新時間") or "").strip()
+        records.append([
+            len(records) + 1,        # 0 id
+            name,                     # 1 name
+            phone,                     # 2 phone
+            fax,                       # 3 fax
+            email,                     # 4 email
+            addr,                      # 5 address
+            county or "花蓮縣",        # 6 county
+            district,                  # 7 district
+            lat,                       # 8 lat
+            lng,                       # 9 lng
+            website,                   # 10 website
+            remark,                    # 11 remark
+            last_updated,              # 12 lastUpdated
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = [
+        "id", "name", "phone", "fax", "email", "address", "county", "district",
+        "lat", "lng", "website", "remark", "lastUpdated",
+    ]
+    return {"fields": fields, "rows": records}
+
+
 def _to_int(v):
     try:
         return int(float(v))
@@ -4174,6 +4260,15 @@ DATASETS = [
         "meta_key": "ntDisabilityHospitals",
         "title": "南投縣身心障礙鑑定醫院及申請說明",
         "source": lambda: NT_DISABILITY_HOSPITALS_URL,
+    },
+    {
+        "key": "hl-disability-hospitals",
+        "builder": build_hl_disability_hospitals,
+        "json": "data/hl-disability-hospitals.json",
+        "js_var": "HL_DISABILITY_HOSPITALS_DATA",
+        "meta_key": "hlDisabilityHospitals",
+        "title": "115年花蓮縣身心障礙鑑定醫院及申請說明",
+        "source": lambda: HL_DISABILITY_HOSPITALS_URL,
     },
     {
         "key": "hccg-disability-hospitals",

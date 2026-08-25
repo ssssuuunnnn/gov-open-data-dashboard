@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-24T13:08:03.798759+00:00",
+  "generatedAt": "2026-08-25T13:09:36.837375+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -234,5 +234,10 @@
     "count": 10,
     "source": "https://data.nantou.gov.tw/dataset/2a3d984c-dcd4-4db9-87ae-d776a3f80265/resource/063d242e-d29b-4c04-a6ca-50ab82a423de/download/1110119.csv",
     "title": "南投縣身心障礙鑑定醫院及申請說明"
+  },
+  "hlDisabilityHospitals": {
+    "count": 7,
+    "source": "https://ws.hl.gov.tw/001/Upload/518/relfile/23071/104507/9d82c77f-3a4c-45d0-b699-1da358e577de.csv",
+    "title": "115年花蓮縣身心障礙鑑定醫院及申請說明"
   }
 }

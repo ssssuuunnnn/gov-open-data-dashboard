@@ -495,6 +495,17 @@
     },
     {
       "@type": "Dataset",
+      "name": "115年花蓮縣身心障礙鑑定醫院",
+      "description": "花蓮縣政府公告之身心障礙鑑定醫院名冊，收錄7家醫院之名稱、電話、地址、座標與相關網址。",
+      "url": "https://www.sunkuo.cc/gov-open-data-dashboard/hl-disability-hospitals/index.html",
+      "license": "https://data.gov.tw/license",
+      "creator": {
+        "@type": "Organization",
+        "name": "花蓮縣政府"
+      }
+    },
+    {
+      "@type": "Dataset",
       "name": "身心障礙鑑定評估機構",
       "description": "新竹市衛生局公告之身心障礙鑑定評估機構名冊，收錄6家機構之名稱、電話、地址。",
       "url": "https://www.sunkuo.cc/gov-open-data-dashboard/hccg-disability-hospitals/index.html",
@@ -920,6 +931,12 @@
       <div class="desc">南投縣政府公告，列出10家身心障礙鑑定醫院之名稱、電話、傳真、電子郵件、地址、相關網址與可辦理鑑定類別（第1~8類，即八大向度），可依鄉鎮市、鑑定類別與關鍵字篩選並瀏覽統計圖表。</div>
       <div class="footline" id="nt-disability-hospitals-count">資料筆數載入中…</div>
     </a>
+    <a class="home-card disability" href="hl-disability-hospitals/index.html" data-county="花蓮縣" data-category="disability">
+      <span class="tag">花蓮縣</span>
+      <h2>115年花蓮縣身心障礙鑑定醫院及申請說明</h2>
+      <div class="desc">花蓮縣政府公告，列出7家身心障礙鑑定醫院之名稱、電話、地址、座標與相關網址，並整理服務對象、申請文件、申請窗口、申請流程、線上申請與到宅鑑定條件說明，可依行政區與關鍵字篩選、於地圖上查看位置並瀏覽統計圖表。</div>
+      <div class="footline" id="hl-disability-hospitals-count">資料筆數載入中…</div>
+    </a>
     <a class="home-card disability" href="hccg-disability-hospitals/index.html" data-county="新竹市" data-category="disability">
       <span class="tag">新竹市</span>
       <h2>新竹市身心障礙鑑定評估機構及到宅鑑定流程說明</h2>
@@ -1201,6 +1218,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.ntDisabilityHospitals) {
     document.getElementById("nt-disability-hospitals-count").textContent = `共 ${meta.ntDisabilityHospitals.count.toLocaleString()} 家醫院 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.hlDisabilityHospitals) {
+    document.getElementById("hl-disability-hospitals-count").textContent = `共 ${meta.hlDisabilityHospitals.count.toLocaleString()} 家醫院 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
   if (meta.caregiver) {
     document.getElementById("caregiver-count").textContent = `共 ${meta.caregiver.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;

@@ -1,6 +1,6 @@
 # 政府開放資料儀表板
 
-> 以政府開放資料建置的靜態網站，整理三十個長照/老人福利/身心障礙相關資料集為互動式儀表板，提供篩選、統計圖表與分頁表格，部分資料集含地圖呈現。無後端、無建置工具，直接部署於 GitHub Pages。
+> 以政府開放資料建置的靜態網站，整理近40個長照/老人福利/身心障礙相關資料集為互動式儀表板，提供篩選、統計圖表與分頁表格，部分資料集含地圖呈現。無後端、無建置工具，直接部署於 GitHub Pages。
 
 本站所有資料皆來自各縣市政府開放資料平台或公告頁面，經清理、地址解析與格式轉換後靜態化，原始來源與授權資訊詳見各資料集頁面下方連結的 llms.txt。
 
@@ -41,6 +41,7 @@
 - [115年臺南市身心障礙鑑定醫院及申請說明](https://www.sunkuo.cc/gov-open-data-dashboard/tn-disability-hospitals/index.html): 臺南市政府衛生局公告之身心障礙鑑定醫院名冊，共16筆，收錄醫院名稱、電話、地址與可辦理鑑定類別（第1~8類），行政區由地址欄位解析，提供行政區／鑑定類別／關鍵字篩選與統計圖表，無經緯度座標。頁面上方收錄申請流程、到宅鑑定條件、應備文件與業務窗口 Q&A（整理自社會局／衛生局公告內容）。 (https://www.sunkuo.cc/gov-open-data-dashboard/tn-disability-hospitals/llms.txt)
 - [臺南巿身心障礙牙醫診所名單](https://www.sunkuo.cc/gov-open-data-dashboard/tn-disability-dentist/index.html): 臺南市政府衛生局公告之身心障礙牙醫診所名單，共107筆，收錄機構名稱、電話、地址與經緯度座標，行政區欄位為原始資料直接提供，提供行政區／關鍵字篩選、地圖與統計圖表。 (https://www.sunkuo.cc/gov-open-data-dashboard/tn-disability-dentist/llms.txt)
 - [新竹市身心障礙鑑定評估機構及到宅鑑定流程說明](https://www.sunkuo.cc/gov-open-data-dashboard/hccg-disability-hospitals/index.html): 新竹市衛生局公告之身心障礙鑑定評估機構名冊，共6筆（申請診斷證明書可辦醫院），收錄醫院名稱、電話、地址，行政區由地址欄位解析，提供行政區／關鍵字篩選與統計圖表，無經緯度座標。頁面上方收錄「新竹市身心障礙到宅(機構)鑑定流程」（109.10.05審修）完整公告文字：到宅鑑定申請3項條件、8步驟流程、東/北/香山區公所領表窗口與衛生局／社會處聯絡資訊。 (https://www.sunkuo.cc/gov-open-data-dashboard/hccg-disability-hospitals/llms.txt)
+- [115年花蓮縣身心障礙鑑定醫院及申請說明](https://www.sunkuo.cc/gov-open-data-dashboard/hl-disability-hospitals/index.html): 花蓮縣政府公告之身心障礙鑑定醫院名冊，共7筆，收錄醫院名稱、電話、地址、座標與相關網址，含經緯度座標（由TWD97平面座標換算），於地圖上呈現，提供行政區／關鍵字篩選與統計圖表。頁面上方收錄使用者提供之完整申請說明文字：服務對象、申請文件、申請窗口、申請流程5步驟、線上申請適用/不適用情形與跨縣市郵寄申請等備註。
 
 ## 非政府開放資料（人工蒐集，僅供參考）
 
