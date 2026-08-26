@@ -534,6 +534,12 @@ TN_DISABILITY_DENTIST_URL = (
     "https://data.tainan.gov.tw/File/ResourceCsvDownload/"
     "9f0b19fb-4d35-471e-9f9c-2af7254a6d14"
 )
+# 安寧療護機構資源查詢（臺北市政府衛生局提供，DCAT dataset id 132385，
+# https://data.gov.tw/dataset/8572 ，聯絡窗口：郭維宜 02-27208889#7080）。
+TPE_HOSPICE_URL = (
+    "https://data.taipei/api/dataset/fd5d4de8-b7f3-4a8c-9a61-937a787e0a60/"
+    "resource/75ec7d0a-3051-4e2e-b078-3f33231f4a04/download"
+)
 # 嘉義市中低收入老人免費裝置假牙合約醫院名單（DCAT dataset https://data.gov.tw/dataset/8572
 # https://cms.data.gov.tw/dataset/130486，提供機關：嘉義市政府社會處）。
 CHIAYI_DENTURE_LOW_INCOME_URL = (
@@ -3288,6 +3294,105 @@ def build_tn_disability_dentist():
     return {"fields": fields, "rows": records}
 
 
+# 「縣市別」欄位為數字代碼（標準台灣縣市代碼加尾端補零至8碼），非中文名稱，實測共21種代碼，
+# 固定寫死對照表（未知代碼 fallback 為代碼本身，見 build_tpe_hospice()）。
+TPE_HOSPICE_COUNTY_LABELS = {
+    "63000000": "臺北市",
+    "64000000": "高雄市",
+    "65000000": "新北市",
+    "10002000": "宜蘭縣",
+    "10003000": "桃園市",
+    "10004000": "新竹縣",
+    "10005000": "苗栗縣",
+    "10007000": "彰化縣",
+    "10008000": "南投縣",
+    "10009000": "雲林縣",
+    "10010000": "嘉義縣",
+    "10013000": "屏東縣",
+    "10014000": "臺東縣",
+    "10015000": "花蓮縣",
+    "10016000": "澎湖縣",
+    "10017000": "基隆市",
+    "10018000": "新竹市",
+    "10019000": "臺中市",
+    "10020000": "嘉義市",
+    "10021000": "臺南市",
+    "9020000": "金門縣",
+}
+
+
+def build_tpe_hospice():
+    """安寧療護機構資源查詢（臺北市政府衛生局提供，DCAT dataset id 132385，
+    https://data.gov.tw/dataset/8572 ，聯絡窗口：郭維宜 02-27208889#7080）。
+
+    **資料實際內容與 DCAT 標題有落差，務必先讀**：標題雖為「臺北市安寧療護機構資源查詢」，但實測
+    內容是**全國性**安寧療護轉介合作醫療院所名冊（共85筆，涵蓋北中南東各區醫院），並非僅臺北市機構，
+    只是由臺北市衛生局整理提供；前端頁面標題已改為「安寧療護機構資源查詢（臺北市衛生局提供）」以
+    忠實反映內容範圍。
+
+    來源 TPE_HOSPICE_URL 為 **BIG5 編碼**CSV（data.taipei API 回傳 `text/csv;charset=BIG-5`），
+    需以 fetch(url, encoding="big5") 解碼；無 CORS 標頭，改由本腳本於伺服器端下載，並輸出內嵌 JS
+    版本（window.TPE_HOSPICE_DATA）。
+
+    實測欄位（5欄）：業務組別、特約類別、縣市別、醫事機構名稱、各類病床使用情形網址。
+
+    - **合併儲存格格式**：原始 Excel 匯出時「業務組別」（臺北/北區/中區/南區/高屏/東區）與
+      「特約類別」（醫學中心/區域醫院/地區醫院）欄位僅在每個群組的第一列填值，同群組其餘列為空白
+      （代表沿用上一列的值），本函式逐列往下遞補（forward-fill）這兩欄。
+    - 「縣市別」為數字代碼（如 63000000=臺北市），非中文名稱，用 TPE_HOSPICE_COUNTY_LABELS 固定
+      對照表轉換；實測共21種代碼皆可對應到標準縣市名稱，無未知代碼案例，但仍保留 fallback（查無
+      對照時原樣輸出代碼本身，不當機也不捏造縣市名稱）。
+    - 「各類病床使用情形網址」欄位多數僅一個網址，但少數機構（如臺北市立聯合醫院）以換行分隔列出
+      旗下多個院區的網址，且每個網址前常帶有院區名稱標籤（以全形或半形冒號分隔，如
+      「中興：https://...」），本函式將此欄位拆解為 `[{label, url}, ...]` 的清單（JSON 陣列字串
+      形式存於 row），無標籤者 label 為空字串。前端依使用者需求將每筆網址渲染成獨立可點擊連結。
+    - 少數「醫事機構名稱」前面誤植了與「縣市別」相同的數字代碼（如「63000000立聯合醫院」
+      「10021000立安南醫院-委託中國醫藥大學興建經營」），研判為原始資料建置時的複製貼上瑕疵
+      （代碼被誤貼到名稱欄位開頭），屬原始資料狀態，本函式**不修改**，原樣輸出。
+    - 無地址、無經緯度座標欄位，故本頁不含地圖，僅篩選＋統計卡＋圖表＋分頁表格呈現。
+    """
+    print("下載 安寧療護機構資源查詢 ...", file=sys.stderr)
+    text = fetch(TPE_HOSPICE_URL, encoding="big5")
+    reader = csv.DictReader(io.StringIO(text))
+    records = []
+    last_group = ""
+    last_type = ""
+    for i, row in enumerate(reader, start=1):
+        group = (row.get("業務組別") or "").strip() or last_group
+        contract_type = (row.get("特約類別") or "").strip() or last_type
+        last_group = group
+        last_type = contract_type
+
+        county_code = (row.get("縣市別") or "").strip()
+        county = TPE_HOSPICE_COUNTY_LABELS.get(county_code, county_code)
+
+        name = (row.get("醫事機構名稱") or "").strip()
+
+        url_field = (row.get("各類病床使用情形網址") or "").strip()
+        links = []
+        for line in url_field.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            m = re.match(r"^([^:：]{1,10})[:：]\s*(https?://.+)$", line)
+            if m:
+                links.append({"label": m.group(1).strip(), "url": m.group(2).strip()})
+            else:
+                links.append({"label": "", "url": line})
+
+        records.append([
+            i,                                  # 0 id
+            group,                                # 1 group（業務組別，forward-fill）
+            contract_type,                        # 2 contractType（特約類別，forward-fill）
+            county,                                # 3 county（縣市別，代碼已轉中文）
+            name,                                  # 4 name（醫事機構名稱，原樣，含少數誤植代碼瑕疵）
+            json.dumps(links, ensure_ascii=False), # 5 bedInfoLinks（JSON 陣列字串：[{label,url},...]）
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "group", "contractType", "county", "name", "bedInfoLinks"]
+    return {"fields": fields, "rows": records}
+
+
 CHIAYI_DISABILITY_CATEGORY_LABELS = {
     "1": "第一類神經系統構造及精神、心智功能",
     "2": "第二類眼、耳及相關構造與感官功能及疼痛",
@@ -4287,6 +4392,15 @@ DATASETS = [
         "meta_key": "tnDisabilityDentist",
         "title": "臺南巿身心障礙牙醫診所名單",
         "source": lambda: TN_DISABILITY_DENTIST_URL,
+    },
+    {
+        "key": "tpe-hospice",
+        "builder": build_tpe_hospice,
+        "json": "data/tpe-hospice.json",
+        "js_var": "TPE_HOSPICE_DATA",
+        "meta_key": "tpeHospice",
+        "title": "安寧療護機構資源查詢（臺北市衛生局提供）",
+        "source": lambda: TPE_HOSPICE_URL,
     },
 ]
 

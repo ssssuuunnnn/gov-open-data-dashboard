@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-25T13:09:36.837375+00:00",
+  "generatedAt": "2026-08-26T15:01:40.636107+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -106,7 +106,7 @@
     "title": "桃園市社區安寧療護資源一覽表"
   },
   "caregiver": {
-    "count": 35,
+    "count": 36,
     "source": "使用者人工蒐集網路公開資訊（非政府開放資料，無官方驗證）",
     "title": "看護／照服機構名錄"
   },
@@ -239,5 +239,10 @@
     "count": 7,
     "source": "https://ws.hl.gov.tw/001/Upload/518/relfile/23071/104507/9d82c77f-3a4c-45d0-b699-1da358e577de.csv",
     "title": "115年花蓮縣身心障礙鑑定醫院及申請說明"
+  },
+  "tpeHospice": {
+    "count": 85,
+    "source": "https://data.taipei/api/dataset/fd5d4de8-b7f3-4a8c-9a61-937a787e0a60/resource/75ec7d0a-3051-4e2e-b078-3f33231f4a04/download",
+    "title": "安寧療護機構資源查詢（臺北市衛生局提供）"
   }
 }
