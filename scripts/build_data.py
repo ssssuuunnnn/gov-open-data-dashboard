@@ -419,6 +419,7 @@ TC_DISABILITY_CATEGORY_LABELS = {
 KCG_DENTURE_PDF_URL = "https://orgws.kcg.gov.tw/001/KcgOrgUploadFiles/463/RelFile/0/85588/23687658-8121-4268-8bf3-8def3a1e1bf8.pdf"
 KCG_DENTURE_MANUAL_JSON = "data/source/kcg-denture-manual.json"
 KCG_HOMECARE_URL = "https://data.kcg.gov.tw/File/DirectDownload/59ac925f-10dd-42f7-a540-ab6c4218b93d"
+KCG_HOSPITALS_URL = "https://data.kcg.gov.tw/File/DirectDownload/1b381cc4-7da0-42b6-b9be-b49edf87775d"
 HSC_LTC_URL = "https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/283/b14a70a1-784c-4586-babf-ade99a7e8277.json"
 HSC_DENTURE_URL = "https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/288/d6586e37-bce0-46eb-ae4e-08c5fa41a568.json"
 CHC_DENTURE_URL = "https://email.chcg.gov.tw/df/36br48cd4g64iragh4y6dwoy668s3q"
@@ -678,6 +679,22 @@ CATEGORY_LABELS = {
     "A": "A級 社區整合型服務中心（旗艦店）",
     "B": "B級 複合型服務中心（據點）",
     "C": "C級 巷弄長照站",
+}
+
+# 高雄市醫療院所資料（DCAT dataset https://data.gov.tw/dataset/8572，dataset id 43821）的 39 個
+# 科別欄位分組，依「西醫科別／牙科／中醫科別」歸類，供前端建立三個科別勾選區塊使用。
+KCG_HOSPITALS_SPECIALTY_GROUPS = {
+    "西醫科別": [
+        "家庭醫學科", "內科", "外科", "整形外科", "兒科", "婦產科", "骨科", "泌尿科",
+        "耳鼻喉科", "眼科", "皮膚科", "精神科", "神經科", "神經外科", "復健科", "麻醉科",
+        "放射診斷科", "放射腫瘤科", "解剖病理科", "臨床病理科", "核子醫學科", "急診醫學科",
+        "職業醫學科", "西醫一般科",
+    ],
+    "牙科": ["口腔病理科", "口腔顏面外科", "齒顎矯正科", "牙科一般科", "牙科"],
+    "中醫科別": [
+        "中醫一般科", "中醫", "中醫內科", "中醫外科", "中醫婦科", "中醫兒科", "傷科",
+        "中醫眼科", "針灸科", "痔科",
+    ],
 }
 
 ADDR_RE = re.compile(r"^(..[市縣])(.*?[市區鄉鎮])")
@@ -940,6 +957,46 @@ def build_kcg_homecare():
     fields = ["id", "name", "district", "address", "phone",
               "servItem", "servTime", "lng", "lat"]
     return {"fields": fields, "rows": records}
+
+
+def build_kcg_hospitals():
+    """高雄市醫療院所資料（高雄市政府衛生局，DCAT dataset https://data.gov.tw/dataset/8572，
+    dataset id 43821）。
+
+    同一 DCAT 記錄提供兩個 distribution 網址，內容相同但格式不同：
+      - openapi.kcg.gov.tw/Api/Service/Get/... （JSON API）：**有分頁限制，僅回傳前 1000 筆**，
+        實測共 3,047 筆機構，此網址不完整，故不採用。
+      - data.kcg.gov.tw/File/DirectDownload/...（CSV，UTF-8 with BOM）：完整 3,047 筆，採用此網址
+        （KCG_HOSPITALS_URL）。
+    來源 CSV 共 45 欄：Seq、機構名稱、機構代碼、地址、行政區、電話，加上 39 個科別欄位（值為
+    「有」/「無」文字，此處轉為 1/0），39 個科別依序分為西醫科別(24)／牙科(5)／中醫科別(10)三大類，
+    詳見 KCG_HOSPITALS_SPECIALTY_GROUPS。
+    地址欄位已含完整「高雄市OO區」字首可直接解析，「行政區」欄位本身即為中文區名（非代碼），
+    兩者皆可直接使用，不需 fallback 或代碼對照。電話欄位格式不一致（空格或橫線分隔），保留原文，
+    前端顯示時另外轉為 tel: 連結。實測資料無座標欄位，且抽查地址/行政區欄位皆無空值。
+    """
+    print("下載 高雄市醫療院所資料 ...", file=sys.stderr)
+    text = fetch(KCG_HOSPITALS_URL)
+    reader = csv.DictReader(io.StringIO(text))
+    specialty_names = [n for names in KCG_HOSPITALS_SPECIALTY_GROUPS.values() for n in names]
+    records = []
+    for row in reader:
+        specialty_flags = [1 if (row.get(name, "") or "").strip() == "有" else 0 for name in specialty_names]
+        records.append([
+            (row.get("Seq", "") or "").strip(),         # 0 seq
+            (row.get("機構名稱", "") or "").strip(),   # 1 name
+            (row.get("機構代碼", "") or "").strip(),   # 2 code
+            (row.get("地址", "") or "").strip(),         # 3 address
+            (row.get("行政區", "") or "").strip(),     # 4 district
+            (row.get("電話", "") or "").strip(),         # 5 phone
+        ] + specialty_flags)
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["seq", "name", "code", "address", "district", "phone"] + specialty_names
+    return {
+        "fields": fields,
+        "specialtyGroups": KCG_HOSPITALS_SPECIALTY_GROUPS,
+        "rows": records,
+    }
 
 
 def build_hsc_ltc():
@@ -4003,6 +4060,15 @@ DATASETS = [
         "meta_key": "kcgHomecare",
         "title": "銀髮族服務-居家長照機構",
         "source": lambda: KCG_HOMECARE_URL,
+    },
+    {
+        "key": "kcg-hospitals",
+        "builder": build_kcg_hospitals,
+        "json": "data/kcg-hospitals.json",
+        "js_var": "KCG_HOSPITALS_DATA",
+        "meta_key": "kcgHospitals",
+        "title": "高雄市醫療院所資料",
+        "source": lambda: KCG_HOSPITALS_URL,
     },
     {
         "key": "hsc-ltc",

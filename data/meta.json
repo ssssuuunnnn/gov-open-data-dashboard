@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-26T15:01:40.636107+00:00",
+  "generatedAt": "2026-08-30T05:02:56.408912+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -244,5 +244,10 @@
     "count": 85,
     "source": "https://data.taipei/api/dataset/fd5d4de8-b7f3-4a8c-9a61-937a787e0a60/resource/75ec7d0a-3051-4e2e-b078-3f33231f4a04/download",
     "title": "安寧療護機構資源查詢（臺北市衛生局提供）"
+  },
+  "kcgHospitals": {
+    "count": 3047,
+    "source": "https://data.kcg.gov.tw/File/DirectDownload/1b381cc4-7da0-42b6-b9be-b49edf87775d",
+    "title": "高雄市醫療院所資料"
   }
 }

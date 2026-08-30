@@ -525,6 +525,17 @@
         "@type": "Organization",
         "name": "臺中市政府衛生局"
       }
+    },
+    {
+      "@type": "Dataset",
+      "name": "高雄市醫療院所資料",
+      "description": "高雄市政府衛生局公告之全市醫療院所名冊，收錄約3,047筆診所／醫院的機構名稱、機構代碼、地址、行政區與電話，並標示是否提供家庭醫學科、內科、外科、牙科、中醫等39項科別服務。",
+      "url": "https://www.sunkuo.cc/gov-open-data-dashboard/kcg-hospitals/index.html",
+      "license": "http://data.gov.tw/license",
+      "creator": {
+        "@type": "Organization",
+        "name": "高雄市政府衛生局"
+      }
     }
   ]
 }
@@ -961,6 +972,12 @@
       <div class="desc">整理長照司「交通接送服務」BD03／DA01 給付碼別官方制度說明（給付額度、給付內容、給付價格），並彙整使用者人工蒐集之全台洗腎（透析）就醫民間接送/租賃服務單位名稱、官網與聯絡電話，可依關鍵字搜尋。<strong>民間接送清單非政府開放資料，未經官方驗證，僅供參考</strong>。</div>
       <div class="footline" id="dialysis-transport-count">資料筆數載入中…</div>
     </a>
+    <a class="home-card" href="kcg-hospitals/index.html" data-county="高雄市" data-category="ltc">
+      <span class="tag">高雄市</span>
+      <h2>高雄市醫療院所資料</h2>
+      <div class="desc">高雄市政府衛生局提供，列出全市醫療院所（診所／醫院）名稱、機構代碼、地址、行政區與電話，並以打勾標示是否提供家庭醫學科、內科、外科、牙科、中醫等39項科別服務，可依行政區、科別篩選並瀏覽統計圖表。</div>
+      <div class="footline" id="kcg-hospitals-count">資料筆數載入中…</div>
+    </a>
     <p class="no-match" id="county-no-match" style="display:none; grid-column: 1 / -1; text-align:center; color: var(--color-muted); padding: 24px 0;">
       沒有符合所選縣市的資料集，請調整篩選條件。
     </p>
@@ -1088,6 +1105,7 @@
   <a href="https://www-ws.pthg.gov.tw/Upload/2015pthg/0/relfile/0/0/886f59e6-23b6-4de3-a04a-4de087bdf9b8.csv" target="_blank" rel="noopener">屏東縣政府社會處 屏東縣老人長期照顧機構</a> ·
   <a href="https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=96251524-861c-4b92-9401-590444adcb8f" target="_blank" rel="noopener">臺中市政府衛生局 臺中市失能者交通接送服務</a> ·
   <a href="https://opendata.tycg.gov.tw/api/dataset/c0c21e97-fc4a-4b65-aa31-0550b4a007b6/resource/433a97d4-c947-4ecd-9e9f-a1860f8cc0d5/download" target="_blank" rel="noopener">桃園市政府衛生局 桃園市長者裝置活動假牙合約醫療院所</a> ·
+  <a href="https://data.kcg.gov.tw/File/DirectDownload/1b381cc4-7da0-42b6-b9be-b49edf87775d" target="_blank" rel="noopener">高雄市政府衛生局 高雄市醫療院所資料</a> ·
   <a href="https://opendata.tycg.gov.tw/api/dataset/628c2789-10f8-4c73-bafc-58dac276fa6f/resource/a2b6559b-9265-4854-b1be-97c0f8cde3a6/download" target="_blank" rel="noopener">桃園市政府衛生局 桃園市身心障礙類別、向度之鑑定醫院名冊</a> ·
   看護／照服機構名錄（使用者人工蒐集網路公開資訊，非政府開放資料）<br />
   依「政府資料開放授權條款-第1版」釋出，本站僅作資料視覺化整理，實際內容以原始資料集為準。<br />
@@ -1236,6 +1254,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.dialysisTransport) {
     document.getElementById("dialysis-transport-count").textContent = `共 ${meta.dialysisTransport.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.kcgHospitals) {
+    document.getElementById("kcg-hospitals-count").textContent = `共 ${meta.kcgHospitals.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
 }).catch(() => {});
 
