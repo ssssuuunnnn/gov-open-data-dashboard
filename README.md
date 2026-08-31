@@ -1,6 +1,6 @@
 # 政府開放資料儀表板
 
-以政府開放資料建置的靜態網站，整理五十個長照/老人福利/身心障礙相關資料集為互動式儀表板，可直接部署於 GitHub Pages。
+以政府開放資料建置的靜態網站，整理五十一個長照/老人福利/身心障礙相關資料集為互動式儀表板，可直接部署於 GitHub Pages。
 
 ## 資料集
 
@@ -56,6 +56,7 @@
 | `caregiver/` | 看護／照服機構名錄 | **無（使用者人工蒐集）** | 使用者手動整理目前網路上找得到的私人看護／居家照護機構名單（共35筆），收錄機構名稱、官網、收費頁面、聯絡電話、服務地區、統一編號，提供服務地區／是否有公開收費頁面／關鍵字篩選；**非政府開放資料，無提供機關、無官方驗證**，頁面明確標示免責聲明，資料來源為使用者提供之本機 CSV、無公開下載網址，需人工更新，詳見下方「更新資料」說明 |
 | `dialysis-transport/` | 洗腎（透析）交通接送服務查詢 | 部分為衛生福利部長期照顧司（制度說明）／**無（民間清單為使用者人工蒐集）** | 頁面上方整理長照司「交通接送服務」BD03（社區式服務交通接送）／DA01（交通接送）給付碼別官方制度說明（資料來源：1966長照專區公告頁），下方為使用者手動整理之全台洗腎（透析）就醫民間接送/租賃服務名單（共16筆），收錄名稱、官網、聯絡電話、服務地區，因資料量小且服務地區欄位稀疏僅提供關鍵字篩選；**民間接送清單非政府開放資料，無官方驗證**，頁面明確標示免責聲明，資料來源為使用者提供之本機 CSV、無公開下載網址，需人工更新，詳見下方「更新資料」說明 |
 | `kcg-hospitals/` | 高雄市醫療院所資料 | 高雄市政府衛生局 | 高雄市全市醫療院所名冊（DCAT dataset id 43821，https://data.gov.tw/dataset/8572），共3,047筆，來源提供 JSON API 與 CSV 兩種 distribution，**JSON API 有分頁限制僅回傳前1000筆**，改用 CSV 版（DirectDownload 網址）取得完整資料。欄位為 Seq／機構名稱／機構代碼／地址／行政區／電話，加上39個科別欄位（值為「有」/「無」，轉為1/0），依西醫科別(24)／牙科(5)／中醫科別(10)分三組。地址已含完整「高雄市OO區」字首、行政區欄位本身即為中文區名，皆可直接使用，無經緯度座標，故不含地圖。提供行政區／科別（三組checkbox，勾選多個為AND邏輯，需同時提供所有已勾選科別）／關鍵字篩選與統計圖表（各行政區機構數、各科別提供機構數前15名），表格科別欄位以打勾徽章呈現，地址／電話另轉為 Google Maps／tel: 連結，來源網址無CORS標頭，比照 specialty 用內嵌 js 版本輸出 |
+| `kcg-elder-checkup/` | 高雄市老人健檢醫療院所 | 高雄市政府衛生局 | 高雄市65歲以上長者（含55歲以上原住民）老人健康檢查合約醫療院所名冊（DCAT dataset id 86299，https://data.gov.tw/dataset/8572），來源提供 JSON API 與 CSV 兩種 distribution，內容相同，共49筆，採用 JSON API 版。欄位為 Seq／合約院所／市話／地址（「序號」與 Seq 重複、「行政區域代碼」非中文皆不收錄），地址不含「高雄市」字首，比照 hsc-denture 補上前綴後解析行政區（涵蓋21個行政區），「機構類型」（醫院／衛生所／診所）由名稱關鍵字啟發式推斷（非官方分類）。並整理服務對象、健檢項目（本市補助項目+成人預防保健服務項目）、檢查日期與53,846名額、注意事項、簽署授權同意書獎勵方案（88元/66元敬老卡儲值金）等公告說明，提供行政區／機構類型／關鍵字篩選與統計圖表，無經緯度座標，來源網址無CORS標頭，內嵌 js 版本輸出 |
 
 原始資料下載網址：
 - https://ltcpap.mohw.gov.tw/publish/abc.csv
@@ -188,6 +189,9 @@ dialysis-transport/app.js
 kcg-hospitals/index.html 高雄市醫療院所資料儀表板（Chart.js 圖表 + 篩選表格，無地圖；39個科別
                        欄位分三組checkbox篩選，表格以打勾徽章呈現各機構提供之科別）
 kcg-hospitals/app.js
+kcg-elder-checkup/index.html 高雄市老人健檢醫療院所儀表板（Chart.js 圖表 + 篩選表格，無地圖；
+                       頁面上方另有服務對象/健檢項目/檢查日期名額/獎勵方案等公告 Q&A 說明卡片）
+kcg-elder-checkup/app.js
 assets/style.css     共用樣式
 assets/table.js       共用分頁表格元件
 data/abc.json         長照ABC據點資料（由 scripts/build_data.py 產生）
@@ -370,6 +374,10 @@ data/kcg-hospitals.json  高雄市醫療院所資料（由 scripts/build_data.py
                        對照表 specialtyGroups）
 data/kcg-hospitals.js  同上資料的內嵌 JS 版本（window.KCG_HOSPITALS_DATA），供 kcg-hospitals
                        頁面以 <script> 標籤直接載入，因來源網址無 CORS 標頭，不透過 fetch()
+data/kcg-elder-checkup.json  高雄市老人健檢醫療院所資料（由 scripts/build_data.py 產生）
+data/kcg-elder-checkup.js  同上資料的內嵌 JS 版本（window.KCG_ELDER_CHECKUP_DATA），供
+                       kcg-elder-checkup 頁面以 <script> 標籤直接載入，因來源網址無 CORS 標頭，
+                       不透過 fetch()
 data/source/          長照專業服務特約單位來源 PDF（人工下載存放於此，供 build_data.py 解析）；
                        另含 kcg-denture-manual.json（115年高雄市免費裝假牙名冊人工轉寫結果）與
                        kcg-denture-115.pdf（原始公告 PDF 存檔，供未來人工核對/重新轉寫參考）

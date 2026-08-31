@@ -270,6 +270,18 @@
     「新北巿」（巿非市），本腳本自動修正為「新北市」後再解析；「機構名稱」欄位有1筆含前後多餘
     空白，本腳本 strip() 處理。來源網址無 CORS 標頭，改由本腳本於伺服器端下載，另輸出內嵌 JS
     版本，詳見 build_ntpc_dementia())
+29. 高雄市老人健檢醫療院所（DCAT dataset https://data.gov.tw/dataset/8572 ，dataset id 86299，
+    提供機關：高雄市政府衛生局）
+    https://openapi.kcg.gov.tw/Api/Service/Get/776b1e36-0112-4a72-9c89-c3b68eb3990d
+    （同一 DCAT 記錄另提供 data.kcg.gov.tw/File/DirectDownload/... 的 CSV distribution，內容相同，
+    依「json > csv」原則採用本 JSON API 網址；實測共49筆，未受 openapi 常見的1000筆分頁限制。
+    原始欄位：Seq、序號（與 Seq 內容重複，不收錄）、行政區域代碼（行政區代碼非中文，不具篩選意義，
+    不收錄）、合約院所（機構名稱）、市話（電話）、地址。地址欄位（如「三民區建國三路60號」）不含
+    「高雄市」字首，本腳本比照 build_hsc_denture() 補上「高雄市」前綴後用
+    parse_county_district(fallback_county="高雄市") 解析行政區，表格顯示仍保留原始地址文字；
+    「機構類型」由 _kcg_elder_checkup_type() 依名稱關鍵字（醫院／衛生所／其餘歸類診所）啟發式判斷，
+    非官方分類欄位。無經緯度座標，故本頁不含地圖。來源網址無 CORS 標頭，改由本腳本於伺服器端下載，
+    另輸出內嵌 JS 版本，詳見 build_kcg_elder_checkup())
 
 用法：
     python3 scripts/build_data.py
@@ -329,6 +341,8 @@
     data/chiayi-disability-hospitals.js  (window.CHIAYI_DISABILITY_HOSPITALS_DATA，同上，供前端以 <script> 直接載入)
     data/ntpc-dementia.json
     data/ntpc-dementia.js  (window.NTPC_DEMENTIA_DATA，同上，供前端以 <script> 直接載入)
+    data/kcg-elder-checkup.json
+    data/kcg-elder-checkup.js  (window.KCG_ELDER_CHECKUP_DATA，同上，供前端以 <script> 直接載入)
     data/meta.json  (資料更新時間等資訊)
 
 額外相依套件：
@@ -420,6 +434,7 @@ KCG_DENTURE_PDF_URL = "https://orgws.kcg.gov.tw/001/KcgOrgUploadFiles/463/RelFil
 KCG_DENTURE_MANUAL_JSON = "data/source/kcg-denture-manual.json"
 KCG_HOMECARE_URL = "https://data.kcg.gov.tw/File/DirectDownload/59ac925f-10dd-42f7-a540-ab6c4218b93d"
 KCG_HOSPITALS_URL = "https://data.kcg.gov.tw/File/DirectDownload/1b381cc4-7da0-42b6-b9be-b49edf87775d"
+KCG_ELDER_CHECKUP_URL = "https://openapi.kcg.gov.tw/Api/Service/Get/776b1e36-0112-4a72-9c89-c3b68eb3990d"
 HSC_LTC_URL = "https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/283/b14a70a1-784c-4586-babf-ade99a7e8277.json"
 HSC_DENTURE_URL = "https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/288/d6586e37-bce0-46eb-ae4e-08c5fa41a568.json"
 CHC_DENTURE_URL = "https://email.chcg.gov.tw/df/36br48cd4g64iragh4y6dwoy668s3q"
@@ -997,6 +1012,59 @@ def build_kcg_hospitals():
         "specialtyGroups": KCG_HOSPITALS_SPECIALTY_GROUPS,
         "rows": records,
     }
+
+
+def _kcg_elder_checkup_type(name: str) -> str:
+    """依「合約院所」名稱關鍵字啟發式推斷機構類型（醫院／衛生所／其餘歸類診所），
+    非官方分類欄位，僅供前端篩選/圖表參考，比照 _kcg_denture_type()。"""
+    name = name or ""
+    if "醫院" in name:
+        return "醫院"
+    if "衛生所" in name:
+        return "衛生所"
+    return "診所"
+
+
+def build_kcg_elder_checkup():
+    """高雄市老人健檢醫療院所（高雄市政府衛生局，DCAT dataset https://data.gov.tw/dataset/8572，
+    dataset id 86299）。
+
+    同一 DCAT 記錄提供兩個 distribution 網址，內容相同：
+      - openapi.kcg.gov.tw/Api/Service/Get/...（JSON API）：實測共49筆，未受 openapi 常見的
+        1000筆分頁限制（資料量本身小於上限），依「json > csv」原則採用此網址（KCG_ELDER_CHECKUP_URL）。
+      - data.kcg.gov.tw/File/DirectDownload/...（CSV）：內容相同，未採用。
+
+    原始欄位：Seq、序號（與 Seq 內容恆相同，不收錄）、行政區域代碼（行政區代碼非中文，不具篩選意義，
+    不收錄）、合約院所（機構名稱）、市話（電話）、地址。
+
+    地址欄位（如「三民區建國三路60號」）**不含「高雄市」字首**，僅鄉鎮市區起頭，比照
+    build_hsc_denture() 的處理方式：先補上「高雄市」前綴，再用
+    parse_county_district(fallback_county="高雄市") 解析行政區；表格顯示仍保留原始地址文字（不含
+    「高雄市」字首），僅在轉 Google Maps 連結時才使用補上「高雄市」的完整地址。
+
+    「機構類型」由 _kcg_elder_checkup_type() 依名稱關鍵字（醫院／衛生所／其餘歸類診所，含「OO區衛生所」
+    及一般診所、醫學中心等）啟發式判斷，非官方分類欄位。無經緯度座標，故本頁不含地圖。來源網址無 CORS
+    標頭，改由本腳本於伺服器端下載。
+    """
+    print("下載 高雄市老人健檢醫療院所 ...", file=sys.stderr)
+    text = fetch(KCG_ELDER_CHECKUP_URL)
+    rows_in = json.loads(text).get("data", [])
+    records = []
+    for row in rows_in:
+        addr = (row.get("地址", "") or "").strip()
+        _county, district = parse_county_district("高雄市" + addr, fallback_county="高雄市")
+        name = (row.get("合約院所", "") or "").strip()
+        records.append([
+            str(row.get("Seq", "")).strip(),        # 0 seq
+            name,                                     # 1 name
+            _kcg_elder_checkup_type(name),           # 2 type
+            district,                                  # 3 district
+            addr,                                      # 4 address
+            (row.get("市話", "") or "").strip(),      # 5 phone
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["seq", "name", "type", "district", "address", "phone"]
+    return {"fields": fields, "rows": records}
 
 
 def build_hsc_ltc():
@@ -4069,6 +4137,15 @@ DATASETS = [
         "meta_key": "kcgHospitals",
         "title": "高雄市醫療院所資料",
         "source": lambda: KCG_HOSPITALS_URL,
+    },
+    {
+        "key": "kcg-elder-checkup",
+        "builder": build_kcg_elder_checkup,
+        "json": "data/kcg-elder-checkup.json",
+        "js_var": "KCG_ELDER_CHECKUP_DATA",
+        "meta_key": "kcgElderCheckup",
+        "title": "高雄市老人健檢醫療院所",
+        "source": lambda: KCG_ELDER_CHECKUP_URL,
     },
     {
         "key": "hsc-ltc",

@@ -536,6 +536,17 @@
         "@type": "Organization",
         "name": "高雄市政府衛生局"
       }
+    },
+    {
+      "@type": "Dataset",
+      "name": "高雄市老人健檢醫療院所",
+      "description": "高雄市政府衛生局公告之老人健檢合約醫療院所名冊，收錄49筆合約院所名稱、地址、電話，供65歲以上長者（含55歲以上原住民）查詢就近合約院所辦理老人健康檢查與成人預防保健服務。",
+      "url": "https://www.sunkuo.cc/gov-open-data-dashboard/kcg-elder-checkup/index.html",
+      "license": "http://data.gov.tw/license",
+      "creator": {
+        "@type": "Organization",
+        "name": "高雄市政府衛生局"
+      }
     }
   ]
 }
@@ -978,6 +989,12 @@
       <div class="desc">高雄市政府衛生局提供，列出全市醫療院所（診所／醫院）名稱、機構代碼、地址、行政區與電話，並以打勾標示是否提供家庭醫學科、內科、外科、牙科、中醫等39項科別服務，可依行政區、科別篩選並瀏覽統計圖表。</div>
       <div class="footline" id="kcg-hospitals-count">資料筆數載入中…</div>
     </a>
+    <a class="home-card" href="kcg-elder-checkup/index.html" data-county="高雄市" data-category="ltc">
+      <span class="tag">高雄市</span>
+      <h2>高雄市老人健檢醫療院所</h2>
+      <div class="desc">高雄市政府衛生局提供，列出65歲以上長者（含55歲以上原住民）老人健康檢查合約醫療院所名稱、地址、電話，並整理健檢項目、檢查日期名額、簽署授權同意書獎勵方案等申請須知，可依行政區、機構類型篩選並瀏覽統計圖表。</div>
+      <div class="footline" id="kcg-elder-checkup-count">資料筆數載入中…</div>
+    </a>
     <p class="no-match" id="county-no-match" style="display:none; grid-column: 1 / -1; text-align:center; color: var(--color-muted); padding: 24px 0;">
       沒有符合所選縣市的資料集，請調整篩選條件。
     </p>
@@ -1257,6 +1274,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.kcgHospitals) {
     document.getElementById("kcg-hospitals-count").textContent = `共 ${meta.kcgHospitals.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.kcgElderCheckup) {
+    document.getElementById("kcg-elder-checkup-count").textContent = `共 ${meta.kcgElderCheckup.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
 }).catch(() => {});
 

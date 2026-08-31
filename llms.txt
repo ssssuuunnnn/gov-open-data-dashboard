@@ -42,6 +42,7 @@
 - [臺南巿身心障礙牙醫診所名單](https://www.sunkuo.cc/gov-open-data-dashboard/tn-disability-dentist/index.html): 臺南市政府衛生局公告之身心障礙牙醫診所名單，共107筆，收錄機構名稱、電話、地址與經緯度座標，行政區欄位為原始資料直接提供，提供行政區／關鍵字篩選、地圖與統計圖表。 (https://www.sunkuo.cc/gov-open-data-dashboard/tn-disability-dentist/llms.txt)
 - [新竹市身心障礙鑑定評估機構及到宅鑑定流程說明](https://www.sunkuo.cc/gov-open-data-dashboard/hccg-disability-hospitals/index.html): 新竹市衛生局公告之身心障礙鑑定評估機構名冊，共6筆（申請診斷證明書可辦醫院），收錄醫院名稱、電話、地址，行政區由地址欄位解析，提供行政區／關鍵字篩選與統計圖表，無經緯度座標。頁面上方收錄「新竹市身心障礙到宅(機構)鑑定流程」（109.10.05審修）完整公告文字：到宅鑑定申請3項條件、8步驟流程、東/北/香山區公所領表窗口與衛生局／社會處聯絡資訊。 (https://www.sunkuo.cc/gov-open-data-dashboard/hccg-disability-hospitals/llms.txt)
 - [115年花蓮縣身心障礙鑑定醫院及申請說明](https://www.sunkuo.cc/gov-open-data-dashboard/hl-disability-hospitals/index.html): 花蓮縣政府公告之身心障礙鑑定醫院名冊，共7筆，收錄醫院名稱、電話、地址、座標與相關網址，含經緯度座標（由TWD97平面座標換算），於地圖上呈現，提供行政區／關鍵字篩選與統計圖表。頁面上方收錄使用者提供之完整申請說明文字：服務對象、申請文件、申請窗口、申請流程5步驟、線上申請適用/不適用情形與跨縣市郵寄申請等備註。
+- [高雄市老人健檢醫療院所](https://www.sunkuo.cc/gov-open-data-dashboard/kcg-elder-checkup/index.html): 高雄市政府衛生局公告之65歲以上長者（含55歲以上原住民）老人健康檢查合約醫療院所名冊，共49筆，收錄合約院所名稱、行政區（21個行政區）、地址、市話，「機構類型」（醫院／衛生所／診所）由名稱關鍵字啟發式推斷（非官方分類），提供行政區／機構類型／關鍵字篩選與統計圖表，無經緯度座標。頁面上方收錄公告全文整理之Q&A：服務對象、健檢項目（本市補助項目＋成人預防保健服務項目）、檢查日期與53,846名額、注意事項、簽署授權同意書獎勵方案（敬老卡儲值金88元/66元）。
 
 ## 非政府開放資料（人工蒐集，僅供參考）
 

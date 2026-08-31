@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-30T05:02:56.408912+00:00",
+  "generatedAt": "2026-08-31T13:32:46.842750+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -249,5 +249,10 @@
     "count": 3047,
     "source": "https://data.kcg.gov.tw/File/DirectDownload/1b381cc4-7da0-42b6-b9be-b49edf87775d",
     "title": "高雄市醫療院所資料"
+  },
+  "kcgElderCheckup": {
+    "count": 49,
+    "source": "https://openapi.kcg.gov.tw/Api/Service/Get/776b1e36-0112-4a72-9c89-c3b68eb3990d",
+    "title": "高雄市老人健檢醫療院所"
   }
 }
