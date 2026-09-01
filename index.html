@@ -547,6 +547,17 @@
         "@type": "Organization",
         "name": "高雄市政府衛生局"
       }
+    },
+    {
+      "@type": "Dataset",
+      "name": "新北市長者健康檢查醫療院所",
+      "description": "新北市政府衛生局公告之長者健康檢查合約醫療院所名冊，收錄84筆合約院所名稱、地址、電話，供65歲以上長者（含55歲以上原住民）查詢就近合約院所辦理長者健康檢查服務。",
+      "url": "https://www.sunkuo.cc/gov-open-data-dashboard/ntpc-elder-checkup/index.html",
+      "license": "http://data.gov.tw/license",
+      "creator": {
+        "@type": "Organization",
+        "name": "新北市政府衛生局"
+      }
     }
   ]
 }
@@ -995,6 +1006,12 @@
       <div class="desc">高雄市政府衛生局提供，列出65歲以上長者（含55歲以上原住民）老人健康檢查合約醫療院所名稱、地址、電話，並整理健檢項目、檢查日期名額、簽署授權同意書獎勵方案等申請須知，可依行政區、機構類型篩選並瀏覽統計圖表。</div>
       <div class="footline" id="kcg-elder-checkup-count">資料筆數載入中…</div>
     </a>
+    <a class="home-card" href="ntpc-elder-checkup/index.html" data-county="新北市" data-category="ltc">
+      <span class="tag">新北市</span>
+      <h2>新北市長者健康檢查醫療院所</h2>
+      <div class="desc">新北市政府衛生局提供，列出65歲以上長者（含55歲以上原住民）長者健康檢查合約醫療院所名稱、地址、電話，可依行政區、關鍵字篩選並瀏覽統計圖表。</div>
+      <div class="footline" id="ntpc-elder-checkup-count">資料筆數載入中…</div>
+    </a>
     <p class="no-match" id="county-no-match" style="display:none; grid-column: 1 / -1; text-align:center; color: var(--color-muted); padding: 24px 0;">
       沒有符合所選縣市的資料集，請調整篩選條件。
     </p>
@@ -1277,6 +1294,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.kcgElderCheckup) {
     document.getElementById("kcg-elder-checkup-count").textContent = `共 ${meta.kcgElderCheckup.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.ntpcElderCheckup) {
+    document.getElementById("ntpc-elder-checkup-count").textContent = `共 ${meta.ntpcElderCheckup.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
 }).catch(() => {});
 

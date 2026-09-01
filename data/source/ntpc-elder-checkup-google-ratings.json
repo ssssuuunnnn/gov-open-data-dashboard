@@ -1,0 +1,422 @@
+{
+  "三重中興醫院": {
+    "place_id": "ChIJpYeEyF-oQjQRbLrULE_yj7w",
+    "rating": 3.3,
+    "review_count": 134
+  },
+  "三重祥安診所": {
+    "place_id": "ChIJpRC4itCoQjQR-h0m0xTdkgI",
+    "rating": 3.3,
+    "review_count": 83
+  },
+  "中心診所": {
+    "place_id": "ChIJMVOIy3uoQjQR9Ad9g92lsvo",
+    "rating": 2.7,
+    "review_count": 65
+  },
+  "仁翔診所": {
+    "place_id": "ChIJ3TZuBeSpQjQRvEnsPdQWVN0",
+    "rating": 4.2,
+    "review_count": 272
+  },
+  "佛教慈濟醫療財團法人台北慈濟醫院": {
+    "place_id": "ChIJ8zlZ562faDQRNvz07Lg4BFk",
+    "rating": 4.2,
+    "review_count": 4372
+  },
+  "信德診所": {
+    "place_id": "ChIJDcdZBRaoQjQR71oxVTMkgaA",
+    "rating": 4.9,
+    "review_count": 706
+  },
+  "健福診所": {
+    "place_id": "ChIJh2jSZdaoQjQRwYcQ2GY3aXA",
+    "rating": 3.9,
+    "review_count": 103
+  },
+  "台灣基督長老教會馬偕醫療財團法人淡水馬偕紀念醫院": {
+    "place_id": "ChIJr8cFO5yvQjQR_teJ2XS1FbM",
+    "rating": 3.8,
+    "review_count": 2329
+  },
+  "同仁醫院": {
+    "place_id": "ChIJ_9Roj_gBaDQRvr0w1Ttll7A",
+    "rating": 3.1,
+    "review_count": 172
+  },
+  "唯安診所": {
+    "place_id": "ChIJEYu6JXMCaDQR-C8I6QTKx8Q",
+    "rating": 3.6,
+    "review_count": 93
+  },
+  "國泰醫療財團法人汐止國泰綜合醫院": {
+    "place_id": "ChIJHTl17hFTXTQR8EpPSAQBdv0",
+    "rating": 3.7,
+    "review_count": 2138
+  },
+  "大川診所": {
+    "place_id": "ChIJqavzTzuoQjQREbJlHhNd1hA",
+    "rating": 4.4,
+    "review_count": 660
+  },
+  "大鈞診所": {
+    "place_id": "ChIJO5CZRTuoQjQRWceeL5TfCXw",
+    "rating": 4.4,
+    "review_count": 633
+  },
+  "天主教耕莘醫療財團法人永和耕莘醫院": {
+    "place_id": "ChIJDx9WxuupQjQRbx22IOIRsFg",
+    "rating": 3.2,
+    "review_count": 1422
+  },
+  "天主教耕莘醫療財團法人耕莘醫院": {
+    "place_id": "ChIJi3VnwB0CaDQRM-ufXn_vj8M",
+    "rating": 2.9,
+    "review_count": 1406
+  },
+  "寶祥診所": {
+    "place_id": "ChIJBw4X7tenQjQRELL-_JM76ac",
+    "rating": 3.3,
+    "review_count": 149
+  },
+  "廣川醫院": {
+    "place_id": "ChIJI7vNJM8CaDQRrY47K-91l9Q",
+    "rating": 3.4,
+    "review_count": 829
+  },
+  "德興診所": {
+    "place_id": "ChIJT9c48cyoQjQRtMsaQsZ63LM",
+    "rating": 3.0,
+    "review_count": 110
+  },
+  "成洲診所": {
+    "place_id": "ChIJ5cD-q1avQjQR8SKY2RAk3_E",
+    "rating": 3.3,
+    "review_count": 49
+  },
+  "捷安診所": {
+    "place_id": "ChIJBQrMpd2pQjQReCvI5NspBVo",
+    "rating": 3.3,
+    "review_count": 93
+  },
+  "新北市三峽區衛生所": {
+    "place_id": "ChIJEwVnuOwbaDQRMjcOqR-UiYU",
+    "rating": 3.0,
+    "review_count": 143
+  },
+  "新北市三芝區衛生所": {
+    "place_id": "ChIJGZGDL9K2QjQRiqOiNWWwoRI",
+    "rating": 2.6,
+    "review_count": 42
+  },
+  "新北市三重區衛生所": {
+    "place_id": "ChIJs6rQJh6pQjQRnrBaPodiJ84",
+    "rating": 2.4,
+    "review_count": 277
+  },
+  "新北市中和區衛生所": {
+    "place_id": "ChIJa7r3CXgCaDQRpyhcRKnJbiU",
+    "rating": 2.4,
+    "review_count": 375
+  },
+  "新北市五股區衛生所": {
+    "place_id": "ChIJw8ILMhqmQjQR-M-cDvciGlE",
+    "rating": 2.4,
+    "review_count": 111
+  },
+  "新北市八里區衛生所": {
+    "place_id": "ChIJy74I1VSkQjQRCUdcm2T9kNI",
+    "rating": 3.4,
+    "review_count": 84
+  },
+  "新北市土城區衛生所": {
+    "place_id": "ChIJf9TxAysdaDQRNabZopgHGhE",
+    "rating": 2.3,
+    "review_count": 209
+  },
+  "新北市坪林區衛生所": {
+    "place_id": "ChIJSdgT-E7_ZzQRo3LElUi_6UE",
+    "rating": 4.5,
+    "review_count": 14
+  },
+  "新北市平溪區衛生所": {
+    "place_id": "ChIJEe4F_LRWXTQRV-FHftveAtY",
+    "rating": 4.3,
+    "review_count": 27
+  },
+  "新北市新店區衛生所": {
+    "place_id": "ChIJZRcan9UBaDQRAtDPZxRrH-E",
+    "rating": 2.7,
+    "review_count": 289
+  },
+  "新北市新莊區衛生所": {
+    "place_id": "ChIJNyR35XOoQjQROf73Cy6_dqo",
+    "rating": 2.5,
+    "review_count": 255
+  },
+  "新北市板橋區衛生所": {
+    "place_id": "ChIJ3UYNwRGoQjQRxRb3E5zHd3o",
+    "rating": 2.9,
+    "review_count": 384
+  },
+  "新北市林口區衛生所": {
+    "place_id": "ChIJvWKBQfCmQjQRwX5fwguh3_c",
+    "rating": 3.0,
+    "review_count": 204
+  },
+  "新北市樹林區衛生所": {
+    "place_id": "ChIJx-_YrxsdaDQRiN2EdKdI1Zg",
+    "rating": 4.1,
+    "review_count": 15
+  },
+  "新北市永和區衛生所": {
+    "place_id": "ChIJqbuhxeepQjQR6KcXR1bAUwM",
+    "rating": 3.2,
+    "review_count": 241
+  },
+  "新北市汐止區衛生所": {
+    "place_id": "ChIJo1AIhmtTXTQRyyYHRllkqJ0",
+    "rating": 2.9,
+    "review_count": 244
+  },
+  "新北市泰山區衛生所": {
+    "place_id": "ChIJDVpMWs2nQjQRDhdDtVPsHpg",
+    "rating": 3.8,
+    "review_count": 65
+  },
+  "新北市淡水區衛生所": {
+    "place_id": "ChIJEXFqW1elQjQROx2iiJDDjYM",
+    "rating": 3.2,
+    "review_count": 215
+  },
+  "新北市深坑區衛生所": {
+    "place_id": "ChIJTwktaMSqQjQRHAWEY8bjQSA",
+    "rating": 3.2,
+    "review_count": 42
+  },
+  "新北市烏來區衛生所": {
+    "place_id": "ChIJEc2MppoGaDQRhuIVSBt3WoI",
+    "rating": 5.0,
+    "review_count": 20
+  },
+  "新北市瑞芳區衛生所": {
+    "place_id": "ChIJI6eYlfdPXTQRciLw1hRIhVY",
+    "rating": 3.8,
+    "review_count": 46
+  },
+  "新北市石碇區衛生所": {
+    "place_id": "ChIJ486v3RBVXTQR4Bs9fqSAWb0",
+    "rating": 4.7,
+    "review_count": 13
+  },
+  "新北市石門區衛生所": {
+    "place_id": "ChIJG1KitrC1QjQRt1koLhEowjY",
+    "rating": 4.1,
+    "review_count": 8
+  },
+  "新北市立聯合醫院（三重院區）": {
+    "place_id": "ChIJHbpW3OGoQjQRl5fALyskKvc",
+    "rating": 3.5,
+    "review_count": 2435
+  },
+  "新北市立聯合醫院（板橋院區）": {
+    "place_id": "ChIJgUcP3RGoQjQR1TIu7Jh2bG4",
+    "rating": 3.1,
+    "review_count": 724
+  },
+  "新北市萬里區衛生所": {
+    "place_id": "ChIJ0wINXgPEDRQRwZ_rYsBwpvY",
+    "rating": 3.8,
+    "review_count": 21
+  },
+  "新北市蘆洲區衛生所": {
+    "place_id": "ChIJ4yAbRcmoQjQRkgHgI1xqaag",
+    "rating": 2.5,
+    "review_count": 179
+  },
+  "新北市貢寮區衛生所": {
+    "place_id": "ChIJ8Uc8vXtcXTQRZRUspqffUMw",
+    "rating": 4.0,
+    "review_count": 33
+  },
+  "新北市金山區衛生所": {
+    "place_id": "ChIJHwYdc1hLXTQR8P5THBDRcPw",
+    "rating": 4.5,
+    "review_count": 48
+  },
+  "新北市雙溪區衛生所": {
+    "place_id": "ChIJ6YX7FKhbXTQRjuuca591OOk",
+    "rating": 4.2,
+    "review_count": 21
+  },
+  "新北市鶯歌區衛生所": {
+    "place_id": "ChIJ-z9_8qoeaDQRdF3kXu8kYKI",
+    "rating": 2.2,
+    "review_count": 140
+  },
+  "新泰綜合醫院": {
+    "place_id": "ChIJ_____3SoQjQRh3qTt5vwNyA",
+    "rating": 4.0,
+    "review_count": 1368
+  },
+  "晉安診所": {
+    "place_id": "ChIJhxgb0I2nQjQRWPFCKfI9xdA",
+    "rating": 4.1,
+    "review_count": 281
+  },
+  "樂福診所": {
+    "place_id": "ChIJO8EtmzqoQjQRjEv8SgO_wJg",
+    "rating": 3.2,
+    "review_count": 91
+  },
+  "正倫診所": {
+    "place_id": "ChIJmUmzuW4CaDQR8qgdbPyS1Gk",
+    "rating": 3.3,
+    "review_count": 34
+  },
+  "正興診所": {
+    "place_id": "ChIJA6LqpLepQjQR-45I5py0qsE",
+    "rating": 3.0,
+    "review_count": 185
+  },
+  "民族診所": {
+    "place_id": "ChIJz0rIl82oQjQRpFxWGlLS7is",
+    "rating": 3.6,
+    "review_count": 56
+  },
+  "洪源裕小兒科診所": {
+    "place_id": "ChIJcf6Lpe6pQjQR0tunzqt79qo",
+    "rating": 4.2,
+    "review_count": 204
+  },
+  "洪碩壎小兒科診所": {
+    "place_id": "ChIJ77-R-uCpQjQRzy0sL0L1RSY",
+    "rating": 4.5,
+    "review_count": 175
+  },
+  "添福診所": {
+    "place_id": "ChIJb1rNPpupQjQRIQXK4nz8SNo",
+    "rating": 4.9,
+    "review_count": 73
+  },
+  "益安診所": {
+    "place_id": "ChIJc9GfgiGpQjQRRkqaNiU8lv4",
+    "rating": 3.1,
+    "review_count": 113
+  },
+  "維發診所": {
+    "place_id": "ChIJ29yiZW4CaDQRoJIR53_zyrU",
+    "rating": 4.4,
+    "review_count": 51
+  },
+  "聯安診所": {
+    "place_id": "ChIJ3e5yY3WoQjQRssptUPhjl24",
+    "rating": 4.0,
+    "review_count": 336
+  },
+  "聯德診所": {
+    "place_id": "ChIJoSgelz4daDQR9FcvPK-IKGY",
+    "rating": 3.3,
+    "review_count": 128
+  },
+  "聯福診所": {
+    "place_id": "ChIJwV5IhfOnQjQRfFW8L7zyaVE",
+    "rating": 3.1,
+    "review_count": 93
+  },
+  "自立診所": {
+    "place_id": "ChIJfxxwo2SoQjQR0EvSSd9daJA",
+    "rating": 2.7,
+    "review_count": 109
+  },
+  "莒光診所": {
+    "place_id": "ChIJJ80SSz6oQjQRxjd-tfs5JmU",
+    "rating": 3.1,
+    "review_count": 96
+  },
+  "華安診所": {
+    "place_id": "ChIJqWtB0j-pQjQRybjmY_IFhX8",
+    "rating": 3.1,
+    "review_count": 70
+  },
+  "華貞診所": {
+    "place_id": "ChIJmwj_-yapQjQRsnO8dnVKNI8",
+    "rating": 3.8,
+    "review_count": 45
+  },
+  "蔡正平耳鼻喉科診所": {
+    "place_id": "ChIJ3TZuBeSpQjQRvEnsPdQWVN0",
+    "rating": 4.2,
+    "review_count": 272
+  },
+  "行天宮醫療志業醫療財團法人恩主公醫院": {
+    "place_id": "ChIJbeboVPobaDQR-OQe5xVO0t0",
+    "rating": 3.2,
+    "review_count": 1071
+  },
+  "衛生福利部樂生療養院": {
+    "place_id": "ChIJv0qUL_GnQjQRg3jZpjBpmEM",
+    "rating": 4.4,
+    "review_count": 42
+  },
+  "衛生福利部臺北醫院": {
+    "place_id": "ChIJbfjyAWWoQjQRHzdFoJW2Qow",
+    "rating": 3.6,
+    "review_count": 2902
+  },
+  "衛生福利部雙和醫院": {
+    "place_id": "ChIJ2YVTrn0CaDQR5OCvFfGu6wc",
+    "rating": 3.7,
+    "review_count": 6269
+  },
+  "裕安診所": {
+    "place_id": "ChIJK4MugMkCaDQR2Lw3-dfSG5w",
+    "rating": 2.9,
+    "review_count": 88
+  },
+  "輔仁大學學校財團法人輔仁大學醫務室": {
+    "place_id": "ChIJO-jLdeinQjQRJs-xHDEhTmY",
+    "rating": 3.8,
+    "review_count": 397
+  },
+  "輔仁大學學校財團法人輔仁大學附設醫院": {
+    "place_id": "ChIJf7teBcOnQjQR8BeYpp3w9yU",
+    "rating": 2.8,
+    "review_count": 2670
+  },
+  "醫療財團法人徐元智先生醫藥基金會亞東紀念醫院": {
+    "place_id": "ChIJ5bAJNAKoQjQRN3x3QFsGrdI",
+    "rating": 4.4,
+    "review_count": 13672
+  },
+  "重新診所": {
+    "place_id": "ChIJ10MUIh-pQjQRMPR-SsnstYE",
+    "rating": 4.0,
+    "review_count": 79
+  },
+  "鉅儒診所": {
+    "place_id": "ChIJ1XzjK_SnQjQRL3rsUJq_8vQ",
+    "rating": 4.2,
+    "review_count": 94
+  },
+  "長榮耳鼻喉科診所": {
+    "place_id": "ChIJKcxLV7eoQjQRESlNyLUEWYo",
+    "rating": 4.5,
+    "review_count": 942
+  },
+  "陳敏玲內科診所": {
+    "place_id": "ChIJC4nUGDwdaDQRlNzzkXrdwH8",
+    "rating": 4.4,
+    "review_count": 170
+  },
+  "集美診所": {
+    "place_id": "ChIJmRhKQv2oQjQRy-jD2_XMCqA",
+    "rating": 3.3,
+    "review_count": 72
+  },
+  "龍華診所": {
+    "place_id": "ChIJ2QqjZyqpQjQR6TXfdMCiYok",
+    "rating": 3.7,
+    "review_count": 80
+  }
+}

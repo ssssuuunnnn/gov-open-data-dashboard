@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-31T13:32:46.842750+00:00",
+  "generatedAt": "2026-09-01T13:25:09.508191+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -254,5 +254,10 @@
     "count": 49,
     "source": "https://openapi.kcg.gov.tw/Api/Service/Get/776b1e36-0112-4a72-9c89-c3b68eb3990d",
     "title": "高雄市老人健檢醫療院所"
+  },
+  "ntpcElderCheckup": {
+    "count": 84,
+    "source": "https://data.ntpc.gov.tw/api/datasets/1adaed3e-fbf2-41ec-ba65-bba153e1ae9f/csv/file",
+    "title": "新北市長者健康檢查醫療院所"
   }
 }

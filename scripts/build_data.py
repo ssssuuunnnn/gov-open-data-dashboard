@@ -282,6 +282,16 @@
     「機構類型」由 _kcg_elder_checkup_type() 依名稱關鍵字（醫院／衛生所／其餘歸類診所）啟發式判斷，
     非官方分類欄位。無經緯度座標，故本頁不含地圖。來源網址無 CORS 標頭，改由本腳本於伺服器端下載，
     另輸出內嵌 JS 版本，詳見 build_kcg_elder_checkup())
+30. 新北市長者健康檢查醫療院所（DCAT dataset https://data.gov.tw/dataset/8572 ，dataset id 125181，
+    提供機關：新北市政府衛生局）
+    https://data.ntpc.gov.tw/api/datasets/1adaed3e-fbf2-41ec-ba65-bba153e1ae9f/csv/file
+    （單一 CSV 檔案，非分頁 API，實測共84筆。來源網址 CORS 標頭僅允許 data.ntpc.gov.tw 網域，
+    前端無法直接 fetch，本腳本於伺服器端下載，另輸出內嵌 JS 版本。原始欄位：seqno(序號)／
+    hosp_attr_type（**欄位名稱雖為「屬性類別」，實測內容其實是機構名稱**，如「新北市板橋區衛生所」
+    「亞東紀念醫院」等，非分類值，本腳本仍以 name 輸出）／zipcode(3碼郵遞區號，僅輔助解析行政區，
+    不作為前端可見欄位)／hosp_addr(地址)／tel(電話)。地址欄位皆已含完整「新北市」＋行政區字首，
+    用 parse_county_district(fallback_county="新北市") 即可解析，實測 29 個行政區全數解析成功，
+    無 typo／缺前綴問題。無經緯度座標，故本頁不含地圖，詳見 build_ntpc_elder_checkup()）
 
 用法：
     python3 scripts/build_data.py
@@ -343,6 +353,8 @@
     data/ntpc-dementia.js  (window.NTPC_DEMENTIA_DATA，同上，供前端以 <script> 直接載入)
     data/kcg-elder-checkup.json
     data/kcg-elder-checkup.js  (window.KCG_ELDER_CHECKUP_DATA，同上，供前端以 <script> 直接載入)
+    data/ntpc-elder-checkup.json
+    data/ntpc-elder-checkup.js  (window.NTPC_ELDER_CHECKUP_DATA，同上，供前端以 <script> 直接載入)
     data/meta.json  (資料更新時間等資訊)
 
 額外相依套件：
@@ -462,6 +474,9 @@ NTPC_SILVER_HAIR_CLUB_URL = (
 )
 NTPC_DEMENTIA_URL = (
     "https://data.ntpc.gov.tw/api/datasets/ca171d91-b049-48e9-b60e-d5ebb82613c5/csv/file"
+)
+NTPC_ELDER_CHECKUP_URL = (
+    "https://data.ntpc.gov.tw/api/datasets/1adaed3e-fbf2-41ec-ba65-bba153e1ae9f/csv/file"
 )
 CHIAYI_LTC_SOURCE_PAGE = "https://ltccenter.cyhg.gov.tw/cp.aspx?n=F7AEF7883C88532B"
 CHIAYI_LTC_INSTITUTIONS_CSV = "scripts/sources/chiayi-ltc/institutions.csv"
@@ -2022,6 +2037,72 @@ def build_ntpc_dementia():
         ])
     print(f"  共 {len(records)} 筆", file=sys.stderr)
     fields = ["name", "phone", "district", "address"]
+    return {"fields": fields, "rows": records}
+
+
+NTPC_ELDER_CHECKUP_GOOGLE_RATINGS_FILE = "data/source/ntpc-elder-checkup-google-ratings.json"
+
+
+def build_ntpc_elder_checkup():
+    """新北市長者健康檢查醫療院所（新北市政府衛生局，DCAT dataset
+    https://data.gov.tw/dataset/8572，dataset id 125181，授權：政府資料開放授權條款-第1版，
+    更新頻率：不定期）。
+
+    downloadURL：NTPC_ELDER_CHECKUP_URL（單一 CSV 檔案，非分頁 API），共 84 筆。來源網址無
+    `Access-Control-Allow-Origin` 標頭允許本站網域（實測僅允許 data.ntpc.gov.tw），前端無法直接
+    fetch，本腳本於伺服器端下載，另輸出內嵌 JS 版本供前端以 `<script>` 直接載入。
+
+    來源欄位：seqno(序號)／hosp_attr_type／zipcode(3碼郵遞區號)／hosp_addr(地址)／tel(電話)。
+    **`hosp_attr_type` 欄位名稱雖為「屬性類別」，實測內容其實是機構名稱**（如「新北市板橋區衛生所」
+    「醫療財團法人徐元智先生醫藥基金會亞東紀念醫院」「莒光診所」等具體院所名，並非分類值），本腳本
+    以此欄位作為 name 輸出，不另外解讀為分類欄位；實測 1 筆（亞東紀念醫院）名稱因來源 CSV 欄位內含
+    換行符被拆成兩行，本腳本移除所有空白字元組回單行名稱。`zipcode` 僅用於輔助交叉確認行政區解析
+    結果，本腳本保留於資料中但前端表格不作為可見欄位顯示。
+
+    地址欄位固定為「新北市」＋行政區字首（如「新北市板橋區英士路192號」），用
+    parse_county_district() 搭配 fallback_county="新北市" 完整解析行政區，實測 29 個行政區
+    全數解析成功、無 typo／缺前綴問題。無經緯度座標，前端不呈現地圖，僅篩選＋統計卡＋圖表＋表格。
+
+    額外欄位 google_rating／google_review_count／google_place_id：使用者需求為呈現各院所的
+    Google 地圖星等與評論數，比照 build_tyc_elder() 的作法，用
+    `scripts/fetch_google_ratings.py --dataset ntpc-elder-checkup --name-field name
+    --address-field address` 一次性呼叫 Google Places API (Legacy) Text Search，人工核對配對
+    正確性後整理成 data/source/ntpc-elder-checkup-google-ratings.json（key 為機構名稱）供本
+    function 讀取合併，之後不會重新抓取。**已於 2026-09-01 執行該一次性查詢並完成**：全部 84 筆
+    皆成功配對且皆有評分資料（無 rating=None、無需人工排除的誤配對案例），僅「仁翔診所」與
+    「蔡正平耳鼻喉科診所」比對到同一 Google 地點（皆為新北市永和區得和路245號，同址不同名稱，判斷
+    為診所更名／聯合門診，非誤配對，予以保留）。三欄目前皆有值，前端顯示星等與可點擊評論數連結。
+    """
+    print("下載 新北市長者健康檢查醫療院所 ...", file=sys.stderr)
+    text = fetch(NTPC_ELDER_CHECKUP_URL)
+    reader = csv.DictReader(io.StringIO(text))
+    try:
+        with open(NTPC_ELDER_CHECKUP_GOOGLE_RATINGS_FILE, "r", encoding="utf-8") as f:
+            google_ratings = json.load(f)
+    except FileNotFoundError:
+        google_ratings = {}
+    records = []
+    for row in reader:
+        addr = (row.get("hosp_addr", "") or "").strip()
+        _county, district = parse_county_district(addr, fallback_county="新北市")
+        # 少數機構名稱因來源 CSV 欄位內含換行符而被拆成兩行（如「醫療財團法人徐元智先生醫藥基金會\n
+        # 亞東紀念醫院」），此處移除所有空白字元組回單行名稱。
+        name = re.sub(r"\s+", "", (row.get("hosp_attr_type", "") or ""))
+        g = google_ratings.get(name, {})
+        records.append([
+            (row.get("seqno", "") or "").strip(),          # 0 id
+            name,                                            # 1 name
+            (row.get("zipcode", "") or "").strip(),        # 2 zipcode
+            district,                                        # 3 district
+            addr,                                            # 4 address
+            (row.get("tel", "") or "").strip(),            # 5 phone
+            g.get("rating", ""),                            # 6 google_rating（一次性資料，查無留空字串）
+            g.get("review_count", ""),                      # 7 google_review_count（同上）
+            g.get("place_id", ""),                           # 8 google_place_id（同上，用於評論連結）
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "name", "zipcode", "district", "address", "phone",
+              "google_rating", "google_review_count", "google_place_id"]
     return {"fields": fields, "rows": records}
 
 
@@ -4146,6 +4227,15 @@ DATASETS = [
         "meta_key": "kcgElderCheckup",
         "title": "高雄市老人健檢醫療院所",
         "source": lambda: KCG_ELDER_CHECKUP_URL,
+    },
+    {
+        "key": "ntpc-elder-checkup",
+        "builder": build_ntpc_elder_checkup,
+        "json": "data/ntpc-elder-checkup.json",
+        "js_var": "NTPC_ELDER_CHECKUP_DATA",
+        "meta_key": "ntpcElderCheckup",
+        "title": "新北市長者健康檢查醫療院所",
+        "source": lambda: NTPC_ELDER_CHECKUP_URL,
     },
     {
         "key": "hsc-ltc",
