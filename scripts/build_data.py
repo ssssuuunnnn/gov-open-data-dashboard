@@ -571,6 +571,13 @@ TPE_HOSPICE_URL = (
     "https://data.taipei/api/dataset/fd5d4de8-b7f3-4a8c-9a61-937a787e0a60/"
     "resource/75ec7d0a-3051-4e2e-b078-3f33231f4a04/download"
 )
+# 臺北市老人健康檢查特約醫事機構（臺北市政府衛生局提供，DCAT dataset id 121269，
+# https://data.gov.tw/dataset/8572 ，聯絡窗口：詹恩驊 02-27208889#1807）。
+TPE_ELDER_CHECKUP_URL = (
+    "https://data.taipei/api/dataset/9a1aefde-2e4a-467c-9ec4-256e33ad6df0/"
+    "resource/ca9b88ff-a881-4ca3-a3a4-b26747f3e3e7/download"
+)
+TPE_ELDER_CHECKUP_GOOGLE_RATINGS_FILE = "data/source/tpe-elder-checkup-google-ratings.json"
 # 嘉義市中低收入老人免費裝置假牙合約醫院名單（DCAT dataset https://data.gov.tw/dataset/8572
 # https://cms.data.gov.tw/dataset/130486，提供機關：嘉義市政府社會處）。
 CHIAYI_DENTURE_LOW_INCOME_URL = (
@@ -2684,6 +2691,62 @@ def build_tpe_denture():
     return {"fields": fields, "rows": records}
 
 
+def build_tpe_elder_checkup():
+    """臺北市老人健康檢查特約醫事機構（臺北市政府衛生局，DCAT dataset id 121269）。
+
+    來源為 CSV（TPE_ELDER_CHECKUP_URL），**BIG5 編碼**，與 build_tpe_denture()/build_tpe_hospice()
+    同一慣例，需 fetch(url, encoding="cp950") 下載解碼。原始欄位：醫事機構名稱、顯示用地址、
+    系統辨識用地址、電話、分機、手機，與 DCAT description 一致。實測共85筆。
+
+    「顯示用地址」與「系統辨識用地址」實測85筆內容完全相同（同一組地址字串重複兩次），故本腳本僅保留
+    一份（address），不重複輸出。地址已含完整「臺北市OO區」字首，用
+    parse_county_district(strict=True) 直接解析（臺北市12個行政區名稱互不含子字串歧義，理由同
+    build_tpe_denture()），實測12個行政區全數解析成功（松山7/信義4/大安10/中山10/中正6/大同3/
+    萬華7/文山5/南港3/內湖11/士林9/北投10）。「電話」「分機」「手機」欄位部分機構僅擇一填寫、留有
+    空值，屬正常現象非資料品質問題。無經緯度座標，故本頁不含地圖。
+
+    來源網址 data.taipei 平台無 CORS 標頭，改由本腳本於伺服器端下載，並輸出內嵌 JS 版本以避免
+    fetch 時序問題。
+
+    額外欄位 rating／review_count／place_id：使用者需求為呈現各特約機構的 Google 地圖星等與評論數，
+    比照 build_tpe_denture()/build_ntpc_elder_checkup() 的作法，用
+    `scripts/fetch_google_ratings.py --dataset tpe-elder-checkup --name-field name
+    --address-field address` 一次性呼叫 Google Places API (Legacy) Text Search，人工核對配對
+    正確性後整理成 data/source/tpe-elder-checkup-google-ratings.json（key 為機構名稱）供本
+    function 讀取合併，之後不會重新抓取。**已於 2026-09-02 執行該一次性查詢並完成**：全部 85 筆
+    皆成功配對且皆有評分資料（無 rating=None、無重複 place_id 需人工排除的誤配對案例）。三欄目前
+    皆有值，前端顯示星等與可點擊評論數連結。
+    """
+    print("下載 臺北市老人健康檢查特約醫事機構 ...", file=sys.stderr)
+    text = fetch(TPE_ELDER_CHECKUP_URL, encoding="cp950")
+    reader = csv.DictReader(io.StringIO(text))
+    try:
+        with open(TPE_ELDER_CHECKUP_GOOGLE_RATINGS_FILE, "r", encoding="utf-8") as f:
+            google_ratings = json.load(f)
+    except FileNotFoundError:
+        google_ratings = {}
+    records = []
+    for row in reader:
+        addr = (row.get("顯示用地址", "") or "").strip()
+        _county, district = parse_county_district(addr, strict=True)
+        name = (row.get("醫事機構名稱", "") or "").strip()
+        g = google_ratings.get(name, {})
+        records.append([
+            name,                                              # 0 name
+            district,                                       # 1 district
+            addr,                                            # 2 address
+            (row.get("電話", "") or "").strip(),           # 3 phone
+            (row.get("分機", "") or "").strip(),           # 4 ext
+            (row.get("手機", "") or "").strip(),           # 5 mobile
+            g.get("rating", ""),                             # 6 rating（一次性 Google 評分，查無資料留空字串）
+            g.get("review_count", ""),                       # 7 review_count（一次性 Google 評論數，查無資料留空字串）
+            g.get("place_id", ""),                            # 8 place_id（一次性 Google Place ID，用於評論連結）
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["name", "district", "address", "phone", "ext", "mobile", "rating", "review_count", "place_id"]
+    return {"fields": fields, "rows": records}
+
+
 def _tyc_transport_county_district(addr: str) -> tuple[str, str]:
     """解析辦理單位地址所在縣市／行政區。地址分布多個縣市（桃園市/臺北市/新北市等，服務桃園市民但
     辦理單位本身設址於外縣市），若以「桃園市」開頭或直接以桃園市13個行政區名稱開頭（少數地址缺少
@@ -4634,6 +4697,15 @@ DATASETS = [
         "meta_key": "tpeHospice",
         "title": "安寧療護機構資源查詢（臺北市衛生局提供）",
         "source": lambda: TPE_HOSPICE_URL,
+    },
+    {
+        "key": "tpe-elder-checkup",
+        "builder": build_tpe_elder_checkup,
+        "json": "data/tpe-elder-checkup.json",
+        "js_var": "TPE_ELDER_CHECKUP_DATA",
+        "meta_key": "tpeElderCheckup",
+        "title": "臺北市老人健康檢查特約醫事機構",
+        "source": lambda: TPE_ELDER_CHECKUP_URL,
     },
 ]
 

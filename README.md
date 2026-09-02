@@ -1,6 +1,6 @@
 # 政府開放資料儀表板
 
-以政府開放資料建置的靜態網站，整理五十一個長照/老人福利/身心障礙相關資料集為互動式儀表板，可直接部署於 GitHub Pages。
+以政府開放資料建置的靜態網站，整理五十三個長照/老人福利/身心障礙相關資料集為互動式儀表板，可直接部署於 GitHub Pages。
 
 ## 資料集
 
@@ -57,7 +57,8 @@
 | `dialysis-transport/` | 洗腎（透析）交通接送服務查詢 | 部分為衛生福利部長期照顧司（制度說明）／**無（民間清單為使用者人工蒐集）** | 頁面上方整理長照司「交通接送服務」BD03（社區式服務交通接送）／DA01（交通接送）給付碼別官方制度說明（資料來源：1966長照專區公告頁），下方為使用者手動整理之全台洗腎（透析）就醫民間接送/租賃服務名單（共16筆），收錄名稱、官網、聯絡電話、服務地區，因資料量小且服務地區欄位稀疏僅提供關鍵字篩選；**民間接送清單非政府開放資料，無官方驗證**，頁面明確標示免責聲明，資料來源為使用者提供之本機 CSV、無公開下載網址，需人工更新，詳見下方「更新資料」說明 |
 | `kcg-hospitals/` | 高雄市醫療院所資料 | 高雄市政府衛生局 | 高雄市全市醫療院所名冊（DCAT dataset id 43821，https://data.gov.tw/dataset/8572），共3,047筆，來源提供 JSON API 與 CSV 兩種 distribution，**JSON API 有分頁限制僅回傳前1000筆**，改用 CSV 版（DirectDownload 網址）取得完整資料。欄位為 Seq／機構名稱／機構代碼／地址／行政區／電話，加上39個科別欄位（值為「有」/「無」，轉為1/0），依西醫科別(24)／牙科(5)／中醫科別(10)分三組。地址已含完整「高雄市OO區」字首、行政區欄位本身即為中文區名，皆可直接使用，無經緯度座標，故不含地圖。提供行政區／科別（三組checkbox，勾選多個為AND邏輯，需同時提供所有已勾選科別）／關鍵字篩選與統計圖表（各行政區機構數、各科別提供機構數前15名），表格科別欄位以打勾徽章呈現，地址／電話另轉為 Google Maps／tel: 連結，來源網址無CORS標頭，比照 specialty 用內嵌 js 版本輸出 |
 | `kcg-elder-checkup/` | 高雄市老人健檢醫療院所 | 高雄市政府衛生局 | 高雄市65歲以上長者（含55歲以上原住民）老人健康檢查合約醫療院所名冊（DCAT dataset id 86299，https://data.gov.tw/dataset/8572），來源提供 JSON API 與 CSV 兩種 distribution，內容相同，共49筆，採用 JSON API 版。欄位為 Seq／合約院所／市話／地址（「序號」與 Seq 重複、「行政區域代碼」非中文皆不收錄），地址不含「高雄市」字首，比照 hsc-denture 補上前綴後解析行政區（涵蓋21個行政區），「機構類型」（醫院／衛生所／診所）由名稱關鍵字啟發式推斷（非官方分類）。並整理服務對象、健檢項目（本市補助項目+成人預防保健服務項目）、檢查日期與53,846名額、注意事項、簽署授權同意書獎勵方案（88元/66元敬老卡儲值金）等公告說明，提供行政區／機構類型／關鍵字篩選與統計圖表，無經緯度座標，來源網址無CORS標頭，內嵌 js 版本輸出 |
-| `ntpc-elder-checkup/` | 新北市長者健康檢查醫療院所 | 新北市政府衛生局 | 新北市65歲以上長者（含55歲以上原住民）長者健康檢查合約醫療院所名冊（DCAT dataset id 125181，https://data.gov.tw/dataset/8572），單一 CSV 檔案共84筆。欄位為 seqno／hosp_attr_type／zipcode／hosp_addr／tel，**`hosp_attr_type` 欄位名稱雖為「屬性類別」，實測內容其實是機構名稱**（如「新北市板橋區衛生所」「亞東紀念醫院」），本腳本以此欄位輸出機構名稱；`zipcode` 僅輔助解析行政區，不作為前端可見欄位。地址已含完整「新北市OO區」字首可直接解析行政區（涵蓋29個行政區），無經緯度座標，故不含地圖，僅提供行政區／關鍵字篩選與統計圖表，來源網址CORS標頭僅允許data.ntpc.gov.tw網域，內嵌 js 版本輸出。另有 google_rating／google_review_count／google_place_id 三欄，比照 tyc-elder 用 `scripts/fetch_google_ratings.py --dataset ntpc-elder-checkup` 一次性查詢 Google Map 星等／評論數，已於 2026-09-01 完成查詢與人工核對（84 筆全數成功配對，皆有評分資料），結果存於 data/source/ntpc-elder-checkup-google-ratings.json，前端顯示星等與可點擊評論數連結 |
+| `ntpc-elder-checkup/` | 新北市長者健康檢查醫療院所 | 新北市政府衛生局 | 新北市65歲以上長者（含55歲以上原住民）長者健康檢查合約醫療院所名冊（DCAT dataset id 125181，https://data.gov.tw/dataset/8572），單一 CSV 檔案共84筆。欄位為 seqno／hosp_attr_type／zipcode／hosp_addr／tel，**`hosp_attr_type` 欄位名稱雖為「屬性類別」，實測內容其實是機構名稱**（如「新北市板橋區衛生所」「亞東紀念醫院」），本腳本以此欄位輸出機構名稱；`zipcode` 僅輔助解析行政區，不作為前端可見欄位。地址已含完整「新北市OO區」字首可直接解析行政區（涵蓋29個行政區），無經緯度座標，故不含地圖，僅提供行政區／關鍵字篩選與統計圖表，來源網址CORS標頭僅允許data.ntpc.gov.tw網域，內嵌 js 版本輸出。另有 rating／review_count／place_id 三欄，比照 tyc-elder 用 `scripts/fetch_google_ratings.py --dataset ntpc-elder-checkup` 一次性查詢 Google Map 星等／評論數，已於 2026-09-01 完成查詢與人工核對（84 筆全數成功配對，皆有評分資料），結果存於 data/source/ntpc-elder-checkup-google-ratings.json，前端顯示星等與可點擊評論數連結 |
+| `tpe-elder-checkup/` | 臺北市老人健康檢查特約醫事機構 | 臺北市政府衛生局 | 臺北市65歲以上長者（含55歲以上原住民）老人健康檢查特約醫事機構名冊（DCAT dataset id 121269，https://data.gov.tw/dataset/8572），單一 BIG5 編碼 CSV 檔案共85筆。原始欄位為 醫事機構名稱／顯示用地址／系統辨識用地址／電話／分機／手機，實測「顯示用地址」與「系統辨識用地址」85筆內容完全相同，僅保留一份輸出。地址已含完整「臺北市OO區」字首，用 `parse_county_district(strict=True)` 直接解析行政區（涵蓋12個行政區），無經緯度座標，故不含地圖，僅提供行政區／關鍵字篩選與統計圖表；電話欄位另有分機時，表格顯示「OO 轉 OO」並以逗號附加分機於 tel: 連結。頁面上方整理使用者提供之老人健檢資格、成人健康檢查基礎項目（含憂鬱症篩檢GDS-15、認知功能評估AD8）與A（腦肺）／B（腹部超音波）／C（骨密肌力）三種套餐內容 Q&A 說明，屬固定公告文字。來源網址 data.taipei 無 CORS 標頭，比照 tpe-denture 用內嵌 js 版本輸出。另有 rating／review_count／place_id 三欄，比照 tyc-elder 用 `scripts/fetch_google_ratings.py --dataset tpe-elder-checkup --name-field name --address-field address` 一次性查詢 Google Map 星等／評論數，已於 2026-09-02 完成查詢與人工核對（85 筆全數成功配對，皆有評分資料，無重複 place_id 誤配對案例），結果存於 data/source/tpe-elder-checkup-google-ratings.json，前端顯示星等與可點擊評論數連結 |
 
 原始資料下載網址：
 - https://ltcpap.mohw.gov.tw/publish/abc.csv
@@ -83,6 +84,7 @@
 - https://opendata.tycg.gov.tw/api/dataset/7ae18138-74f9-4ebb-8b7d-f03d9ddb1ef5/resource/0b949cb1-bfc3-4d02-8474-35e42a932643/download　（居家喘息，BIG5(cp950) 編碼）
 - https://opendata.tycg.gov.tw/api/dataset/7ae18138-74f9-4ebb-8b7d-f03d9ddb1ef5/resource/b7c16660-f7ac-4bb6-b639-9c795581f160/download　（機構喘息，BIG5(cp950) 編碼）
 - https://health.tainan.gov.tw/warehouse/F8BCB915-C08B-47F3-A731-1C30A3EE61EE/F_1780645430477e.pdf　（衛生局公告 PDF，由 build_data.py 自動下載並用 pdfplumber 解析）
+- https://data.taipei/api/dataset/9a1aefde-2e4a-467c-9ec4-256e33ad6df0/resource/ca9b88ff-a881-4ca3-a3a4-b26747f3e3e7/download　（BIG5 編碼）
 
 授權方式：政府資料開放授權條款-第1版
 
@@ -195,6 +197,9 @@ kcg-elder-checkup/index.html 高雄市老人健檢醫療院所儀表板（Chart.
 kcg-elder-checkup/app.js
 ntpc-elder-checkup/index.html 新北市長者健康檢查醫療院所儀表板（Chart.js 圖表 + 篩選表格，無地圖）
 ntpc-elder-checkup/app.js
+tpe-elder-checkup/index.html 臺北市老人健康檢查特約醫事機構儀表板（Chart.js 圖表 + 篩選表格，無地圖；
+                       頁面上方另有老人健檢資格/項目/ABC套餐說明 Q&A 說明卡片）
+tpe-elder-checkup/app.js
 assets/style.css     共用樣式
 assets/table.js       共用分頁表格元件
 data/abc.json         長照ABC據點資料（由 scripts/build_data.py 產生）
@@ -385,6 +390,11 @@ data/ntpc-elder-checkup.json  新北市長者健康檢查醫療院所資料（�
 data/ntpc-elder-checkup.js  同上資料的內嵌 JS 版本（window.NTPC_ELDER_CHECKUP_DATA），供
                        ntpc-elder-checkup 頁面以 <script> 標籤直接載入，因來源網址無 CORS 標頭，
                        不透過 fetch()
+data/tpe-elder-checkup.json  臺北市老人健康檢查特約醫事機構資料（由 scripts/build_data.py 下載
+                       data.taipei BIG5 CSV 解碼產生）
+data/tpe-elder-checkup.js  同上資料的內嵌 JS 版本（window.TPE_ELDER_CHECKUP_DATA），供
+                       tpe-elder-checkup 頁面以 <script> 標籤直接載入，因來源網址無 CORS 標頭，
+                       不透過 fetch()
 data/source/          長照專業服務特約單位來源 PDF（人工下載存放於此，供 build_data.py 解析）；
                        另含 kcg-denture-manual.json（115年高雄市免費裝假牙名冊人工轉寫結果）與
                        kcg-denture-115.pdf（原始公告 PDF 存檔，供未來人工核對/重新轉寫參考）
@@ -479,6 +489,7 @@ python3 scripts/build_data.py dialysis-transport  # 只重新產生洗腎（透�
 python3 scripts/build_data.py ntpc-dementia       # 只重新產生新北市失智症門診資訊
 python3 scripts/build_data.py tc-nursing ntpc-nursing   # 可同時指定多個，以空白分隔
 python3 scripts/build_data.py ntpc-silver-hair-club     # 只重新產生新北市銀髮俱樂部
+python3 scripts/build_data.py tpe-elder-checkup   # 只重新產生臺北市老人健康檢查特約醫事機構
 python3 scripts/build_data.py --help              # 列出所有可用的資料集 key
 ```
 

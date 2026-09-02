@@ -1,0 +1,427 @@
+{
+  "臺北長庚醫院": {
+    "place_id": "ChIJD93yueirQjQR3CiOWCpr8MI",
+    "rating": 3.1,
+    "review_count": 1029
+  },
+  "臺安醫院": {
+    "place_id": "ChIJ2_uJxNyrQjQR1GQnxU5cKtU",
+    "rating": 3.2,
+    "review_count": 1624
+  },
+  "三總松山分院": {
+    "place_id": "ChIJNeA1feurQjQRV2LFgIT4sos",
+    "rating": 3.0,
+    "review_count": 761
+  },
+  "博仁綜合醫院": {
+    "place_id": "ChIJ-arfj-qrQjQR4vb1kpRTdoo",
+    "rating": 3.7,
+    "review_count": 1810
+  },
+  "民安診所": {
+    "place_id": "ChIJMe8ZLwCrQjQRhBQIuuSBPZI",
+    "rating": 4.9,
+    "review_count": 159
+  },
+  "吳慶南內科診所": {
+    "place_id": "ChIJEZEdnJKrQjQROI9g6mMDCVw",
+    "rating": 3.6,
+    "review_count": 122
+  },
+  "聯醫松山門診部": {
+    "place_id": "ChIJ8ebgAZyrQjQRHq1fxZAPp8Y",
+    "rating": 3.2,
+    "review_count": 25
+  },
+  "臺北醫學大學附設醫院": {
+    "place_id": "ChIJe5BE0bSrQjQRkQDwF-Tv5Lc",
+    "rating": 3.7,
+    "review_count": 1747
+  },
+  "張育驍診所": {
+    "place_id": "ChIJEzj5PU2qQjQRT0s28eyNS68",
+    "rating": 4.6,
+    "review_count": 1008
+  },
+  "承功診所": {
+    "place_id": "ChIJfVoPcQCrQjQR7Cei0BMZSjM",
+    "rating": 4.8,
+    "review_count": 18
+  },
+  "聯醫信義門診部": {
+    "place_id": "ChIJOf-PCAqrQjQRtP4k6FxJ4D8",
+    "rating": 3.5,
+    "review_count": 50
+  },
+  "聯醫仁愛院區": {
+    "place_id": "ChIJmYpUC9GrQjQRT9YO_88LhP0",
+    "rating": 3.5,
+    "review_count": 1722
+  },
+  "國泰綜合醫院": {
+    "place_id": "ChIJQcMiLMmrQjQRXlAjmNwIQNg",
+    "rating": 4.2,
+    "review_count": 3641
+  },
+  "中心綜合醫院": {
+    "place_id": "ChIJvzOQu9qrQjQRHMINUVIULZs",
+    "rating": 3.4,
+    "review_count": 835
+  },
+  "宏恩綜合醫院": {
+    "place_id": "ChIJHX9U8dCrQjQRdWTDaMH9KBo",
+    "rating": 3.7,
+    "review_count": 1022
+  },
+  "中山醫院": {
+    "place_id": "ChIJMS_FQM6rQjQRXIdDfibNfFI",
+    "rating": 3.8,
+    "review_count": 601
+  },
+  "尹書田診所": {
+    "place_id": "ChIJd-XD1imqQjQRh34iCRvhke4",
+    "rating": 3.4,
+    "review_count": 1422
+  },
+  "健華診所": {
+    "place_id": "ChIJmS6jvi6qQjQR9gXRR9-6LR8",
+    "rating": 3.1,
+    "review_count": 153
+  },
+  "夏爾診所": {
+    "place_id": "ChIJhafiFMmrQjQRXM_kEROYUfk",
+    "rating": 4.2,
+    "review_count": 592
+  },
+  "家齡診所": {
+    "place_id": "ChIJKbe7iMOrQjQRWYWBM2Gpepo",
+    "rating": 4.6,
+    "review_count": 214
+  },
+  "聯醫大安門診部": {
+    "place_id": "ChIJmdy0Qy-qQjQR4j6GHRopVVc",
+    "rating": 3.1,
+    "review_count": 14
+  },
+  "聯醫林森院區": {
+    "place_id": "ChIJz666SlupQjQRMmLCMH4nd98",
+    "rating": 4.1,
+    "review_count": 368
+  },
+  "臺北馬偕醫院": {
+    "place_id": "ChIJPZ12X0KpQjQRFQwmqOSdlRY",
+    "rating": 2.8,
+    "review_count": 3218
+  },
+  "民生承安診所": {
+    "place_id": "ChIJfezjpearQjQR7Iac4QmSDtA",
+    "rating": 4.0,
+    "review_count": 603
+  },
+  "大直診所": {
+    "place_id": "ChIJiY7T2A-sQjQRKH7XsrtOYHg",
+    "rating": 3.5,
+    "review_count": 350
+  },
+  "啟新診所": {
+    "place_id": "ChIJX5Q7BFipQjQRmyiBr1T6tkw",
+    "rating": 3.9,
+    "review_count": 1744
+  },
+  "沐晴診所": {
+    "place_id": "ChIJc00hX1irQjQRYMfhpBgquE0",
+    "rating": 5.0,
+    "review_count": 153
+  },
+  "榮星診所": {
+    "place_id": "ChIJt5t5peOrQjQRJEpnX-WKVCo",
+    "rating": 4.1,
+    "review_count": 1058
+  },
+  "思雲診所": {
+    "place_id": "ChIJ2wDqaEOpQjQRTlgIEUn8W7o",
+    "rating": 3.0,
+    "review_count": 21
+  },
+  "永育樂群診所": {
+    "place_id": "ChIJ9apQTw2sQjQRC7GFT1C_TbM",
+    "rating": 4.8,
+    "review_count": 702
+  },
+  "聯醫中山門診部": {
+    "place_id": "ChIJTRC5yFmpQjQRO-GPLw_59P4",
+    "rating": 3.6,
+    "review_count": 23
+  },
+  "臺大醫院": {
+    "place_id": "ChIJlblYxnOpQjQR_7C_sDPc4P0",
+    "rating": 3.7,
+    "review_count": 2342
+  },
+  "聯醫和平院區": {
+    "place_id": "ChIJrZ0_kaapQjQRR4lFD2M6Lq0",
+    "rating": 3.5,
+    "review_count": 1243
+  },
+  "聯醫婦幼院區": {
+    "place_id": "ChIJzf5reJmpQjQR-XZs3RiwfGI",
+    "rating": 4.1,
+    "review_count": 828
+  },
+  "怡和診所": {
+    "place_id": "ChIJ50rns5GpQjQRPS0lvSnnbc8",
+    "rating": 4.4,
+    "review_count": 555
+  },
+  "美兆診所": {
+    "place_id": "ChIJZQW13nKpQjQRlbR3hgxooGw",
+    "rating": 3.9,
+    "review_count": 798
+  },
+  "聯醫中正門診部": {
+    "place_id": "ChIJm8Pk8ZipQjQRGl5hHDnqirM",
+    "rating": 4.6,
+    "review_count": 10
+  },
+  "聯醫中興院區": {
+    "place_id": "ChIJKfilEBKpQjQRiqgmYP6pC2g",
+    "rating": 3.7,
+    "review_count": 1335
+  },
+  "悅昇診所": {
+    "place_id": "ChIJ997zIKSrQjQRIwfdVaQrrS0",
+    "rating": 4.9,
+    "review_count": 439
+  },
+  "聯醫大同門診部": {
+    "place_id": "ChIJ-fh2GUepQjQRAnrtXlGqSXw",
+    "rating": 3.7,
+    "review_count": 19
+  },
+  "西園醫院": {
+    "place_id": "ChIJm-3YnLOpQjQRSSMZD96S9ns",
+    "rating": 3.9,
+    "review_count": 1062
+  },
+  "臺大北護分院": {
+    "place_id": "ChIJbyLp4AepQjQRVTUd1x0aMMA",
+    "rating": 3.8,
+    "review_count": 355
+  },
+  "仁濟醫院": {
+    "place_id": "ChIJ655uTKmpQjQR4pTdwZ60vto",
+    "rating": 4.1,
+    "review_count": 146
+  },
+  "瑞生診所": {
+    "place_id": "ChIJtXQ-mLOpQjQRXHwKyZWlUiI",
+    "rating": 4.6,
+    "review_count": 473
+  },
+  "天行健診所": {
+    "place_id": "ChIJYQWvRLSpQjQRJhNFVQxh2Is",
+    "rating": 4.8,
+    "review_count": 363
+  },
+  "東京生活診所": {
+    "place_id": "ChIJZWtqDxqpQjQRzivA4fXmRMs",
+    "rating": 5.0,
+    "review_count": 76
+  },
+  "聯醫萬華門診部": {
+    "place_id": "ChIJWdeefLapQjQR8XVlfmSk51I",
+    "rating": 3.9,
+    "review_count": 17
+  },
+  "萬芳醫院": {
+    "place_id": "ChIJwbaoahOqQjQR0zgeIPKg22o",
+    "rating": 3.4,
+    "review_count": 2582
+  },
+  "景美醫院": {
+    "place_id": "ChIJqe6D9QCqQjQRQ7JSqJS8OyE",
+    "rating": 4.0,
+    "review_count": 740
+  },
+  "山林診所": {
+    "place_id": "ChIJfxTiVW2rQjQRnRVqt4j8r_M",
+    "rating": 4.5,
+    "review_count": 35
+  },
+  "吳錫賢診所": {
+    "place_id": "ChIJLQEgneABaDQRZPvdvEb2c8Q",
+    "rating": 3.4,
+    "review_count": 155
+  },
+  "聯醫政大門診部": {
+    "place_id": "ChIJre9p83uqQjQR5yQi0LfZRBs",
+    "rating": 2.8,
+    "review_count": 86
+  },
+  "聯醫忠孝院區": {
+    "place_id": "ChIJZ4C2N3SrQjQRJnIHuKK6utU",
+    "rating": 3.5,
+    "review_count": 1629
+  },
+  "永育福德診所": {
+    "place_id": "ChIJec3jggurQjQRABv7VwRwJqU",
+    "rating": 4.9,
+    "review_count": 550
+  },
+  "聯醫南港門診部": {
+    "place_id": "ChIJecx5FF6rQjQRq0apbQp9D_0",
+    "rating": 2.4,
+    "review_count": 31
+  },
+  "三軍總醫院": {
+    "place_id": "ChIJJyQGuYWsQjQRU9Vql-Aj8ZE",
+    "rating": 3.3,
+    "review_count": 2408
+  },
+  "中國醫臺北分院": {
+    "place_id": "ChIJbXH-z4ysQjQREBNVOYqC468",
+    "rating": 3.0,
+    "review_count": 389
+  },
+  "康寧醫院": {
+    "place_id": "ChIJTcST8b6sQjQRRr-tqRxSFFs",
+    "rating": 4.6,
+    "review_count": 2431
+  },
+  "康樂診所": {
+    "place_id": "ChIJdUQc6bCsQjQReRJ7COweMG0",
+    "rating": 4.6,
+    "review_count": 1184
+  },
+  "葫州診所": {
+    "place_id": "ChIJ3bebaKmtQjQRs1E6cAaMGJI",
+    "rating": 3.6,
+    "review_count": 261
+  },
+  "內湖國泰診所": {
+    "place_id": "ChIJKf5FOm6sQjQRJ2LP68tRAQo",
+    "rating": 3.6,
+    "review_count": 585
+  },
+  "永育大湖診所": {
+    "place_id": "ChIJSSH6j-usQjQRNWHeoGu_WwY",
+    "rating": 4.5,
+    "review_count": 473
+  },
+  "內湖長春診所": {
+    "place_id": "ChIJKW9q0ICsQjQRB1U4wXKzOkI",
+    "rating": 4.2,
+    "review_count": 109
+  },
+  "陳森豊診所": {
+    "place_id": "ChIJuV6FAaytQjQRGYkBSq4oStA",
+    "rating": 2.6,
+    "review_count": 269
+  },
+  "高峰診所": {
+    "place_id": "ChIJf3mwSlKtQjQRyZxuxqRA1tI",
+    "rating": 4.9,
+    "review_count": 237
+  },
+  "聯醫內湖門診部": {
+    "place_id": "ChIJpaV1GYSsQjQR5GlxLZmToEg",
+    "rating": 2.7,
+    "review_count": 78
+  },
+  "新光醫院": {
+    "place_id": "ChIJ1Yr4GLyuQjQRN4-sESx_hGc",
+    "rating": 3.3,
+    "review_count": 2476
+  },
+  "聯醫陽明院區": {
+    "place_id": "ChIJC5p2fJyuQjQRtS1OLXC18F4",
+    "rating": 3.7,
+    "review_count": 1121
+  },
+  "樹爸爸親子診所": {
+    "place_id": "ChIJcZMMYoKuQjQRxUm2Vf7IDWQ",
+    "rating": 3.8,
+    "review_count": 149
+  },
+  "愛林診所": {
+    "place_id": "ChIJI4UAuLCuQjQRE-Dx3VaeccU",
+    "rating": 4.3,
+    "review_count": 511
+  },
+  "科安診所": {
+    "place_id": "ChIJ-zNi5MiuQjQRvCzsAjtsXh4",
+    "rating": 4.8,
+    "review_count": 361
+  },
+  "揚德健康診所": {
+    "place_id": "ChIJv_nhcbmuQjQRpi8xcMwkFRo",
+    "rating": 4.4,
+    "review_count": 137
+  },
+  "榮清耳鼻喉科診所": {
+    "place_id": "ChIJFf5M3byuQjQR7fnUhqiNEj8",
+    "rating": 4.6,
+    "review_count": 629
+  },
+  "政吉診所": {
+    "place_id": "ChIJzeHvNQCvQjQRGTcLdxpwFeo",
+    "rating": 4.9,
+    "review_count": 48
+  },
+  "聯醫士林門診部": {
+    "place_id": "ChIJbzTxfrmuQjQRwEPZ5gqX8XQ",
+    "rating": 3.3,
+    "review_count": 74
+  },
+  "臺北榮總": {
+    "place_id": "ChIJq6q6AoquQjQRk27N2_Y8tWE",
+    "rating": 4.0,
+    "review_count": 3889
+  },
+  "關渡醫院": {
+    "place_id": "ChIJU8jp72yvQjQRN5sWK6cUQUI",
+    "rating": 3.6,
+    "review_count": 438
+  },
+  "振興醫院": {
+    "place_id": "ChIJL7g9HImuQjQRDePRY_TvHOA",
+    "rating": 4.0,
+    "review_count": 2147
+  },
+  "張參雄診所": {
+    "place_id": "ChIJ5Ys_dVCuQjQRLtzUJciBAD4",
+    "rating": 2.9,
+    "review_count": 212
+  },
+  "惠康診所": {
+    "place_id": "ChIJNVjKdIuuQjQROeRzV_vP5wA",
+    "rating": 3.7,
+    "review_count": 34
+  },
+  "常哲診所": {
+    "place_id": "ChIJW3ILbEavQjQRPBLHhXK2td4",
+    "rating": 4.7,
+    "review_count": 255
+  },
+  "王志靈診所": {
+    "place_id": "ChIJAVkKIfKuQjQRzEzx_76DCIw",
+    "rating": 4.6,
+    "review_count": 100
+  },
+  "文遠診所": {
+    "place_id": "ChIJV4PX2WKuQjQRHlI9reph25I",
+    "rating": 4.0,
+    "review_count": 51
+  },
+  "洪耳鼻喉科診所": {
+    "place_id": "ChIJr7H7uFCuQjQR_6tYhlZAdaM",
+    "rating": 4.3,
+    "review_count": 78
+  },
+  "聯醫北投門診部": {
+    "place_id": "ChIJfeloXwCvQjQR74IbpTKe4wo",
+    "rating": 4.6,
+    "review_count": 7
+  }
+}
