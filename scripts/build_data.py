@@ -449,6 +449,7 @@ KCG_HOSPITALS_URL = "https://data.kcg.gov.tw/File/DirectDownload/1b381cc4-7da0-4
 KCG_ELDER_CHECKUP_URL = "https://openapi.kcg.gov.tw/Api/Service/Get/776b1e36-0112-4a72-9c89-c3b68eb3990d"
 HSC_LTC_URL = "https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/283/b14a70a1-784c-4586-babf-ade99a7e8277.json"
 HSC_DENTURE_URL = "https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/288/d6586e37-bce0-46eb-ae4e-08c5fa41a568.json"
+HSC_ELDER_CHECKUP_URL = "https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/565/e27f2807-bcdf-493b-85d5-ff6604298404.json"
 CHC_DENTURE_URL = "https://email.chcg.gov.tw/df/36br48cd4g64iragh4y6dwoy668s3q"
 YL_LTC_URL = "https://opendataap2.e-land.gov.tw/./resource/files/2019-12-03/a91e966d8b5b07d1e9bb8c3a767e9d1f.json"
 # 115年度宜蘭縣中低收入戶老人假牙裝置補助實施計畫－特約牙醫醫療院所名單（宜蘭縣政府社會處公告 PDF，
@@ -1166,6 +1167,77 @@ def build_hsc_denture():
         ])
     print(f"  共 {len(records)} 筆", file=sys.stderr)
     fields = ["id", "district", "name", "type", "owner", "address", "phone"]
+    return {"fields": fields, "rows": records}
+
+
+def build_hsc_elder_checkup():
+    """新竹縣65歲以上老人健康檢查合約醫療院所（新竹縣政府社會處，DCAT dataset
+    https://data.gov.tw/dataset/8572，dataset id 111994，授權：政府資料開放授權條款-第1版，
+    更新頻率：不定期）。
+
+    4 種 distribution 格式（xls/csv/xml/json）皆提供，依 json > csv > xml > xlsx 選用順序採用
+    HSC_ELDER_CHECKUP_URL（JSON，UTF-8，標準庫可直接解析）。來源網址無 `Access-Control-Allow-Origin`
+    標頭，前端無法直接 fetch，本腳本於伺服器端下載，另輸出內嵌 JS 版本供前端以 `<script>` 直接載入。
+
+    原始欄位：醫院名稱／電話／分機／傳真機號碼／電子郵件／地址／網址／最後更新時間。實測共 19 列，
+    但因部分醫院同時登記多組分機（如「竹信醫院」有110、111、300三組分機）而重複列出同一機構，
+    去重後實際為 **10 家不重複醫院、共11筆聯絡資料**（「臺北榮民總醫院新竹分院」登記了兩支不同的
+    直撥電話，各自無分機，視為兩筆獨立聯絡資料保留，不強行合併成一筆；使用者提供之公告文字寫「9家
+    合約醫院」，與本站實測 10 家不一致，屬公告與資料集本身的落差，本函式如實依資料集內容輸出，不
+    強行刪減湊成9家）。本函式依（醫院名稱, 地址, 電話）分組，將同一機構＋同一電話號碼的多組分機
+    合併為單一列，分機以「、」串接附加於電話後（如「(03)5552039 轉 1113、1202」，比照
+    build_hsc_ltc() 的「電話 轉 分機」慣例），前端 `tel:` 連結僅取電話主機號碼（不含分機文字）。
+
+    地址欄位已含完整「新竹縣＋鄉鎮市」字首（如「新竹縣竹北市竹義里博愛街331號」），可直接用
+    parse_county_district() 解析行政區，實測涵蓋竹北市／湖口鄉／竹東鎮，無 typo、無需 fallback。
+    無經緯度座標，故本頁不含地圖，僅篩選＋統計卡＋圖表＋分頁表格。
+    """
+    print("下載 新竹縣65歲以上老人健康檢查合約醫療院所 ...", file=sys.stderr)
+    text = fetch(HSC_ELDER_CHECKUP_URL)
+    rows_in = json.loads(text)
+    groups = {}
+    order = []
+    for row in rows_in:
+        name = (row.get("醫院名稱", "") or "").strip()
+        addr = (row.get("地址", "") or "").strip()
+        phone = (row.get("電話", "") or "").strip()
+        key = (name, addr, phone)
+        if key not in groups:
+            groups[key] = {
+                "name": name,
+                "address": addr,
+                "phone": phone,
+                "exts": [],
+                "fax": (row.get("傳真機號碼", "") or "").strip(),
+                "email": (row.get("電子郵件", "") or "").strip(),
+                "website": (row.get("網址", "") or "").strip(),
+                "updated": (row.get("最後更新時間", "") or "").strip(),
+            }
+            order.append(key)
+        ext = (row.get("分機", "") or "").strip()
+        if ext:
+            groups[key]["exts"].append(ext)
+
+    records = []
+    for i, key in enumerate(order, start=1):
+        g = groups[key]
+        _county, district = parse_county_district(g["address"])
+        phone = g["phone"]
+        if g["exts"]:
+            phone = f"{phone} 轉 {'、'.join(g['exts'])}"
+        records.append([
+            i,                 # 0 id
+            g["name"],         # 1 name
+            district,          # 2 district
+            g["address"],      # 3 address
+            phone,             # 4 phone
+            g["fax"],          # 5 fax
+            g["email"],        # 6 email
+            g["website"],      # 7 website
+            g["updated"],      # 8 updated
+        ])
+    print(f"  共 {len(records)} 筆（去重前 {len(rows_in)} 列）", file=sys.stderr)
+    fields = ["id", "name", "district", "address", "phone", "fax", "email", "website", "updated"]
     return {"fields": fields, "rows": records}
 
 
@@ -4534,6 +4606,15 @@ DATASETS = [
         "meta_key": "hscDenture",
         "title": "新竹縣中低收入老人補助裝置假牙特約醫療院所",
         "source": lambda: HSC_DENTURE_URL,
+    },
+    {
+        "key": "hsc-elder-checkup",
+        "builder": build_hsc_elder_checkup,
+        "json": "data/hsc-elder-checkup.json",
+        "js_var": "HSC_ELDER_CHECKUP_DATA",
+        "meta_key": "hscElderCheckup",
+        "title": "新竹縣65歲以上老人健康檢查合約醫療院所",
+        "source": lambda: HSC_ELDER_CHECKUP_URL,
     },
     {
         "key": "chc-denture",

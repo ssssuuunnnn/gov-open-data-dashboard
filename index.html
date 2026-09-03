@@ -376,6 +376,17 @@
     },
     {
       "@type": "Dataset",
+      "name": "新竹縣65歲以上老人健康檢查據點",
+      "description": "新竹縣政府社會處公告之65歲以上老人健康檢查合約醫療院所名冊，共11筆聯絡資料（10家不重複醫院），收錄醫院名稱、電話、地址、網址。",
+      "url": "https://www.sunkuo.cc/gov-open-data-dashboard/hsc-elder-checkup/index.html",
+      "license": "http://data.gov.tw/license",
+      "creator": {
+        "@type": "Organization",
+        "name": "新竹縣政府社會處"
+      }
+    },
+    {
+      "@type": "Dataset",
       "name": "嘉義市假牙補助合約醫療院所（中低收入／一般身分別）",
       "description": "嘉義市政府社會處長青及社會行政科提供，整合中低收入與一般身分別兩方案假牙補助合約診所名單共59筆，含經緯度座標（中低收入方案）。",
       "url": "https://www.sunkuo.cc/gov-open-data-dashboard/chiayi-denture/index.html",
@@ -683,6 +694,7 @@
       <button type="button" class="category-tab active" data-category="all" role="tab" aria-selected="true">全部資料集</button>
       <button type="button" class="category-tab" data-category="ltc" role="tab" aria-selected="false">長照 / 老人福利</button>
       <button type="button" class="category-tab" data-category="denture" role="tab" aria-selected="false">老人假牙補助</button>
+      <button type="button" class="category-tab" data-category="elder-checkup" role="tab" aria-selected="false">老人健康檢查</button>
       <button type="button" class="category-tab" data-category="disability" role="tab" aria-selected="false">身心障礙鑑定</button>
       <button type="button" class="category-tab" data-category="dementia" role="tab" aria-selected="false">失智症診療</button>
       <button type="button" class="category-tab" data-category="private" role="tab" aria-selected="false">私人機構名錄</button>
@@ -887,6 +899,12 @@
       <div class="desc">新竹縣政府社會處公告，列出中低收入老人補助裝置假牙特約醫療院所名稱、負責人、地址與電話，共7家，並整理申請資格、補助金額（最高4萬4,000元）、申請流程與應備文件說明，可依鄉鎮市、機構類型與關鍵字篩選並瀏覽統計圖表。</div>
       <div class="footline" id="hsc-denture-count">資料筆數載入中…</div>
     </a>
+    <a class="home-card" href="hsc-elder-checkup/index.html" data-county="新竹縣" data-category="elder-checkup">
+      <span class="tag">新竹縣</span>
+      <h2>新竹縣65歲以上老人健康檢查合約醫院查詢</h2>
+      <div class="desc">新竹縣政府社會處公告，列出65歲以上長者（含55歲以上原住民）老人健康檢查合約醫院名稱、行政區、地址、電話，共10家不重複醫院，並整理預約登記時間（115年7月20日起）、健檢時間（115年8月1日至9月30日）、資格條件、檢查項目與攜帶證件須知，可依行政區與關鍵字篩選並瀏覽統計圖表。</div>
+      <div class="footline" id="hsc-elder-checkup-count">資料筆數載入中…</div>
+    </a>
     <a class="home-card" href="chiayi-denture/index.html" data-county="嘉義市" data-category="denture">
       <span class="tag">嘉義市</span>
       <h2>嘉義市假牙補助合約醫療院所（中低收入／一般身分別）</h2>
@@ -1013,19 +1031,19 @@
       <div class="desc">高雄市政府衛生局提供，列出全市醫療院所（診所／醫院）名稱、機構代碼、地址、行政區與電話，並以打勾標示是否提供家庭醫學科、內科、外科、牙科、中醫等39項科別服務，可依行政區、科別篩選並瀏覽統計圖表。</div>
       <div class="footline" id="kcg-hospitals-count">資料筆數載入中…</div>
     </a>
-    <a class="home-card" href="kcg-elder-checkup/index.html" data-county="高雄市" data-category="ltc">
+    <a class="home-card" href="kcg-elder-checkup/index.html" data-county="高雄市" data-category="elder-checkup">
       <span class="tag">高雄市</span>
       <h2>高雄市老人健檢醫療院所</h2>
       <div class="desc">高雄市政府衛生局提供，列出65歲以上長者（含55歲以上原住民）老人健康檢查合約醫療院所名稱、地址、電話，並整理健檢項目、檢查日期名額、簽署授權同意書獎勵方案等申請須知，可依行政區、機構類型篩選並瀏覽統計圖表。</div>
       <div class="footline" id="kcg-elder-checkup-count">資料筆數載入中…</div>
     </a>
-    <a class="home-card" href="ntpc-elder-checkup/index.html" data-county="新北市" data-category="ltc">
+    <a class="home-card" href="ntpc-elder-checkup/index.html" data-county="新北市" data-category="elder-checkup">
       <span class="tag">新北市</span>
       <h2>新北市長者健康檢查醫療院所</h2>
       <div class="desc">新北市政府衛生局提供，列出65歲以上長者（含55歲以上原住民）長者健康檢查合約醫療院所名稱、地址、電話，可依行政區、關鍵字篩選並瀏覽統計圖表。</div>
       <div class="footline" id="ntpc-elder-checkup-count">資料筆數載入中…</div>
     </a>
-    <a class="home-card" href="tpe-elder-checkup/index.html" data-county="臺北市" data-category="ltc">
+    <a class="home-card" href="tpe-elder-checkup/index.html" data-county="臺北市" data-category="elder-checkup">
       <span class="tag">臺北市</span>
       <h2>臺北市老人健康檢查特約醫事機構</h2>
       <div class="desc">臺北市政府衛生局提供，整理65歲以上長者（含55歲以上原住民）老人健康檢查資格、項目與A（腦肺）B（腹部超音波）C（骨密肌力）套餐說明，並列出特約醫事機構名稱、地址、電話、分機與手機，可依行政區、關鍵字篩選並瀏覽統計圖表。</div>
@@ -1247,6 +1265,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.hscDenture) {
     document.getElementById("hsc-denture-count").textContent = `共 ${meta.hscDenture.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.hscElderCheckup) {
+    document.getElementById("hsc-elder-checkup-count").textContent = `共 ${meta.hscElderCheckup.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
   if (meta.chiayiDenture) {
     document.getElementById("chiayi-denture-count").textContent = `共 ${meta.chiayiDenture.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;

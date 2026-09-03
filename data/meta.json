@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-02T13:19:48.040461+00:00",
+  "generatedAt": "2026-09-03T13:16:58.052782+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -264,5 +264,10 @@
     "count": 85,
     "source": "https://data.taipei/api/dataset/9a1aefde-2e4a-467c-9ec4-256e33ad6df0/resource/ca9b88ff-a881-4ca3-a3a4-b26747f3e3e7/download",
     "title": "臺北市老人健康檢查特約醫事機構"
+  },
+  "hscElderCheckup": {
+    "count": 11,
+    "source": "https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/565/e27f2807-bcdf-493b-85d5-ff6604298404.json",
+    "title": "新竹縣65歲以上老人健康檢查合約醫療院所"
   }
 }
