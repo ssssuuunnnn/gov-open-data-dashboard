@@ -566,6 +566,7 @@ TN_DISABILITY_DENTIST_URL = (
     "https://data.tainan.gov.tw/File/ResourceCsvDownload/"
     "9f0b19fb-4d35-471e-9f9c-2af7254a6d14"
 )
+TN_DISABILITY_DENTIST_GOOGLE_RATINGS_FILE = "data/source/tn-disability-dentist-google-ratings.json"
 # 安寧療護機構資源查詢（臺北市政府衛生局提供，DCAT dataset id 132385，
 # https://data.gov.tw/dataset/8572 ，聯絡窗口：郭維宜 02-27208889#7080）。
 TPE_HOSPICE_URL = (
@@ -3640,10 +3641,45 @@ def build_tn_disability_dentist():
     **緯度／經度為原始資料直接提供的 WGS84 座標**，107 筆皆有值，不需地理編碼或座標系統轉換。
     依專案地圖決策表「有座標＋資料量≤1000筆」，前端加地圖呈現（Leaflet + MarkerCluster +
     circleMarker），資料量小故不需抽樣上限。
+
+    額外欄位 google_rating／google_review_count／google_place_id：使用者需求為呈現各診所的
+    Google 地圖星等與評論數，且明確表示為一次性資料，之後不會重新抓取。本資料集無官方評鑑分數
+    欄位，故不存在欄位語意衝突，仍沿用其他資料集的 google_ 前綴命名慣例。
+
+    **本資料集「機構名稱」欄位不保證唯一**（實測「奇美醫療財團法人奇美醫院」「日新牙醫診所」各
+    出現 2 次，分別代表不同院區/分店的 2 個不同實體地點），故 data/source/ 對照檔**不能**沿用
+    其他資料集「以機構名稱為 key」的模式（會造成後筆資料覆蓋前筆），改用
+    `f"{機構名稱}|{地址}"`（地址為本函式輸出的 address 欄位原始字串，含全形數字）組合字串作為 key。
+
+    資料來源：2026-09-04 用 scripts/fetch_google_ratings.py --dataset tn-disability-dentist
+    一次性呼叫 Google Places API (Legacy) Text Search，107 筆全數比對成功（status=OK），整理成
+    data/source/tn-disability-dentist-google-ratings.json。人工核對時發現並修正以下情況：
+    - 「奇美醫療財團法人奇美醫院」（永康區中華路901號，主院區）與（南區樹林街二段442號，樹林院區）
+      分別正確比對到「Chi Mei Medical Center」與「Chi Mei Medical Center Shulin Campus」兩個
+      不同 Google 地點，經 Place Details 核對地址皆一致，非誤配對，僅為同名不同院區。
+    - 「日新牙醫診所」（南區金華路二段374號）與（新營區中正路39-7號）分別正確比對到兩個不同
+      place_id，經 Place Details 核對地址皆一致，為兩間恰好同名的不同診所。
+    - 「仁愛牙醫診所」（仁德區中山路572號）與「仁愛牙科診所」（新市區光華街181號）**原始查詢皆被
+      誤配對到台北市中正區信義路二段179號的同名診所**（完全不同縣市，經 Place Details 核對後確認
+      為明顯誤配對），已改用更完整地址（臺南市＋行政區＋街路門牌）重新查詢取得正確結果：「仁愛牙醫
+      診所」比對到臺南市仁德區中山路570號同名診所（門牌570 vs 572略有出入，路名與行政區皆吻合，
+      確認為同一診所）；「仁愛牙科診所」比對到「新市鄉仁愛牙科診所」，門牌181號完全一致。
+    - 多筆醫院／診所顯示英文 Google 地點名稱（如衛生福利部臺南醫院→MOHW Tainan Hospital、國立
+      成功大學醫學院附設醫院→National Cheng Kung University Hospital、獨角獸牙醫診所→Unicorn
+      Dental 等），皆經 Place Details 核對地址一致，確認為同一地點。
+    查無對照資料的診所，此三欄留空字串，前端顯示為「-」（本次 107 筆全數有對照資料，故實務上不會
+    出現空值，僅為程式穩健性保留）。
     """
     print("下載 臺南巿身心障礙牙醫診所名單 ...", file=sys.stderr)
     text = fetch(TN_DISABILITY_DENTIST_URL)
     reader = csv.DictReader(io.StringIO(text))
+
+    try:
+        with open(TN_DISABILITY_DENTIST_GOOGLE_RATINGS_FILE, "r", encoding="utf-8") as f:
+            google_ratings = json.load(f)
+    except FileNotFoundError:
+        google_ratings = {}
+
     records = []
     for row in reader:
         name = (row.get("機構名稱") or "").strip()
@@ -3657,6 +3693,7 @@ def build_tn_disability_dentist():
             lng = float(row.get("經度") or 0)
         except ValueError:
             lat, lng = 0.0, 0.0
+        g = google_ratings.get(f"{name}|{street}", {})
         records.append([
             len(records) + 1,   # 0 id
             name,                 # 1 name
@@ -3666,9 +3703,15 @@ def build_tn_disability_dentist():
             district,             # 5 district
             lat,                  # 6 lat
             lng,                  # 7 lng
+            g.get("rating", ""),          # 8 google_rating
+            g.get("review_count", ""),    # 9 google_review_count
+            g.get("place_id", ""),        # 10 google_place_id
         ])
     print(f"  共 {len(records)} 筆", file=sys.stderr)
-    fields = ["id", "name", "phone", "address", "county", "district", "lat", "lng"]
+    fields = [
+        "id", "name", "phone", "address", "county", "district", "lat", "lng",
+        "google_rating", "google_review_count", "google_place_id",
+    ]
     return {"fields": fields, "rows": records}
 
 

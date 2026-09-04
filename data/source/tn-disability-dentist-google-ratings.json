@@ -1,0 +1,537 @@
+{
+  "七股微笑牙醫診所|大埕365號1樓": {
+    "place_id": "ChIJaS6Y8VLXbTQR7XbqymPilNM",
+    "rating": 4.3,
+    "review_count": 46
+  },
+  "下營仁愛牙醫診所|健康路２１８號１樓": {
+    "place_id": "ChIJH4DcDhCHbjQRJ1N78X-IOZQ",
+    "rating": 3.9,
+    "review_count": 43
+  },
+  "仁德牙醫診所|柳營路二段５２號": {
+    "place_id": "ChIJZ42GYEKGbjQRQNS3f1zsC7k",
+    "rating": 4.2,
+    "review_count": 209
+  },
+  "仁愛牙科診所|光華街181號": {
+    "place_id": "ChIJwRteJVh6bjQRoYpJNza-fys",
+    "rating": 2.6,
+    "review_count": 24
+  },
+  "仁愛牙醫診所|中山路５７２號": {
+    "place_id": "ChIJTx2yGlVxbjQRb7qZbiQ3y_M",
+    "rating": 3.5,
+    "review_count": 22
+  },
+  "仁欣牙醫診所|中華路679號1F": {
+    "place_id": "ChIJ2wst3d92bjQRDk-9CZ2d9Mc",
+    "rating": 2.7,
+    "review_count": 34
+  },
+  "佳安牙醫診所|中正南路７０６號": {
+    "place_id": "ChIJK8rYG0d3bjQRnJ8rV_OPR6w",
+    "rating": 3.6,
+    "review_count": 90
+  },
+  "健美牙醫診所|安平路292號": {
+    "place_id": "ChIJeV5tTRJ2bjQROZM4kWz6MlI",
+    "rating": 4.4,
+    "review_count": 235
+  },
+  "光南牙醫診所|忠孝街１７０號１樓": {
+    "place_id": "ChIJZ02C31h6bjQR21PKpA8tuMU",
+    "rating": 3.8,
+    "review_count": 43
+  },
+  "光美牙醫診所|怡平路７７號１、２樓": {
+    "place_id": "ChIJj6qh0IN3bjQRa7uTIJf_o4s",
+    "rating": 4.9,
+    "review_count": 938
+  },
+  "光遠牙醫診所|延平路２３６號１、２樓": {
+    "place_id": "ChIJBcygBkt_bjQRMJD_U3R9NeA",
+    "rating": 4.9,
+    "review_count": 1034
+  },
+  "初昌傑牙醫診所|中華路９８８之１號２樓": {
+    "place_id": "ChIJ03juom93bjQRMbJTnbwqb8M",
+    "rating": 3.6,
+    "review_count": 16
+  },
+  "卓越牙醫診所|民治路１４８－３號": {
+    "place_id": "ChIJO1CA9NCFbjQRtDP9eFT9twk",
+    "rating": 2.7,
+    "review_count": 44
+  },
+  "台南市立醫院(委託秀傳醫療社團法人經營)|崇德路６７０號": {
+    "place_id": "ChIJpRgOFiJ0bjQRF-0pzQuPVjQ",
+    "rating": 3.4,
+    "review_count": 1664
+  },
+  "台灣基督長老教會新樓醫療財團法人台南新樓醫院|東門路１段５７號": {
+    "place_id": "ChIJD6hdfI92bjQRh9WrN_iSO-E",
+    "rating": 3.1,
+    "review_count": 885
+  },
+  "吳牙醫診所|中正路二段１１８７號": {
+    "place_id": "ChIJq4HlV1VxbjQRR88Modu3Gcg",
+    "rating": 4.3,
+    "review_count": 28
+  },
+  "呂牙醫診所|大同路一段210號": {
+    "place_id": "ChIJa5XP44N2bjQR2J9ZaAK6idg",
+    "rating": 4.5,
+    "review_count": 15
+  },
+  "品田牙醫診所|中山路２段１５６號１樓": {
+    "place_id": "ChIJQTBpqghxbjQRa968DTi7dRI",
+    "rating": 4.3,
+    "review_count": 89
+  },
+  "品硯牙醫診所|海安路三段８６８號１、２樓": {
+    "place_id": "ChIJXVkOSJJ3bjQRb4bHbvnM5q4",
+    "rating": 4.9,
+    "review_count": 943
+  },
+  "品誠牙醫診所|怡平路８７號１─２樓": {
+    "place_id": "ChIJC0TpiA52bjQR_olZDTJLJpQ",
+    "rating": 4.9,
+    "review_count": 1056
+  },
+  "國立成功大學醫學院附設醫院|勝利路１３８號": {
+    "place_id": "ChIJO9iPQ-x2bjQRDjD6qaQFCd4",
+    "rating": 3.0,
+    "review_count": 1570
+  },
+  "圓圓牙醫診所|水交社路１號１－２樓": {
+    "place_id": "ChIJ8WpUFJt1bjQR-n777mMCmpQ",
+    "rating": 4.9,
+    "review_count": 1764
+  },
+  "圓成牙醫診所|文成一路８０號１樓": {
+    "place_id": "ChIJP2dZVud3bjQR3nWh4ZKJVjg",
+    "rating": 5.0,
+    "review_count": 469
+  },
+  "夏林牙醫診所|夏林路１０２號": {
+    "place_id": "ChIJM38XEnh2bjQRY573hfwql-4",
+    "rating": 3.9,
+    "review_count": 37
+  },
+  "奇美醫療財團法人奇美醫院|中華路９０１號": {
+    "place_id": "ChIJt8MHid52bjQRQBAsnjbOpZg",
+    "rating": 2.8,
+    "review_count": 1302
+  },
+  "奇美醫療財團法人奇美醫院|樹林街二段４４２號": {
+    "place_id": "ChIJd2HFg3l2bjQRJAQhuqi8D_U",
+    "rating": 3.4,
+    "review_count": 68
+  },
+  "奇美醫療財團法人柳營奇美醫院|２０１號": {
+    "place_id": "ChIJK9Dzsw2GbjQRGsOYizXhOSY",
+    "rating": 3.2,
+    "review_count": 617
+  },
+  "安安牙醫診所|復國一路４２９號": {
+    "place_id": "ChIJj3yLACp3bjQRuJIIy3bQ4ww",
+    "rating": 4.4,
+    "review_count": 44
+  },
+  "安緹牙醫診所|義吉街１號１樓": {
+    "place_id": "ChIJa_EBAwF3bjQRgnl_JoNM-XY",
+    "rating": 4.9,
+    "review_count": 332
+  },
+  "宜新牙醫診所|文平路２３８號２樓": {
+    "place_id": "ChIJVyCvswt2bjQRDMTzB32Jf3Q",
+    "rating": 4.9,
+    "review_count": 660
+  },
+  "家傳牙醫診所|１３５之１號１樓": {
+    "place_id": "ChIJwS-faQ-faDQR2inUf5fXYew",
+    "rating": 4.5,
+    "review_count": 33
+  },
+  "寓品牙醫診所|正強街２５７－５號１－２樓": {
+    "place_id": "ChIJITduGwBxbjQRBdK0YUSREiQ",
+    "rating": 4.9,
+    "review_count": 359
+  },
+  "小雅牙醫診所|崇明十一街２號１－２樓": {
+    "place_id": "ChIJGQKHTSd0bjQRaL1nY21pjTU",
+    "rating": 3.2,
+    "review_count": 45
+  },
+  "山見晴牙醫診所|復華一街176號": {
+    "place_id": "ChIJFzDdSQh3bjQRh2LHPihIDpA",
+    "rating": 4.5,
+    "review_count": 60
+  },
+  "常育牙醫診所|樹林街二段123號1樓": {
+    "place_id": "ChIJjd170H12bjQRHmyR2P_9N44",
+    "rating": 3.8,
+    "review_count": 90
+  },
+  "康喬牙醫診所|府前路一段１７９號１－２樓": {
+    "place_id": "ChIJs9D1j312bjQRB8L7ik3biiI",
+    "rating": 4.9,
+    "review_count": 632
+  },
+  "康齡牙醫診所|忠孝路３８８號１．２樓": {
+    "place_id": "ChIJC-KbV68faDQRZoO2NylFfso",
+    "rating": 3.5,
+    "review_count": 93
+  },
+  "建志牙醫診所|金華路四段２６號１、２樓": {
+    "place_id": "ChIJR-SJAGV2bjQRqpeoxK-Zvgk",
+    "rating": 4.9,
+    "review_count": 2142
+  },
+  "建榮牙醫診所|和緯路５段２３８、２４０號１樓": {
+    "place_id": "ChIJMWM4QRV2bjQRQbIzr0pjZ9A",
+    "rating": 3.6,
+    "review_count": 26
+  },
+  "建翔牙醫診所|建平七街６９０號": {
+    "place_id": "ChIJV725MQZ2bjQRz6sR9XuYMq8",
+    "rating": 3.7,
+    "review_count": 36
+  },
+  "德安牙醫診所|中正路５７１號": {
+    "place_id": "ChIJddVV6WKoQjQRjbjtyiWtOK8",
+    "rating": 2.0,
+    "review_count": 25
+  },
+  "德藝牙醫診所|明興路633-3號": {
+    "place_id": "ChIJ-c4v3Rt1bjQR_DVyTN4sKoo",
+    "rating": 4.9,
+    "review_count": 734
+  },
+  "忠興牙醫診所|１７０－１２號": {
+    "place_id": "ChIJE7Y01-ePbjQRcFt7JrI8UAM",
+    "rating": 4.7,
+    "review_count": 7
+  },
+  "怡仁牙醫診所|龍橋街89-1號": {
+    "place_id": "ChIJYziKnLlwbjQRPKiKRlh0cME",
+    "rating": 4.5,
+    "review_count": 83
+  },
+  "悅康牙醫診所|仁義一街９９號１、２樓": {
+    "place_id": "ChIJ1xYUlVVxbjQR5BlfYkGPRpU",
+    "rating": 4.8,
+    "review_count": 832
+  },
+  "惠康牙醫診所|復國一路５５８號": {
+    "place_id": "ChIJmWDvvCl3bjQRv3Ej9mAJ0mo",
+    "rating": 3.1,
+    "review_count": 26
+  },
+  "慶應牙醫診所|中山路６６號": {
+    "place_id": "ChIJY64-XhaObjQRsu7NDKrHK98",
+    "rating": 3.8,
+    "review_count": 13
+  },
+  "拇舢號牙醫診所|公園南路３４９及３５１號１、２樓": {
+    "place_id": "ChIJgbHNvAB3bjQRQxsxsVSRBqw",
+    "rating": 4.8,
+    "review_count": 908
+  },
+  "新欣牙醫診所|復興街２８３號": {
+    "place_id": "ChIJef37Z7k8aTQR7bAo_m2WQS4",
+    "rating": 4.6,
+    "review_count": 1495
+  },
+  "新泰牙醫診所|東興路２９１號１樓": {
+    "place_id": "ChIJyxlZiOuFbjQR1rA0W3Gllgg",
+    "rating": 3.1,
+    "review_count": 47
+  },
+  "施牙醫診所|中山路１９４巷３號": {
+    "place_id": "ChIJd1NxnXBwbjQRYxMhz7aXKqs",
+    "rating": 4.5,
+    "review_count": 2
+  },
+  "日初牙醫診所|東平路243-2號": {
+    "place_id": "ChIJV1qrYOJ3bjQRqKKPOwLVzog",
+    "rating": 4.6,
+    "review_count": 184
+  },
+  "日新牙醫診所|中正路３９－７號": {
+    "place_id": "ChIJU--2vsOFbjQRY5cegzvymRE",
+    "rating": 4.5,
+    "review_count": 39
+  },
+  "日新牙醫診所|金華路二段374號": {
+    "place_id": "ChIJ9aNXond2bjQR-3JDyybbH6Q",
+    "rating": 3.8,
+    "review_count": 63
+  },
+  "日麗牙醫診所|凱旋路３１號１－２樓": {
+    "place_id": "ChIJU3uKKr52bjQRLNkDWNfTNVE",
+    "rating": 4.8,
+    "review_count": 855
+  },
+  "昌鈺牙醫診所|東門路二段292號": {
+    "place_id": "ChIJfb9zUZh2bjQRseaixbuHcTY",
+    "rating": 3.5,
+    "review_count": 49
+  },
+  "明興牙醫診所|明興路1229號": {
+    "place_id": "ChIJuyrvI6l1bjQRnhrrVqHxv90",
+    "rating": 4.6,
+    "review_count": 36
+  },
+  "晨鈞牙醫診所|中華東路二段１９３號１－２樓": {
+    "place_id": "ChIJs00VVYt3bjQR8cV65s9mUcQ",
+    "rating": 4.8,
+    "review_count": 440
+  },
+  "晶瀅牙醫診所|和緯路三段２９５號１－２樓": {
+    "place_id": "ChIJ______h2bjQRoGDF0mPOQnE",
+    "rating": 3.7,
+    "review_count": 50
+  },
+  "李榮哲牙醫診所|大灣３街５９號": {
+    "place_id": "ChIJU5UIpyZxbjQRYSXzcLMJJhg",
+    "rating": 4.7,
+    "review_count": 30
+  },
+  "東山幸福牙醫診所|東山１２５－１號１樓": {
+    "place_id": "ChIJWZ5261iObjQR9JCgfC9BttU",
+    "rating": 4.4,
+    "review_count": 23
+  },
+  "東嶼牙醫診所|萬年五街４０巷２號１、２樓": {
+    "place_id": "ChIJ2TS9IfV1bjQR-ncqALr5-ck",
+    "rating": 5.0,
+    "review_count": 1624
+  },
+  "柏齡牙醫診所|中正北路123-1": {
+    "place_id": "ChIJr_0Os0h3bjQRjXaleC_oNiI",
+    "rating": 3.7,
+    "review_count": 90
+  },
+  "森緹日岫牙醫診所|健康路二段47號": {
+    "place_id": "ChIJY4UB5DJ1bjQRp2RAtQVggLk",
+    "rating": 5.0,
+    "review_count": 219
+  },
+  "楊牙醫診所|西門路四段５４６號１－２樓": {
+    "place_id": "ChIJZd95Ofx2bjQRGgMxt_kNuy0",
+    "rating": 4.9,
+    "review_count": 883
+  },
+  "橘子牙醫診所|新興街８６－２３號１樓": {
+    "place_id": "ChIJR2sYj2t5bjQRx8KjM9ojtWY",
+    "rating": 4.3,
+    "review_count": 32
+  },
+  "民治牙醫診所|民治路２１之５號１樓": {
+    "place_id": "ChIJM1rLvsKFbjQRpc4qJe-gxak",
+    "rating": 3.4,
+    "review_count": 75
+  },
+  "永安牙醫診所|民族路三段３６號": {
+    "place_id": "ChIJ_1IQHQgfaDQRdT9zJXPro3A",
+    "rating": 3.9,
+    "review_count": 33
+  },
+  "汎美牙醫診所|慶東街１１８號": {
+    "place_id": "ChIJnw8I5I92bjQRlkX7aGzGut4",
+    "rating": 3.8,
+    "review_count": 39
+  },
+  "沐恩牙醫診所|五妃街１７號１－２樓": {
+    "place_id": "ChIJ5-EJZ4F2bjQR7FBF1QYqwbU",
+    "rating": 4.7,
+    "review_count": 70
+  },
+  "河馬牙醫診所|中山南路５８０號": {
+    "place_id": "ChIJC4DB2Sh3bjQRx0WQ69UlkTU",
+    "rating": 4.3,
+    "review_count": 105
+  },
+  "泓翔牙醫診所|民生路２５６號１、２樓": {
+    "place_id": "ChIJgWLRTnhwbjQRlPpeUWzC2NU",
+    "rating": 3.0,
+    "review_count": 50
+  },
+  "海安文元牙醫診所|海安路三段900號": {
+    "place_id": "ChIJ7aBTHFR2bjQRT6of0AxP0u8",
+    "rating": 3.8,
+    "review_count": 55
+  },
+  "港心牙醫診所|新興街６３號１樓": {
+    "place_id": "ChIJa4UEGuJ5bjQRnOGNE5kkmi8",
+    "rating": 4.3,
+    "review_count": 54
+  },
+  "潔寧牙醫診所|文賢路３６５巷２４號": {
+    "place_id": "ChIJ8zXFSEN2bjQRIBEUfhmy8Lc",
+    "rating": 4.1,
+    "review_count": 35
+  },
+  "濰實牙醫診所|中山路一段597號": {
+    "place_id": "ChIJDQXOyHhxbjQRxQNSykvAbO8",
+    "rating": 4.0,
+    "review_count": 22
+  },
+  "獨角獸牙醫診所|東橋八街２０８號１樓及夾層": {
+    "place_id": "ChIJ-V65mt53bjQRxbZtgieefr4",
+    "rating": 4.8,
+    "review_count": 1942
+  },
+  "玉民牙醫診所|中正路６３號": {
+    "place_id": "ChIJ0yvCfBNhbjQRjO9TBU1ha4Q",
+    "rating": 2.3,
+    "review_count": 21
+  },
+  "瑞星牙醫診所|中山南路２３３號": {
+    "place_id": "ChIJldmHmdh2bjQR9ssWrpbD43Q",
+    "rating": 4.5,
+    "review_count": 43
+  },
+  "登泰牙醫診所|國安街3號": {
+    "place_id": "ChIJy4SECU12bjQR2iQPQrB2WSk",
+    "rating": 4.6,
+    "review_count": 71
+  },
+  "百齡牙醫診所|東寧路３５號": {
+    "place_id": "ChIJOyQrXpF2bjQRv_VJ56b1H6c",
+    "rating": 3.7,
+    "review_count": 37
+  },
+  "祐新牙醫診所|中正路二段７９９號": {
+    "place_id": "ChIJfe615_hzbjQRZZB-_M8ntFQ",
+    "rating": 4.0,
+    "review_count": 35
+  },
+  "禾穆牙醫診所|中正路20號": {
+    "place_id": "ChIJmzwmGoZ_bjQRW-BJWaPH54A",
+    "rating": 4.6,
+    "review_count": 55
+  },
+  "禾鈺牙醫診所|中山路二段223號1樓": {
+    "place_id": "ChIJe5vaN5ZxbjQRND6Gi3sCb4M",
+    "rating": 3.9,
+    "review_count": 160
+  },
+  "立潔牙醫診所|民權路一段２０１號１樓": {
+    "place_id": "ChIJf8bdVoh2bjQRwK9oliRVk2w",
+    "rating": 4.0,
+    "review_count": 98
+  },
+  "經典永華牙醫診所|永華路二段501號": {
+    "place_id": "ChIJl0pRUyl3bjQRGGctIGUBZR8",
+    "rating": 4.9,
+    "review_count": 513
+  },
+  "美滿牙醫診所|中正路６７號": {
+    "place_id": "ChIJK3FfPBqEbjQRp9LmLNQF1Sw",
+    "rating": 4.5,
+    "review_count": 17
+  },
+  "群一牙醫診所|新進路３２３號１樓": {
+    "place_id": "ChIJWTE3s9iFbjQRlEz4ue0Om1Q",
+    "rating": 3.2,
+    "review_count": 40
+  },
+  "臺南市立安南醫院-委託中國醫藥大學興建經營|長和路二段６６號": {
+    "place_id": "ChIJo8WH2d55bjQRqLPp8FEFl4g",
+    "rating": 2.9,
+    "review_count": 1363
+  },
+  "臻品牙醫診所|健康路一段１２號１樓": {
+    "place_id": "ChIJr2uZ0YN2bjQRIoeebtIRghw",
+    "rating": 3.4,
+    "review_count": 49
+  },
+  "良銓牙醫診所|育平路３５９號１、２樓": {
+    "place_id": "ChIJl5WaPQZ2bjQRdskMU56GfGI",
+    "rating": 4.2,
+    "review_count": 81
+  },
+  "蒔光美學牙醫診所|長榮路２段１６９號１－２樓": {
+    "place_id": "ChIJAQCsQBd3bjQRNoNykhXV-Ck",
+    "rating": 4.6,
+    "review_count": 408
+  },
+  "衛生福利部臺南醫院|中山路１２５號": {
+    "place_id": "ChIJZ655uIt2bjQRfnwRGhDdz8Y",
+    "rating": 3.1,
+    "review_count": 597
+  },
+  "詠新牙醫診所|民治路43巷26號": {
+    "place_id": "ChIJxVkt62RwbjQRRlxAS1C01O0",
+    "rating": 4.2,
+    "review_count": 60
+  },
+  "謙禾牙醫診所|中華路１３６－１號１、２樓": {
+    "place_id": "ChIJs7wl9cR2bjQRx-ZzArTfhdI",
+    "rating": 4.9,
+    "review_count": 982
+  },
+  "豐禾牙醫診所|大灣路42-1號": {
+    "place_id": "ChIJRz-UfOdwbjQRDQw_AxdepUA",
+    "rating": 3.7,
+    "review_count": 43
+  },
+  "貝果牙醫診所|怡安路二段１８０號１、２樓": {
+    "place_id": "ChIJJ78Z2I93bjQRPpMES_7n5Kg",
+    "rating": 4.9,
+    "review_count": 1499
+  },
+  "資善牙醫診所|大勇路１號１、２樓": {
+    "place_id": "ChIJNY_BIylxbjQRCZUpqVTfs7o",
+    "rating": 4.1,
+    "review_count": 75
+  },
+  "迎曦牙醫診所|龍目井路４７８號２樓": {
+    "place_id": "ChIJ7WZLcV17bjQRlvireCgKous",
+    "rating": 4.8,
+    "review_count": 1080
+  },
+  "逸凡牙醫診所|中華西街171號1樓": {
+    "place_id": "ChIJ3QOMTeB2bjQRPPrZHA4GRUE",
+    "rating": 4.4,
+    "review_count": 127
+  },
+  "遠東唯美牙醫診所|東橋一路１７８號２樓": {
+    "place_id": "ChIJCfW83Ld3bjQRruXQtJFtdB0",
+    "rating": 4.0,
+    "review_count": 351
+  },
+  "遠東聯邦牙醫診所|興南路６８號１樓": {
+    "place_id": "ChIJTRHRJ_Z_bjQRireBO0BGG8k",
+    "rating": 3.6,
+    "review_count": 222
+  },
+  "隆安牙醫診所|中山路２段３６號１樓": {
+    "place_id": "ChIJe37YzHJ9bjQRLcEP7Io63Og",
+    "rating": 4.2,
+    "review_count": 18
+  },
+  "順泰牙醫診所|復興路125之3號": {
+    "place_id": "ChIJodHGVLUjaDQRxzjej7WSQ7g",
+    "rating": 4.4,
+    "review_count": 51
+  },
+  "風禾牙醫診所|崇德路１３６號１、２樓": {
+    "place_id": "ChIJUS1iMKx3bjQRjtFu3Ydi23Y",
+    "rating": 4.9,
+    "review_count": 468
+  },
+  "首嘉牙醫診所|文昌路８號．８－１號": {
+    "place_id": "ChIJb0OmEdV9bjQR_dccW5AaZII",
+    "rating": 3.2,
+    "review_count": 28
+  },
+  "麗安牙醫診所|正強街１０２號１－２樓": {
+    "place_id": "ChIJ_8aCbQBxbjQRBxQdsW1WsRk",
+    "rating": 4.9,
+    "review_count": 95
+  }
+}
