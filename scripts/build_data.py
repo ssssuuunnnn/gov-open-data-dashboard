@@ -593,6 +593,7 @@ CHIAYI_DENTURE_GENERAL_PDF_URL = (
     "?u=LzAwMS9VcGxvYWQvNDA4L3JlbGZpbGUvOTU1NS83ODI3MDYvMTU3Y2Y5NTgtNGFiYi00ZGQxLTk3MjItMWExYmVhYTFjZTk3LnBkZg%3d%3d"
     "&n=MTE15bm05bqm5LiA6Iis6ICB5Lq65YGH54mZ5ZCI57SE6Zmi5omA5ZCN5YaKLnBkZg%3d%3d"
 )
+CHIAYI_DENTURE_GOOGLE_RATINGS_FILE = "data/source/chiayi-denture-google-ratings.json"
 CAREGIVER_CSV = "scripts/sources/caregiver/caregivers.csv"
 CAREGIVER_GOOGLE_RATINGS_FILE = "data/source/caregiver-google-ratings.json"
 
@@ -1634,8 +1635,38 @@ def build_chiayi_denture():
     program 為「中低收入」（無座標，因複製來源本身無座標欄位），原本的「一般身分別」列予以保留、
     不刪除，如實呈現該診所同時服務兩方案的狀態。未來若官方 CSV 已更新納入這3家，此人工補登邏輯
     應改為直接依 CSV 判斷是否重複，避免出現兩筆一模一樣的「中低收入」列（屆時需手動移除本段落）。
+
+    額外欄位 google_rating／google_review_count／google_place_id：使用者需求為呈現各機構的
+    Google 地圖星等與評論數，且明確表示為一次性資料，之後不會重新抓取。本資料集無官方評鑑分數
+    欄位，故不存在欄位語意衝突，仍沿用其他資料集的 google_ 前綴命名慣例。
+
+    資料來源：2026-09-04 用 scripts/fetch_google_ratings.py --dataset chiayi-denture 一次性呼叫
+    Google Places API (Legacy) Text Search，35 個不重複機構名稱全數比對成功（status=OK），整理成
+    data/source/chiayi-denture-google-ratings.json（key 為「診所名稱」）。人工核對時特別確認以下
+    三筆容易誤判的案例，皆核對地址後確認比對正確：
+    - 「臺中榮民總醫院嘉義分院」的 Google 地點名稱為英文「Taichung Veterans General Hospital,
+      Chiayi Branch」，核對 Place Details 回傳地址「600號, Section 2, Shixian Rd, ... West
+      District」與原始地址「嘉義市西區世賢路二段600號」一致，確認為同一地點。
+    - 「仁人牙醫診所」「杏林牙醫診所」的 Google 商家名稱含 SEO 行銷後綴文字（如「隱形矯正／植牙
+      專科」「植牙 嘉義植牙推薦」），核對 Place Details 地址（吳鳳北路288號／147號，皆位於東區）
+      與原始資料地址一致，確認為同一地點，僅顯示名稱不同。
+    同一診所同時出現於「中低收入」與「一般身分別」兩方案列（如劍橋牙醫診所、大明牙醫診所、杏林
+    牙醫診所）時，比對出的 rating/review_count/place_id 完全相同，故所有方案列皆直接依名稱共用
+    同一份快照資料，不需另外處理衝突。查無對照資料的機構，此三欄留空字串，前端顯示為「-」（本次
+    35 個名稱全數有對照資料，故實務上不會出現空值，僅為程式穩健性保留）。
     """
     print("下載 嘉義市中低收入老人免費裝置假牙合約醫院名單 ...", file=sys.stderr)
+
+    try:
+        with open(CHIAYI_DENTURE_GOOGLE_RATINGS_FILE, "r", encoding="utf-8") as f:
+            google_ratings = json.load(f)
+    except FileNotFoundError:
+        google_ratings = {}
+
+    def _google_fields(name):
+        g = google_ratings.get(name, {})
+        return [g.get("rating", ""), g.get("review_count", ""), g.get("place_id", "")]
+
     records = []
     idx = 0
 
@@ -1658,6 +1689,7 @@ def build_chiayi_denture():
             (row.get("電話", "") or "").strip(),  # 6 phone
             float(lat_raw) if lat_raw else "",       # 7 lat
             float(lng_raw) if lng_raw else "",       # 8 lng
+            *_google_fields(name),                    # 9-11 google_rating/review_count/place_id
         ])
     low_income_count = idx
     print(f"  共 {low_income_count} 筆", file=sys.stderr)
@@ -1694,6 +1726,7 @@ def build_chiayi_denture():
                         phone,                          # 6 phone
                         "",                             # 7 lat（此方案來源無座標）
                         "",                             # 8 lng
+                        *_google_fields(name),          # 9-11 google_rating/review_count/place_id
                     ])
                     if name in CHIAYI_DENTURE_LOW_INCOME_ADDED_20260601:
                         added_low_income_patch.append([district, name, addr, phone])
@@ -1713,10 +1746,14 @@ def build_chiayi_denture():
                 phone,                          # 6 phone
                 "",                             # 7 lat（來源複製自無座標的一般身分別列）
                 "",                             # 8 lng
+                *_google_fields(name),          # 9-11 google_rating/review_count/place_id
             ])
 
     print(f"  合計 {len(records)} 筆", file=sys.stderr)
-    fields = ["id", "program", "district", "name", "type", "address", "phone", "lat", "lng"]
+    fields = [
+        "id", "program", "district", "name", "type", "address", "phone", "lat", "lng",
+        "google_rating", "google_review_count", "google_place_id",
+    ]
     return {"fields": fields, "rows": records}
 
 
