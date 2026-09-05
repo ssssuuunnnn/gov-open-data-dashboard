@@ -685,6 +685,9 @@
   ]
 }
 </script>
+<link rel="manifest" href="manifest.webmanifest" />
+<meta name="theme-color" content="#1f6f5c" />
+<link rel="apple-touch-icon" href="assets/icon-192.png" />
 </head>
 <body>
 <header class="site-header">
@@ -1447,6 +1450,7 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   syncUrl();
 })();
 </script>
+<script src="assets/pwa-install.js" defer></script>
 </body>
 </html>
 
