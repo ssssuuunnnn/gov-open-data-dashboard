@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-04T15:41:59.416081+00:00",
+  "generatedAt": "2026-09-05T00:03:51.460630+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -269,5 +269,10 @@
     "count": 11,
     "source": "https://ws.hsinchu.gov.tw/001/Upload/1/opendata/8774/565/e27f2807-bcdf-493b-85d5-ff6604298404.json",
     "title": "新竹縣65歲以上老人健康檢查合約醫療院所"
+  },
+  "tcElderCheckup": {
+    "count": 66,
+    "source": "https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=4aca6b6c-15da-40fa-9a6f-1e7083c84635",
+    "title": "臺中市老人健康檢查合約醫療院所名單"
   }
 }

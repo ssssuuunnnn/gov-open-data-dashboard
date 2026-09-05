@@ -292,6 +292,17 @@
     不作為前端可見欄位)／hosp_addr(地址)／tel(電話)。地址欄位皆已含完整「新北市」＋行政區字首，
     用 parse_county_district(fallback_county="新北市") 即可解析，實測 29 個行政區全數解析成功，
     無 typo／缺前綴問題。無經緯度座標，故本頁不含地圖，詳見 build_ntpc_elder_checkup()）
+31. 臺中市老人健康檢查合約醫療院所名單（DCAT dataset https://cms.data.gov.tw/dataset/85025，
+    dataset id 85025，提供機關：臺中市政府衛生局）
+    https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=4aca6b6c-15da-40fa-9a6f-1e7083c84635
+    （單一 CSV 檔案，實測共66筆。來源網址雖有 CORS 標頭(Access-Control-Allow-Origin: *)，仍比照
+    build_tc_nursing() 慣例由本腳本於伺服器端下載，另輸出內嵌 JS 版本。原始欄位：編號、縣市別代碼、
+    類別、行政區域代碼、院所名稱、聯繫電話、地址、是否收掛號費、服務時段，與 DCAT description 一致；
+    縣市別代碼／行政區域代碼為冗餘代碼欄位不輸出。地址已含完整「臺中市OO區」字首（含中/西/北/東/南
+    等單字行政區），用 parse_county_district(strict=True) 解析，實測66筆中65筆解析成功涵蓋20個
+    行政區，1筆（中國醫藥大學附設醫院）地址缺行政區字首，district 輸出空字串，如實呈現。
+    「類別」分醫學中心/區域醫院/地區醫院/診所四級，可作篩選與圖表分類。無經緯度座標，故本頁不含
+    地圖，詳見 build_tc_elder_checkup()）
 
 用法：
     python3 scripts/build_data.py
@@ -487,6 +498,8 @@ PINGTUNG_LTC_URL = (
     "886f59e6-23b6-4de3-a04a-4de087bdf9b8.csv"
 )
 TC_TRANSPORT_URL = "https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=96251524-861c-4b92-9401-590444adcb8f"
+TC_ELDER_CHECKUP_URL = "https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=4aca6b6c-15da-40fa-9a6f-1e7083c84635"
+TC_ELDER_CHECKUP_GOOGLE_RATINGS_FILE = "data/source/tc-elder-checkup-google-ratings.json"
 TC_DEMENTIA_URL = "https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=a753a1f2-25d6-469c-9580-83e5e17405cf"
 TYLTC_URL = (
     "https://opendata.tycg.gov.tw/api/dataset/2e087011-3a3d-4ae1-9038-19b2f3f43a9a/"
@@ -2857,6 +2870,80 @@ def build_tpe_elder_checkup():
     return {"fields": fields, "rows": records}
 
 
+def build_tc_elder_checkup():
+    """臺中市老人健康檢查合約醫療院所名單（臺中市政府衛生局，DCAT dataset
+    https://cms.data.gov.tw/dataset/85025，dataset id 85025，授權：政府資料開放授權條款-第1版，
+    更新頻率：不定期）。
+
+    來源為單一 CSV distribution（TC_ELDER_CHECKUP_URL），UTF-8-sig 編碼（含 BOM）。實測共66筆。
+    原始欄位：編號、縣市別代碼、類別、行政區域代碼、院所名稱、聯繫電話、地址、是否收掛號費、服務時段，
+    與 DCAT description 完全一致。「縣市別代碼」／「行政區域代碼」為冗餘行政區代碼欄位（非中文，
+    不具篩選意義），不輸出至前端。
+
+    「地址」已含完整「臺中市OO區」字首（含中區/西區/北區/東區/南區等單字行政區名稱），用
+    parse_county_district(strict=True) 直接解析，實測66筆中65筆成功解析，涵蓋20個行政區（北屯/
+    南屯/大甲/大里/大雅/太平/東勢/梧棲/沙鹿/潭子/烏日/神岡/西屯/豐原/霧峰，另涵蓋中/北/西/東/南
+    五個市區）。**1筆例外**：編號28「中國醫藥大學附設醫院」地址為「臺中市育德路2號」，缺少行政區
+    字首（原始資料品質問題，該院實際位於北區），district 會輸出空字串，如實呈現不代為修正。
+
+    「類別」欄位分四級：醫學中心(3)/區域醫院(12)/地區醫院(29)/診所(22)，可作篩選與圖表分類依據。
+    「是否收掛號費」多數為「否」，少數含掛號費金額與年齡分級文字（如「是，65-69歲150元，70-89歲
+    75元，90歲以上免收」），原文照登不拆解為結構化欄位。「服務時段」為自由格式文字，原文呈現不解析。
+
+    無經緯度座標，故本頁不含地圖，僅提供行政區／類別／關鍵字篩選與統計圖表。來源網址雖已允許 CORS
+    (Access-Control-Allow-Origin: *)，仍比照 build_tc_nursing() 既有慣例，由本腳本於伺服器端下載
+    並輸出內嵌 JS 版本，避免依賴外部網址即時可用性。
+
+    額外欄位 google_rating／google_review_count／google_place_id：使用者需求為呈現各院所的
+    Google 地圖星等與評論數，比照 build_ntpc_elder_checkup()／build_tyc_elder() 的作法，用
+    `scripts/fetch_google_ratings.py --dataset tc-elder-checkup --name-field name
+    --address-field address` 一次性呼叫 Google Places API (Legacy) Text Search，人工核對配對
+    正確性後整理成 data/source/tc-elder-checkup-google-ratings.json（key 為院所名稱）供本
+    function 讀取合併，之後不會重新抓取。**已於 2026-09-05 執行該一次性查詢並完成**：全部 66 筆
+    皆成功配對（無 NOT_FOUND/ERROR、無 rating=None）、66 個 place_id 皆不重複（無共址誤配問題）。
+    人工核對時特別確認以下幾筆 Google 配對名稱與原始名稱差異較大或含英文名稱的案例，皆用地址
+    （尤其街道名）交叉核對確認無誤：「澄清綜合醫院」（臺中市中區平等街）配對到
+    「Cheng Ching Hospital Pingdeng Branch」（Pingdeng＝平等，地址一致）；「中國醫藥大學附設
+    醫院台中東區分院」（臺中市東區）配對到「China Medical University Hospital East District
+    Hospital」（East District＝東區，地址一致）；「長安診所」（臺中市大雅區）配對到「大雅長安
+    診所(糖尿病腎臟病洗腎室)」；「全民醫院」（臺中市北屯區）配對到「全民診所（原全民醫院）...」
+    （同一機構更名，地址一致）；其餘皆為英文譯名或附加科別/服務說明的同一機構，非誤配對。
+    """
+    print("下載 臺中市老人健康檢查合約醫療院所名單 ...", file=sys.stderr)
+    # 同 build_tc_nursing()：來源 CSV 檔頭殘留 BOM 字元，utf-8-sig 解碼未能完全去除，
+    # 需額外 lstrip 避免「編號」欄名前殘留 \ufeff 導致 DictReader 讀不到該欄。
+    text = fetch(TC_ELDER_CHECKUP_URL).lstrip("\ufeff")
+    reader = csv.DictReader(io.StringIO(text))
+    try:
+        with open(TC_ELDER_CHECKUP_GOOGLE_RATINGS_FILE, "r", encoding="utf-8") as f:
+            google_ratings = json.load(f)
+    except FileNotFoundError:
+        google_ratings = {}
+    records = []
+    for row in reader:
+        addr = (row.get("地址", "") or "").strip()
+        _county, district = parse_county_district(addr, strict=True)
+        name = row.get("院所名稱", "").strip()
+        g = google_ratings.get(name, {})
+        records.append([
+            row.get("編號", "").strip(),                       # 0 id
+            row.get("類別", "").strip(),                       # 1 category
+            name,                                                # 2 name
+            row.get("聯繫電話", "").strip(),                   # 3 phone
+            addr,                                                # 4 address
+            district,                                            # 5 district
+            row.get("是否收掛號費", "").strip(),               # 6 feeNote
+            row.get("服務時段", "").strip(),                   # 7 hours
+            g.get("rating", ""),                                # 8 google_rating（一次性資料，查無留空字串）
+            g.get("review_count", ""),                          # 9 google_review_count（同上）
+            g.get("place_id", ""),                              # 10 google_place_id（同上，用於評論連結）
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "category", "name", "phone", "address", "district", "feeNote", "hours",
+              "google_rating", "google_review_count", "google_place_id"]
+    return {"fields": fields, "rows": records}
+
+
 def _tyc_transport_county_district(addr: str) -> tuple[str, str]:
     """解析辦理單位地址所在縣市／行政區。地址分布多個縣市（桃園市/臺北市/新北市等，服務桃園市民但
     辦理單位本身設址於外縣市），若以「桃園市」開頭或直接以桃園市13個行政區名稱開頭（少數地址缺少
@@ -4867,6 +4954,15 @@ DATASETS = [
         "meta_key": "tpeElderCheckup",
         "title": "臺北市老人健康檢查特約醫事機構",
         "source": lambda: TPE_ELDER_CHECKUP_URL,
+    },
+    {
+        "key": "tc-elder-checkup",
+        "builder": build_tc_elder_checkup,
+        "json": "data/tc-elder-checkup.json",
+        "js_var": "TC_ELDER_CHECKUP_DATA",
+        "meta_key": "tcElderCheckup",
+        "title": "臺中市老人健康檢查合約醫療院所名單",
+        "source": lambda: TC_ELDER_CHECKUP_URL,
     },
 ]
 

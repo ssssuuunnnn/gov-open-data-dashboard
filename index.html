@@ -582,6 +582,17 @@
         "@type": "Organization",
         "name": "臺北市政府衛生局"
       }
+    },
+    {
+      "@type": "Dataset",
+      "name": "臺中市老人健康檢查合約醫療院所名單",
+      "description": "臺中市政府衛生局公告之老人健康檢查合約醫療院所名單，收錄66筆醫學中心/區域醫院/地區醫院/診所名稱、電話、地址、是否收掛號費與服務時段，供65歲以上長者（含55歲以上原住民）查詢就近合約院所辦理樂齡長青健康檢查。",
+      "url": "https://www.sunkuo.cc/gov-open-data-dashboard/tc-elder-checkup/index.html",
+      "license": "http://data.gov.tw/license",
+      "creator": {
+        "@type": "Organization",
+        "name": "臺中市政府衛生局"
+      }
     }
   ]
 }
@@ -1049,6 +1060,12 @@
       <div class="desc">臺北市政府衛生局提供，整理65歲以上長者（含55歲以上原住民）老人健康檢查資格、項目與A（腦肺）B（腹部超音波）C（骨密肌力）套餐說明，並列出特約醫事機構名稱、地址、電話、分機與手機，可依行政區、關鍵字篩選並瀏覽統計圖表。</div>
       <div class="footline" id="tpe-elder-checkup-count">資料筆數載入中…</div>
     </a>
+    <a class="home-card" href="tc-elder-checkup/index.html" data-county="臺中市" data-category="elder-checkup">
+      <span class="tag">臺中市</span>
+      <h2>臺中市老人健康檢查合約醫療院所</h2>
+      <div class="desc">臺中市政府衛生局提供，整理樂齡長青健康檢查補助期限、對象標準、服務內容與應攜帶文件，並列出醫學中心/區域醫院/地區醫院/診所合約院所名稱、電話、地址與掛號費用，可依行政區、類別、關鍵字篩選並瀏覽統計圖表。</div>
+      <div class="footline" id="tc-elder-checkup-count">資料筆數載入中…</div>
+    </a>
     <p class="no-match" id="county-no-match" style="display:none; grid-column: 1 / -1; text-align:center; color: var(--color-muted); padding: 24px 0;">
       沒有符合所選縣市的資料集，請調整篩選條件。
     </p>
@@ -1340,6 +1357,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.tpeElderCheckup) {
     document.getElementById("tpe-elder-checkup-count").textContent = `共 ${meta.tpeElderCheckup.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.tcElderCheckup) {
+    document.getElementById("tc-elder-checkup-count").textContent = `共 ${meta.tcElderCheckup.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
 }).catch(() => {});
 
