@@ -659,6 +659,34 @@ git config core.hooksPath .githooks
   結構化資料，供搜尋引擎判斷網站的更新頻率與內容新鮮度；**每次新增資料集或重大功能變更時，請同步在此頁
   新增一筆條目**，並更新 `dateModified`。
 
+## PWA（可安裝為應用程式）
+
+除了 `changelog/index.html`（更新紀錄頁，明確排除）以外，全站每個頁面（含首頁）都是可安裝的 PWA，
+安裝後開啟仍會停留在原本瀏覽的那一頁，而不是統一導回首頁：
+
+- 每個頁面各自擁有一份專屬的 `manifest.webmanifest`（與該頁 `index.html` 同目錄），`start_url` 指向
+  自己。這是因為 Web App Manifest 的 `start_url` 是相對於 **manifest 檔案自身網址**解析、而非相對於
+  當下瀏覽的頁面網址，所以無法用單一份全站共用的 manifest 達成「各頁各自安裝、各自回到原頁」的效果。
+- `scripts/generate_pwa_manifests.py`：掃描全站所有頁面（changelog 除外），從既有 `<title>`／
+  `<meta name="description">` 自動產生對應的 `manifest.webmanifest`（`name`/`short_name`/
+  `description`/`start_url`/`icons` 等欄位）。**新增資料集頁面後，請重新執行本腳本**
+  （`python3 scripts/generate_pwa_manifests.py`），會自動涵蓋新頁面、不需手動補檔；腳本可重複執行
+  （每次完整覆寫，冪等）。
+- `scripts/apply_pwa_tags.py`：對全站頁面（changelog 除外）的 `<head>` 批次插入
+  `<link rel="manifest">`／`<meta name="theme-color">`／`<link rel="apple-touch-icon">`，並在
+  `</body>` 前插入 `<script src="assets/pwa-install.js">`。**新增資料集頁面後，請重新執行本腳本**
+  （`python3 scripts/apply_pwa_tags.py`）；已插入過的頁面會自動跳過（偵測 `rel="manifest"` 是否存在），
+  不會重複插入。
+- `assets/sw.js`：全站共用 Service Worker。HTML 頁面與 `data/*.json`／`data/*.js`（會定期更新的政府
+  開放資料）採 network-first，只有離線時才退回快取；共用靜態資源（CSS／共用 JS／圖示）採 cache-first。
+  跨網域資源（Chart.js CDN、Google Analytics 等）一律不快取。
+- `assets/pwa-install.js`：監聽瀏覽器 `beforeinstallprompt` 事件，顯示提示橫幅「可以將此頁面加入應用
+  程式，方便未來持續查詢或找不到頁面」，使用者可選擇「加入」（觸發瀏覽器原生安裝流程）或「不用了」
+  （寫入 `localStorage`，該頁不再顯示，不影響其他頁面）。**iOS Safari 不支援 `beforeinstallprompt`**，
+  該裝置使用者不會看到此橫幅，僅能透過瀏覽器選單手動「加入主畫面」。
+- 圖示 `assets/icon-192.png`／`assets/icon-512.png` 由既有 `assets/favicon.png`（256×256）用 Pillow
+  縮放產生，供 manifest 的 `icons` 欄位與 `apple-touch-icon` 共用。
+
 ## 技術說明. 
 
 - 純靜態網站，無需後端，前端使用原生 JavaScript + [Leaflet](https://leafletjs.com/)（含 MarkerCluster 群聚顯示 3 萬筆座標點）+ [Chart.js](https://www.chartjs.org/)。
