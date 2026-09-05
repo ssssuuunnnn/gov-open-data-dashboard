@@ -1,0 +1,24 @@
+{
+  "name": "115年宜蘭縣老人假牙補助申請須知：全縣特約牙醫診所名單與評價查詢",
+  "short_name": "115年宜蘭縣老人假牙補",
+  "description": "快速查詢 2026 宜蘭縣老人假牙補助特約診所名單！涵蓋宜蘭市、羅東、礁溪等各區牙醫診所評分與地址，附上全口/部分假牙補助金額表、申請步驟及公所聯絡資訊。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

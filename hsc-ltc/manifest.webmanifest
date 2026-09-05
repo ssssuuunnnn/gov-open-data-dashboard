@@ -1,0 +1,24 @@
+{
+  "name": "2026 新竹縣長照機構名冊｜合法日間照顧與居家服務總覽",
+  "short_name": "2026",
+  "description": "尋找新竹縣的合法長照資源？本站完整收錄新竹縣政府立案之居家服務、日間照顧與護理之家名單。透過互動地圖與詳細資料，幫您快速找到最適合長輩的照護機構。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

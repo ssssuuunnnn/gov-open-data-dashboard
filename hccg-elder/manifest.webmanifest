@@ -1,0 +1,24 @@
+{
+  "name": "新竹市老人安養機構地圖查詢｜立案護理之家與核定床位名冊",
+  "short_name": "新竹市老人安養機構地圖查",
+  "description": "新竹市政府社會處老人福利機構一覽表開放資料視覺化，收錄新竹市立案老人養護機構的名稱、負責人、地址、電話、收容對象與核定收容人數，提供地圖、行政區篩選、關鍵字搜尋與統計圖表。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

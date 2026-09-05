@@ -1,0 +1,24 @@
+{
+  "name": "高雄市居家長照機構查詢｜115家銀髮族到府照護服務地圖",
+  "short_name": "高雄市居家長照機構查詢｜",
+  "description": "高雄市合法居家長照機構總整理！收錄超過 115 家政府立案的到府照護服務單位。提供各行政區互動地圖、機構評鑑與聯絡電話，讓您輕鬆比較，為家中長輩安排最妥善的居家照顧。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

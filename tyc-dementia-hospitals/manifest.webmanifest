@@ -1,0 +1,24 @@
+{
+  "name": "桃園失智症門診與醫院名單｜失智症前兆警訊與就醫指南",
+  "short_name": "桃園失智症門診與醫院名單",
+  "description": "整理桃園市 18 家提供失智症診療服務之醫院名冊（含桃園區、龜山區、中壢區等），並提供台灣失智症協會之失智症十大早期警訊、自我檢視重點與就醫科別指南，協助您快速尋求專業醫療資源。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

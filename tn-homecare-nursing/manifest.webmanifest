@@ -1,0 +1,24 @@
+{
+  "name": "臺南市居家護理機構儀表板｜長照機構查詢",
+  "short_name": "臺南市居家護理機構儀表板",
+  "description": "臺南市居家護理機構去哪找？這裡彙整了大台南地區各行政區的合法居家護理所名單。提供詳細地址、負責人與聯絡電話，讓有居家醫療與照護需求的家庭快速取得資源，立即查詢！",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

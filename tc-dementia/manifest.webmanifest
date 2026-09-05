@@ -1,0 +1,24 @@
+{
+  "name": "臺中市失智症服務與據點查詢地圖｜失智共照中心地圖儀表板",
+  "short_name": "臺中市失智症服務與據點查",
+  "description": "提供臺中市失智共同照護中心與失智社區服務據點地圖查詢。可依行政區快速篩選鄰近醫療診斷、照顧諮詢、認知促進課程等照護資源，掌握最新服務據點資訊。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

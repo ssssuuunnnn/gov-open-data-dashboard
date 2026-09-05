@@ -1,0 +1,24 @@
+{
+  "name": "2026花蓮身心障礙鑑定流程與醫院名冊｜7家指定醫院地址電話線上申請",
+  "short_name": "2026花蓮身心障礙鑑定",
+  "description": "花蓮縣身心障礙鑑定申請流程總整理：公所領表、7家指定醫院地址電話、線上申請、到宅鑑定條件與證明展延一次看懂，含花蓮慈濟、門諾、榮總鳳林/玉里分院等指定醫院名冊。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

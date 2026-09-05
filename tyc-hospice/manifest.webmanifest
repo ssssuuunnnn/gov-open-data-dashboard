@@ -1,0 +1,24 @@
+{
+  "name": "桃園市安寧療護資源總整理：安寧病房、居家安寧與共照查詢",
+  "short_name": "桃園市安寧療護資源總整理",
+  "description": "【2026 最新】完整收錄桃園市社區安寧療護服務資源！提供桃園區、中壢區、龜山區等各大醫院與診所之安寧病房、安寧共照及居家安寧聯絡電話、地址與申請資格，協助家屬快速尋求在地醫療照護。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

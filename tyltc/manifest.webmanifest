@@ -1,0 +1,24 @@
+{
+  "name": "找桃園長照資源！2026年115家特約居家護理、物理與職能治療所一鍵查詢",
+  "short_name": "找桃園長照資源！2026",
+  "description": "收錄最新桃園市長期照護專業服務特約單位名冊。無論是居家照護、物理治療或職能治療，透過關鍵字與地區快速篩選，立即獲取最完整的長照機構名單與聯絡資訊。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

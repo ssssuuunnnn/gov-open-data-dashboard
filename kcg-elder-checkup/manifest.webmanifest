@@ -1,0 +1,24 @@
+{
+  "name": "2026高雄市老人健檢合約醫院診所查詢：項目、名額與補助須知",
+  "short_name": "2026高雄市老人健檢合",
+  "description": "提供2026年高雄市65歲以上長者（含55歲以上原住民）老人健檢醫院推薦與合約院所查詢，收錄三民區、鳳山區、岡山區等21個行政區共49家合約院所名稱、地址、電話，整理高雄老人健檢項目、成人預防保健服務、檢查名額與敬老卡健檢獎勵儲值金申請須知，可依行政區、機構類型與關鍵字快速篩選。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

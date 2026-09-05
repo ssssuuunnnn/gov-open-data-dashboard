@@ -1,0 +1,24 @@
+{
+  "name": "2026嘉義市身心障礙鑑定醫院名冊與申請流程｜到宅鑑定與評估查詢",
+  "short_name": "2026嘉義市身心障礙鑑",
+  "description": "收錄 2026 年嘉義市 5 家身心障礙鑑定指定醫院名冊（嘉基、聖馬爾定、嘉義醫院等），提供最新身心障礙證明申請 4 大步驟、到宅鑑定條件與費用說明。依ICF 8大類別與發展遲緩快速篩選適合的評估醫院！",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

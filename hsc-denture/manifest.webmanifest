@@ -1,0 +1,24 @@
+{
+  "name": "2026 新竹縣老人假牙補助申請須知與特約醫療院所查詢",
+  "short_name": "2026",
+  "description": "提供 2026 最新新竹縣中低收入老人假牙補助申請資格、最高 4.4 萬元補助金額與流程說明。並提供竹北、竹東、湖口等鄉鎮最新特約牙醫診所與醫院名冊快速查詢。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

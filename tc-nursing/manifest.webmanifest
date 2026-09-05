@@ -1,0 +1,24 @@
+{
+  "name": "臺中市合法護理之家查詢｜最新評鑑成績與即時床位資訊",
+  "short_name": "臺中市合法護理之家查詢｜",
+  "description": "臺中市政府衛生局一般護理之家開放資料視覺化，收錄臺中市各行政區護理之家名稱、床數、評鑑結果、督考結果、負責人與聯絡電話，提供行政區篩選、關鍵字搜尋與統計圖表。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

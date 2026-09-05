@@ -1,0 +1,24 @@
+{
+  "name": "臺北市失智症門診與診療機構名冊｜大安、內湖、士林記憶門診・AD-8篩檢",
+  "short_name": "臺北市失智症門診與診療機",
+  "description": "臺北市35家失智症診療醫院名冊（含大安區、內湖區、士林區等），整理神經內科、精神科（身心科）與記憶門診資訊，可依行政區、健保特約類別篩選，並提供AD-8極早期失智症篩檢量表、症狀預防與三大類型完整衛教指南。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

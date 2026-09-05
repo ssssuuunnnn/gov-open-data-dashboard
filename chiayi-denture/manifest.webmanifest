@@ -1,0 +1,24 @@
+{
+  "name": "嘉義市假牙補助特約診所地圖｜2026 申請資格、通知單與診所電話",
+  "short_name": "嘉義市假牙補助特約診所地",
+  "description": "嘉義市老人補助裝置假牙懶人包！整理東區與西區共59筆合約醫療院所清單與地圖。輕鬆查詢一般身分別與中低收入假牙補助資格、申請流程及社會處聯繫窗口。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

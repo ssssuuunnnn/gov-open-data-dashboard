@@ -1,0 +1,24 @@
+{
+  "name": "2026年桃園長照交通接送服務查詢：補助金額、申請資格與特約單位名冊",
+  "short_name": "2026年桃園長照交通接",
+  "description": "【2026 最新】提供桃園市長照交通接送服務完整指南！涵蓋一般戶與偏遠地區（復興區）補助金額試算、長照2級以上申請資格，並整理 14 家特約租車與接送單位之電話、地址及服務區域，方便快速聯繫與查詢。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

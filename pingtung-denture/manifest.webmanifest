@@ -1,0 +1,24 @@
+{
+  "name": "屏東縣115年長者假牙補助：申請資格、金額與特約院所名單",
+  "short_name": "屏東縣115年長者假牙補",
+  "description": "【2026最新】屏東縣115年長者假牙裝置補助全攻略！提供最新申請資格、全口/局部假牙最高補助金額、5步驟申請流程及66家特約醫療院所電話地址查詢。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

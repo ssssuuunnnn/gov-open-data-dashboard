@@ -1,0 +1,24 @@
+{
+  "name": "高雄市診所醫院查詢：依行政區、科別快速搜尋門診資訊",
+  "short_name": "高雄市診所醫院查詢：依行",
+  "description": "提供高雄市超過3,000家醫療院所與診所查詢，收錄三民區、左營區、鳳山區等38個行政區，涵蓋牙科、內科、婦產科等39種西醫、牙科及中醫科別門診地址與電話資訊，可依行政區與科別快速篩選鄰近醫療資源。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

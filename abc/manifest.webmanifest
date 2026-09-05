@@ -1,0 +1,24 @@
+{
+  "name": "全台長照 ABC 據點地圖查詢｜快速尋找鄰近居家與社區照護服務",
+  "short_name": "全台長照",
+  "description": "完整收錄衛福部最新長照 ABC 據點資料，包含全台 A級旗艦店、B級複合型中心與 C級巷弄站。透過互動式地圖快速查詢住家附近的居家服務與日間照顧，輕鬆掌握社區照護資源。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

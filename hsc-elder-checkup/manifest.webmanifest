@@ -1,0 +1,24 @@
+{
+  "name": "2026新竹縣老人健康檢查合約醫院查詢：預約時間、資格與檢查項目",
+  "short_name": "2026新竹縣老人健康檢",
+  "description": "新竹縣65歲以上長者（含55歲原住民）老人健檢怎麼預約？查詢10家合約醫院地址電話、115年預約與檢查時間、資格與檢查項目，立即篩選最近院所！",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

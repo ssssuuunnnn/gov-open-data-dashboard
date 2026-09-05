@@ -1,0 +1,24 @@
+{
+  "name": "2026 桃園長照機構查詢｜安養院與護理之家評鑑 x Google商家評價總整理",
+  "short_name": "2026",
+  "description": "整合桃園市政府最新評鑑成績與 Google Map 真實星等評論！收錄桃園區、中壢區等 67 家安養中心與長照機構，提供床位數、電話、地址及民眾口碑評價，幫您快速找到最安心的照護選擇。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

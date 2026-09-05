@@ -1,0 +1,24 @@
+{
+  "name": "台灣長照機構與身心障礙鑑定查詢儀表板｜全台護理之家與合約醫院互動地圖",
+  "short_name": "台灣長照機構與身心障礙鑑",
+  "description": "找長照機構不用霧煞煞！一站式查詢全台長照 ABC 據點、老人福利機構、假牙補助與桃園身心障礙鑑定合約醫院。支援多縣市篩選與地圖座標，幫您快速找到對應的社福與醫療資源。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

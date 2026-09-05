@@ -1,0 +1,24 @@
+{
+  "name": "新北市長照機構與護理之家查詢｜最新評鑑等級與聯絡資訊",
+  "short_name": "新北市長照機構與護理之家",
+  "description": "新北市政府衛生局一般護理之家開放資料視覺化，收錄新北市各行政區護理之家名稱、地址、聯絡人、電話、開放床數與應配置護理人員數，提供行政區篩選、關鍵字搜尋與統計圖表。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

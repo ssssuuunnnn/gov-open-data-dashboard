@@ -1,0 +1,24 @@
+{
+  "name": "2026 桃園市長照機構與安養院名冊｜失能老人保護安置快速查詢",
+  "short_name": "2026",
+  "description": "一站式查詢桃園市及鄰近縣市之失能老人長照與保護安置機構！整合 115-116 年最新公費簽約名冊，提供養護型與長照型機構地址、電話與快速篩選功能，搜尋照護機構更便利。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

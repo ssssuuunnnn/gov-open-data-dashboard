@@ -1,0 +1,24 @@
+{
+  "name": "全台安寧病房與安寧療護機構查詢｜即時病床動態與合作醫院名單",
+  "short_name": "全台安寧病房與安寧療護機",
+  "description": "彙整臺北市衛生局提供之全國安寧療護資源，收錄21縣市共85家醫學中心、區域醫院與地區醫院之安寧病房合作醫院名單，可依業務組別、特約類別與縣市快速篩選查詢，並直接連結至各院所官方病床動態查詢頁面，即時掌握全台安寧病房使用情形，快速找到合適的轉介醫院。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

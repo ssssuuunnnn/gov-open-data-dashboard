@@ -1,0 +1,24 @@
+{
+  "name": "2026台北市老人假牙補助：資格申請＋診所Google評價星等懶人包",
+  "short_name": "2026台北市老人假牙補",
+  "description": "幫爸媽省荷包！整理2026台北市老人假牙補助申請資格、流程與最高補助金額，並整合特約院所Google Map星等評價與評論數，幫您快速找到好評判診所！",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

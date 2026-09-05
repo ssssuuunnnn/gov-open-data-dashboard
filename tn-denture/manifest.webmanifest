@@ -1,0 +1,24 @@
+{
+  "name": "2026 臺南市老人假牙補助懶人包：資格金額與合約診所查詢",
+  "short_name": "2026",
+  "description": "【2026最新】臺南市免費假牙補助申請全攻略！詳細解析設籍條件、綜合所得稅率限制、每人最高 4.4 萬補助金額與審核期程。內含全臺南 161 家合約牙醫診所資料庫，支援依地區與關鍵字篩選！",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

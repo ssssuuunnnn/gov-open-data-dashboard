@@ -1,0 +1,24 @@
+{
+  "name": "2026【全台看護懶人包】私人居家看護／照服機構聯絡方式與收費查詢",
+  "short_name": "2026【全台看護懶人包",
+  "description": "家中有照顧需求？這裡整理全台各縣市私人看護機構電話、服務涵蓋範圍與透明公開的收費頁面連結，讓您一次比價、快速聯繫免煩惱！",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

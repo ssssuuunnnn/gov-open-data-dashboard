@@ -1,0 +1,24 @@
+{
+  "name": "115年花蓮縣65歲以上長者假牙補助懶人包｜資格、金額與合約院所查詢",
+  "short_name": "115年花蓮縣65歲以上",
+  "description": "花蓮縣115年度65歲以上長者假牙補助最新資訊！涵蓋一般長者與中低收入戶等福利身分長者的申請資格、應備文件、申請流程五步驟、補助金額限制，並提供37家合約醫療院所名單與 Google 評分查詢。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

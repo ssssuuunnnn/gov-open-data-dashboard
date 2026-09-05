@@ -1,0 +1,24 @@
+{
+  "name": "2026/115年臺南市身心障礙鑑定醫院名冊與申請流程｜16家指定醫院查詢",
+  "short_name": "2026/115年臺南市",
+  "description": "【2026最新版】彙整臺南市16家身心障礙鑑定指定醫院（成大、奇美、新樓等），提供各區醫院地址、電話與第1~8類鑑定類別篩選，並整理身心障礙證明申請流程、應備文件與到宅鑑定說明。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

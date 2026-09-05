@@ -1,0 +1,24 @@
+{
+  "name": "臺北市老人健康檢查：資格、項目、ABC套餐與特約醫事機構查詢",
+  "short_name": "臺北市老人健康檢查：資格",
+  "description": "整理臺北市65歲以上（原住民55歲以上）長者免費老人健康檢查申請資格、檢查項目（含憂鬱症篩檢、認知功能評估）與A（腦肺）B（腹部超音波）C（骨密肌力）三種套餐內容，並可查詢臺北市老人健康檢查特約醫事機構名單。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

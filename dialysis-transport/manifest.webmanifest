@@ -1,0 +1,24 @@
+{
+  "name": "2026 洗腎交通接送懶人包：長照補助申辦與民間接送資源清單",
+  "short_name": "2026",
+  "description": "彙整全台洗腎（透析）就醫交通接送資訊！清楚說明長照 2.0 補助碼別（DA01/BD03）與申請流程，並提供各地區民間洗腎派車、租賃業者清單，幫您快速找到合適的就醫接送資源。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

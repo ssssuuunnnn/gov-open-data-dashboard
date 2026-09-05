@@ -1,0 +1,24 @@
+{
+  "name": "115年高雄免費裝假牙特約診所查詢與申請須知｜最新醫療院所名冊",
+  "short_name": "115年高雄免費裝假牙特",
+  "description": "最新 115 年高雄市免費裝假牙（假牙補助）特約牙醫醫療院所線上查詢！整合高雄各區醫院、牙醫診所與衛生所名冊，提供申請資格、篩檢時間、保固維修等 Q&amp;A 須知，快速幫長輩找到合適牙醫。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

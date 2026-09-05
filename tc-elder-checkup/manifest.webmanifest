@@ -1,0 +1,24 @@
+{
+  "name": "臺中市老人健康檢查合約醫療院所查詢：樂齡長青健檢補助資格與項目",
+  "short_name": "臺中市老人健康檢查合約醫",
+  "description": "臺中市65歲以上長者（含55歲以上原住民）老人健康檢查合約醫療院所查詢，收錄66家醫學中心/區域醫院/地區醫院/診所名稱、電話、地址、掛號費用與服務時段，整理樂齡長青健檢補助期限、資格、項目與應攜帶文件，提供行政區、類別與關鍵字篩選。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

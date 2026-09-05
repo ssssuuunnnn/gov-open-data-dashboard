@@ -1,0 +1,24 @@
+{
+  "name": "臺中市失能者交通接送服務地圖儀表板｜長照交通接送查詢",
+  "short_name": "臺中市失能者交通接送服務",
+  "description": "臺中市政府衛生局提供之失能者交通接送服務開放資料視覺化，協助中重度失能者滿足以就醫及使用長期照顧服務為主要目的之交通服務需求，收錄辦理單位、連絡電話、地址與服務區域，提供地圖、服務區域多選篩選、行政區篩選、關鍵字搜尋與統計圖表。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

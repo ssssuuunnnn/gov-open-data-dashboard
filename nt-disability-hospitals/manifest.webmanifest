@@ -1,0 +1,24 @@
+{
+  "name": "南投縣身心障礙鑑定醫院名冊與申請說明｜南投市/草屯/竹山/埔里10家指定醫院查詢",
+  "short_name": "南投縣身心障礙鑑定醫院名",
+  "description": "彙整南投縣南投市、草屯鎮、竹山鎮、埔里鎮共10家身心障礙鑑定指定醫院（南投醫院、埔里基督教醫院、竹山秀傳醫院等），提供各鄉鎮市醫院地址、電話與第1~8類鑑定類別（八大向度）篩選，並整理鑑定分類說明Q&A。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

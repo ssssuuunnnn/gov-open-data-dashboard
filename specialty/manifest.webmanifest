@@ -1,0 +1,24 @@
+{
+  "name": "臺北市長照特約單位查詢｜復能照護與營養服務機構地圖",
+  "short_name": "臺北市長照特約單位查詢｜",
+  "description": "臺北市長照專業服務特約單位最新名冊。快速查詢大台北地區提供「復能照護」、「營養服務」等專業機構的地點與聯絡方式。幫助有特定復健與醫療需求的長輩，找到最適合的專業團隊。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
