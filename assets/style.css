@@ -71,6 +71,12 @@ main {
   padding: 20px 24px 60px;
 }
 
+.page-intro {
+  color: var(--color-text);
+  line-height: 1.7;
+  margin: 0 0 16px;
+}
+
 .card {
   background: var(--color-card);
   border-radius: var(--radius);
@@ -302,6 +308,13 @@ table.data-table th {
   white-space: nowrap;
 }
 table.data-table tbody tr:hover { background: #f1f7f5; }
+table.data-table caption {
+  text-align: left;
+  padding: 10px 10px 6px;
+  font-weight: 600;
+  color: var(--color-text);
+  caption-side: top;
+}
 .table-wrap { overflow-x: auto; max-height: 520px; overflow-y: auto; border: 1px solid var(--color-border); border-radius: 8px; }
 /* 資料量少的頁面（如私人機構名錄）不需限制高度，直接展開顯示全部明細 */
 .table-container-full .table-wrap { max-height: none; overflow-y: visible; }

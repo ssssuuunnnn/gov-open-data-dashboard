@@ -1,5 +1,5 @@
 /* 共用：分頁表格元件 */
-function createPagedTable({ container, columns, pageSize = 20, onRowClick = null }) {
+function createPagedTable({ container, columns, pageSize = 20, onRowClick = null, caption = null }) {
   let data = [];
   let sortKey = null;
   let sortDir = 1;
@@ -9,6 +9,11 @@ function createPagedTable({ container, columns, pageSize = 20, onRowClick = null
   wrap.className = "table-wrap";
   const table = document.createElement("table");
   table.className = "data-table";
+  if (caption) {
+    const captionEl = document.createElement("caption");
+    captionEl.textContent = caption;
+    table.appendChild(captionEl);
+  }
   const thead = document.createElement("thead");
   const trHead = document.createElement("tr");
   columns.forEach((col) => {

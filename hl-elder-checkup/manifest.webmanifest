@@ -1,0 +1,24 @@
+{
+  "name": "花蓮縣免費長者健康檢查醫療院所地圖查詢｜合約醫院與衛生所名冊",
+  "short_name": "花蓮長者健檢院所查詢",
+  "description": "花蓮縣衛生局免費長者健康檢查醫療院所表開放資料視覺化，收錄提供免費長者健康檢查服務的醫院與衛生所名稱、電話、鄉鎮別、地址與座標，提供地圖、鄉鎮篩選、關鍵字搜尋與統計圖表。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

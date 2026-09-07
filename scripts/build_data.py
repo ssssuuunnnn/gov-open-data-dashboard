@@ -547,6 +547,10 @@ HL_DISABILITY_HOSPITALS_URL = (
     "https://ws.hl.gov.tw/001/Upload/518/relfile/23071/104507/"
     "9d82c77f-3a4c-45d0-b699-1da358e577de.csv"
 )
+HL_ELDER_CHECKUP_URL = (
+    "https://ws.hl.gov.tw/001/Upload/518/relfile/22643/88545/"
+    "8b59b951-56d2-41e1-921d-66937bf9e670.csv"
+)
 HCCG_DISABILITY_HOSPITALS_URL = (
     "https://odws.hccg.gov.tw/001/Upload/25/opendataback/9059/315/"
     "e1cdf934-b234-48cf-a4fa-cf4014166b16.json"
@@ -4458,6 +4462,70 @@ def build_hl_disability_hospitals():
     return {"fields": fields, "rows": records}
 
 
+def build_hl_elder_checkup():
+    """花蓮縣免費長者健康檢查醫療院所表（花蓮縣衛生局，DCAT dataset id 146136，
+    https://cms.data.gov.tw/dataset/146136 ，聯絡窗口：吳基德 03-8227141#392，
+    授權：政府資料開放授權條款-第1版，更新頻率：不定期）。
+
+    使用者原提供衛生局公告 PDF 附件連結（`ws.hl.gov.tw/Download.ashx?...`），但 DCAT 本身另提供
+    結構化 CSV distribution，內容更完整且可程式化解析，故改用 CSV：`HL_ELDER_CHECKUP_URL`
+    （`ws.hl.gov.tw` 下載連結，與 build_hl_disability_hospitals() 同網域，同樣無
+    `Access-Control-Allow-Origin` 標頭，前端無法直接 fetch，本函式於伺服器端下載，額外輸出內嵌
+    JS 版本 window.HL_ELDER_CHECKUP_DATA）。
+
+    原始欄位：醫療院所、電話、鄉鎮別、地址、緯度、經度、補助類型、補助對象、補助內容，與 DCAT
+    description 一致。實測共 **22 筆**，涵蓋花蓮縣 13 個鄉鎮市（花蓮市、鳳林鎮、玉里鎮、新城鄉、
+    吉安鄉、壽豐鄉、光復鄉、豐濱鄉、瑞穗鄉、富里鄉、秀林鄉、萬榮鄉、卓溪鄉）。地址已含完整
+    「花蓮縣OO市/鄉/鎮」字首，可直接用 parse_county_district() 解析（fallback_county="花蓮縣"
+    備用），無 typo、無需額外修正。緯度／經度已內建於原始資料（WGS84），不需地理編碼或座標轉換。
+
+    「補助類型」「補助對象」「補助內容」三欄位實測全數 22 筆皆為相同常數值（分別為「長者補助」、
+    「設籍花蓮縣年滿65歲或年滿55歲的原住民長者」、「提供每年一次免費長者健康檢查(名額有限，額滿
+    為止)」），本函式仍如實完整輸出（忠實呈現原始資料，不因無篩選意義而刪減欄位），但前端不需為
+    這三欄建立篩選下拉選單。
+
+    資料量小（22 筆）且已內建座標，依專案地圖決策表「有座標＋資料量≤1000 筆」，前端加地圖呈現
+    （Leaflet + MarkerCluster + circleMarker），不需抽樣上限。
+    """
+    print("下載 花蓮縣免費長者健康檢查醫療院所表 ...", file=sys.stderr)
+    text = fetch(HL_ELDER_CHECKUP_URL)
+    reader = csv.DictReader(io.StringIO(text))
+    records = []
+    for row in reader:
+        name = (row.get("醫療院所") or "").strip()
+        if not name:
+            continue
+        phone = (row.get("電話") or "").strip()
+        addr = (row.get("地址") or "").strip()
+        _county, district = parse_county_district(addr, fallback_county="花蓮縣")
+        try:
+            lat = float(row.get("緯度") or 0)
+            lng = float(row.get("經度") or 0)
+        except ValueError:
+            lat, lng = 0.0, 0.0
+        subsidy_type = (row.get("補助類型") or "").strip()
+        subsidy_target = (row.get("補助對象") or "").strip()
+        subsidy_content = (row.get("補助內容") or "").strip()
+        records.append([
+            len(records) + 1,   # 0 id
+            name,                 # 1 name
+            phone,                # 2 phone
+            district,             # 3 district
+            addr,                 # 4 address
+            round(lat, 6),        # 5 lat
+            round(lng, 6),        # 6 lng
+            subsidy_type,         # 7 subsidyType
+            subsidy_target,       # 8 subsidyTarget
+            subsidy_content,      # 9 subsidyContent
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = [
+        "id", "name", "phone", "district", "address", "lat", "lng",
+        "subsidyType", "subsidyTarget", "subsidyContent",
+    ]
+    return {"fields": fields, "rows": records}
+
+
 def _to_int(v):
     try:
         return int(float(v))
@@ -4918,6 +4986,15 @@ DATASETS = [
         "meta_key": "hlDisabilityHospitals",
         "title": "115年花蓮縣身心障礙鑑定醫院及申請說明",
         "source": lambda: HL_DISABILITY_HOSPITALS_URL,
+    },
+    {
+        "key": "hl-elder-checkup",
+        "builder": build_hl_elder_checkup,
+        "json": "data/hl-elder-checkup.json",
+        "js_var": "HL_ELDER_CHECKUP_DATA",
+        "meta_key": "hlElderCheckup",
+        "title": "花蓮縣免費長者健康檢查醫療院所表",
+        "source": lambda: HL_ELDER_CHECKUP_URL,
     },
     {
         "key": "hccg-disability-hospitals",
