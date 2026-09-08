@@ -21,6 +21,7 @@
 | `ntpc-silver-hair-club/` | 新北市銀髮俱樂部 | 新北市政府社會局 | 新北市各行政區銀髮俱樂部據點清單，收錄名稱、地址、市話與手機聯絡電話，並提供官方網站與各據點活動查詢連結，提供行政區／關鍵字篩選與統計圖表，無經緯度座標 |
 | `ntpc-dementia/` | 新北市失智症門診資訊 | 新北市政府衛生局 | 新北市各行政區提供失智症門診服務的醫院清單，共17筆，收錄醫院名稱、電話、地址，提供行政區／關鍵字篩選與統計圖表；原始經緯度座標欄位全數為0或空值，無地圖 |
 | `chiayi-ltc/` | 嘉義縣立案長照及護理之家機構一覽 | 嘉義縣政府長期照護管理中心 | 合併嘉義縣立案住宿長照機構名單與護理之家名單，收錄機構類型、機構名稱、鄉鎮市、地址、電話、負責人、許可／開業床數，提供機構類型／鄉鎮市／關鍵字篩選與統計圖表。**資料來源為使用者提供之本機 CSV、無公開下載網址**，需人工更新，詳見下方「更新資料」說明 |
+| `chiayi-transport/` | 嘉義市長照交通接送服務 | 嘉義市政府 | 嘉義市轄內長照交通接送服務辦理單位清單，共4筆，收錄類別、名稱、聯絡電話、聯絡人、地址、辦公室服務時間、司機服務時間，含經緯度座標（原始資料已為 WGS84），於地圖上呈現，並提供行政區／關鍵字篩選與統計圖表；頁面另整理申請辦法、服務對象、補助標準與依鄉鎮分區之15家服務單位靜態說明（原始公告文字沿用「嘉義縣」相關描述，照登不修改） |
 | `pingtung-ltc/` | 屏東縣老人長期照顧機構 | 屏東縣政府社會處 | 屏東縣老人長期照顧機構清單，收錄機構名稱、地址、電話，機構類型（養護型／失智型／未標示）由機構名稱解析而來，鄉鎮市由地址欄位解析，提供鄉鎮市／機構類型／關鍵字篩選與統計圖表，無經緯度座標 |
 | `tc-transport/` | 臺中市失能者交通接送服務 | 臺中市政府衛生局 | 協助中重度失能者滿足以就醫及使用長期照顧服務為主要目的之交通服務需求，收錄辦理單位名稱、連絡電話、地址、服務區域，含經緯度座標（由原始 TWD97 TM2 平面座標換算），於地圖上呈現，並提供服務區域（多選）／辦理單位所在行政區／關鍵字篩選與統計圖表 |
 | `tc-dementia/` | 臺中市失智症服務及資源提供單位 | 臺中市政府衛生局 | 臺中市失智照護服務計畫服務單位清單，共49筆，收錄失智共同照護中心、失智社區服務據點辦理單位名稱、連絡電話、電子郵件、地址，含經緯度座標（部分由原始 TWD97 TM2 平面座標換算，部分原始資料已為經緯度，本站依數值大小自動判斷格式），於地圖上呈現，並提供行政區／服務類型／關鍵字篩選與統計圖表 |
@@ -129,6 +130,8 @@ ntpc-dementia/index.html 新北市失智症門診資訊儀表板（Chart.js 圖�
 ntpc-dementia/app.js
 chiayi-ltc/index.html 嘉義縣立案長照及護理之家機構一覽儀表板（Chart.js 圖表 + 篩選表格，無地圖）
 chiayi-ltc/app.js
+chiayi-transport/index.html 嘉義市長照交通接送服務儀表板（申請辦法/補助標準說明卡 + 15家服務單位靜態表 + Leaflet 地圖 + Chart.js 圖表 + 篩選表格）
+chiayi-transport/app.js
 pingtung-ltc/index.html 屏東縣老人長期照顧機構儀表板（Chart.js 圖表 + 篩選表格，無地圖）
 pingtung-ltc/app.js
 tc-transport/index.html 臺中市失能者交通接送服務地圖儀表板（Leaflet 地圖 + Chart.js 圖表 + 篩選表格）
@@ -258,6 +261,9 @@ data/ntpc-dementia.js   同上資料的內嵌 JS 版本（window.NTPC_DEMENTIA_D
 data/chiayi-ltc.json  嘉義縣立案長照及護理之家機構一覽資料（由 scripts/build_data.py 讀取本機 CSV 產生）
 data/chiayi-ltc.js    同上資料的內嵌 JS 版本（window.CHIAYI_LTC_DATA），供 chiayi-ltc 頁面以
                        <script> 標籤直接載入，因無公開下載網址，不透過 fetch()
+data/chiayi-transport.json 嘉義市長照交通接送服務資料（由 scripts/build_data.py 產生）
+data/chiayi-transport.js   同上資料的內嵌 JS 版本（window.CHIAYI_TRANSPORT_DATA），供 chiayi-transport
+                       頁面以 <script> 標籤直接載入，因來源網址無 CORS 標頭，不透過 fetch()
 data/pingtung-ltc.json 屏東縣老人長期照顧機構資料（由 scripts/build_data.py 產生）
 data/pingtung-ltc.js   同上資料的內嵌 JS 版本（window.PINGTUNG_LTC_DATA），供 pingtung-ltc 頁面以
                        <script> 標籤直接載入，因來源網址無 CORS 標頭，不透過 fetch()
@@ -480,6 +486,7 @@ python3 scripts/build_data.py
 
 ```bash
 python3 scripts/build_data.py chiayi-ltc          # 只重新產生嘉義縣立案長照及護理之家機構一覽
+python3 scripts/build_data.py chiayi-transport    # 只重新產生嘉義市長照交通接送服務
 python3 scripts/build_data.py pingtung-ltc        # 只重新產生屏東縣老人長期照顧機構
 python3 scripts/build_data.py tc-transport        # 只重新產生臺中市失能者交通接送服務
 python3 scripts/build_data.py tc-dementia         # 只重新產生臺中市失智症服務及資源提供單位

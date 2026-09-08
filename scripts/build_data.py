@@ -498,6 +498,10 @@ PINGTUNG_LTC_URL = (
     "886f59e6-23b6-4de3-a04a-4de087bdf9b8.csv"
 )
 TC_TRANSPORT_URL = "https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=96251524-861c-4b92-9401-590444adcb8f"
+CHIAYI_TRANSPORT_URL = (
+    "https://data.chiayi.gov.tw/opendata/api/getResource"
+    "?oid=6f1af480-e132-4774-9257-8fe499db0ab5&rid=b3366de1-d477-4dfa-aac6-88459b64b506"
+)
 TC_ELDER_CHECKUP_URL = "https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=4aca6b6c-15da-40fa-9a6f-1e7083c84635"
 TC_ELDER_CHECKUP_GOOGLE_RATINGS_FILE = "data/source/tc-elder-checkup-google-ratings.json"
 TC_DEMENTIA_URL = "https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=a753a1f2-25d6-469c-9580-83e5e17405cf"
@@ -2407,6 +2411,56 @@ def build_tc_transport():
         ])
     print(f"  共 {len(records)} 筆", file=sys.stderr)
     fields = ["name", "phone", "address", "district", "lng", "lat", "serviceAreas"]
+    return {"fields": fields, "rows": records}
+
+
+def build_chiayi_transport():
+    """嘉義市長照交通接送服務（嘉義市政府，DCAT dataset https://data.gov.tw/dataset/8572，
+    dataset id 122734）。
+
+    來源為 CSV（CHIAYI_TRANSPORT_URL），欄位：類別、名稱、聯絡電話、聯絡人、地址、辦公室服務時間、
+    司機服務時間、經度、緯度，與 DCAT distribution description 一致。資料筆數極少（僅4筆：嘉義市
+    陽明健康促進會、保康社會福利慈善事業基金會、全台通小客車租賃、嘉義縣私立瑞泰社會福利基金會），
+    皆位於嘉義市轄內（東區/西區），經緯度已是 WGS84 座標，不需座標轉換。
+
+    地址已含完整「嘉義市OO區」字首，用 parse_county_district() 搭配 fallback_county="嘉義市"
+    解析行政區供前端篩選用。
+
+    已知資料品質備註：資料集標題（及發布機關）標示為「嘉義市」，但嘉義市政府公告之申請辦法文字
+    （由頁面靜態呈現，非本函式處理範圍）沿用「嘉義縣」相關描述（如服務對象「實際居住於嘉義縣」、
+    嘉義縣長期照顧管理中心評估等），與本 CSV 資料集本身內容（4家嘉義市轄內服務單位）不完全一致，
+    研判為原始公告文字沿用嘉義縣版本所致；本函式僅忠實轉換 CSV 本身內容，文字說明部分之市/縣差異
+    由頁面呈現時加註提醒，不在此處修改或猜測。
+    """
+    print("下載 嘉義市長照交通接送服務 ...", file=sys.stderr)
+    text = fetch(CHIAYI_TRANSPORT_URL)
+    reader = csv.DictReader(io.StringIO(text))
+    records = []
+    for row in reader:
+        addr = (row.get("地址", "") or "").strip()
+        _county, district = parse_county_district(addr, fallback_county="嘉義市")
+        try:
+            lng = float(row.get("經度") or 0)
+            lat = float(row.get("緯度") or 0)
+        except (TypeError, ValueError):
+            lng, lat = 0.0, 0.0
+        records.append([
+            (row.get("類別", "") or "").strip(),         # 0 category
+            (row.get("名稱", "") or "").strip(),          # 1 name
+            (row.get("聯絡電話", "") or "").strip(),      # 2 phone
+            (row.get("聯絡人", "") or "").strip(),        # 3 contact
+            addr,                                          # 4 address
+            (row.get("辦公室服務時間", "") or "").strip(), # 5 officeHours
+            (row.get("司機服務時間", "") or "").strip(),   # 6 driverHours
+            district,                                       # 7 district
+            round(lng, 6),                                   # 8 lng
+            round(lat, 6),                                   # 9 lat
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = [
+        "category", "name", "phone", "contact", "address",
+        "officeHours", "driverHours", "district", "lng", "lat",
+    ]
     return {"fields": fields, "rows": records}
 
 
@@ -4714,6 +4768,15 @@ DATASETS = [
         "meta_key": "tcTransport",
         "title": "臺中市失能者交通接送服務",
         "source": lambda: TC_TRANSPORT_URL,
+    },
+    {
+        "key": "chiayi-transport",
+        "builder": build_chiayi_transport,
+        "json": "data/chiayi-transport.json",
+        "js_var": "CHIAYI_TRANSPORT_DATA",
+        "meta_key": "chiayiTransport",
+        "title": "嘉義市長照交通接送服務",
+        "source": lambda: CHIAYI_TRANSPORT_URL,
     },
     {
         "key": "tc-dementia",

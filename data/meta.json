@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-07T13:26:15.969080+00:00",
+  "generatedAt": "2026-09-08T12:58:56.333921+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -279,5 +279,10 @@
     "count": 22,
     "source": "https://ws.hl.gov.tw/001/Upload/518/relfile/22643/88545/8b59b951-56d2-41e1-921d-66937bf9e670.csv",
     "title": "花蓮縣免費長者健康檢查醫療院所表"
+  },
+  "chiayiTransport": {
+    "count": 4,
+    "source": "https://data.chiayi.gov.tw/opendata/api/getResource?oid=6f1af480-e132-4774-9257-8fe499db0ab5&rid=b3366de1-d477-4dfa-aac6-88459b64b506",
+    "title": "嘉義市長照交通接送服務"
   }
 }
