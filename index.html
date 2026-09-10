@@ -1103,6 +1103,12 @@
       <div class="desc">花蓮縣衛生局提供，列出22家提供免費長者健康檢查服務的醫院與衛生所名稱、電話、鄉鎮別、地址與座標，服務對象為設籍花蓮縣年滿65歲或年滿55歲的原住民長者，可依鄉鎮別、關鍵字篩選、於地圖上查看位置並瀏覽統計圖表。</div>
       <div class="footline" id="hl-elder-checkup-count">資料筆數載入中…</div>
     </a>
+    <a class="home-card" href="diabetes-care/index.html" data-county="all" data-category="ltc">
+      <span class="tag">全國</span>
+      <h2>醫療給付改善方案院所-糖尿病</h2>
+      <div class="desc">衛生福利部中央健康保險署提供，列出全國約1,970家參與糖尿病醫療給付改善方案試辦計畫的醫事機構名稱、地址、電話與試辦計畫生效起迄日，可依縣市、關鍵字篩選並瀏覽各縣市院所數與生效年度累計趨勢統計圖表。</div>
+      <div class="footline" id="diabetes-care-count">資料筆數載入中…</div>
+    </a>
     <p class="no-match" id="county-no-match" style="display:none; grid-column: 1 / -1; text-align:center; color: var(--color-muted); padding: 24px 0;">
       沒有符合所選縣市的資料集，請調整篩選條件。
     </p>
@@ -1403,6 +1409,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.hlElderCheckup) {
     document.getElementById("hl-elder-checkup-count").textContent = `共 ${meta.hlElderCheckup.count.toLocaleString()} 家院所 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.diabetesCare) {
+    document.getElementById("diabetes-care-count").textContent = `共 ${meta.diabetesCare.count.toLocaleString()} 家院所 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
 }).catch(() => {});
 

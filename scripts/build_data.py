@@ -303,6 +303,17 @@
     行政區，1筆（中國醫藥大學附設醫院）地址缺行政區字首，district 輸出空字串，如實呈現。
     「類別」分醫學中心/區域醫院/地區醫院/診所四級，可作篩選與圖表分類。無經緯度座標，故本頁不含
     地圖，詳見 build_tc_elder_checkup()）
+32. 醫療給付改善方案院所-糖尿病（DCAT dataset https://data.gov.tw/dataset/8572 ，dataset id 39263，
+    提供機關：衛生福利部中央健康保險署）
+    https://info.nhi.gov.tw/api/iode0000s01/Dataset?rId=A21030000I-D20004-001
+    （CSV，全國性資料，共約1,970筆，欄位：醫事機構名稱/醫事機構地址/醫事機構電話/改善方案項目/
+    試辦計畫生效起日/試辦計畫生效迄日，與 DCAT description 一致，欄位數皆一致無缺欄位髒資料。
+    地址已含完整「OO市/縣OO區/鄉/鎮/市」字首，實測全數1,970筆皆可用 parse_county_district() 解析
+    出縣市，涵蓋全台22縣市（含連江、金門）；無經緯度座標，不做地圖。「改善方案項目」欄位實測全數
+    為常數值「糖尿病」，無篩選意義，僅照登輸出不做篩選下拉。「試辦計畫生效起日/迄日」為西元
+    YYYYMMDD 字串，迄日實測僅2種值：絕大多數為 `29101231`（代表無期限/持續有效），僅1筆為
+    `20280424`（已知/預定終止日），原文照登，前端顯示時再轉換格式並對非常數迄日加註提示。
+    來源網址無 CORS 標頭，改由本腳本於伺服器端下載，另輸出內嵌 JS 版本，詳見 build_diabetes_care()）
 
 用法：
     python3 scripts/build_data.py
@@ -622,6 +633,8 @@ CAREGIVER_GOOGLE_RATINGS_FILE = "data/source/caregiver-google-ratings.json"
 DIALYSIS_TRANSPORT_CSV = "scripts/sources/dialysis-transport/dialysis-transport.csv"
 
 TC_DENTURE_CSV = "scripts/sources/tc-denture/tc-denture.csv"
+
+DIABETES_CARE_CSV_URL = "https://info.nhi.gov.tw/api/iode0000s01/Dataset?rId=A21030000I-D20004-001"
 
 HL_DENTURE_PDF = "scripts/sources/hl-denture/institution-list.pdf"
 HL_DENTURE_GOOGLE_RATINGS_FILE = "data/source/hl-denture-google-ratings.json"
@@ -3362,6 +3375,55 @@ def build_dialysis_transport():
     return {"fields": fields, "rows": records}
 
 
+def build_diabetes_care():
+    """醫療給付改善方案院所-糖尿病（DCAT dataset https://data.gov.tw/dataset/8572，id 39263，
+    提供機關：衛生福利部中央健康保險署）。
+
+    來源網址：https://info.nhi.gov.tw/api/iode0000s01/Dataset?rId=A21030000I-D20004-001
+    （CSV，UTF-8 with BOM，無 `Access-Control-Allow-Origin` 標頭，前端無法直接 fetch，改由本腳本於
+    伺服器端下載；另輸出內嵌 JS 版本 window.DIABETES_CARE_DATA 供前端以 <script> 標籤直接載入，
+    避免任何網路/快取時序問題）。
+
+    原始欄位（與 DCAT description 完全一致）：醫事機構名稱、醫事機構地址、醫事機構電話、
+    改善方案項目、試辦計畫生效起日、試辦計畫生效迄日。全國性資料，共約1,970筆，欄位數皆一致
+    （實測無缺欄位髒資料）。
+
+    地址已含完整「OO市/縣OO區/鄉/鎮/市」字首，可直接用共用的 parse_county_district() 解析，
+    實測全數1,970筆皆可解析出縣市，涵蓋全台22縣市（含連江、金門）；無經緯度座標，不做地圖。
+    部分機構於同一地址欄位內含多個院區地址（以「、」「，」等分隔，如臺大醫院多院區），原文照登
+    不拆分成多筆。
+
+    「改善方案項目」欄位實測全數為常數值「糖尿病」，無篩選意義，前端不做篩選下拉，僅照登輸出。
+
+    「試辦計畫生效起日」「試辦計畫生效迄日」為西元 YYYYMMDD 字串，起日介於1997~2026年間；迄日
+    實測僅2種值：絕大多數為 `29101231`（代表無期限／持續有效），僅1筆為 `20280424`
+    （表示已知/預定終止日），本腳本照登原始字串，前端顯示時再轉換格式並對非常數迄日加註提示。
+
+    未來如需更新，重新執行 `python3 scripts/build_data.py diabetes-care` 即可（來源網址為健保署
+    公開 API，預期會持續提供最新試辦院所名單）。
+    """
+    print("下載 醫療給付改善方案院所-糖尿病 ...", file=sys.stderr)
+    text = fetch(DIABETES_CARE_CSV_URL)
+    reader = csv.DictReader(io.StringIO(text))
+    records = []
+    for row in reader:
+        addr = (row.get("醫事機構地址") or "").strip()
+        county, district = parse_county_district(addr)
+        records.append([
+            (row.get("醫事機構名稱") or "").strip(),   # 0 name
+            county,                                        # 1 county
+            district,                                       # 2 district
+            addr,                                           # 3 address
+            (row.get("醫事機構電話") or "").strip(),   # 4 phone
+            (row.get("改善方案項目") or "").strip(),   # 5 program
+            (row.get("試辦計畫生效起日") or "").strip(),  # 6 effectiveStart
+            (row.get("試辦計畫生效迄日") or "").strip(),  # 7 effectiveEnd
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["name", "county", "district", "address", "phone", "program", "effectiveStart", "effectiveEnd"]
+    return {"fields": fields, "rows": records}
+
+
     """去除 PDF 儲存格內因欄寬過窄產生的換行，並還原被誤用的 CJK 部首符號為正常漢字。"""
     if not s:
         return ""
@@ -5103,6 +5165,15 @@ DATASETS = [
         "meta_key": "tcElderCheckup",
         "title": "臺中市老人健康檢查合約醫療院所名單",
         "source": lambda: TC_ELDER_CHECKUP_URL,
+    },
+    {
+        "key": "diabetes-care",
+        "builder": build_diabetes_care,
+        "json": "data/diabetes-care.json",
+        "js_var": "DIABETES_CARE_DATA",
+        "meta_key": "diabetesCare",
+        "title": "醫療給付改善方案院所-糖尿病",
+        "source": lambda: DIABETES_CARE_CSV_URL,
     },
 ]
 

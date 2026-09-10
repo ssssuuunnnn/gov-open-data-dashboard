@@ -1,0 +1,24 @@
+{
+  "name": "全國糖尿病醫療給付改善方案試辦院所查詢",
+  "short_name": "糖尿病試辦院所查詢",
+  "description": "衛生福利部中央健康保險署糖尿病醫療給付改善方案試辦院所名單，收錄全國試辦院所名稱、地址、電話與試辦計畫生效日期，提供縣市篩選、關鍵字搜尋與統計圖表。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

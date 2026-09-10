@@ -1,6 +1,6 @@
 # 政府開放資料儀表板
 
-以政府開放資料建置的靜態網站，整理五十六個長照/老人福利/身心障礙相關資料集為互動式儀表板，可直接部署於 GitHub Pages。
+以政府開放資料建置的靜態網站，整理五十七個長照/老人福利/身心障礙相關資料集為互動式儀表板，可直接部署於 GitHub Pages。
 
 ## 資料集
 
@@ -63,6 +63,7 @@
 | `ntpc-elder-checkup/` | 新北市長者健康檢查醫療院所 | 新北市政府衛生局 | 新北市65歲以上長者（含55歲以上原住民）長者健康檢查合約醫療院所名冊（DCAT dataset id 125181，https://data.gov.tw/dataset/8572），單一 CSV 檔案共84筆。欄位為 seqno／hosp_attr_type／zipcode／hosp_addr／tel，**`hosp_attr_type` 欄位名稱雖為「屬性類別」，實測內容其實是機構名稱**（如「新北市板橋區衛生所」「亞東紀念醫院」），本腳本以此欄位輸出機構名稱；`zipcode` 僅輔助解析行政區，不作為前端可見欄位。地址已含完整「新北市OO區」字首可直接解析行政區（涵蓋29個行政區），無經緯度座標，故不含地圖，僅提供行政區／關鍵字篩選與統計圖表，來源網址CORS標頭僅允許data.ntpc.gov.tw網域，內嵌 js 版本輸出。另有 rating／review_count／place_id 三欄，比照 tyc-elder 用 `scripts/fetch_google_ratings.py --dataset ntpc-elder-checkup` 一次性查詢 Google Map 星等／評論數，已於 2026-09-01 完成查詢與人工核對（84 筆全數成功配對，皆有評分資料），結果存於 data/source/ntpc-elder-checkup-google-ratings.json，前端顯示星等與可點擊評論數連結 |
 | `tpe-elder-checkup/` | 臺北市老人健康檢查特約醫事機構 | 臺北市政府衛生局 | 臺北市65歲以上長者（含55歲以上原住民）老人健康檢查特約醫事機構名冊（DCAT dataset id 121269，https://data.gov.tw/dataset/8572），單一 BIG5 編碼 CSV 檔案共85筆。原始欄位為 醫事機構名稱／顯示用地址／系統辨識用地址／電話／分機／手機，實測「顯示用地址」與「系統辨識用地址」85筆內容完全相同，僅保留一份輸出。地址已含完整「臺北市OO區」字首，用 `parse_county_district(strict=True)` 直接解析行政區（涵蓋12個行政區），無經緯度座標，故不含地圖，僅提供行政區／關鍵字篩選與統計圖表；電話欄位另有分機時，表格顯示「OO 轉 OO」並以逗號附加分機於 tel: 連結。頁面上方整理使用者提供之老人健檢資格、成人健康檢查基礎項目（含憂鬱症篩檢GDS-15、認知功能評估AD8）與A（腦肺）／B（腹部超音波）／C（骨密肌力）三種套餐內容 Q&A 說明，屬固定公告文字。來源網址 data.taipei 無 CORS 標頭，比照 tpe-denture 用內嵌 js 版本輸出。另有 rating／review_count／place_id 三欄，比照 tyc-elder 用 `scripts/fetch_google_ratings.py --dataset tpe-elder-checkup --name-field name --address-field address` 一次性查詢 Google Map 星等／評論數，已於 2026-09-02 完成查詢與人工核對（85 筆全數成功配對，皆有評分資料，無重複 place_id 誤配對案例），結果存於 data/source/tpe-elder-checkup-google-ratings.json，前端顯示星等與可點擊評論數連結 |
 | `tc-elder-checkup/` | 臺中市老人健康檢查合約醫療院所名單 | 臺中市政府衛生局 | 臺中市65歲以上長者（含55歲以上原住民）老人健康檢查合約醫療院所名單（DCAT dataset id 85025，https://cms.data.gov.tw/dataset/85025），單一 CSV 檔案共66筆。原始欄位為 編號／縣市別代碼／類別／行政區域代碼／院所名稱／聯繫電話／地址／是否收掛號費／服務時段，與 DCAT description 一致；縣市別代碼／行政區域代碼為冗餘代碼欄位不輸出。地址已含完整「臺中市OO區」字首（含中/西/北/東/南等單字行政區），用 `parse_county_district(strict=True)` 解析，實測66筆中65筆解析成功涵蓋20個行政區，1筆（編號28中國醫藥大學附設醫院，地址「臺中市育德路2號」）缺行政區字首，屬原始資料品質問題，district 輸出空字串如實呈現。「類別」分醫學中心(3)/區域醫院(12)/地區醫院(29)/診所(22)四級可篩選；「是否收掛號費」多數為「否」，少數含掛號費金額與年齡分級文字，原文照登不拆分；無經緯度座標，故不含地圖，提供行政區／類別／關鍵字篩選與統計圖表（各行政區院所數長條圖、各類別占比環圈圖）。頁面上方整理使用者提供之「本市樂齡長青健康檢查補助」公告文字（補助期限、對象標準、服務內容、大腸癌篩檢年齡分級備註、應攜帶文件、空腹叮嚀、受理單位、洽詢電話）Q&A 說明，屬固定公告文字。來源網址雖有 CORS 標頭，仍比照 tc-nursing 用內嵌 js 版本輸出 |
+| `diabetes-care/` | 醫療給付改善方案院所-糖尿病 | 衛生福利部中央健康保險署 | 全國性資料（DCAT dataset id 39263，https://data.gov.tw/dataset/8572），糖尿病醫療給付改善方案試辦院所名單，來源 CSV（https://info.nhi.gov.tw/api/iode0000s01/Dataset?rId=A21030000I-D20004-001）共1,970筆，欄位：醫事機構名稱／醫事機構地址／醫事機構電話／改善方案項目／試辦計畫生效起日／試辦計畫生效迄日，與 DCAT description 一致，欄位數皆一致無缺欄位髒資料。地址已含完整「OO市/縣OO區/鄉/鎮/市」字首，實測全數1,970筆皆可用 `parse_county_district()` 解析出縣市，涵蓋全台22縣市（含連江、金門）；無經緯度座標，故不含地圖。「改善方案項目」欄位實測全數為常數值「糖尿病」，無篩選意義，僅照登輸出不做篩選下拉。「試辦計畫生效起日/迄日」為西元 YYYYMMDD 字串，前端顯示時轉換為 YYYY-MM-DD；迄日實測僅2種值：絕大多數為 `29101231`（代表無期限/持續有效，顯示為「持續有效」），僅1筆為 `20280424`（已知/預定終止日，表格另加註提示），原始欄位值不變更。提供縣市／關鍵字篩選與統計圖表（各縣市院所數長條圖、試辦計畫生效年度累計院所數折線圖）。來源網址無 CORS 標頭，改由 build script 於伺服器端下載，另輸出內嵌 js 版本 |
 
 原始資料下載網址：
 - https://ltcpap.mohw.gov.tw/publish/abc.csv
@@ -216,6 +217,9 @@ tc-elder-checkup/app.js
 hl-elder-checkup/index.html 花蓮縣免費長者健康檢查醫療院所表地圖儀表板（Leaflet 地圖 + Chart.js
                        圖表 + 篩選表格）
 hl-elder-checkup/app.js
+diabetes-care/index.html 全國糖尿病醫療給付改善方案試辦院所查詢儀表板（Chart.js 圖表 + 篩選表格，
+                       無地圖）
+diabetes-care/app.js
 assets/style.css     共用樣式
 assets/table.js       共用分頁表格元件
 data/abc.json         長照ABC據點資料（由 scripts/build_data.py 產生）
@@ -427,6 +431,10 @@ data/hl-elder-checkup.json  花蓮縣免費長者健康檢查醫療院所表資�
 data/hl-elder-checkup.js  同上資料的內嵌 JS 版本（window.HL_ELDER_CHECKUP_DATA），供
                        hl-elder-checkup 頁面以 <script> 標籤直接載入，因來源網址無 CORS 標頭，
                        不透過 fetch()
+data/diabetes-care.json  醫療給付改善方案院所-糖尿病資料（由 scripts/build_data.py 產生）
+data/diabetes-care.js  同上資料的內嵌 JS 版本（window.DIABETES_CARE_DATA），供
+                       diabetes-care 頁面以 <script> 標籤直接載入，因來源網址無 CORS 標頭，
+                       不透過 fetch()
 data/source/          長照專業服務特約單位來源 PDF（人工下載存放於此，供 build_data.py 解析）；
                        另含 kcg-denture-manual.json（115年高雄市免費裝假牙名冊人工轉寫結果）與
                        kcg-denture-115.pdf（原始公告 PDF 存檔，供未來人工核對/重新轉寫參考）
@@ -526,6 +534,7 @@ python3 scripts/build_data.py tc-nursing ntpc-nursing   # 可同時指定多個�
 python3 scripts/build_data.py ntpc-silver-hair-club     # 只重新產生新北市銀髮俱樂部
 python3 scripts/build_data.py tpe-elder-checkup   # 只重新產生臺北市老人健康檢查特約醫事機構
 python3 scripts/build_data.py tc-elder-checkup    # 只重新產生臺中市老人健康檢查合約醫療院所名單
+python3 scripts/build_data.py diabetes-care       # 只重新產生醫療給付改善方案院所-糖尿病
 python3 scripts/build_data.py --help              # 列出所有可用的資料集 key
 ```
 

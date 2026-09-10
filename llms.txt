@@ -45,6 +45,7 @@
 - [115年花蓮縣身心障礙鑑定醫院及申請說明](https://www.sunkuo.cc/gov-open-data-dashboard/hl-disability-hospitals/index.html): 花蓮縣政府公告之身心障礙鑑定醫院名冊，共7筆，收錄醫院名稱、電話、地址、座標與相關網址，含經緯度座標（由TWD97平面座標換算），於地圖上呈現，提供行政區／關鍵字篩選與統計圖表。頁面上方收錄使用者提供之完整申請說明文字：服務對象、申請文件、申請窗口、申請流程5步驟、線上申請適用/不適用情形與跨縣市郵寄申請等備註。
 - [高雄市老人健檢醫療院所](https://www.sunkuo.cc/gov-open-data-dashboard/kcg-elder-checkup/index.html): 高雄市政府衛生局公告之65歲以上長者（含55歲以上原住民）老人健康檢查合約醫療院所名冊，共49筆，收錄合約院所名稱、行政區（21個行政區）、地址、市話，「機構類型」（醫院／衛生所／診所）由名稱關鍵字啟發式推斷（非官方分類），提供行政區／機構類型／關鍵字篩選與統計圖表，無經緯度座標。頁面上方收錄公告全文整理之Q&A：服務對象、健檢項目（本市補助項目＋成人預防保健服務項目）、檢查日期與53,846名額、注意事項、簽署授權同意書獎勵方案（敬老卡儲值金88元/66元）。
 - [新北市長者健康檢查醫療院所](https://www.sunkuo.cc/gov-open-data-dashboard/ntpc-elder-checkup/index.html): 新北市政府衛生局公告之65歲以上長者（含55歲以上原住民）長者健康檢查合約醫療院所名冊，共84筆，收錄合約院所名稱、行政區（29個行政區）、地址、電話；來源欄位 hosp_attr_type 名稱雖為「屬性類別」，實測內容其實是機構名稱，提供行政區／關鍵字篩選與統計圖表，無經緯度座標。 (https://www.sunkuo.cc/gov-open-data-dashboard/ntpc-elder-checkup/llms.txt)
+- [醫療給付改善方案院所-糖尿病](https://www.sunkuo.cc/gov-open-data-dashboard/diabetes-care/index.html): 衛生福利部中央健康保險署糖尿病醫療給付改善方案試辦院所名單，全國性資料共約1,970筆，收錄醫事機構名稱、地址、電話、試辦計畫生效起迄日，提供縣市／關鍵字篩選與統計圖表（各縣市院所數、生效年度累計趨勢），無經緯度座標。 (https://www.sunkuo.cc/gov-open-data-dashboard/diabetes-care/llms.txt)
 
 ## 非政府開放資料（人工蒐集，僅供參考）
 
