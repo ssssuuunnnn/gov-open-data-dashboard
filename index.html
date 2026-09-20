@@ -38,6 +38,7 @@
 
 <link rel="icon" type="image/png" href="assets/favicon.png" />
 <link rel="stylesheet" href="assets/classical-style.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9582196617963946"
      crossorigin="anonymous"></script>
 <script type="application/ld+json">
@@ -748,24 +749,39 @@
     </div>
   </div>
   <div class="card">
+    <h2 class="section-title" style="margin-top:0;">按縣市瀏覽</h2>
+    <p style="color:var(--color-muted);margin-top:-6px;">
+      點選地圖上的縣市，快速篩選出該縣市的資料集；圓圈大小代表該縣市專屬資料集數量，可與下方勾選框搭配多選。
+    </p>
+    <div id="home-map"></div>
+  </div>
+  <div class="card">
     <div class="filters">
       <div class="field" style="flex:1;">
         <label>依縣市篩選（可多選，未選則顯示全部）</label>
         <div class="checkbox-group" id="county-filter" style="flex-wrap:wrap;">
+          <label><input type="checkbox" value="基隆市" /> 基隆市</label>
           <label><input type="checkbox" value="臺北市" /> 臺北市</label>
-          <label><input type="checkbox" value="宜蘭縣" /> 宜蘭縣</label>
+          <label><input type="checkbox" value="新北市" /> 新北市</label>
           <label><input type="checkbox" value="桃園市" /> 桃園市</label>
-          <label><input type="checkbox" value="新竹縣" /> 新竹縣</label>
           <label><input type="checkbox" value="新竹市" /> 新竹市</label>
+          <label><input type="checkbox" value="新竹縣" /> 新竹縣</label>
+          <label><input type="checkbox" value="苗栗縣" /> 苗栗縣</label>
           <label><input type="checkbox" value="臺中市" /> 臺中市</label>
           <label><input type="checkbox" value="彰化縣" /> 彰化縣</label>
+          <label><input type="checkbox" value="南投縣" /> 南投縣</label>
+          <label><input type="checkbox" value="雲林縣" /> 雲林縣</label>
+          <label><input type="checkbox" value="嘉義市" /> 嘉義市</label>
+          <label><input type="checkbox" value="嘉義縣" /> 嘉義縣</label>
           <label><input type="checkbox" value="臺南市" /> 臺南市</label>
           <label><input type="checkbox" value="高雄市" /> 高雄市</label>
-          <label><input type="checkbox" value="新北市" /> 新北市</label>
-          <label><input type="checkbox" value="嘉義縣" /> 嘉義縣</label>
           <label><input type="checkbox" value="屏東縣" /> 屏東縣</label>
+          <label><input type="checkbox" value="宜蘭縣" /> 宜蘭縣</label>
           <label><input type="checkbox" value="花蓮縣" /> 花蓮縣</label>
           <label><input type="checkbox" value="臺東縣" /> 臺東縣</label>
+          <label><input type="checkbox" value="澎湖縣" /> 澎湖縣</label>
+          <label><input type="checkbox" value="金門縣" /> 金門縣</label>
+          <label><input type="checkbox" value="連江縣" /> 連江縣</label>
         </div>
       </div>
       <button class="ghost" id="county-reset">重設篩選</button>
@@ -1259,6 +1275,7 @@
   依「政府資料開放授權條款-第1版」釋出，本站僅作資料視覺化整理，實際內容以原始資料集為準。<br />
   <a href="changelog/index.html">網站更新紀錄</a>　|　本頁面最後更新時間：2026年7月27日
 </footer>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="assets/analytics.js"></script>
 <script>
 fetch("data/meta.json").then(r => r.json()).then(meta => {
@@ -1450,6 +1467,33 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   const validCategories = new Set(tabs.map((t) => t.dataset.category));
   let activeCategory = "all";
 
+  // 22 縣市代表點座標（縣市治所附近的近似座標，僅供首頁地圖標示定位使用，
+  // 非官方行政區中心點／邊界資料，精確度不適用於地理分析）。
+  const COUNTY_COORDS = {
+    "基隆市": [25.1276, 121.7392],
+    "臺北市": [25.0330, 121.5654],
+    "新北市": [25.0169, 121.4628],
+    "桃園市": [24.9936, 121.3010],
+    "新竹市": [24.8138, 120.9675],
+    "新竹縣": [24.8390, 121.0177],
+    "苗栗縣": [24.5602, 120.8214],
+    "臺中市": [24.1477, 120.6736],
+    "彰化縣": [24.0518, 120.5161],
+    "南投縣": [23.9609, 120.9718],
+    "雲林縣": [23.7092, 120.4313],
+    "嘉義市": [23.4801, 120.4491],
+    "嘉義縣": [23.4518, 120.2555],
+    "臺南市": [22.9997, 120.2270],
+    "高雄市": [22.6273, 120.3014],
+    "屏東縣": [22.5519, 120.5487],
+    "宜蘭縣": [24.7021, 121.7377],
+    "花蓮縣": [23.9871, 121.6015],
+    "臺東縣": [22.7583, 121.1444],
+    "澎湖縣": [23.5711, 119.5793],
+    "金門縣": [24.4326, 118.3171],
+    "連江縣": [26.1604, 119.9308],
+  };
+
   function syncUrl() {
     const params = new URLSearchParams();
     if (activeCategory !== "all") params.set("category", activeCategory);
@@ -1473,6 +1517,7 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
       if (visible) visibleCount++;
     });
     noMatch.style.display = visibleCount === 0 ? "" : "none";
+    syncMapHighlight();
     if (shouldSyncUrl) syncUrl();
   }
 
@@ -1481,6 +1526,69 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
     tabs.forEach((t) => {
       t.classList.toggle("active", t.dataset.category === category);
       t.setAttribute("aria-selected", t.dataset.category === category ? "true" : "false");
+    });
+  }
+
+  // 首頁互動地圖：22 縣市代表點，圓圈大小反映該縣市專屬資料集數量（不含 data-county="all"
+  // 的全國性資料集，避免每個縣市都因為 5 張全國性卡片而膨脹圓圈大小、失去縣市間的差異）。
+  // 點擊圓圈＝勾選/取消對應的 checkbox（沿用既有多選篩選邏輯），checkbox 狀態改變時圓圈的
+  // 高亮樣式也會同步更新，達成地圖與勾選框雙向連動。
+  const countyCardCounts = {};
+  cards.forEach((card) => {
+    const county = card.dataset.county;
+    if (county === "all") return;
+    countyCardCounts[county] = (countyCardCounts[county] || 0) + 1;
+  });
+
+  const checkboxByCounty = {};
+  checkboxes.forEach((cb) => (checkboxByCounty[cb.value] = cb));
+
+  const countyMarkers = {};
+  const mapEl = document.getElementById("home-map");
+  if (mapEl && typeof L !== "undefined") {
+    // 台灣本島＋澎湖為主要視野，金門/連江座標偏西不納入初始置中計算，避免地圖為了遷就外島
+    // 而過度縮小；使用者仍可手動拖曳/縮放地圖查看金門、連江。
+    const map = L.map(mapEl, { scrollWheelZoom: false }).setView([23.75, 121.05], 7);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 18,
+      attribution: "&copy; OpenStreetMap contributors",
+    }).addTo(map);
+
+    Object.keys(COUNTY_COORDS).forEach((county) => {
+      const count = countyCardCounts[county] || 0;
+      const marker = L.circleMarker(COUNTY_COORDS[county], {
+        radius: 7 + count * 2,
+        color: "#fff",
+        weight: 1,
+        fillColor: count > 0 ? "#7d5411" : "#a8a29e",
+        fillOpacity: 0.75,
+      }).addTo(map);
+      marker.bindTooltip(county, { direction: "top", offset: [0, -4] });
+      marker.bindPopup(
+        count > 0
+          ? `<strong>${county}</strong><br/>共 ${count} 個專屬資料集`
+          : `<strong>${county}</strong><br/>目前無專屬資料集，可查看全國性資料集`
+      );
+      marker.on("click", () => {
+        const cb = checkboxByCounty[county];
+        if (!cb) return;
+        cb.checked = !cb.checked;
+        applyFilters();
+      });
+      countyMarkers[county] = marker;
+    });
+  }
+
+  function syncMapHighlight() {
+    Object.keys(countyMarkers).forEach((county) => {
+      const marker = countyMarkers[county];
+      const cb = checkboxByCounty[county];
+      const active = !!(cb && cb.checked);
+      marker.setStyle({
+        fillColor: active ? "#b68235" : (countyCardCounts[county] > 0 ? "#7d5411" : "#a8a29e"),
+        fillOpacity: active ? 0.95 : 0.75,
+        weight: active ? 2 : 1,
+      });
     });
   }
 
