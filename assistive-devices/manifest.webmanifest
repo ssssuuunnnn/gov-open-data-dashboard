@@ -1,0 +1,24 @@
+{
+  "name": "全台22縣市身心障礙者輔具費用補助懶人包",
+  "short_name": "輔具補助",
+  "description": "彙整衛福部社家署輔具資源入口網22縣市「身心障礙者輔具費用補助」公告，一頁比較各縣市服務對象、服務內容、申請辦法、業務單位、聯絡電話與相關連結。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

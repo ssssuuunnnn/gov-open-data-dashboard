@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-10T13:58:01.765713+00:00",
+  "generatedAt": "2026-09-20T03:10:06.820716+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -289,5 +289,10 @@
     "count": 1970,
     "source": "https://info.nhi.gov.tw/api/iode0000s01/Dataset?rId=A21030000I-D20004-001",
     "title": "醫療給付改善方案院所-糖尿病"
+  },
+  "assistiveDevices": {
+    "count": 22,
+    "source": "https://newrepat.sfaa.gov.tw/home/repat-welfare/index",
+    "title": "全國22縣市身心障礙者輔具費用補助"
   }
 }

@@ -386,11 +386,13 @@
 import argparse
 import csv
 import glob
+import html as html_module
 import io
 import json
 import math
 import re
 import sys
+import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
 
@@ -4642,6 +4644,166 @@ def build_hl_elder_checkup():
     return {"fields": fields, "rows": records}
 
 
+ASSISTIVE_DEVICES_BASE_URL = "https://newrepat.sfaa.gov.tw"
+
+# 22 縣市「身心障礙者輔具費用補助」公告詳情頁（衛福部社家署輔具資源入口網），
+# 使用者提供，路徑格式為 /home/repat-welfare/detail/<id>。順序依使用者提供順序
+# （基隆市→連江縣，慣用北到南、本島到離島排序）。
+ASSISTIVE_DEVICES_COUNTIES = [
+    ("keelung", "基隆市", "/home/repat-welfare/detail/2c90e4c76633d6e701663411204d0763"),
+    ("taipei", "臺北市", "/home/repat-welfare/detail/2c90e4c76633d6e7016634112033074f"),
+    ("new-taipei", "新北市", "/home/repat-welfare/detail/2c90e4c76633d6e701663411210307cb"),
+    ("taoyuan", "桃園市", "/home/repat-welfare/detail/2c90e4c76633d6e701663411211607d7"),
+    ("hsinchu-city", "新竹市", "/home/repat-welfare/detail/2c90e4c76633d6e701663411212b07e2"),
+    ("hsinchu-county", "新竹縣", "/home/repat-welfare/detail/2c90e4c76633d6e70166341120c107ae"),
+    ("miaoli", "苗栗縣", "/home/repat-welfare/detail/2c90e4c76633d6e70166341120e707ba"),
+    ("taichung", "臺中市", "/home/repat-welfare/detail/2c90e4c76633d6e70166341120ee07be"),
+    ("changhua", "彰化縣", "/home/repat-welfare/detail/2c90e4c76633d6e70166341120620771"),
+    ("nantou", "南投縣", "/home/repat-welfare/detail/2c90e4c76633d6e701663411207a0783"),
+    ("yunlin", "雲林縣", "/home/repat-welfare/detail/2c90e4c76633d6e701663411208c078f"),
+    ("chiayi-city", "嘉義市", "/home/repat-welfare/detail/2c90e4c76633d6e70166341120980796"),
+    ("chiayi-county", "嘉義縣", "/home/repat-welfare/detail/2c90e4c76633d6e70166341120aa07a3"),
+    ("tainan", "臺南市", "/home/repat-welfare/detail/2c90e4c76633d6e7016634111ff60722"),
+    ("kaohsiung", "高雄市", "/home/repat-welfare/detail/2c90e4c76633d6e70166341120090732"),
+    ("pingtung", "屏東縣", "/home/repat-welfare/detail/2c90e4c76633d6e7016634112018073d"),
+    ("yilan", "宜蘭縣", "/home/repat-welfare/detail/2c90e4c76633d6e7016634112041075b"),
+    ("hualien", "花蓮縣", "/home/repat-welfare/detail/2c90e4c76633d6e7016634112015073b"),
+    ("taitung", "臺東縣", "/home/repat-welfare/detail/2c90e4c76633d6e7016634111fea0719"),
+    # 使用者原提供 id 2c90e4c76633d6e70166341120940793 該筆已於原網站移除（連結回傳HTTP 500），
+    # 改用內容結構相同、欄位齊全的澎湖縣對應方案頁面（身心障礙生活輔具補助服務，含代償墊付資訊）。
+    ("penghu", "澎湖縣", "/home/repat-welfare/detail/4bc1e2b49be9195a019c216f0cb76bf9"),
+    ("kinmen", "金門縣", "/home/repat-welfare/detail/2c90e4c76633d6e701663411210407cc"),
+    ("lienchiang", "連江縣", "/home/repat-welfare/detail/2c90e4c76633d6e70166341121d507ef"),
+]
+
+ASSISTIVE_DEVICES_FIELD_MAP = {
+    "服務對象": "serviceTarget",
+    "申請資格": "serviceTarget",  # 苗栗縣頁面用「申請資格」取代「服務對象」，語意相同
+    "服務內容": "serviceContent",
+    "申請辦法": "howToApply",
+    "業務單位": "unit",
+    "聯絡電話": "phone",
+}
+
+
+def _assistive_devices_clean_text(raw):
+    text = re.sub(r"</?br\s*/?>", "\n", raw, flags=re.IGNORECASE)
+    text = re.sub(r"<[^>]+>", "", text)
+    text = html_module.unescape(text)
+    lines = [line.strip() for line in text.splitlines()]
+    while lines and not lines[0]:
+        lines.pop(0)
+    while lines and not lines[-1]:
+        lines.pop()
+    return "\n".join(lines)
+
+
+def _assistive_devices_extract_links(fragment):
+    links = []
+    for m in re.finditer(r'<a\s+href=["\']([^"\']+)["\'][^>]*>(.*?)</a>', fragment, re.S):
+        href = html_module.unescape(m.group(1).strip())
+        text = _assistive_devices_clean_text(m.group(2))
+        if not href or href == "#":
+            continue
+        url = urllib.parse.urljoin(ASSISTIVE_DEVICES_BASE_URL, href)
+        links.append({"text": text, "url": url})
+    return links
+
+
+def _parse_assistive_devices_page(page_html):
+    """解析單一縣市「身心障礙者輔具費用補助」詳情頁 HTML。
+
+    頁面結構固定：每個欄位為 `<div class="article-item"><h4 ...>{欄位名稱}</h4></div>`
+    接著 `<div class="article-word">{內容}</div>`（純文字，換行為 `</br>`），僅「相關連結」
+    欄位後面接的是 `<ul class="list-unstyled fa-ul">` 內含多個 `<li><a href="...">...</a></li>`。
+    欄位不保證每縣市齊全（例如連江縣缺「服務內容」），缺的欄位如實輸出空字串／空陣列。
+    """
+    title_m = re.search(r"<title>(.*?)-輔具福利\|", page_html, re.S)
+    if title_m:
+        title = html_module.unescape(title_m.group(1)).strip()
+    else:
+        h3_m = re.search(r'<h3 class="text-primary"><strong>(.*?)</strong></h3>', page_html, re.S)
+        title = _assistive_devices_clean_text(h3_m.group(1)) if h3_m else ""
+
+    updated_m = re.search(r"更新日期[：:]\s*([0-9/\-]+)", page_html)
+    updated_date = updated_m.group(1).strip() if updated_m else ""
+
+    result = {
+        "title": title,
+        "updatedDate": updated_date,
+        "serviceTarget": "",
+        "serviceContent": "",
+        "howToApply": "",
+        "unit": "",
+        "phone": "",
+        "links": [],
+    }
+
+    for part in page_html.split('<div class="article-item">')[1:]:
+        h4_m = re.search(r"<h4[^>]*>(.*?)</h4>", part, re.S)
+        if not h4_m:
+            continue
+        label = _assistive_devices_clean_text(h4_m.group(1))
+        if label == "相關連結":
+            ul_m = re.search(r'<ul class="list-unstyled fa-ul">(.*?)</ul>', part, re.S)
+            if ul_m:
+                result["links"] = _assistive_devices_extract_links(ul_m.group(1))
+            continue
+        key = ASSISTIVE_DEVICES_FIELD_MAP.get(label)
+        if not key:
+            continue
+        word_m = re.search(r'<div class="article-word">(.*?)</div>', part, re.S)
+        if word_m:
+            result[key] = _assistive_devices_clean_text(word_m.group(1))
+
+    return result
+
+
+def build_assistive_devices():
+    """全國22縣市「身心障礙者輔具費用補助」（衛生福利部社會及家庭署輔具資源入口網
+    newrepat.sfaa.gov.tw，https://newrepat.sfaa.gov.tw/home/repat-welfare/index）。
+
+    使用者提供 22 個縣市的公告詳情頁網址（見 ASSISTIVE_DEVICES_COUNTIES），皆為伺服器端
+    渲染的純 HTML（非 SPA），本函式逐頁下載並用正規表示式解析固定的
+    `article-item`/`h4`/`article-word` 結構，取出服務對象、服務內容、申請辦法、業務單位、
+    聯絡電話、相關連結六個欄位，另附頁面標題與官方標示之更新日期。
+
+    欄位不保證每縣市齊全，例如連江縣缺「服務內容」欄位（只有5個h4，非解析遺漏），如實輸出
+    空字串，不捏造內容。「相關連結」欄位輸出 JSON 陣列字串 `[{"text":...,"url":...}, ...]`
+    （比照 build_tpe_hospice() 的 bedInfoLinks 既有慣例，前端 JSON.parse 還原），連結網址
+    一律轉為絕對網址。
+
+    來源網址無 Access-Control-Allow-Origin 標頭，比照專案慣例於伺服器端下載，另輸出內嵌
+    JS 版本 window.ASSISTIVE_DEVICES_DATA。
+    """
+    print("下載 全國22縣市身心障礙者輔具費用補助 ...", file=sys.stderr)
+    records = []
+    for key, county, path in ASSISTIVE_DEVICES_COUNTIES:
+        url = ASSISTIVE_DEVICES_BASE_URL + path
+        print(f"  下載 {county} ...", file=sys.stderr)
+        page_html = fetch(url)
+        parsed = _parse_assistive_devices_page(page_html)
+        records.append([
+            key,                                            # 0 key
+            county,                                          # 1 county
+            url,                                             # 2 sourceUrl
+            parsed["title"],                                 # 3 title
+            parsed["updatedDate"],                           # 4 updatedDate
+            parsed["serviceTarget"],                         # 5 serviceTarget
+            parsed["serviceContent"],                        # 6 serviceContent
+            parsed["howToApply"],                            # 7 howToApply
+            parsed["unit"],                                  # 8 unit
+            parsed["phone"],                                 # 9 phone
+            json.dumps(parsed["links"], ensure_ascii=False), # 10 links（JSON 陣列字串）
+        ])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = [
+        "key", "county", "sourceUrl", "title", "updatedDate",
+        "serviceTarget", "serviceContent", "howToApply", "unit", "phone", "links",
+    ]
+    return {"fields": fields, "rows": records}
+
+
 def _to_int(v):
     try:
         return int(float(v))
@@ -5174,6 +5336,15 @@ DATASETS = [
         "meta_key": "diabetesCare",
         "title": "醫療給付改善方案院所-糖尿病",
         "source": lambda: DIABETES_CARE_CSV_URL,
+    },
+    {
+        "key": "assistive-devices",
+        "builder": build_assistive_devices,
+        "json": "data/assistive-devices.json",
+        "js_var": "ASSISTIVE_DEVICES_DATA",
+        "meta_key": "assistiveDevices",
+        "title": "全國22縣市身心障礙者輔具費用補助",
+        "source": lambda: "https://newrepat.sfaa.gov.tw/home/repat-welfare/index",
     },
 ]
 

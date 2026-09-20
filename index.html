@@ -615,6 +615,17 @@
         "@type": "Organization",
         "name": "花蓮縣衛生局"
       }
+    },
+    {
+      "@type": "Dataset",
+      "name": "全台22縣市身心障礙者輔具費用補助懶人包",
+      "description": "彙整衛生福利部社會及家庭署輔具資源入口網22縣市「身心障礙者輔具費用補助」公告，整理各縣市服務對象、服務內容、申請辦法、業務單位、聯絡電話與相關連結，可切換查看比較。",
+      "url": "https://www.sunkuo.cc/gov-open-data-dashboard/assistive-devices/index.html",
+      "license": "http://data.gov.tw/license",
+      "creator": {
+        "@type": "Organization",
+        "name": "衛生福利部社會及家庭署"
+      }
     }
   ]
 }
@@ -1109,6 +1120,12 @@
       <div class="desc">衛生福利部中央健康保險署提供，列出全國約1,970家參與糖尿病醫療給付改善方案試辦計畫的醫事機構名稱、地址、電話與試辦計畫生效起迄日，可依縣市、關鍵字篩選並瀏覽各縣市院所數與生效年度累計趨勢統計圖表。</div>
       <div class="footline" id="diabetes-care-count">資料筆數載入中…</div>
     </a>
+    <a class="home-card disability" href="assistive-devices/index.html" data-county="all" data-category="disability">
+      <span class="tag">全國</span>
+      <h2>全台22縣市身心障礙者輔具費用補助懶人包</h2>
+      <div class="desc">彙整衛生福利部社會及家庭署輔具資源入口網22縣市「身心障礙者輔具費用補助」公告，一頁整理各縣市服務對象、服務內容、申請辦法、業務單位、聯絡電話與相關連結，點選縣市按鈕即可切換查看比較，並附官方最新公告連結供查證。</div>
+      <div class="footline" id="assistive-devices-count">資料筆數載入中…</div>
+    </a>
     <p class="no-match" id="county-no-match" style="display:none; grid-column: 1 / -1; text-align:center; color: var(--color-muted); padding: 24px 0;">
       沒有符合所選縣市的資料集，請調整篩選條件。
     </p>
@@ -1412,6 +1429,9 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.diabetesCare) {
     document.getElementById("diabetes-care-count").textContent = `共 ${meta.diabetesCare.count.toLocaleString()} 家院所 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.assistiveDevices) {
+    document.getElementById("assistive-devices-count").textContent = `涵蓋 ${meta.assistiveDevices.count.toLocaleString()} 縣市 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
 }).catch(() => {});
 

@@ -1,0 +1,25 @@
+# 全台22縣市身心障礙者輔具費用補助懶人包
+
+> 彙整衛生福利部社會及家庭署「輔具資源入口網」（newrepat.sfaa.gov.tw）22 縣市「身心障礙者輔具費用補助」（或同性質方案）公告詳情頁內容，整理各縣市服務對象、服務內容、申請辦法、業務單位、聯絡電話與相關連結，點選縣市按鈕即可切換查看比較，並附官方公告最後更新日期與原始連結供查證。
+
+- 提供機關：各縣市地方政府（衛生福利部社會及家庭署輔具資源入口網彙整發布）
+- 資料筆數：22 筆（22 縣市，每縣市一筆）
+- 原始資料來源：https://newrepat.sfaa.gov.tw/home/repat-welfare/index ，22 個縣市各自的公告詳情頁網址見頁面內各縣市「查看原始公告」連結
+- 授權方式：政府資料開放授權條款-第1版
+- 建議查看頻率：不定期（各縣市公告內容可能隨時調整）
+
+## 頁面內容
+
+- 儀表板頁面：https://www.sunkuo.cc/gov-open-data-dashboard/assistive-devices/index.html
+- 22 個縣市內容皆直接寫入頁面 HTML（非純 JS 動態渲染），僅用按鈕切換顯示/隱藏，停用 JavaScript 時仍可捲動閱讀全部 22 縣市完整內容。
+- 每個縣市區塊包含：官方公告標題、更新日期、服務對象、服務內容、申請辦法、業務單位、聯絡電話、相關連結（外部連結）。
+- 欄位不保證每縣市齊全：新北市、新竹市、臺中市、連江縣公告原文缺「服務內容」欄位（非解析遺漏，原始公告如此）；苗栗縣公告以「申請資格」取代「服務對象」，語意相同已對應合併。
+- 資料由 `scripts/build_data.py` 的 `build_assistive_devices()` 逐頁下載 22 個公告詳情頁 HTML 並解析固定結構取出，可重新執行 `python3 scripts/build_data.py assistive-devices` 更新。
+- 澎湖縣：使用者原提供之公告連結已於原網站移除（回傳 HTTP 500），改採內容結構相同、欄位齊全之澎湖縣對應方案頁面「澎湖縣身心障礙生活輔具補助服務（含代償墊付資訊）」。
+- 支援 `?county=<縣市代碼>` 網址參數深連結，預選特定縣市（例如 `?county=hualien` 預選花蓮縣），縣市代碼見頁面原始碼各按鈕 `data-county` 屬性。
+
+## 相關連結
+
+- 網站首頁：https://www.sunkuo.cc/gov-open-data-dashboard/
+- 更新紀錄：https://www.sunkuo.cc/gov-open-data-dashboard/changelog/index.html
+- 專案原始碼：https://github.com/ssssuuunnnn/gov-open-data-dashboard
