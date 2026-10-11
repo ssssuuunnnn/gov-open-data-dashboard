@@ -144,6 +144,11 @@ main {
 .faq-answer p { margin: 0 0 8px; }
 .faq-answer ul { margin: 0 0 8px; padding-left: 20px; }
 .faq-answer li { margin-bottom: 4px; }
+.faq-answer li ul { margin: 4px 0 0; }
+.faq-answer .faq-table { max-height: none; margin: 0 0 12px; }
+.faq-answer .faq-table th { cursor: default; position: static; }
+.faq-answer .faq-table tbody th { white-space: nowrap; text-transform: none; letter-spacing: 0; }
+.faq-answer .faq-table tbody tr:hover { background: none; }
 
 .stat-card {
   background: var(--color-card);
