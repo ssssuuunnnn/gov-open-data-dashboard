@@ -10,6 +10,10 @@
  * - 若使用者在這一頁按過「不用了」（localStorage 記錄，key 含 pathname，僅影響單一頁面，不影響
  *   其他資料集頁面的提示），或已經是安裝後以 standalone 模式開啟，則不顯示橫幅。
  * - iOS Safari 不支援 beforeinstallprompt，該裝置使用者不會看到本橫幅（已知限制，見設計文件）。
+ * - Google Analytics 事件（gtag 未載入時略過）：
+ *     pwa_install_click   使用者按橫幅「加入」（.pwa-install-accept）
+ *     pwa_install_result  瀏覽器安裝對話框結果，outcome 為 accepted / dismissed
+ *     pwa_install_dismiss 使用者按橫幅「不用了」
  */
 (function () {
   if (!("serviceWorker" in navigator)) return;
@@ -31,6 +35,13 @@
   var deferredPrompt = null;
   var banner = null;
 
+  function track(eventName, params) {
+    if (typeof gtag !== "function") return;
+    var payload = { event_category: "pwa_install", page_path: location.pathname };
+    for (var k in params) payload[k] = params[k];
+    gtag("event", eventName, payload);
+  }
+
   function showBanner() {
     if (banner) return;
     banner = document.createElement("div");
@@ -42,18 +53,22 @@
     document.body.appendChild(banner);
 
     banner.querySelector(".pwa-install-accept").addEventListener("click", function () {
+      track("pwa_install_click", {});
       if (!deferredPrompt) {
         hideBanner();
         return;
       }
       deferredPrompt.prompt();
-      deferredPrompt.userChoice.finally(function () {
+      deferredPrompt.userChoice.then(function (choice) {
+        track("pwa_install_result", { outcome: choice.outcome, event_label: choice.outcome });
+      }).finally(function () {
         deferredPrompt = null;
         hideBanner();
       });
     });
 
     banner.querySelector(".pwa-install-dismiss").addEventListener("click", function () {
+      track("pwa_install_dismiss", {});
       localStorage.setItem(dismissKey, "1");
       hideBanner();
     });

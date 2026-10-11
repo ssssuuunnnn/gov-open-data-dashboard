@@ -10,7 +10,7 @@
  *
  * 版本管理：修改 SHELL_ASSETS 或快取邏輯時，遞增 CACHE_VERSION，install/activate 會自動清除舊版快取。
  */
-const CACHE_VERSION = "shell-v1";
+const CACHE_VERSION = "shell-v2";
 
 // 這份清單需與 assets/ 目錄實際檔案同步；新增/更名共用資源時記得一併更新。
 const SHELL_ASSETS = [
