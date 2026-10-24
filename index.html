@@ -794,6 +794,17 @@
       </div>
       <button class="ghost" id="county-reset">重設篩選</button>
     </div>
+    <p class="county-page-hint" id="county-page-hint" style="display:none;"></p>
+  </div>
+  <div class="card county-pages-card">
+    <h2 class="section-title" style="margin-top:0;">縣市長照資源專頁</h2>
+    <p style="color:var(--color-muted);margin-top:-6px;">把同一縣市的照管中心分站電話、各類長照資源與常見問題整理在同一頁。</p>
+    <div class="county-page-links" id="county-page-links">
+      <!-- COUNTY_PAGES:HOME:START -->
+      <a class="county-page-link all" href="county/">全台縣市總覽</a>
+      <a class="county-page-link" href="county/taoyuan/" data-county-page="桃園市">桃園市長照資源總整理</a>
+      <!-- COUNTY_PAGES:HOME:END -->
+    </div>
   </div>
   <div class="home-grid" id="home-grid">
     <a class="home-card" href="abc/index.html" data-county="all" data-category="ltc">
@@ -1155,7 +1166,7 @@
     </p>
   </div>
 
-  <section class="card faq-section">
+  <section class="card faq-section" id="faq">
     <h2>長照服務 11 大常見問答（FAQ）</h2>
     <p class="faq-intro">整理台灣民眾在面對長照需求時最常提出的問題，協助您快速掌握申請資格、流程、費用與家屬支援資源。</p>
 
@@ -1585,8 +1596,30 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
       if (visible) visibleCount++;
     });
     noMatch.style.display = visibleCount === 0 ? "" : "none";
+    renderCountyPageHint(selected);
     syncMapHighlight();
     if (shouldSyncUrl) syncUrl();
+  }
+
+  // 勾選的縣市若已有縣市專頁（county/<slug>/，由 scripts/build_county_pages.py 產生並寫入
+  // #county-page-links 靜態連結），在篩選列下方提示可前往完整縣市頁。
+  const countyPageHint = document.getElementById("county-page-hint");
+  const countyPageLinks = {};
+  document.querySelectorAll("#county-page-links [data-county-page]").forEach((a) => {
+    countyPageLinks[a.dataset.countyPage] = a.getAttribute("href");
+  });
+  function renderCountyPageHint(selected) {
+    if (!countyPageHint) return;
+    const withPage = selected.filter((c) => countyPageLinks[c]);
+    if (withPage.length === 0) {
+      countyPageHint.style.display = "none";
+      countyPageHint.innerHTML = "";
+      return;
+    }
+    countyPageHint.innerHTML = withPage
+      .map((c) => `<a href="${countyPageLinks[c]}">查看${c}完整長照資源頁（分站電話、資源總覽與常見問題）→</a>`)
+      .join("<br />");
+    countyPageHint.style.display = "";
   }
 
   function setActiveTab(category) {

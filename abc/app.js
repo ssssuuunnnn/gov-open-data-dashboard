@@ -226,6 +226,9 @@
 
       const counties = Array.from(new Set(state.all.map((r) => r.county))).filter(Boolean).sort((a, b) => a.localeCompare(b, "zh-Hant"));
       populateSelect(els.county, counties, "全部");
+      // 支援 ?county=桃園市 預先篩選縣市（縣市長照資源頁 county/<slug>/ 會帶此參數連過來）
+      const presetCounty = new URLSearchParams(window.location.search).get("county");
+      if (presetCounty && counties.includes(presetCounty)) els.county.value = presetCounty;
       refreshDistrictOptions();
 
       els.metaUpdated.textContent = `資料筆數：${meta.abc.count.toLocaleString()}　資料整理時間：${new Date(meta.generatedAt).toLocaleString("zh-Hant-TW")}`;

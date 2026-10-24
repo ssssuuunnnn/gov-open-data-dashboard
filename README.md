@@ -466,6 +466,17 @@ scripts/sources/tpe-dementia-hospitals/  臺北市失智症診療機構名冊的
 檔案大小。「臺北市長照專業服務特約單位」則因來源僅提供 PDF 附件（無開放資料 CSV/API），改為以
 [pdfplumber](https://github.com/jsvine/pdfplumber) 解析本機存放的 PDF 表格。
 
+## 縣市長照資源頁（county/）
+
+`county/<slug>/index.html` 是依縣市整理的長照資源總覽頁（目前已建立：桃園市 `county/taoyuan/`），`county/index.html` 是 22 縣市總覽。兩者皆為**靜態 HTML**（內容直接寫在 HTML 裡、不靠 JS 載入），以利搜尋引擎索引。
+
+- 人工內容（導言、照管中心分站、依需求分類說明、FAQ、鄰近縣市）維護在 `data/counties.json`，只有含 `page` 欄位的縣市才會產生頁面；`indexable: false` 會加 `noindex` 且不列入 sitemap。
+- 資料集清單取自首頁 `.home-card` 的 `data-county`，筆數取自 `data/meta.json`，ABC 據點數取自 `data/abc.json`（以機構代碼去重）。
+- 產生頁面：`python3 scripts/build_county_pages.py`（不需網路）。腳本會同時以 `<!-- COUNTY_PAGES:... -->` 標記區塊更新首頁的縣市專頁連結、該縣市各資料集頁面的「相關資料集」連結，以及 `sitemap.xml`，可重複執行。
+- 新增資料集卡片或重跑 `build_data.py` 後，請一併重跑本腳本，讓縣市頁的資料集與數字保持同步。
+- 新增縣市頁：在 `data/counties.json` 該縣市加上 `page` 物件（可複製桃園市的結構），說明文字請自行撰寫並核對各縣市政府公告，再執行腳本。
+- `abc/index.html` 支援 `?county=桃園市` 參數預先篩選縣市。
+
 ## 更新資料
 
 ```bash
