@@ -802,6 +802,7 @@
     <div class="county-page-links" id="county-page-links">
       <!-- COUNTY_PAGES:HOME:START -->
       <a class="county-page-link all" href="county/">全台縣市總覽</a>
+      <a class="county-page-link all" href="denture-subsidy/">全台老人假牙補助比較</a>
       <a class="county-page-link" href="county/keelung/" data-county-page="基隆市">基隆市長照資源總整理</a>
       <a class="county-page-link" href="county/taipei/" data-county-page="臺北市">臺北市長照資源總整理</a>
       <a class="county-page-link" href="county/new-taipei/" data-county-page="新北市">新北市長照資源總整理</a>
@@ -1037,6 +1038,18 @@
       <h2>花蓮縣65歲以上長者假牙補助合約醫療院所</h2>
       <div class="desc">花蓮縣政府社會處公告，115年度65歲以上長者假牙補助合約醫療院所公開名單，共37筆（含1筆跨縣市臺東縣特約診所），並整理一般長者／中低收入戶等福利身分長者的申請資格、應備文件、申請流程與條件限制，可依縣市、鄉鎮市、機構類型篩選並瀏覽統計圖表，另附 Google Map 星等與評論數。</div>
       <div class="footline" id="hl-denture-count">資料筆數載入中…</div>
+    </a>
+    <a class="home-card" href="kl-denture/index.html" data-county="基隆市" data-category="denture">
+      <span class="tag">基隆市</span>
+      <h2>基隆市中低收入老人假牙補助特約醫療院所</h2>
+      <div class="desc">基隆市政府社會處公告，115年中低收入老人補助裝置假牙特約醫療院所44家，並整理申請資格、活動與固定假牙補助金額、維修補助與申請流程，可依行政區與關鍵字篩選並瀏覽統計圖表。</div>
+      <div class="footline" id="kl-denture-count">資料筆數載入中…</div>
+    </a>
+    <a class="home-card" href="ml-denture/index.html" data-county="苗栗縣" data-category="denture">
+      <span class="tag">苗栗縣</span>
+      <h2>苗栗縣中低收入老人假牙補助合約牙醫診所</h2>
+      <div class="desc">苗栗縣政府 1999 常見問答所列中低收入老人補助裝置假牙合約牙科診所22家，含負責醫師、地址與電話，並整理申請資格、應備文件與承辦窗口，可依鄉鎮市與關鍵字篩選並瀏覽統計圖表。</div>
+      <div class="footline" id="ml-denture-count">資料筆數載入中…</div>
     </a>
     <a class="home-card" href="pingtung-denture/index.html" data-county="屏東縣" data-category="denture">
       <span class="tag">屏東縣</span>
@@ -1371,6 +1384,8 @@
   <a href="https://opendata.tycg.gov.tw/api/dataset/c0c21e97-fc4a-4b65-aa31-0550b4a007b6/resource/433a97d4-c947-4ecd-9e9f-a1860f8cc0d5/download" target="_blank" rel="noopener">桃園市政府衛生局 桃園市長者裝置活動假牙合約醫療院所</a> ·
   <a href="https://data.kcg.gov.tw/File/DirectDownload/1b381cc4-7da0-42b6-b9be-b49edf87775d" target="_blank" rel="noopener">高雄市政府衛生局 高雄市醫療院所資料</a> ·
   <a href="https://opendata.tycg.gov.tw/api/dataset/628c2789-10f8-4c73-bafc-58dac276fa6f/resource/a2b6559b-9265-4854-b1be-97c0f8cde3a6/download" target="_blank" rel="noopener">桃園市政府衛生局 桃園市身心障礙類別、向度之鑑定醫院名冊</a> ·
+  <a href="https://www.klcg.gov.tw/tw/social/2751-279793.html" target="_blank" rel="noopener">基隆市政府社會處 115年度假牙補助特約醫療院所</a> ·
+  <a href="https://service.miaoli.gov.tw/FAQTable.aspx?n=1797" target="_blank" rel="noopener">苗栗縣政府 中低收入老人補助裝置假牙合約診所</a> ·
   看護／照服機構名錄（使用者人工蒐集網路公開資訊，非政府開放資料）<br />
   依「政府資料開放授權條款-第1版」釋出，本站僅作資料視覺化整理，實際內容以原始資料集為準。<br />
   <a href="changelog/index.html">網站更新紀錄</a>　|　本頁面最後更新時間：2026年7月27日
@@ -1477,6 +1492,12 @@ fetch("data/meta.json").then(r => r.json()).then(meta => {
   }
   if (meta.hlDenture) {
     document.getElementById("hl-denture-count").textContent = `共 ${meta.hlDenture.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.klDenture) {
+    document.getElementById("kl-denture-count").textContent = `共 ${meta.klDenture.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
+  }
+  if (meta.mlDenture) {
+    document.getElementById("ml-denture-count").textContent = `共 ${meta.mlDenture.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;
   }
   if (meta.pingtungDenture) {
     document.getElementById("pingtung-denture-count").textContent = `共 ${meta.pingtungDenture.count.toLocaleString()} 筆 · 更新於 ${new Date(meta.generatedAt).toLocaleDateString("zh-Hant-TW")}`;

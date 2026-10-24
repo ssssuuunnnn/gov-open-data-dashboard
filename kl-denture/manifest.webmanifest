@@ -1,0 +1,24 @@
+{
+  "name": "2026基隆市老人假牙補助：中低收入申請資格、補助金額與44家特約牙醫診所",
+  "short_name": "2026基隆市老人假牙補",
+  "description": "基隆市115年中低收入老人補助裝置假牙：申請資格、全口假牙最高4萬4,000元等補助金額、固定假牙與維修補助、申請流程，以及44家特約牙醫診所與醫院的地址電話，可依行政區篩選。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./index.html",
+  "display": "standalone",
+  "lang": "zh-Hant-TW",
+  "theme_color": "#1f6f5c",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

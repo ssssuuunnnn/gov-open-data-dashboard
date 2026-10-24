@@ -186,6 +186,16 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://www.sunkuo.cc/gov-open-data-dashboard/kl-denture/index.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.sunkuo.cc/gov-open-data-dashboard/ml-denture/index.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://www.sunkuo.cc/gov-open-data-dashboard/tyc-dementia-hospitals/index.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.8</priority>
@@ -308,6 +318,12 @@
   <!-- COUNTY_PAGES:SITEMAP:START -->
   <url>
     <loc>https://www.sunkuo.cc/gov-open-data-dashboard/county/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.sunkuo.cc/gov-open-data-dashboard/denture-subsidy/</loc>
     <lastmod>2026-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>

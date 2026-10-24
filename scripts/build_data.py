@@ -1634,6 +1634,84 @@ def build_pingtung_denture():
     return {"fields": fields, "rows": records}
 
 
+KL_DENTURE_PDF = "scripts/sources/kl-denture/115-clinic-list.pdf"
+KL_DENTURE_PAGE_URL = "https://www.klcg.gov.tw/tw/social/2751-279793.html"
+KL_DENTURE_PDF_URL = "https://www.klcg.gov.tw/wSite/public/Attachment/01307/f1768191202421.pdf"
+ML_DENTURE_CSV = "scripts/sources/ml-denture/clinics.csv"
+ML_DENTURE_FAQ_URL = "https://service.miaoli.gov.tw/FAQTable.aspx?n=1797"
+
+
+def _denture_clinic_type(name: str) -> str:
+    return "醫院" if "醫院" in name else "牙醫診所"
+
+
+def build_kl_denture():
+    """基隆市115年度假牙補助特約醫療院所一覽表（基隆市政府社會處「115年中低收入老人補助裝置假牙
+    實施計畫」附件）。
+
+    **資料來源**：官方 PDF（KL_DENTURE_PDF_URL）由使用者手動下載後存放於 KL_DENTURE_PDF
+    （scripts/sources/kl-denture/115-clinic-list.pdf），單頁 Excel 匯出的文字型 PDF，pdfplumber
+    extract_tables() 可直接取得「編號、診所名稱、地址、電話」四欄表格；表格末尾有空白列（編號45、46
+    無內容），以「診所名稱為空」略過。更新名冊時需人工下載新版 PDF 覆蓋後重跑
+    `python3 scripts/build_data.py kl-denture`。
+
+    district 由地址「基隆市X區」解析；電話原文未含區碼（如「2429-2205」），本函式補上「02-」以便
+    前端產生可撥打的 tel 連結，分機（#3282）原文照登。type 依名稱是否含「醫院」啟發式判斷，非官方
+    分類。無經緯度座標，故不含地圖。
+    """
+    print("讀取 基隆市115年度假牙補助特約醫療院所一覽表 本地 PDF ...", file=sys.stderr)
+    import pdfplumber  # 延遲載入：僅 PDF 資料集需要
+
+    rows = []
+    with pdfplumber.open(KL_DENTURE_PDF) as pdf:
+        for page in pdf.pages:
+            for table in page.extract_tables():
+                rows.extend(table)
+    records = []
+    for row in rows:
+        row = list(row) + [None] * (4 - len(row))
+        rid, name, addr, phone = [(c or "").replace("\n", "").strip() for c in row[:4]]
+        if not rid.isdigit() or not name:
+            continue
+        m = re.match(r"^基隆市(..區)", addr)
+        district = m.group(1) if m else ""
+        if phone and not phone.startswith("0"):
+            phone = "02-" + phone
+        records.append([len(records) + 1, "基隆市", district, name, _denture_clinic_type(name), addr, phone])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "county", "district", "name", "type", "address", "phone"]
+    return {"fields": fields, "rows": records}
+
+
+def build_ml_denture():
+    """苗栗縣中低收入老人補助裝置假牙合約牙科醫療診所名單（苗栗縣政府 1999 常見問答，114-05-27 更新）。
+
+    **資料來源**：官方未提供可下載的檔案，名單以文字列在 1999 常見問答頁（ML_DENTURE_FAQ_URL）。
+    由使用者複製頁面文字後整理成 ML_DENTURE_CSV（scripts/sources/ml-denture/clinics.csv），欄位為
+    「編號、鄉鎮市、診所名稱、負責醫師、電話、地址」；原文跨行斷字（如「田美\n71號」）已人工接回。
+    更新名冊時需人工比對官方頁面後修改 CSV，再重跑 `python3 scripts/build_data.py ml-denture`。
+
+    電話原文多為 6 碼市話未含區碼（如「466927」），本函式補上苗栗區碼「037-」；已含區碼者
+    （卓蘭鎮「04-25897628」）原文照登。地址原文省略「苗栗縣」，輸出時補上以利地圖搜尋。
+    """
+    print("讀取 苗栗縣中低收入老人假牙合約診所 CSV ...", file=sys.stderr)
+    records = []
+    with open(ML_DENTURE_CSV, encoding="utf-8") as f:
+        for r in csv.DictReader(f):
+            phone = r["電話"].strip()
+            if re.fullmatch(r"\d{6}", phone):
+                phone = "037-" + phone
+            addr = r["地址"].strip()
+            if not addr.startswith("苗栗縣"):
+                addr = "苗栗縣" + addr
+            name = r["診所名稱"].strip()
+            records.append([len(records) + 1, "苗栗縣", r["鄉鎮市"].strip(), name, r["負責醫師"].strip(),
+                            _denture_clinic_type(name), addr, phone])
+    print(f"  共 {len(records)} 筆", file=sys.stderr)
+    fields = ["id", "county", "district", "name", "doctor", "type", "address", "phone"]
+    return {"fields": fields, "rows": records}
+
+
 def _chiayi_denture_type(name: str) -> str:
     return "醫院" if "醫院" in name else "牙醫診所"
 
@@ -5164,6 +5242,24 @@ DATASETS = [
         "meta_key": "pingtungDenture",
         "title": "屏東縣115年長者假牙裝置補助合作醫療院所",
         "source": lambda: PINGTUNG_DENTURE_PDF,
+    },
+    {
+        "key": "kl-denture",
+        "builder": build_kl_denture,
+        "json": "data/kl-denture.json",
+        "js_var": "KL_DENTURE_DATA",
+        "meta_key": "klDenture",
+        "title": "基隆市115年度假牙補助特約醫療院所",
+        "source": lambda: KL_DENTURE_PDF_URL,
+    },
+    {
+        "key": "ml-denture",
+        "builder": build_ml_denture,
+        "json": "data/ml-denture.json",
+        "js_var": "ML_DENTURE_DATA",
+        "meta_key": "mlDenture",
+        "title": "苗栗縣中低收入老人補助裝置假牙合約牙科醫療診所",
+        "source": lambda: ML_DENTURE_FAQ_URL,
     },
     {
         "key": "tc-denture",
