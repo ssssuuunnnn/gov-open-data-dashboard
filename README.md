@@ -479,6 +479,15 @@ scripts/sources/tpe-dementia-hospitals/  臺北市失智症診療機構名冊的
 - 照管中心電話依衛福部長照專區「各縣市長期照顧管理中心聯繫窗口」；桃園市另列各區分站。內容涵蓋全國的縣市卡片（如 `tpe-hospice`）可列在 `counties.json` 的 `nationalExtra`，會出現在其他縣市頁的全國性資源區塊。
 - 沒有分站資料的縣市，會自動改列各鄉鎮市區的 ABC 據點數表。
 
+## 跨縣市比較頁（denture-subsidy/）
+
+`denture-subsidy/index.html` 是「全台老人假牙補助比較」，由 `data/programs/denture.json` 的結構化重點產生（每縣市的方案類型、資格、全口上限、受理期間、申請窗口、資料來源與確認狀態）。同一份資料也會在各縣市頁 `county/<slug>/` 產生「老人假牙補助重點」區塊。
+
+- 只填有對照官方公告或本站資料集頁確認過的內容；未確認的欄位留 `null`，頁面會顯示「—／本站尚未確認」。
+- `status`：`verified`（已確認）、`partial`（部分確認）、`pending`（待確認）。
+- 更新後執行 `python3 scripts/build_county_pages.py`，會一併重產比較頁、縣市頁、首頁連結與 sitemap。
+- 各縣市計畫多在每年 1～3 月公告新年度內容，更新時記得同步修改 `year`。
+
 ## 更新資料
 
 ```bash

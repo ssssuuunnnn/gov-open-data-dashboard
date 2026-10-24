@@ -437,3 +437,16 @@ footer.site-footer {
 .county-page table.data-table td, .county-page table.data-table th { vertical-align: top; }
 .county-page .table-wrap table.data-table { min-width: 720px; }
 .county-page .table-wrap table.data-table td:nth-child(3) { white-space: nowrap; }
+
+/* ---- 跨縣市比較頁（denture-subsidy/ 等） ---- */
+.program-dl { display: grid; grid-template-columns: 5.5em 1fr; gap: 4px 12px; margin: 6px 0 10px; font-size: .9rem; }
+.program-dl dt { color: var(--color-muted); font-size: .82rem; padding-top: 2px; }
+.program-dl dd { margin: 0; }
+.program-county { border-top: 1px solid var(--color-border); padding: 14px 0 6px; scroll-margin-top: 12px; }
+.program-county:first-of-type { border-top: 0; padding-top: 0; }
+.program-county h3 { margin: 0 0 6px; font-size: 1.15rem; }
+.program-county h4 { margin: 10px 0 2px; font-size: 1rem; }
+.program-links { font-size: .86rem; margin: 6px 0; }
+.county-page .table-wrap table.compare-table { min-width: 680px; }
+.compare-table td, .compare-table th { white-space: nowrap; }
+.compare-table td .county-note { white-space: normal; }

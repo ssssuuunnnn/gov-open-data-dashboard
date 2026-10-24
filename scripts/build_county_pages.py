@@ -30,6 +30,8 @@ TODAY = dt.date.today().isoformat()
 # 首頁卡片歸在某縣市、但內容其實涵蓋全國的資料集（由 counties.json 的 nationalExtra 設定），
 # 會同時列在其他縣市頁的「全國性資源」區塊
 NATIONAL_EXTRA = set()
+# data/programs/denture.json（由 main() 載入），用來在縣市頁加上假牙補助重點區塊
+DENTURE = None
 
 CATEGORY_LABELS = {
     "ltc": "長照 / 老人福利",
@@ -363,6 +365,11 @@ def build_county_page(county, slug_by_name, county_by_slug, cards, meta, abc_cou
         out.append(_needs_html(page, name, rel, cards_by_slug, meta, total, others))
     used = {n["dataset"] for n in page.get("needs", [])}
 
+    # 跨縣市計畫重點（目前：老人假牙補助）
+    if DENTURE:
+        import build_program_pages as bp
+        out.append(bp.county_denture_html(name, DENTURE, rel, esc))
+
     # 全國性資料集
     national = [c for c in cards if (c["county"] == "all" or c["slug"] in NATIONAL_EXTRA) and c["slug"] not in used]
     if national:
@@ -543,14 +550,18 @@ def replace_block(text, name, new_inner, indent=""):
     return pattern.sub(lambda _: block, text, count=1)
 
 
-def update_homepage(built):
+def update_homepage(built, program_paths=()):
     path = ROOT / "index.html"
     text = path.read_text(encoding="utf-8")
     links = "".join(
         f'      <a class="county-page-link" href="county/{c["slug"]}/" data-county-page="{esc(c["name"])}">{esc(c["name"])}長照資源總整理</a>\n'
         for c in built
     )
-    inner = f'      <a class="county-page-link all" href="county/">全台縣市總覽</a>\n{links}'
+    programs = "".join(
+        f'      <a class="county-page-link all" href="{p}">{label}</a>\n'
+        for p, label in [("denture-subsidy/", "全台老人假牙補助比較")] if p in program_paths
+    )
+    inner = f'      <a class="county-page-link all" href="county/">全台縣市總覽</a>\n{programs}{links}'
     new = replace_block(text, "HOME", inner, indent="      ")
     if new is None:
         print("  ⚠️ index.html 找不到 COUNTY_PAGES:HOME 標記，略過首頁更新")
@@ -586,10 +597,11 @@ def update_dataset_pages(cards, built):
             print(f"  ↺ {card['slug']}/index.html 加上縣市頁連結")
 
 
-def update_sitemap(built):
+def update_sitemap(built, program_paths=()):
     path = ROOT / "sitemap.xml"
     text = path.read_text(encoding="utf-8")
-    entries = [f"{SITE}county/"] + [f"{SITE}county/{c['slug']}/" for c in built if c["page"].get("indexable")]
+    entries = [f"{SITE}county/"] + [f"{SITE}{p}" for p in program_paths] + [
+        f"{SITE}county/{c['slug']}/" for c in built if c["page"].get("indexable")]
     inner = "".join(
         f"  <url>\n    <loc>{u}</loc>\n    <lastmod>{TODAY}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>\n"
         for u in entries
@@ -606,6 +618,11 @@ def update_sitemap(built):
 def main():
     cfg = json.loads((ROOT / "data" / "counties.json").read_text(encoding="utf-8"))
     NATIONAL_EXTRA.update(cfg.get("nationalExtra", []))
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import build_program_pages as bp
+    global DENTURE
+    DENTURE = bp.load_denture()
     counties = cfg["counties"]
     county_by_slug = {c["slug"]: c for c in counties}
     slug_by_name = {c["name"]: c["slug"] for c in counties}
@@ -629,9 +646,10 @@ def main():
     hub.write_text(build_hub(counties, cards, abc_by_county), encoding="utf-8")
     print("✓ county/index.html")
 
-    update_homepage(built)
+    program_paths = bp.build_all(sys.modules[__name__])
+    update_homepage(built, program_paths)
     update_dataset_pages(cards, built)
-    update_sitemap(built)
+    update_sitemap(built, program_paths)
     print("✓ index.html / sitemap.xml 已同步")
 
 
