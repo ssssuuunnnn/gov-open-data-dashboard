@@ -3,261 +3,563 @@
   "reviewedAt": "2026-10-24",
   "background": {
     "text": "衛生福利部自 98 年起以中央預算補助縣市辦理「中低收入老人補助裝置假牙」，自 115 年度起因財政收支劃分法修正，改由各地方政府辦理；不少縣市另以自有預算辦理不限福利身分的一般長者假牙補助。",
-    "source": { "title": "衛生福利部新聞稿（115-02-09）", "url": "https://mohw.gov.tw/cp-16-85406-1.html" }
+    "source": {
+      "title": "衛生福利部新聞稿（115-02-09）",
+      "url": "https://mohw.gov.tw/cp-16-85406-1.html"
+    }
   },
   "counties": [
     {
-      "county": "基隆市", "slug": "keelung", "year": 115, "status": "verified", "dataset": null,
+      "county": "基隆市",
+      "slug": "keelung",
+      "year": 115,
+      "status": "verified",
+      "dataset": "kl-denture",
       "programs": [
-        { "type": "welfare", "name": "中低收入老人補助裝置假牙",
+        {
+          "type": "welfare",
+          "name": "中低收入老人補助裝置假牙",
           "eligibility": "設籍基隆市 65 歲以上（原住民 55 歲以上），經醫師評估需裝活動假牙，且為列冊低收入戶、中低收入戶，或領中低收入老人生活津貼、身心障礙者生活補助費等身分",
           "maxFull": 44000,
           "amounts": "全口 4 萬 4,000 元、單顎全口 2 萬 2,000 元、部分活動假牙 1 萬 7,000 元至 3 萬 9,000 元；固定假牙每顆 4,400 元（當年至多 10 顆）；維修每年最高 6,600 元",
           "apply": "先到區公所開立福利身分證明，再帶證明、身分證與健保卡到配合的醫療院所就診",
-          "contact": "基隆市政府社會處 (02)2420-1122" }
+          "contact": "基隆市政府社會處 (02)2420-1122"
+        }
       ],
-      "clinics": { "note": "115 年度特約醫療院所一覽表（PDF）", "url": "https://www.klcg.gov.tw/wSite/public/Attachment/01307/f1768191202421.pdf" },
-      "sources": [ { "title": "基隆市政府社會處：115年中低收入老人補助裝置假牙實施計畫", "url": "https://www.klcg.gov.tw/tw/social/2751-279793.html", "date": "2026-04-08" } ]
+      "clinics": {
+        "note": "115 年度特約醫療院所一覽表（PDF）",
+        "url": "https://www.klcg.gov.tw/wSite/public/Attachment/01307/f1768191202421.pdf"
+      },
+      "sources": [
+        {
+          "title": "基隆市政府社會處：115年中低收入老人補助裝置假牙實施計畫",
+          "url": "https://www.klcg.gov.tw/tw/social/2751-279793.html",
+          "date": "2026-04-08"
+        }
+      ]
     },
     {
-      "county": "臺北市", "slug": "taipei", "year": 115, "status": "verified", "dataset": "tpe-denture",
+      "county": "臺北市",
+      "slug": "taipei",
+      "year": 115,
+      "status": "verified",
+      "dataset": "tpe-denture",
       "programs": [
-        { "type": "welfare", "name": "中低收入老人假牙補助",
+        {
+          "type": "welfare",
+          "name": "中低收入老人假牙補助",
           "eligibility": "55 歲以上列冊低收入戶或中低收入戶，或 65 歲以上領中低收入老人生活津貼、身心障礙者生活補助費、經公費收容安置等身分",
           "maxFull": 55000,
           "amounts": "活動假牙依身分與態樣最高 2 萬元至 5 萬 5,000 元；固定假牙單顆最高 7,000～7,500 元（最多 6 顆）；維修每年最高 6,600 元",
           "apply": "到市立聯合醫院或牙醫師公會所屬院所口腔篩檢，經社會局核定後才開始製作",
-          "contact": "臺北市政府社會局老人福利科 1999 轉 1576" }
+          "contact": "臺北市政府社會局老人福利科 1999 轉 1576"
+        }
       ],
-      "sources": [ { "title": "本站整理：臺北市老人假牙補助", "url": "tpe-denture/index.html" } ]
+      "sources": [
+        {
+          "title": "本站整理：臺北市老人假牙補助",
+          "url": "tpe-denture/index.html"
+        }
+      ]
     },
     {
-      "county": "新北市", "slug": "new-taipei", "year": 115, "status": "verified", "dataset": null,
+      "county": "新北市",
+      "slug": "new-taipei",
+      "year": 115,
+      "status": "verified",
+      "dataset": null,
       "programs": [
-        { "type": "welfare", "name": "中、低收入老人補助裝置假牙",
+        {
+          "type": "welfare",
+          "name": "中、低收入老人補助裝置假牙",
           "eligibility": "設籍新北市，60 歲以上列冊低收入戶，或 65 歲以上（原住民 55 歲以上）中低收入戶、領中低收入老人生活津貼、身心障礙者生活補助費等身分，經牙醫評估需裝假牙",
           "maxFull": 44000,
           "amounts": "全口 4 萬 4,000 元、單顎全口 2 萬 2,000 元、部分活動假牙 1 萬 7,000 元至 3 萬 9,000 元；固定假牙每顆 4,400 元（當年至多 10 顆）；維修每年最高 6,600 元；5 年內合計上限 4 萬 4,000 元（維修除外）",
           "apply": "帶福利身分證明到健保特約牙醫院所口腔篩檢，由院所或戶籍地區公所送社會局，核定後 6 個月內完成製作；申請前已完成的假牙不補助",
-          "contact": "新北市政府社會局 1999（外縣市 (02)2960-3456 分機 3761）" }
+          "contact": "新北市政府社會局 1999（外縣市 (02)2960-3456 分機 3761）"
+        }
       ],
       "notes": "部分區公所另自辦一般戶老人假牙補助（例如鶯歌區），條件依各區公告。",
-      "sources": [ { "title": "新北市政府福利補助自己查：中、低收入老人補助裝置假牙", "url": "https://welfare.ntpc.gov.tw/viewService/show/1008049?actionName=list6&fromOpa=1" } ]
+      "sources": [
+        {
+          "title": "新北市政府福利補助自己查：中、低收入老人補助裝置假牙",
+          "url": "https://welfare.ntpc.gov.tw/viewService/show/1008049?actionName=list6&fromOpa=1"
+        }
+      ]
     },
     {
-      "county": "桃園市", "slug": "taoyuan", "year": 115, "status": "verified", "dataset": "tyc-denture",
+      "county": "桃園市",
+      "slug": "taoyuan",
+      "year": 115,
+      "status": "verified",
+      "dataset": "tyc-denture",
       "programs": [
-        { "type": "general", "name": "長者裝置活動假牙補助",
+        {
+          "type": "general",
+          "name": "長者裝置活動假牙補助",
           "eligibility": "設籍桃園市 1 年以上、65 歲以上的長者，終身一次",
           "maxFull": 44000,
           "amounts": "部分活動假牙 1 萬 7,000 元、半口 2 萬 2,000 元、全口 4 萬 4,000 元、維修 2,000 元；植牙與固定假牙不補助",
           "apply": "到合約醫療院所提出申請，由院所送衛生局審查",
-          "contact": "桃園市政府衛生局" }
+          "contact": "桃園市政府衛生局"
+        }
       ],
-      "sources": [ { "title": "本站整理：桃園市長者假牙補助", "url": "tyc-denture/index.html" } ]
+      "sources": [
+        {
+          "title": "本站整理：桃園市長者假牙補助",
+          "url": "tyc-denture/index.html"
+        }
+      ]
     },
     {
-      "county": "新竹市", "slug": "hsinchu-city", "year": 114, "status": "partial", "dataset": null,
+      "county": "新竹市",
+      "slug": "hsinchu-city",
+      "year": 114,
+      "status": "partial",
+      "dataset": null,
       "programs": [
-        { "type": "general", "name": "高齡友善固齒整合照護計畫（全口活動假牙）",
+        {
+          "type": "general",
+          "name": "高齡友善固齒整合照護計畫（全口活動假牙）",
           "eligibility": "65 歲以上（原住民 55 歲以上），112 年 1 月 1 日前設籍新竹市，上下顎自然牙合計不足 6 顆；65 歲以上長者需符合安老津貼的資產與居住條件",
           "maxFull": 60000,
           "amounts": "每人最高 6 萬元",
           "apply": "先到合約診所評估，再向衛生局申請",
-          "contact": "新竹市衛生局 03-535-5191" }
+          "contact": "新竹市衛生局 03-535-5191"
+        }
       ],
-      "clinics": { "note": "合約醫療院所名單（衛生局假牙專區）", "url": "https://dep.hcchb.gov.tw/ch/home.jsp?id=97&parentpath=0%2C40%2C88" },
+      "clinics": {
+        "note": "合約醫療院所名單（衛生局假牙專區）",
+        "url": "https://dep.hcchb.gov.tw/ch/home.jsp?id=97&parentpath=0%2C40%2C88"
+      },
       "notes": "以上為 114 年度公告內容；115 年度條件已於 115-02-24 公告，請以衛生局假牙專區最新文件為準。中低收入老人另有假牙補助，條件請洽社會處。",
       "sources": [
-        { "title": "新竹市衛生局新聞（114-03-06）：竹市長者全口假牙補助最高6萬元", "url": "https://dep.hcchb.gov.tw/ch/home.jsp?id=5&parentpath=0,4&mcustomize=municipalnews_view.jsp&toolsflag=Y&dataserno=202503060003&t=MunicipalNews&mserno=201601300317", "date": "2025-03-06" },
-        { "title": "新竹市衛生局：假牙專區", "url": "https://dep.hcchb.gov.tw/ch/home.jsp?id=97&parentpath=0%2C40%2C88", "date": "2026-02-24" }
+        {
+          "title": "新竹市衛生局新聞（114-03-06）：竹市長者全口假牙補助最高6萬元",
+          "url": "https://dep.hcchb.gov.tw/ch/home.jsp?id=5&parentpath=0,4&mcustomize=municipalnews_view.jsp&toolsflag=Y&dataserno=202503060003&t=MunicipalNews&mserno=201601300317",
+          "date": "2025-03-06"
+        },
+        {
+          "title": "新竹市衛生局：假牙專區",
+          "url": "https://dep.hcchb.gov.tw/ch/home.jsp?id=97&parentpath=0%2C40%2C88",
+          "date": "2026-02-24"
+        }
       ]
     },
     {
-      "county": "新竹縣", "slug": "hsinchu-county", "year": 115, "status": "verified", "dataset": "hsc-denture",
+      "county": "新竹縣",
+      "slug": "hsinchu-county",
+      "year": 115,
+      "status": "verified",
+      "dataset": "hsc-denture",
       "programs": [
-        { "type": "welfare", "name": "中低收入老人補助裝置假牙",
+        {
+          "type": "welfare",
+          "name": "中低收入老人補助裝置假牙",
           "eligibility": "65 歲以上（原住民 55 歲以上），列冊低收入戶、中低收入戶，或領中低收入老人生活津貼、身心障礙者生活補助費等身分",
           "maxFull": 44000,
           "amounts": "全口 4 萬 4,000 元、單顎全口 2 萬 2,000 元、部分活動假牙 1 萬 7,000 元至 3 萬 9,000 元；固定假牙每顆 4,000 元（當年至多 10 顆）；維修每年最高 6,600 元",
           "apply": "治療前向戶籍地鄉鎮市公所申請",
-          "contact": "新竹縣政府 03-551-8101 分機 3201" }
+          "contact": "新竹縣政府 03-551-8101 分機 3201"
+        }
       ],
-      "sources": [ { "title": "本站整理：新竹縣中低收入老人假牙補助", "url": "hsc-denture/index.html" } ]
+      "sources": [
+        {
+          "title": "本站整理：新竹縣中低收入老人假牙補助",
+          "url": "hsc-denture/index.html"
+        }
+      ]
     },
     {
-      "county": "苗栗縣", "slug": "miaoli", "year": 114, "status": "partial", "dataset": null,
+      "county": "苗栗縣",
+      "slug": "miaoli",
+      "year": 114,
+      "status": "partial",
+      "dataset": "ml-denture",
       "programs": [
-        { "type": "welfare", "name": "中低收入老人補助裝置假牙",
-          "eligibility": "設籍苗栗縣 65 歲以上，經醫師評估缺牙需裝假牙，且為低收入戶、中低收入戶，或領中低收入老人生活津貼、身心障礙者生活補助費等身分",
+        {
+          "type": "welfare",
+          "name": "中低收入老人補助裝置假牙",
+          "eligibility": "設籍苗栗縣年滿 65 歲，經醫師評估缺牙需裝假牙，且為列冊低收入戶、中低收入戶，或領中低收入老人生活津貼、身心障礙者生活補助，或經各級政府全額補助收容安置、補助身心障礙者托育費或養護費達 50% 以上",
           "maxFull": null,
           "amounts": null,
           "apply": "向戶籍所在地鄉鎮市公所申請，備申請表、身分證影本、福利身分證明與印章",
-          "contact": "苗栗縣 1999（外縣市 037-322150）" }
+          "contact": "戶籍所在地鄉鎮市公所；苗栗縣 1999（外縣市 037-322150）"
+        }
       ],
-      "clinics": { "note": "1999 常見問答列有 22 家合約牙醫診所", "url": "https://service.miaoli.gov.tw/FAQTable.aspx?n=1797" },
-      "notes": "補助金額尚待對照官方公告。",
-      "sources": [ { "title": "苗栗縣政府 1999 常見問答：中低收入老人補助裝置假牙", "url": "https://service.miaoli.gov.tw/FAQTable.aspx?n=1797", "date": "2025-05-27" } ]
+      "clinics": null,
+      "notes": "官方 1999 常見問答未列出補助金額，本站不自行推估，請洽戶籍地公所。",
+      "sources": [
+        {
+          "title": "苗栗縣政府 1999 常見問答：中低收入老人補助裝置假牙",
+          "url": "https://service.miaoli.gov.tw/FAQTable.aspx?n=1797",
+          "date": "2025-05-27"
+        }
+      ]
     },
     {
-      "county": "臺中市", "slug": "taichung", "year": 115, "status": "verified", "dataset": "tc-denture",
+      "county": "臺中市",
+      "slug": "taichung",
+      "year": 115,
+      "status": "verified",
+      "dataset": "tc-denture",
       "programs": [
-        { "type": "general", "name": "65 歲以上銀髮族假牙裝置補助計畫",
+        {
+          "type": "general",
+          "name": "65 歲以上銀髮族假牙裝置補助計畫",
           "eligibility": "設籍臺中市滿 1 年、65 歲以上，極重度或重度缺牙，且最近一年綜合所得稅率 5% 以下；終身一次",
           "maxFull": 44000,
           "amounts": "上下顎全口 4 萬 4,000 元、單顎全口 2 萬 2,000 元、單顎部分活動假牙最高 2 萬 2,000 元",
           "period": "115 年 1 月 1 日至 12 月 31 日，或經費用罄為止",
           "apply": "到合約院所免費口腔檢查，由院所送件",
-          "contact": "臺中市政府衛生局" }
+          "contact": "臺中市政府衛生局"
+        }
       ],
       "notes": "低收入、中低收入等身分另有轉介申請管道。",
-      "sources": [ { "title": "本站整理：臺中市銀髮族假牙補助", "url": "tc-denture/index.html" } ]
+      "sources": [
+        {
+          "title": "本站整理：臺中市銀髮族假牙補助",
+          "url": "tc-denture/index.html"
+        }
+      ]
     },
     {
-      "county": "彰化縣", "slug": "changhua", "year": 115, "status": "verified", "dataset": "chc-denture",
+      "county": "彰化縣",
+      "slug": "changhua",
+      "year": 115,
+      "status": "verified",
+      "dataset": "chc-denture",
       "programs": [
-        { "type": "general", "name": "補助 65 歲以上老人裝置全口假牙",
+        {
+          "type": "general",
+          "name": "補助 65 歲以上老人裝置全口假牙",
           "eligibility": "65 歲以上、設籍彰化縣滿 3 年，經牙醫評估需裝全口活動假牙（上下顎或單顎健康牙齒各 3 顆以內）；同一部位終身一次",
           "maxFull": null,
           "amounts": null,
           "period": "每年 3 月 1 日至 9 月 30 日",
           "apply": "持身分證與印章到戶籍地公所辦理",
-          "contact": "彰化縣政府社會處長青福利科 04-753-2353" }
+          "contact": "彰化縣政府社會處長青福利科 04-753-2353"
+        }
       ],
-      "sources": [ { "title": "本站整理：彰化縣老人全口假牙補助", "url": "chc-denture/index.html" } ]
+      "sources": [
+        {
+          "title": "本站整理：彰化縣老人全口假牙補助",
+          "url": "chc-denture/index.html"
+        }
+      ]
     },
     {
-      "county": "南投縣", "slug": "nantou", "year": 115, "status": "partial", "dataset": null,
+      "county": "南投縣",
+      "slug": "nantou",
+      "year": 115,
+      "status": "partial",
+      "dataset": null,
       "programs": [
-        { "type": "general", "name": "老人裝置假牙補助（一般戶）",
+        {
+          "type": "general",
+          "name": "老人裝置假牙補助（一般戶）",
           "eligibility": "65 歲以上、設籍南投縣滿 1 年，或設籍南投縣 50 歲以上領有身心障礙證明；全口假牙限上或下顎剩 3 顆以內",
           "maxFull": 40000,
           "amounts": "每人終身累計最高 4 萬元，同一項目不重複補助",
           "apply": "取得牙醫診斷證明後，向戶籍地鄉鎮市衛生所申請",
-          "contact": "南投縣政府衛生局（各鄉鎮市衛生所）" },
-        { "type": "welfare", "name": "老人裝置假牙補助（福利身分）",
+          "contact": "南投縣政府衛生局（各鄉鎮市衛生所）"
+        },
+        {
+          "type": "welfare",
+          "name": "老人裝置假牙補助（福利身分）",
           "eligibility": "設籍南投縣 65 歲以上（原住民 55 歲以上），且為低收入戶、中低收入戶，或領中低收入老人生活津貼、身心障礙者生活補助費等身分",
           "maxFull": null,
           "amounts": null,
           "apply": "取得牙醫診斷證明後，向戶籍地鄉鎮市公所申請",
-          "contact": "戶籍地鄉鎮市公所" }
+          "contact": "戶籍地鄉鎮市公所"
+        }
       ],
-      "sources": [ { "title": "南投縣政府衛生局：115年南投縣老人裝置假牙補助申請", "url": "https://www.ntshb.gov.tw/center/form/Details?Parser=2%2C24%2C525%2C496%2C%2C%2C2688" } ]
+      "sources": [
+        {
+          "title": "南投縣政府衛生局：115年南投縣老人裝置假牙補助申請",
+          "url": "https://www.ntshb.gov.tw/center/form/Details?Parser=2%2C24%2C525%2C496%2C%2C%2C2688"
+        }
+      ]
     },
     {
-      "county": "雲林縣", "slug": "yunlin", "year": 115, "status": "partial", "dataset": null,
+      "county": "雲林縣",
+      "slug": "yunlin",
+      "year": 115,
+      "status": "verified",
+      "dataset": null,
       "programs": [
-        { "type": "welfare", "name": "中低收入老人補助裝置假牙",
-          "eligibility": null, "maxFull": null, "amounts": null, "apply": null,
-          "contact": "雲林縣政府社會處 05-552-2560" }
+        {
+          "type": "welfare",
+          "name": "中低收入老人補助裝置假牙",
+          "eligibility": "設籍雲林縣 65 歲以上（原住民 55 歲以上），經健保特約牙醫評估需裝活動假牙，且為列冊低收入戶、中低收入戶，或領中低收入老人生活津貼、身心障礙者生活補助費等身分；同一顎 5 年內不重複補助（維修除外）",
+          "maxFull": 44000,
+          "amounts": "全口 4 萬 4,000 元、單顎全口 2 萬 2,000 元、部分活動假牙 1 萬 7,000 元至 3 萬 9,000 元；固定假牙每顆 4,400 元（當年至多 10 顆）；維修每年最高 6,600 元",
+          "period": "口腔篩檢至每年 10 月 31 日截止，計畫至 12 月 31 日",
+          "apply": "帶身分證向戶籍地鄉鎮市公所申請，取得口腔篩檢通知單與特約診所名冊後，1 週內約診、3 週內完成篩檢",
+          "contact": "雲林縣政府社會處 05-552-2560"
+        }
       ],
-      "clinics": { "note": "115 年度老人假牙簽約名單（PDF，見官方頁附件）", "url": "https://social.yunlin.gov.tw/News_Content.aspx?n=22334&s=536172" },
-      "notes": "115 年度實施計畫已公告（115-05-11），資格與金額待對照計畫全文。",
-      "sources": [ { "title": "雲林縣政府社會處：雲林縣中低收入老人補助裝置假牙實施計畫", "url": "https://social.yunlin.gov.tw/News_Content.aspx?n=22334&s=536172", "date": "2026-05-11" } ]
+      "clinics": {
+        "note": "115 年度老人假牙簽約名單（PDF，見官方頁附件）",
+        "url": "https://social.yunlin.gov.tw/News_Content.aspx?n=22334&s=536172"
+      },
+      "notes": "依 115 年 5 月 11 日修訂之實施計畫整理。",
+      "sources": [
+        {
+          "title": "雲林縣中低收入老人補助裝置假牙實施計畫（115-05-11 修訂）",
+          "url": "https://social.yunlin.gov.tw/News_Content.aspx?n=22334&s=536172",
+          "date": "2026-05-11"
+        }
+      ]
     },
     {
-      "county": "嘉義市", "slug": "chiayi-city", "year": 115, "status": "verified", "dataset": "chiayi-denture",
+      "county": "嘉義市",
+      "slug": "chiayi-city",
+      "year": 115,
+      "status": "verified",
+      "dataset": "chiayi-denture",
       "programs": [
-        { "type": "general", "name": "一般身分別老人補助裝置假牙",
+        {
+          "type": "general",
+          "name": "一般身分別老人補助裝置假牙",
           "eligibility": "75 歲以上、設籍嘉義市滿 5 年，終身一次；市府寄發通知單",
-          "maxFull": null, "amounts": null,
+          "maxFull": null,
+          "amounts": null,
           "apply": "收到通知單後到合約診所，由診所向市府請款",
-          "contact": "嘉義市政府社會處 05-225-4321 分機 153、120" },
-        { "type": "welfare", "name": "中低收入老人補助裝置假牙",
+          "contact": "嘉義市政府社會處 05-225-4321 分機 153、120"
+        },
+        {
+          "type": "welfare",
+          "name": "中低收入老人補助裝置假牙",
           "eligibility": "設籍嘉義市 65 歲以上（原住民 55 歲以上），且為低收入戶、中低收入戶等身分",
-          "maxFull": null, "amounts": null, "apply": null,
-          "contact": "嘉義市政府社會處" }
+          "maxFull": null,
+          "amounts": null,
+          "apply": null,
+          "contact": "嘉義市政府社會處"
+        }
       ],
-      "sources": [ { "title": "本站整理：嘉義市假牙補助", "url": "chiayi-denture/index.html" } ]
+      "sources": [
+        {
+          "title": "本站整理：嘉義市假牙補助",
+          "url": "chiayi-denture/index.html"
+        }
+      ]
     },
-    { "county": "嘉義縣", "slug": "chiayi-county", "year": null, "status": "pending", "dataset": null, "programs": [],
-      "sources": [ { "title": "嘉義縣衛生局（官方頁面）", "url": "https://cyshb.cyhg.gov.tw/Content_List.aspx?n=6790D8B929BF47BE" } ] },
     {
-      "county": "臺南市", "slug": "tainan", "year": 115, "status": "verified", "dataset": "tn-denture",
+      "county": "嘉義縣",
+      "slug": "chiayi-county",
+      "year": null,
+      "status": "pending",
+      "dataset": null,
+      "programs": [],
+      "sources": [
+        {
+          "title": "嘉義縣衛生局（官方頁面）",
+          "url": "https://cyshb.cyhg.gov.tw/Content_List.aspx?n=6790D8B929BF47BE"
+        }
+      ]
+    },
+    {
+      "county": "臺南市",
+      "slug": "tainan",
+      "year": 115,
+      "status": "verified",
+      "dataset": "tn-denture",
       "programs": [
-        { "type": "general", "name": "長者免費裝置全口活動假牙計畫",
+        {
+          "type": "general",
+          "name": "長者免費裝置全口活動假牙計畫",
           "eligibility": "設籍臺南市（111 年 12 月 25 日前設籍且持續在籍）、民國 50 年 12 月 31 日前出生（原住民 60 年前），上或下顎健康牙齒 3 顆以內；綜合所得稅率未滿 20%",
           "maxFull": 44000,
           "amounts": "每顎上限 2 萬 2,000 元，全口 4 萬 4,000 元",
           "period": "115 年 1 月 1 日至 12 月 10 日",
           "apply": "到合約牙科醫療院所申請",
-          "contact": "臺南市政府衛生局" }
+          "contact": "臺南市政府衛生局"
+        }
       ],
-      "sources": [ { "title": "本站整理：臺南市長者免費全口假牙", "url": "tn-denture/index.html" } ]
+      "sources": [
+        {
+          "title": "本站整理：臺南市長者免費全口假牙",
+          "url": "tn-denture/index.html"
+        }
+      ]
     },
     {
-      "county": "高雄市", "slug": "kaohsiung", "year": 115, "status": "partial", "dataset": "kcg-denture",
+      "county": "高雄市",
+      "slug": "kaohsiung",
+      "year": 115,
+      "status": "partial",
+      "dataset": "kcg-denture",
       "programs": [
-        { "type": "general", "name": "老人免費裝假牙",
-          "eligibility": null, "maxFull": null, "amounts": null,
+        {
+          "type": "general",
+          "name": "老人免費裝假牙",
+          "eligibility": null,
+          "maxFull": null,
+          "amounts": null,
           "period": "口腔篩檢自 115 年 3 月 1 日起至額滿截止",
           "apply": "篩檢期間帶身分證與印章到指定地點篩檢，收到裝置證明書後 3 個月內到特約院所完成裝置",
-          "contact": "高雄市政府衛生局" }
+          "contact": "高雄市政府衛生局"
+        }
       ],
       "notes": "一般老人與中低收入老人的篩檢地點不同；115 年度資格與金額待對照公告全文。",
-      "sources": [ { "title": "本站整理：115年高雄市免費裝假牙", "url": "kcg-denture/index.html" } ]
+      "sources": [
+        {
+          "title": "本站整理：115年高雄市免費裝假牙",
+          "url": "kcg-denture/index.html"
+        }
+      ]
     },
     {
-      "county": "屏東縣", "slug": "pingtung", "year": 115, "status": "verified", "dataset": "pingtung-denture",
+      "county": "屏東縣",
+      "slug": "pingtung",
+      "year": 115,
+      "status": "verified",
+      "dataset": "pingtung-denture",
       "programs": [
-        { "type": "welfare", "name": "長者假牙裝置補助",
+        {
+          "type": "welfare",
+          "name": "長者假牙裝置補助",
           "eligibility": "設籍屏東縣 65 歲以上（原住民 55 歲以上），且為低收入戶、中低收入戶，或領中低收入老人生活津貼、身心障礙者生活補助費等身分",
           "maxFull": 44000,
           "amounts": "全口 4 萬 4,000 元、單顎全口 2 萬 2,000 元、部分活動假牙 1 萬 7,000 元至 3 萬 9,000 元；固定假牙每顆 4,400 元；同一顎 5 年內不重複補助",
           "apply": "到合作醫療院所（含醫療站）申請",
-          "contact": "屏東縣政府衛生局醫政科" }
+          "contact": "屏東縣政府衛生局醫政科"
+        }
       ],
-      "sources": [ { "title": "本站整理：屏東縣長者假牙補助", "url": "pingtung-denture/index.html" } ]
+      "sources": [
+        {
+          "title": "本站整理：屏東縣長者假牙補助",
+          "url": "pingtung-denture/index.html"
+        }
+      ]
     },
     {
-      "county": "宜蘭縣", "slug": "yilan", "year": 115, "status": "verified", "dataset": "yl-denture",
+      "county": "宜蘭縣",
+      "slug": "yilan",
+      "year": 115,
+      "status": "verified",
+      "dataset": "yl-denture",
       "programs": [
-        { "type": "welfare", "name": "中低收入戶老人假牙裝置補助",
+        {
+          "type": "welfare",
+          "name": "中低收入戶老人假牙裝置補助",
           "eligibility": "設籍宜蘭縣滿 1 年、65 歲以上（原住民 55 歲以上），且為低收入戶、中低收入戶，或領中低收入老人生活津貼、身心障礙者生活補助費等身分",
           "maxFull": 44000,
           "amounts": "全口 4 萬 4,000 元、單顎全口 2 萬 2,000 元；同一顎或牙位 5 年內不得重複申請（維修除外）",
           "apply": "向戶籍地鄉鎮市公所申請",
-          "contact": "戶籍地鄉鎮市公所" }
+          "contact": "戶籍地鄉鎮市公所"
+        }
       ],
-      "sources": [ { "title": "本站整理：宜蘭縣中低收入戶老人假牙補助", "url": "yl-denture/index.html" } ]
+      "sources": [
+        {
+          "title": "本站整理：宜蘭縣中低收入戶老人假牙補助",
+          "url": "yl-denture/index.html"
+        }
+      ]
     },
     {
-      "county": "花蓮縣", "slug": "hualien", "year": 115, "status": "verified", "dataset": "hl-denture",
+      "county": "花蓮縣",
+      "slug": "hualien",
+      "year": 115,
+      "status": "verified",
+      "dataset": "hl-denture",
       "programs": [
-        { "type": "general", "name": "65 歲以上長者假牙補助（一般長者）",
+        {
+          "type": "general",
+          "name": "65 歲以上長者假牙補助（一般長者）",
           "eligibility": "65 歲以上、112 年 1 月 1 日前設籍花蓮縣滿 3 年",
           "maxFull": 50000,
           "amounts": "每 5 年最高 5 萬元",
           "period": "115 年 6 月 1 日起至經費用罄",
           "apply": "到合約醫療院所申請",
-          "contact": "花蓮縣政府社會處" },
-        { "type": "welfare", "name": "65 歲以上長者假牙補助（福利身分）",
+          "contact": "花蓮縣政府社會處"
+        },
+        {
+          "type": "welfare",
+          "name": "65 歲以上長者假牙補助（福利身分）",
           "eligibility": "65 歲以上（原住民 55 歲以上），且為低收入戶、中低收入戶，或領相關津貼補助等身分",
           "maxFull": 55000,
           "amounts": "每 5 年最高 5 萬 5,000 元",
           "period": "115 年 6 月 1 日起至經費用罄",
           "apply": "到合約醫療院所申請",
-          "contact": "花蓮縣政府社會處" }
+          "contact": "花蓮縣政府社會處"
+        }
       ],
-      "sources": [ { "title": "本站整理：花蓮縣長者假牙補助", "url": "hl-denture/index.html" } ]
+      "sources": [
+        {
+          "title": "本站整理：花蓮縣長者假牙補助",
+          "url": "hl-denture/index.html"
+        }
+      ]
     },
-    { "county": "臺東縣", "slug": "taitung", "year": null, "status": "pending", "dataset": null, "programs": [],
-      "sources": [ { "title": "臺東縣政府社會處（官方頁面）", "url": "https://taisoc.taitung.gov.tw/WebSite/Service/serviceDetail.aspx?menuid=lW%2BfKiAxClc%3D&page=1&id=dJlKqR3tp9g%3D" } ] },
     {
-      "county": "澎湖縣", "slug": "penghu", "year": 113, "status": "partial", "dataset": null,
+      "county": "臺東縣",
+      "slug": "taitung",
+      "year": null,
+      "status": "pending",
+      "dataset": null,
+      "programs": [],
+      "sources": [
+        {
+          "title": "臺東縣政府社會處（官方頁面）",
+          "url": "https://taisoc.taitung.gov.tw/WebSite/Service/serviceDetail.aspx?menuid=lW%2BfKiAxClc%3D&page=1&id=dJlKqR3tp9g%3D"
+        }
+      ]
+    },
+    {
+      "county": "澎湖縣",
+      "slug": "penghu",
+      "year": 113,
+      "status": "partial",
+      "dataset": null,
       "programs": [
-        { "type": "welfare", "name": "中低收入老人假牙補助",
+        {
+          "type": "welfare",
+          "name": "中低收入老人假牙補助",
           "eligibility": "65 歲以上（原住民 55 歲以上），經牙醫評估需裝活動假牙，且為低收入戶、中低收入戶，或領中低收入老人生活津貼、身心障礙者生活補助費等身分；同一顎 5 年內不重複補助（維修除外）",
-          "maxFull": null, "amounts": null,
+          "maxFull": null,
+          "amounts": null,
           "apply": "到特約牙醫院所篩檢，由院所經衛生局送社會處審查，核定後開始治療",
-          "contact": "澎湖縣政府社會處 06-927-4400 分機 533、541、560、568" }
+          "contact": "澎湖縣政府社會處 06-927-4400 分機 533、541、560、568"
+        }
       ],
       "notes": "官方頁面附件為 112–113 年計畫，115 年度內容待確認。",
-      "sources": [ { "title": "澎湖縣政府社會處：中低收入老人假牙補助", "url": "https://www.penghu.gov.tw/society/home.jsp?id=317&act=view&dataserno=201310010002", "date": "2023-08-10" } ]
+      "sources": [
+        {
+          "title": "澎湖縣政府社會處：中低收入老人假牙補助",
+          "url": "https://www.penghu.gov.tw/society/home.jsp?id=317&act=view&dataserno=201310010002",
+          "date": "2023-08-10"
+        }
+      ]
     },
-    { "county": "金門縣", "slug": "kinmen", "year": null, "status": "pending", "dataset": null, "programs": [],
-      "sources": [ { "title": "金門縣政府社會處（官方頁面）", "url": "https://social.kinmen.gov.tw/cp.aspx?n=c8cde0088d2e9571&s=B26BC741A9EB1645" } ] },
-    { "county": "連江縣", "slug": "lienchiang", "year": null, "status": "pending", "dataset": null, "programs": [],
-      "sources": [ { "title": "連江縣政府（官方公告 PDF）", "url": "https://www.matsu.gov.tw/upload/f-20240517102037.pdf" } ] }
+    {
+      "county": "金門縣",
+      "slug": "kinmen",
+      "year": null,
+      "status": "pending",
+      "dataset": null,
+      "programs": [],
+      "sources": [
+        {
+          "title": "金門縣政府社會處（官方頁面）",
+          "url": "https://social.kinmen.gov.tw/cp.aspx?n=c8cde0088d2e9571&s=B26BC741A9EB1645"
+        }
+      ]
+    },
+    {
+      "county": "連江縣",
+      "slug": "lienchiang",
+      "year": null,
+      "status": "pending",
+      "dataset": null,
+      "programs": [],
+      "sources": [
+        {
+          "title": "連江縣政府（官方公告 PDF）",
+          "url": "https://www.matsu.gov.tw/upload/f-20240517102037.pdf"
+        }
+      ]
+    }
   ]
 }

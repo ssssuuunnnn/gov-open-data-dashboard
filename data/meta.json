@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-20T03:10:06.820716+00:00",
+  "generatedAt": "2026-10-24T05:08:27.103227+00:00",
   "abc": {
     "count": 32073,
     "source": "https://ltcpap.mohw.gov.tw/publish/abc.csv",
@@ -294,5 +294,15 @@
     "count": 22,
     "source": "https://newrepat.sfaa.gov.tw/home/repat-welfare/index",
     "title": "全國22縣市身心障礙者輔具費用補助"
+  },
+  "klDenture": {
+    "count": 44,
+    "source": "https://www.klcg.gov.tw/wSite/public/Attachment/01307/f1768191202421.pdf",
+    "title": "基隆市115年度假牙補助特約醫療院所"
+  },
+  "mlDenture": {
+    "count": 22,
+    "source": "https://service.miaoli.gov.tw/FAQTable.aspx?n=1797",
+    "title": "苗栗縣中低收入老人補助裝置假牙合約牙科醫療診所"
   }
 }
