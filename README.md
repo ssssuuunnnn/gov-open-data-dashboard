@@ -468,7 +468,7 @@ scripts/sources/tpe-dementia-hospitals/  臺北市失智症診療機構名冊的
 
 ## 縣市長照資源頁（county/）
 
-`county/<slug>/index.html` 是依縣市整理的長照資源總覽頁（目前已建立：桃園市 `county/taoyuan/`），`county/index.html` 是 22 縣市總覽。兩者皆為**靜態 HTML**（內容直接寫在 HTML 裡、不靠 JS 載入），以利搜尋引擎索引。
+`county/<slug>/index.html` 是依縣市整理的長照資源總覽頁（22 縣市皆已建立；本站有 2 個以上專屬資料集的 13 個縣市開放索引，其餘 9 縣市先設 `noindex`，待補足資料集後再開放），`county/index.html` 是 22 縣市總覽。兩者皆為**靜態 HTML**（內容直接寫在 HTML 裡、不靠 JS 載入），以利搜尋引擎索引。
 
 - 人工內容（導言、照管中心分站、依需求分類說明、FAQ、鄰近縣市）維護在 `data/counties.json`，只有含 `page` 欄位的縣市才會產生頁面；`indexable: false` 會加 `noindex` 且不列入 sitemap。
 - 資料集清單取自首頁 `.home-card` 的 `data-county`，筆數取自 `data/meta.json`，ABC 據點數取自 `data/abc.json`（以機構代碼去重）。
@@ -476,6 +476,8 @@ scripts/sources/tpe-dementia-hospitals/  臺北市失智症診療機構名冊的
 - 新增資料集卡片或重跑 `build_data.py` 後，請一併重跑本腳本，讓縣市頁的資料集與數字保持同步。
 - 新增縣市頁：在 `data/counties.json` 該縣市加上 `page` 物件（可複製桃園市的結構），說明文字請自行撰寫並核對各縣市政府公告，再執行腳本。
 - `abc/index.html` 支援 `?county=桃園市` 參數預先篩選縣市。
+- 照管中心電話依衛福部長照專區「各縣市長期照顧管理中心聯繫窗口」；桃園市另列各區分站。內容涵蓋全國的縣市卡片（如 `tpe-hospice`）可列在 `counties.json` 的 `nationalExtra`，會出現在其他縣市頁的全國性資源區塊。
+- 沒有分站資料的縣市，會自動改列各鄉鎮市區的 ABC 據點數表。
 
 ## 更新資料
 
