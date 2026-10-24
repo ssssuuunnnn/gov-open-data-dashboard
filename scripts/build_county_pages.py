@@ -27,6 +27,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://www.sunkuo.cc/gov-open-data-dashboard/"
 TODAY = dt.date.today().isoformat()
+# 首頁卡片歸在某縣市、但內容其實涵蓋全國的資料集（由 counties.json 的 nationalExtra 設定），
+# 會同時列在其他縣市頁的「全國性資源」區塊
+NATIONAL_EXTRA = set()
 
 CATEGORY_LABELS = {
     "ltc": "長照 / 老人福利",
@@ -98,6 +101,8 @@ def load_abc_stats():
         code = row[idx["code"]] or row[idx["name"]]
         cat = row[idx["category"]]
         district = row[idx["district"]] or ""
+        if re.fullmatch(r"..[縣市]", district) and district != county:
+            district = ""  # 原始資料偶有行政區欄位誤填為其他縣市名稱
         if county.endswith("市") and district and not district.endswith("區"):
             district += "區"  # 直轄市原始資料偶有「平鎮」缺「區」字
         if (county, code) not in seen_total:
@@ -277,11 +282,13 @@ def build_county_page(county, slug_by_name, county_by_slug, cards, meta, abc_cou
     if center:
         out.append(f'      <div class="quick-item"><div class="label">{esc(center["name"])}</div>'
                    f'<div class="value"><a href="{tel_href(center["phone"])}">{esc(center["phone"])}</a></div>'
-                   f'<div class="hint">{esc(center["address"])}</div></div>\n')
+                   f'<div class="hint">{esc(center.get("address") or center.get("hint", ""))}</div></div>\n')
     out.append('      <div class="quick-item"><div class="label">住院中的長輩</div>'
                '<div class="value small">醫院出院準備服務</div>'
                '<div class="hint">出院前即可完成評估，出院後銜接長照服務</div></div>\n')
     out.append("    </div>\n")
+    if center and center.get("phoneSource"):
+        out.append(f'    <p class="county-note">照管中心電話依<a href="{esc(center["phoneSource"])}" target="_blank" rel="noopener">衛福部長照專區「各縣市長期照顧管理中心聯繫窗口」</a>（{esc(center.get("phoneSourceDate", ""))}更新）。</p>\n')
     out.append(f'    <p class="county-note">申請流程、四包錢、費用與部分負擔等通用說明，請見<a href="{rel}index.html#faq">首頁長照常見問答</a>。</p>\n')
     out.append("  </div>\n")
 
@@ -332,8 +339,47 @@ def build_county_page(county, slug_by_name, county_by_slug, cards, meta, abc_cou
             src_note += f"；{esc(center['note'])}"
         out.append(f'    <p class="county-note">{src_note}</p>\n')
         out.append("  </div>\n")
+    elif abc_district:
+        # 沒有分站資料時，改列各行政區據點數，仍提供在地化的獨特內容
+        rows = sorted(
+            ((d, c) for d, c in abc_district.items() if d),
+            key=lambda x: (-x[1].get("_total", 0), x[0]),
+        )
+        out.append('  <div class="card">\n')
+        out.append(f'    <h2 class="section-title" style="margin-top:0;">{esc(name)}各{esc(page.get("districtWord", "鄉鎮市區"))}長照據點數</h2>\n')
+        out.append('    <p class="county-note" style="margin-top:-6px;">依據點數由多到少排列；點行政區名稱可在 ABC 地圖上查看該區據點。</p>\n')
+        out.append('    <div class="table-container-full"><div class="table-wrap"><table class="data-table county-district-table">\n')
+        out.append("      <thead><tr><th>行政區</th><th>據點合計</th><th>A</th><th>B</th><th>C</th></tr></thead>\n      <tbody>\n")
+        for d, c in rows:
+            out.append(
+                f'        <tr><th scope="row"><a href="{rel}abc/index.html?county={esc(name)}">{esc(d)}</a></th>'
+                f'<td>{c.get("_total", 0)}</td><td>{c.get("A", 0)}</td><td>{c.get("B", 0)}</td><td>{c.get("C", 0)}</td></tr>\n'
+            )
+        out.append("      </tbody>\n    </table></div></div>\n  </div>\n")
 
     # 依需求找資源
+    others = [c for c in cards if c["county"] == name and c["slug"] not in {n["dataset"] for n in page.get("needs", [])}]
+    if page.get("needs") or others:
+        out.append(_needs_html(page, name, rel, cards_by_slug, meta, total, others))
+    used = {n["dataset"] for n in page.get("needs", [])}
+
+    # 全國性資料集
+    national = [c for c in cards if (c["county"] == "all" or c["slug"] in NATIONAL_EXTRA) and c["slug"] not in used]
+    if national:
+        out.append('  <div class="card">\n')
+        out.append(f'    <h2 class="section-title" style="margin-top:0;">{esc(name)}也適用的全國性資源</h2>\n')
+        out.append('    <ul class="county-links">\n')
+        for c in national:
+            href = f"{rel}{c['slug']}/index.html" + (f"?county={name}" if c["slug"] == "abc" else "")
+            tag = "全國" if c["slug"] in NATIONAL_EXTRA else c["tag"]
+            out.append(f'      <li><a href="{esc(href)}">{esc(c["title"])}</a>'
+                       f'<span class="county-note">　{esc(tag)}</span></li>\n')
+        out.append("    </ul>\n  </div>\n")
+    return _tail_html(page, name, rel, county_by_slug, out)
+
+
+def _needs_html(page, name, rel, cards_by_slug, meta, total, others):
+    out = []
     out.append('  <div class="card">\n')
     out.append('    <h2 class="section-title" style="margin-top:0;">依需求找資源</h2>\n')
     out.append('    <div class="need-list">\n')
@@ -366,25 +412,16 @@ def build_county_page(county, slug_by_name, county_by_slug, cards, meta, abc_cou
     out.append("    </div>\n")
 
     # 未在 needs 中說明、但屬於此縣市的資料集，自動補列，避免新增資料集後漏掉
-    others = [c for c in cards if c["county"] == name and c["slug"] not in used]
     if others:
         out.append(f'    <h3 class="county-subhead">其他{esc(name)}資料集</h3>\n    <ul class="county-links">\n')
         for c in others:
             out.append(f'      <li><a href="{rel}{esc(c["href"])}">{esc(c["title"])}</a></li>\n')
         out.append("    </ul>\n")
     out.append("  </div>\n")
+    return "".join(out)
 
-    # 全國性資料集
-    national = [c for c in cards if c["county"] == "all" and c["slug"] not in used]
-    if national:
-        out.append('  <div class="card">\n')
-        out.append(f'    <h2 class="section-title" style="margin-top:0;">{esc(name)}也適用的全國性資源</h2>\n')
-        out.append('    <ul class="county-links">\n')
-        for c in national:
-            out.append(f'      <li><a href="{rel}{esc(c["href"])}">{esc(c["title"])}</a>'
-                       f'<span class="county-note">　{esc(c["tag"])}</span></li>\n')
-        out.append("    </ul>\n  </div>\n")
 
+def _tail_html(page, name, rel, county_by_slug, out):
     # FAQ
     if page.get("faq"):
         out.append('  <section class="faq-section card" id="faq">\n')
@@ -471,11 +508,12 @@ def build_hub(counties, cards, abc_by_county):
         abc_total = abc_by_county.get(c["name"], Counter()).get("_total", 0)
         n = dataset_counts.get(c["name"], 0)
         if c.get("page"):
-            href, badge = f"{c['slug']}/", '<span class="tag">完整專頁</span>'
+            full = c["page"].get("indexable")
+            href, badge = f"{c['slug']}/", ('<span class="tag">完整專頁</span>' if full else "")
         else:
             href, badge = f"{rel}index.html?counties={c['name']}", ""
         out.append(
-            f'      <a class="county-tile{" built" if c.get("page") else ""}" href="{esc(href)}">'
+            f'      <a class="county-tile{" built" if c.get("page", {}).get("indexable") else ""}" href="{esc(href)}">'
             f'{badge}<strong>{esc(c["name"])}</strong>'
             f'<span class="county-note">ABC 據點 {abc_total:,} 處 · 專屬資料集 {n} 個</span></a>\n'
         )
@@ -567,6 +605,7 @@ def update_sitemap(built):
 
 def main():
     cfg = json.loads((ROOT / "data" / "counties.json").read_text(encoding="utf-8"))
+    NATIONAL_EXTRA.update(cfg.get("nationalExtra", []))
     counties = cfg["counties"]
     county_by_slug = {c["slug"]: c for c in counties}
     slug_by_name = {c["name"]: c["slug"] for c in counties}
