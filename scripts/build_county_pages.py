@@ -204,6 +204,7 @@ def footer_html(rel, extra=""):
 </footer>
 <script src="{rel}assets/analytics.js"></script>
 <script src="{rel}assets/pwa-install.js" defer></script>
+<script src="{rel}assets/promo.js" defer></script>
 </body>
 </html>
 """

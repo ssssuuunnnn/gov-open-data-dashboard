@@ -295,7 +295,7 @@ footer.site-footer {
 
 .loading { text-align: center; padding: 40px; color: var(--color-muted); font-family: var(--font-heading); }
 
-.home-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; margin-top: 24px; }
+.home-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 18px; margin-top: 24px; }
 .home-card {
   background: var(--color-card);
   border: 1px solid var(--color-border);
@@ -450,3 +450,23 @@ footer.site-footer {
 .county-page .table-wrap table.compare-table { min-width: 680px; }
 .compare-table td, .compare-table th { white-space: nowrap; }
 .compare-table td .county-note { white-space: normal; }
+
+/* 全站推廣版位（assets/promo.js 動態插入於 footer 之前） */
+.promo-section {
+  max-width: 1160px; margin: 32px auto 0; padding: 0 16px;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 12px;
+}
+.promo-card {
+  display: flex; flex-direction: column; gap: 6px;
+  background: #1a2133; color: #fff; border-radius: 12px; padding: 22px 22px 18px;
+  text-decoration: none; font-family: system-ui, -apple-system, "PingFang TC", "Noto Sans TC", sans-serif;
+}
+.promo-card:hover { color: #fff; text-decoration: none; }
+.promo-card .promo-name { font-size: .85rem; font-weight: 700; }
+.promo-card .promo-title { font-family: var(--font-heading), "Noto Serif TC", serif; font-size: 1.3rem; font-weight: 700; line-height: 1.35; }
+.promo-card .promo-desc { font-size: .88rem; line-height: 1.7; color: rgba(255,255,255,.9); flex: 1; margin-bottom: 14px; }
+.promo-card .promo-cta {
+  display: block; text-align: center; background: #b8302d; color: #fff;
+  border-radius: 8px; padding: 10px 12px; font-weight: 700; font-size: .92rem;
+}
+.promo-card:hover .promo-cta { background: #a02724; }
